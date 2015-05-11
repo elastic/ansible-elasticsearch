@@ -1,0 +1,5 @@
+---
+__java_packages:
+  - "oracle-java8-installer"
+__java_repos:
+  - "ppa:webupd8team/java"

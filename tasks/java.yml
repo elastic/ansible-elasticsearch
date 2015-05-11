@@ -1,0 +1,30 @@
+---
+- name: Define java_packages.
+  set_fact:
+    java_packages: "{{ __java_packages | list }}"
+  when: java_packages is not defined  
+- name: Define java_repos.
+  set_fact:
+    java_repos: "{{ __java_repos | list }}"
+  when: java_repos is not defined  
+
+# Debian section
+- name: Automatically select the Oracle License
+  tags: java
+  shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+  changed_when: false
+  when: ansible_os_family == 'Debian'
+
+- name: Add java repos
+  apt_repository: repo={{ item }} update_cache=yes state=present
+  with_items: java_repos
+  when: ansible_os_family == 'Debian'
+
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=86400
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure Java is installed.
+  apt: name={{ item }} state=installed
+  with_items: java_packages
+  when: ansible_os_family == 'Debian'
