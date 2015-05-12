@@ -6,7 +6,8 @@ galaxy_info:
   description: Elasticsearch for Linux
   company: "Elastic.co"
   license: "license (Apache)"
-  min_ansible_version: 1.4
+  # Require 1.6 for apt deb install
+  min_ansible_version: 1.6
   platforms:
   - name: EL
     versions:
