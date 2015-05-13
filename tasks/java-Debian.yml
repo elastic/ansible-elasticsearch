@@ -1,0 +1,19 @@
+---
+# Debian specific Java
+- name: Debian - Define java_repos.
+  set_fact:
+    java_repos: "{{ __java_repos | list }}"
+  when: java_repos is not defined
+
+- name: Debian - Automatically select the Oracle License
+  tags: java
+  shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+  changed_when: false
+
+- name: Debian - Add java repos
+  apt_repository: repo={{ item }} update_cache=yes state=present
+  with_items: java_repos
+
+- name: Debian - Ensure Java is installed.
+  apt: name={{ item }} state=present cache_valid_time=86400
+  with_items: java_packages

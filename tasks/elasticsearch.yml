@@ -1,40 +1,20 @@
 ---
-# Packages
-- name: Define elasticsearch_package (Debian)
-  set_fact:
-    elasticsearch_package: "elasticsearch-{{ elasticsearch_version}}.deb"
-  when: elasticsearch_package is not defined and ansible_os_family == 'Debian'
-- name: Define elasticsearch_package (Redhat)
-  set_fact:
-    elasticsearch_package: "elasticsearch-{{ elasticsearch_version}}.noarch.rpm"
-  when: elasticsearch_package is not defined and ansible_os_family == 'RedHat'
-- name: Define elasticsearch_package (Linux)
-  set_fact:
-    elasticsearch_package: "elasticsearch-{{ elasticsearch_version}}.tar.gz"
-  when: elasticsearch_package is not defined
-
-- name: Define elasticsearch_url
-  set_fact:
-    elasticsearch_url: "https://download.elastic.co/elasticsearch/elasticsearch/{{ elasticsearch_package}}"
-  when: elasticsearch_url is not defined
-
-- debug: var=elasticsearch_url
-
-# TODO Is /opt always a good destination?
-# It is good to always have one location to avoid downloading again
-# It is bad to have a location hard-coded because we don't know if it
-# will always exist and have space... better to use mktemp, but then
-# have to ensure that desired version is already installde with 
-# dpkg-query -W elasticsearch and parse the output...
-- name: Download elasticsearch package
-  get_url: url={{ elasticsearch_url }} dest=/opt/{{ elasticsearch_package}}
-
-# Debian section
-- name: Ensure elasticsearch is installed.
-  apt: deb=/opt/{{ elasticsearch_package }} state=installed
+# Trigger Debian section
+- name: Include Debian specific Elasticsearch
+  include: elasticsearch-Debian.yml
   when: ansible_os_family == 'Debian'
 
-# Linux section
-- name: Ensure elasticsearch is installed.
-  apt: deb=/opt/{{ elasticsearch_package }} state=installed
-  when: ansible_os_family == 'Linux'
+# Trigger Redhat section
+- name: Include RedHat specific Elasticsearch
+  include: elasticsearch-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+# Make sure the service is started, and restart if necessary
+- name: Start elasticsearch service
+  service: name=elasticsearch state=started
+  when: elasticsearch.start_service
+  register: elasticsearch_started
+- name: Restart elasticsearch service if new version installed
+  service: name=elasticsearch state=restarted
+  when: elasticsearch.start_service and elasticsearch_install.changed and not elasticsearch_started.changed
+

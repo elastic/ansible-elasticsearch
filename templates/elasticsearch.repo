@@ -1,0 +1,6 @@
+[elasticsearch-{{ elasticsearch.major_version }}]
+name=Elasticsearch repository for {{ elasticsearch.major_version }}.x packages
+baseurl=http://packages.elastic.co/elasticsearch/{{ elasticsearch.major_version }}/centos
+gpgcheck=1
+gpgkey=http://packages.elastic.co/GPG-KEY-elasticsearch
+enabled=1

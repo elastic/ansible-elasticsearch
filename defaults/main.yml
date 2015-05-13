@@ -1,2 +1,5 @@
 ---
-elasticsearch_version: "1.5.2"
+elasticsearch:
+  major_version: "1.5"
+  version: "1.5.2"
+  start_service: true

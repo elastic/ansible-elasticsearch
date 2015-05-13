@@ -1,0 +1,6 @@
+---
+# RedHat specific Java
+- name: RedHat - Ensure Java is installed.
+  yum: name={{ item }} state=latest
+  with_items: java_packages
+
