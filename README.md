@@ -17,13 +17,32 @@ mkdir -p roles
 ln -s /my/repos/ansible-elasticsearch ./roles/elasticsearch
 ```
 
-Then create your playbook yaml adding the role elasticsearch and overriding any variables you wish, e.g. 
+Then create your playbook yaml adding the role elasticsearch and overriding any variables you wish.  It can be as simple as this to take all the defaults:
+
 
 ```
 ---
-- hosts: centos
-  sudo: yes
+hosts: my_host
+  roles:
+    - elasticsearch
+  tasks:
+    - .... your tasks ...
+```
+
+or more complex..
+
+
+```
+---
+hosts: my_host
+  roles:
+    - elasticsearch
   vars:
+    java_packages:
+      - "oracle-java7-installer"
+    es_major_version: 1.4
+    es_version: 1.4.4
+    es_start_service: false
     es_plugins_reinstall: false
     es_plugins:
       - plugin: elasticsearch-cloud-aws
@@ -36,13 +55,11 @@ Then create your playbook yaml adding the role elasticsearch and overriding any 
         version: latest
       - plugin: elasticsearch-support-diagnostics
         version: latest
-  roles:
-    - elasticsearch
   tasks:
     - .... your tasks ...
 ```
 
-Make sure your host is defined in your ```hosts``` file.
+Make sure your hosts are defined in your ```hosts``` file with the appropriate ```ansible_ssh_host```,  ```ansible_ssh_user``` and ```ansible_ssh_private_key_file``` values.
 
 Then run it:
 
