@@ -1,8 +1,8 @@
 ---
 - name: RedHat - add Elasticsearch repo
-  template: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch-{{ elasticsearch.major_version }}.repo
+  template: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch-{{ es_major_version }}.repo
 - name: RedHat - Install Elasticsearch
-  yum: name=elasticsearch-{{ elasticsearch.version }} state=present update_cache=yes
+  yum: name=elasticsearch-{{ es_version }} state=present update_cache=yes
   register: elasticsearch_install
 
 

@@ -1,0 +1,15 @@
+---
+- name: Remove elasticsearch plugins
+  command: /usr/share/elasticsearch/bin/plugin --remove {{ item.plugin }} --silent
+  ignore_errors: yes
+  with_items: es_plugins
+  when: ( ansible_os_family == 'RedHat' or ansible_os_family == 'Debian' ) and es_plugins_reinstall
+
+- name: Install elasticsearch plugins
+  #debug: var=item
+  command: /usr/share/elasticsearch/bin/plugin --install elasticsearch/{{ item.plugin }}/{{ item.version }} --silent
+  register: command_result
+  failed_when: "'Failed to install' in command_result.stderr"
+  changed_when: command_result.rc == 0
+  with_items: es_plugins
+  when: ( ansible_os_family == 'RedHat' or ansible_os_family == 'Debian' )

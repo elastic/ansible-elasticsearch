@@ -12,9 +12,9 @@
 # Make sure the service is started, and restart if necessary
 - name: Start elasticsearch service
   service: name=elasticsearch state=started
-  when: elasticsearch.start_service
+  when: es_start_service
   register: elasticsearch_started
 - name: Restart elasticsearch service if new version installed
   service: name=elasticsearch state=restarted
-  when: elasticsearch.start_service and elasticsearch_install.changed and not elasticsearch_started.changed
+  when: es_start_service and elasticsearch_install.changed and not elasticsearch_started.changed
 
