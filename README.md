@@ -83,3 +83,6 @@ Following variables affect the versions installed:
       - plugin: elasticsearch-cloud-aws
         version: 2.5.0
  ```
+
+* ```java_repos``` (an array of repositories to be added to allow java to be installed)
+* ```java_packages``` (an array of packages to be installed to get Java installed)
