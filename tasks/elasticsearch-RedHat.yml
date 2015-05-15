@@ -1,4 +1,7 @@
 ---
+- name: Ensure libselinux-python on CentOS 6.x
+  yum: name=libselinux-python state=present update_cache=yes
+  when: ( ansible_distribution == "CentOS" ) and ( ansible_distribution_major_version == "6" )
 - name: RedHat - add Elasticsearch repo
   template: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch-{{ es_major_version }}.repo
 - name: RedHat - Install Elasticsearch
