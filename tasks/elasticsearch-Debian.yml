@@ -6,3 +6,8 @@
 - name: Debian - Ensure elasticsearch is installed.
   apt: name=elasticsearch={{ es_version }} state=present cache_valid_time=86400
   register: elasticsearch_install
+
+- name: Debian - configure memory
+  lineinfile: dest=/etc/default/elasticsearch regexp="^ES_HEAP_SIZE" insertafter="^#ES_HEAP_SIZE" line="ES_HEAP_SIZE={{ es_heap_size }}"
+  when: es_heap_size is defined
+  register: elasticsearch_configure

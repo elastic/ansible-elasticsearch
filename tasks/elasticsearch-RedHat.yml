@@ -8,4 +8,7 @@
   yum: name=elasticsearch-{{ es_version }} state=present update_cache=yes
   register: elasticsearch_install
 
-
+- name: RedHat - configure memory
+  lineinfile: dest=/etc/default/elasticsearch regexp="^ES_HEAP_SIZE" insertafter="^#ES_HEAP_SIZE" line="ES_HEAP_SIZE={{ es_heap_size }}"
+  when: es_heap_size is defined
+  register: elasticsearch_configure
