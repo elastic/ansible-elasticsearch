@@ -3,3 +3,5 @@ es_major_version: "1.5"
 es_version: "1.5.2"
 es_start_service: true
 es_plugins_reinstall: false
+es_user: elasticsearch
+es_group: elasticsearch

@@ -11,3 +11,18 @@
   lineinfile: dest=/etc/default/elasticsearch regexp="^ES_HEAP_SIZE" insertafter="^#ES_HEAP_SIZE" line="ES_HEAP_SIZE={{ es_heap_size }}"
   when: es_heap_size is defined
   register: elasticsearch_configure
+- name: Debian - configure data store
+  lineinfile: dest=/etc/default/elasticsearch regexp="^ES_DATA_DIR" insertafter="^#ES_DATA_DIR" line="ES_DATA_DIR={{ es_data_dir }}"
+  when: es_data_dir is defined
+  register: elasticsearch_configure
+- name: Debian - configure elasticsearch user
+  lineinfile: dest=/etc/default/elasticsearch regexp="^ES_USER" insertafter="^#ES_USER" line="ES_USER={{ es_user }}"
+  when: es_user is defined
+  register: elasticsearch_configure
+- name: Debian - configure elasticsearch group
+  lineinfile: dest=/etc/default/elasticsearch regexp="^ES_GROUP" insertafter="^#ES_GROUP" line="ES_GROUP={{ es_group }}"
+  when: es_group is defined
+  register: elasticsearch_configure
+- name: Debian - create data dir
+  file: state=directory path={{ es_data_dir }} owner={{ es_user }} group={{ es_group }}
+  when: es_data_dir is defined
