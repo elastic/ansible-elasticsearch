@@ -13,7 +13,7 @@
   when: es_heap_size is defined
   register: elasticsearch_configure
 - name: RedHat - configure data store
-  lineinfile: dest=/etc/default/elasticsearch regexp="^ES_DATA_DIR" insertafter="^#ES_DATA_DIR" line="ES_DATA_DIR={{ es_data_dir }}"
+  lineinfile: dest=/etc/default/elasticsearch regexp="^DATA_DIR" insertafter="^#DATA_DIR" line="DATA_DIR={{ es_data_dir }}"
   when: es_data_dir is defined
   register: elasticsearch_configure
 - name: RedHat - configure elasticsearch user
