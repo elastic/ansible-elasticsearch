@@ -45,16 +45,18 @@ hosts: my_host
     es_start_service: false
     es_plugins_reinstall: false
     es_plugins:
-      - plugin: elasticsearch-cloud-aws
+      - plugin: elasticsearch/elasticsearch-cloud-aws
         version: 2.5.0
-      - plugin: marvel
+      - plugin: elasticsearch/marvel
         version: latest
-      - plugin: license
+      - plugin: elasticsearch/license
         version: latest
-      - plugin: shield
+      - plugin: elasticsearch/shield
         version: latest
-      - plugin: elasticsearch-support-diagnostics
+      - plugin: elasticsearch/elasticsearch-support-diagnostics
         version: latest
+      - plugin: lmenezes/elasticsearch-kopf
+        version: master
   tasks:
     - .... your tasks ...
 ```
