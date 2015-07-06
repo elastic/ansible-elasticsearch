@@ -9,19 +9,19 @@
   register: elasticsearch_install
 
 - name: RedHat - configure memory
-  lineinfile: dest=/etc/default/elasticsearch regexp="^ES_HEAP_SIZE" insertafter="^#ES_HEAP_SIZE" line="ES_HEAP_SIZE={{ es_heap_size }}"
+  lineinfile: dest=/etc/sysconfig/elasticsearch regexp="^ES_HEAP_SIZE" insertafter="^#ES_HEAP_SIZE" line="ES_HEAP_SIZE={{ es_heap_size }}"
   when: es_heap_size is defined
   register: elasticsearch_configure
 - name: RedHat - configure data store
-  lineinfile: dest=/etc/default/elasticsearch regexp="^DATA_DIR" insertafter="^#DATA_DIR" line="DATA_DIR={{ es_data_dir }}"
+  lineinfile: dest=/etc/sysconfig/elasticsearch regexp="^DATA_DIR" insertafter="^#DATA_DIR" line="DATA_DIR={{ es_data_dir }}"
   when: es_data_dir is defined
   register: elasticsearch_configure
 - name: RedHat - configure elasticsearch user
-  lineinfile: dest=/etc/default/elasticsearch regexp="^ES_USER" insertafter="^#ES_USER" line="ES_USER={{ es_user }}"
+  lineinfile: dest=/etc/sysconfig/elasticsearch regexp="^ES_USER" insertafter="^#ES_USER" line="ES_USER={{ es_user }}"
   when: es_user is defined
   register: elasticsearch_configure
 - name: RedHat - configure elasticsearch group
-  lineinfile: dest=/etc/default/elasticsearch regexp="^ES_GROUP" insertafter="^#ES_GROUP" line="ES_GROUP={{ es_group }}"
+  lineinfile: dest=/etc/sysconfig/elasticsearch regexp="^ES_GROUP" insertafter="^#ES_GROUP" line="ES_GROUP={{ es_group }}"
   when: es_group is defined
   register: elasticsearch_configure
 - name: RedHat - create data dir
