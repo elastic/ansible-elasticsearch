@@ -5,3 +5,5 @@
 - include: elasticsearch.yml
 - include: elasticsearch-plugins.yml
   when: es_plugins is defined
+- include: elasticsearch-version-lock.yml
+  when: es_version_lock
