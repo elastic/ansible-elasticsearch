@@ -4,8 +4,13 @@
   when: ( ansible_distribution == "CentOS" ) and ( ansible_distribution_major_version == "6" )
 - name: RedHat - add Elasticsearch repo
   template: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch-{{ es_major_version }}.repo
-- name: RedHat - Install Elasticsearch
+- name: RedHat - Install Elasticsearch with minor version supplied
+  when: es_version != ""
   yum: name=elasticsearch-{{ es_version }} state=present update_cache=yes
+  register: elasticsearch_install
+- name: RedHat - Install Elasticsearch without minor version supplied
+  when: es_version == ""
+  yum: name=elasticsearch state=present update_cache=yes
   register: elasticsearch_install
 
 - name: RedHat - configure memory
