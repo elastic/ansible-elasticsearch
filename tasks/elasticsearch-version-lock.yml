@@ -1,0 +1,10 @@
+---
+# Trigger Debian section
+- name: Include Debian specific Elasticsearch
+  include: elasticsearch-Debian-version-lock.yml
+  when: ansible_os_family == 'Debian'
+
+# Trigger Redhat section
+- name: Include RedHat specific Elasticsearch
+  include: elasticsearch-RedHat-version-lock.yml
+  when: ansible_os_family == 'RedHat'
