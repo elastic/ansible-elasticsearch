@@ -1,0 +1,6 @@
+.kitchen/
+.kitchen.local.yml
+*.lock
+.vendor
+.bundle
+Converging

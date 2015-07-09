@@ -1,0 +1,9 @@
+---
+- name: wrapper playbook for kitchen testing "elasticsearch"
+  hosts: localhost
+  roles:
+    - elasticsearch
+  vars:
+    es_plugins:
+      - plugin: lmenezes/elasticsearch-kopf
+        version: master

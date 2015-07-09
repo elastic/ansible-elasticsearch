@@ -1,0 +1,49 @@
+---
+driver:
+  name: docker
+
+provisioner:
+  name: ansible_playbook
+  hosts: localhost
+  roles_path: ../
+  require_ansible_repo: true
+  ansible_verbose: true
+
+platforms:
+  - name: ubuntu-14.04
+    driver_config:
+      image: electrical/ubuntu:14.04
+      privileged: true
+      provision_command: apt-get -y -q install ansible python-apt python-pycurl ruby
+  - name: debian-7
+    driver_config:
+      image: electrical/debian:7.3
+      privileged: true
+      provision_command:
+        - echo 'deb http://http.debian.net/debian/ wheezy-backports main' >> /etc/apt/sources.list
+        - apt-get update
+        - apt-get install -y -q ansible ruby
+  - name: debian-8
+    driver_config:
+      image: electrical/debian:8
+      privileged: true
+      provision_command: apt-get -y -q install ansible ruby
+  - name: centos-6
+    driver_config:
+      image: electrical/centos:6.4
+      privileged: true
+  - name: centos-7
+    driver_config:
+      image: electrical/centos:7
+      provision_command:
+        - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
+        - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+      privileged: true
+
+verifier:
+  ruby_bindir: '/usr/bin'
+
+suites:
+  - name: default
+    run_list:
+    attributes:
