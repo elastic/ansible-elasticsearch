@@ -38,6 +38,10 @@ platforms:
       provision_command:
         - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+        - yum -y install initscripts ruby
+        - BUSSER_ROOT="/tmp/verifier" GEM_HOME="/tmp/verifier/gems" GEM_PATH="/tmp/verifier/gems" GEM_CACHE="/tmp/verifier/gems/cache" gem install --no-rdoc --no-ri rake
+        - chown kitchen:kitchen /tmp/verifier -R
+        - yum clean all
       privileged: true
 
 verifier:
