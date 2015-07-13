@@ -15,6 +15,7 @@ platforms:
       image: electrical/ubuntu:14.04
       privileged: true
       provision_command: apt-get -y -q install ansible python-apt python-pycurl ruby
+      use_sudo: false
   - name: debian-7
     driver_config:
       image: electrical/debian:7.3
@@ -23,15 +24,18 @@ platforms:
         - echo 'deb http://http.debian.net/debian/ wheezy-backports main' >> /etc/apt/sources.list
         - apt-get update
         - apt-get install -y -q ansible ruby
+      use_sudo: false
   - name: debian-8
     driver_config:
       image: electrical/debian:8
       privileged: true
       provision_command: apt-get -y -q install ansible ruby
+      use_sudo: false
   - name: centos-6
     driver_config:
       image: electrical/centos:6.4
       privileged: true
+      use_sudo: false
   - name: centos-7
     driver_config:
       image: electrical/centos:7
@@ -43,6 +47,7 @@ platforms:
         - chown kitchen:kitchen /tmp/verifier -R
         - yum clean all
       privileged: true
+      use_sudo: false
 
 verifier:
   ruby_bindir: '/usr/bin'
