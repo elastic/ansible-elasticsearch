@@ -1,7 +1,8 @@
 ---
 es_major_version: "1.5"
-es_version: "1.5.2"
+es_version: "1.5.1"
 es_version_lock: false
+es_use_repository: false
 es_start_service: true
 es_plugins_reinstall: false
 es_user: elasticsearch
