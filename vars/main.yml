@@ -1,1 +1,6 @@
 ---
+__es_package_url:
+        default: "https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch"
+        url_master: "http://s3-eu-west-1.amazonaws.com/build-eu.elasticsearch.org/origin/master/nightly/JDK7/elasticsearch-latest-"
+        url_17: "http://s3-eu-west-1.amazonaws.com/build.eu-west-1.elastic.co/origin/1.7/nightly/JDK7/elasticsearch-latest-"
+        url_16: "http://s3-eu-west-1.amazonaws.com/build.eu-west-1.elastic.co/origin/1.6/nightly/JDK7/elasticsearch-latest-"
