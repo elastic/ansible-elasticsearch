@@ -15,8 +15,10 @@ platforms:
       image: electrical/ubuntu:14.04
       privileged: true
       provision_command:
-        - echo 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main' >> /etc/apt/sources.list
-        - apt-get update && apt-get -y -q install ansible python-apt python-pycurl ruby
+        - apt-get -y -q install python-software-properties
+        - add-apt-repository -y ppa:ansible/ansible
+        - apt-get update
+        - apt-get -y -q install ansible python-apt python-pycurl ruby
       use_sudo: false
   - name: debian-7
     driver_config:
