@@ -1,10 +1,24 @@
 ---
 - name: Debian - Add Elasticsearch repository key
   apt_key: url="http://packages.elasticsearch.org/GPG-KEY-elasticsearch" state=present
+  when: es_use_repository == "true"
+
 - name: Debian - add elasticsearch repository
   apt_repository: repo="deb http://packages.elastic.co/elasticsearch/{{ es_major_version }}/debian stable main" state=present
+  when: es_use_repository == "true"
+
 - name: Debian - Ensure elasticsearch is installed.
   apt: name=elasticsearch{% if es_version is defined and es_version != "" %}={{ es_version }}{% endif %} state=present cache_valid_time=86400
+  when: es_use_repository == "true"
+  register: elasticsearch_install
+
+- name: Debian - Download elasticsearch from url.
+  get_url: url={{ __es_package_url.default }}-{{ es_version }}.deb dest=/tmp/elasticsearch-{{ es_version }}.deb validate_certs=no
+  when: es_use_repository != "true"
+
+- name: Debian - Ensure elasticsearch is installed from downloaded package.
+  apt: deb=/tmp/elasticsearch-{{ es_version }}.deb
+  when: es_use_repository != "true"
   register: elasticsearch_install
 
 - name: Debian - configure memory
