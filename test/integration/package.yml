@@ -1,0 +1,6 @@
+---
+- name: Elasticsearch Package tests
+  hosts: localhost
+  roles:
+    - elasticsearch
+  vars:

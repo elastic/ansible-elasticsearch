@@ -4,6 +4,7 @@
   roles:
     - elasticsearch
   vars:
+    es_use_repository: "true"
     es_plugins:
       - plugin: lmenezes/elasticsearch-kopf
         version: master
