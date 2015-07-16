@@ -55,6 +55,14 @@ verifier:
   ruby_bindir: '/usr/bin'
 
 suites:
-  - name: default
+  - name: standard
+    provisioner:
+      playbook: test/integration/standard.yml
     run_list:
     attributes:
+  - name: package
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/package.yml
+
