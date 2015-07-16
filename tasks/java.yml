@@ -1,5 +1,5 @@
 ---
-- name: Java - Define java_packages.
+- name: Java - Define java_packages
   set_fact:
     java_packages: "{{ __java_packages | list }}"
   when: java_packages is not defined  

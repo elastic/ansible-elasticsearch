@@ -1,5 +1,5 @@
 ---
-- name: Include OS-specific variables.
+- name: Include OS-specific variables
   include_vars: "{{ ansible_os_family }}.yml"
 - include: java.yml
 - include: elasticsearch.yml
