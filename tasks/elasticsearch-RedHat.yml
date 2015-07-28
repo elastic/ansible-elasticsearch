@@ -2,10 +2,19 @@
 - name: Ensure libselinux-python on CentOS 6.x
   yum: name=libselinux-python state=present update_cache=yes
   when: ( ansible_distribution == "CentOS" ) and ( ansible_distribution_major_version == "6" )
+
 - name: RedHat - add Elasticsearch repo
   template: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch-{{ es_major_version }}.repo
+  when: es_use_repository
+
 - name: RedHat - Install Elasticsearch
   yum: name=elasticsearch{% if es_version is defined and es_version != ""  %}-{{ es_version }}{% endif %} state=present update_cache=yes
+  when: es_use_repository
+  register: elasticsearch_install
+
+- name: RedHat - Install Elasticsearch from url
+  yum: name={{ es_package_url }}-{{ es_version }}.noarch.rpm state=present
+  when: not es_use_repository
   register: elasticsearch_install
 
 - name: RedHat - configure memory

@@ -1,5 +1,5 @@
 ---
 # Debian specific Java
 - name: Debian - Ensure Java is installed
-  apt: name={{ item }} state=present cache_valid_time=86400
+  apt: name={{ item }} state=present update_cache=yes
   with_items: java_packages
