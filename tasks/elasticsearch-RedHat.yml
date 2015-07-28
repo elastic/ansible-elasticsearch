@@ -13,7 +13,7 @@
   register: elasticsearch_install
 
 - name: RedHat - Install Elasticsearch from url
-  yum: name={{ __es_package_url.default }}-{{ es_version }}.noarch.rpm state=present
+  yum: name={{ es_package_url }}-{{ es_version }}.noarch.rpm state=present
   when: not es_use_repository
   register: elasticsearch_install
 
