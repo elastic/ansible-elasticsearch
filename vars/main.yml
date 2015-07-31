@@ -1,2 +1,4 @@
 ---
+java_debian: "openjdk-7-jre-headless"
+java_rhel: "java-1.8.0-openjdk.x86_64"
 es_package_url: "https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch"

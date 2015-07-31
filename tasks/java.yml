@@ -1,15 +1,8 @@
 ---
-- name: Java - Define java_packages
-  set_fact:
-    java_packages: "{{ __java_packages | list }}"
-  when: java_packages is not defined  
-
-- name: Include Debian specific Java stuff
-  include: java-Debian.yml
-  when: ansible_os_family == 'Debian'
-
-- name: Include RedHat specific Java stuff
-  include: java-RedHat.yml
+- name: RedHat - Ensure Java is installed
+  yum: name={{ java_rhel }} state=latest
   when: ansible_os_family == 'RedHat'
-
-
+  
+- name: Debian - Ensure Java is installed
+  apt: name={{ java_debian }} state=present update_cache=yes
+  when: ansible_os_family == 'Debian'
