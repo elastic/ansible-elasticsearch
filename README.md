@@ -40,8 +40,8 @@ hosts: my_host
   vars:
     java_packages:
       - "oracle-java7-installer"
-    es_major_version: 1.4
-    es_version: 1.4.4
+    es_major_version: 1.7
+    es_version: 1.7.0
     es_start_service: false
     es_plugins_reinstall: false
     es_plugins:
@@ -72,19 +72,49 @@ ansible-playbook -i hosts ./your-playbook.yml
 ## Configuration
 You can add the role without any customisation and it will by default install Java and Elasticsearch, without any plugins.
 
-Following variables affect the versions installed:
+#### Description of the variables available.
 
-* ```es_major_version``` (e.g. "1.5" )
-* ```es_version``` (e.g. "1.5.2")
-* ```es_start_service``` (true (default) or false)
-* ```es_plugins_reinstall``` (true or false (default) )
-* ```es_plugins``` (an array of plugin definitons e.g.:
+```es_major_version``` (e.g. `1.7` )
+
+Which major version to use. This is also used to define which the repository is used.
+
+```es_version``` (e.g. `1.7.0`)
+
+Which minor version to use.
+
+```es_start_service``` (true (default) or false)
+
+Should elasticsearch be startet after installation?
+
+```es_use_repository``` (true (default) or false )
+
+Should elasticsearch be installed from a repository or from a url download. If false package will be downloaded from https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch.... You can also specify `es_custom_package_url` with a url to a custom package.
+
+```es_version_lock``` (true or false (default))
+
+This will lock the elasticsearch version using `yum versionlock` or `apt-mark hold`.
+
+```es_scripts``` (true or false (default))
+
+If true you need to supply a files/scripts/ folder with your scripts, inside the role directory. The folder and all files will be copied to `/etc/elasticsearch/scripts`. You can also provide a scripts/ folder at toplevel of your playbook.
+
+
+```es_plugins_reinstall``` (true or false (default) )
+
+Schould plugins be reinstalled?
+
+```es_plugins``` (an array of plugin definitons e.g.:)
 
 ```
-    es_plugins:
-      - plugin: elasticsearch-cloud-aws
-        version: 2.5.0
- ```
+  es_plugins:
+  - plugin: elasticsearch-cloud-aws
+    version: 2.5.0
+```
 
-* ```java_repos``` (an array of repositories to be added to allow java to be installed)
-* ```java_packages``` (an array of packages to be installed to get Java installed)
+```java_debian```
+
+name of the java debian package to use (e.g. `openjdk-7-jre-headless`) 
+
+```java_rhel```
+
+name of the java rhel package to use (e.g. `java-1.8.0-openjdk.x86_64`)
