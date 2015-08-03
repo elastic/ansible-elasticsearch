@@ -5,3 +5,6 @@
   when: es_plugins is defined
 - include: elasticsearch-version-lock.yml
   when: es_version_lock
+- include: elasticsearch-scripts.yml
+  when: es_scripts
+
