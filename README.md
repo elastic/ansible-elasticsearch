@@ -111,10 +111,10 @@ Schould plugins be reinstalled?
     version: 2.5.0
 ```
 
-```java_debian```
+`java_debian`
 
 name of the java debian package to use (e.g. `openjdk-7-jre-headless`) 
 
-```java_rhel```
+`java_rhel`
 
 name of the java rhel package to use (e.g. `java-1.8.0-openjdk.x86_64`)
