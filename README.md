@@ -84,7 +84,7 @@ Which minor version to use.
 
 ```es_start_service``` (true (default) or false)
 
-Should elasticsearch be startet after installation?
+Should elasticsearch be started after installation?
 
 ```es_use_repository``` (true (default) or false )
 
