@@ -38,7 +38,7 @@ hosts: my_host
   roles:
     - elasticsearch
   vars:
-    java_packages:
+    java_debian:
       - "openjdk-7-jre-headless"
     es_major_version: 1.7
     es_version: 1.7.0
