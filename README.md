@@ -38,8 +38,8 @@ hosts: my_host
   roles:
     - elasticsearch
   vars:
-    java_packages:
-      - "oracle-java7-installer"
+    java_debian:
+      - "openjdk-7-jre-headless"
     es_major_version: 1.7
     es_version: 1.7.0
     es_start_service: false
@@ -84,7 +84,7 @@ Which minor version to use.
 
 ```es_start_service``` (true (default) or false)
 
-Should elasticsearch be startet after installation?
+Should elasticsearch be started after installation?
 
 ```es_use_repository``` (true (default) or false )
 
@@ -111,10 +111,10 @@ Schould plugins be reinstalled?
     version: 2.5.0
 ```
 
-```java_debian```
+`java_debian`
 
 name of the java debian package to use (e.g. `openjdk-7-jre-headless`) 
 
-```java_rhel```
+`java_rhel`
 
 name of the java rhel package to use (e.g. `java-1.8.0-openjdk.x86_64`)
