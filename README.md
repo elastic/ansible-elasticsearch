@@ -39,7 +39,7 @@ hosts: my_host
     - elasticsearch
   vars:
     java_packages:
-      - "oracle-java7-installer"
+      - "openjdk-7-jre-headless"
     es_major_version: 1.7
     es_version: 1.7.0
     es_start_service: false
