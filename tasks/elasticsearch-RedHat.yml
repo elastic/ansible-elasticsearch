@@ -7,7 +7,7 @@
   template: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch-{{ es_major_version }}.repo
   when: es_use_repository
 
-- name: Include RHEL versionlock
+- name: RedHat - include versionlock
   include: elasticsearch-RedHat-version-lock.yml
   when: es_version_lock
 
