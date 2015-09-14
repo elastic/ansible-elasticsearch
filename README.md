@@ -118,3 +118,29 @@ name of the java debian package to use (e.g. `openjdk-7-jre-headless`)
 `java_rhel`
 
 name of the java rhel package to use (e.g. `java-1.8.0-openjdk.x86_64`)
+
+## apt pinning
+apt pinning is possible using an external role like https://github.com/debops/ansible-apt_preferences.
+
+To use this, add it as another role e.g.
+```
+cd /my/repos/
+git clone git@github.com:debops/ansible-apt_preferences.git
+cd /my/ansible/playbook
+mkdir -p roles
+ln -s /my/repos/ansible-apt_preferences ./roles/apt_preferences
+```
+
+then add something like this to your playook:
+```
+  roles:
+          - apt_preferences
+          - elasticsearch
+  vars:
+    ...
+    apt_preferences_list:
+     - package: elasticsearch
+       version: 1.7.0
+    ...
+
+```
