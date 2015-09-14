@@ -2,6 +2,9 @@
 - name: Copy templates to elasticsearch
   copy: src=templates dest=/etc/elasticsearch/
 
+- name: Wait for elasticsearch to startup
+  wait_for: port=9200 delay=10
+
 - name: Get template files 
   shell: find . -maxdepth 1 -type f | sed "s#\./##" | sed "s/.json//" chdir=/etc/elasticsearch/templates
   register: resultstemplate
