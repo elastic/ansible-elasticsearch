@@ -92,7 +92,7 @@ Should elasticsearch be installed from a repository or from a url download. If f
 
 ```es_version_lock``` (true or false (default))
 
-This will lock the elasticsearch version using `yum versionlock` or `apt-mark hold`.
+This will lock the elasticsearch version using `yum versionlock`. Only available on RHEL/CentOS. For Debian/Ubuntu see `apt pinning` below.
 
 ```es_scripts``` (true or false (default))
 
