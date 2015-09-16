@@ -16,7 +16,7 @@ platforms:
       privileged: true
       provision_command:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
-        - apt-get update && apt-get -y -q install ansible python-apt python-pycurl ruby
+        - apt-get update && apt-get -y -q install ansible python-apt python-pycurl
       use_sudo: false
   - name: debian-7
     driver_config:
@@ -25,17 +25,17 @@ platforms:
       provision_command:
         - echo 'deb http://http.debian.net/debian/ wheezy-backports main' >> /etc/apt/sources.list
         - apt-get update
-        - apt-get install -y -q ansible ruby
+        - apt-get install -y -q ansible
       use_sudo: false
   - name: debian-8
     driver_config:
       image: electrical/debian:8
       privileged: true
-      provision_command: apt-get -y -q install ansible ruby
+      provision_command: apt-get -y -q install ansible
       use_sudo: false
   - name: centos-6
     driver_config:
-      image: electrical/centos:6.4
+      image: electrical/centos:6.4-1
       privileged: true
       use_sudo: false
   - name: centos-7
@@ -44,15 +44,14 @@ platforms:
       provision_command:
         - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
-        - yum -y install initscripts ruby
-        - BUSSER_ROOT="/tmp/verifier" GEM_HOME="/tmp/verifier/gems" GEM_PATH="/tmp/verifier/gems" GEM_CACHE="/tmp/verifier/gems/cache" gem install --no-rdoc --no-ri rake
-        - chown kitchen:kitchen /tmp/verifier -R
+        - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
+        - yum -y install initscripts
+        #        - BUSSER_ROOT="/tmp/verifier" GEM_HOME="/tmp/verifier/gems" GEM_PATH="/tmp/verifier/gems" GEM_CACHE="/tmp/verifier/gems/cache" gem install --no-rdoc --no-ri rake
+        #        - chown kitchen:kitchen /tmp/verifier -R
         - yum clean all
+      run_command: "/usr/sbin/init"
       privileged: true
       use_sudo: false
-
-verifier:
-  ruby_bindir: '/usr/bin'
 
 suites:
   - name: standard
