@@ -18,9 +18,14 @@ context "basic tests" do
     it { should be_file }
   end
 
-  describe command('curl localhost:9200/_nodes/?plugin | grep kopf') do
-    its(:stdout) { should match /kopf/ }
-    its(:exit_status) { should eq 0 }
+  describe 'plugin' do
+
+    it 'should be reported as existing', :retry => 3, :retry_wait => 10 do
+      command = command('curl localhost:9200/_nodes/?plugin | grep kopf')
+      expect(command.stdout).to match(/kopf/)
+      expect(command.exit_status).to eq(0)
+    end
+
   end
 
 end
