@@ -2,5 +2,5 @@
 - name: RedHat - install yum-version-lock
   yum: name=yum-plugin-versionlock state=present update_cache=yes
 - name: RedHat - lock elasticsearch version
-  command: yum versionlock add elasticsearch
+  shell: yum versionlock delete 0:elasticsearch* ; yum versionlock add elasticsearch{% if es_version is defined and es_version != "" %}-{{ es_version }}{% endif %}
 

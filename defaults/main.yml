@@ -1,10 +1,11 @@
 ---
 es_major_version: "1.7"
-es_version: "1.7.0"
+es_version: "1.7.1"
 es_version_lock: false
 es_use_repository: true
 es_start_service: true
 es_plugins_reinstall: false
 es_scripts: false
+es_templates: false
 es_user: elasticsearch
 es_group: elasticsearch
