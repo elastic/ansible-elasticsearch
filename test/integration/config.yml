@@ -1,0 +1,12 @@
+---
+#Test explicit setting of parameters and variables
+- name: Elasticsearch Package tests
+  hosts: localhost
+  roles:
+    #expand to all available parameters
+    - { role: elasticsearch, es_unicast_hosts: "localhost:9301", es_http_port: "9201", es_transport_tcp_port: "9301", es_data_node: false, es_master_node: true, es_m_lock_enabled: true, es_multicast_enabled: false, es_node_name_prefix: "node1_", es_cluster_name: "custom-cluster" }
+  vars:
+    es_scripts: false
+    es_templates: false
+    es_version_lock: false
+    es_m_lock_enabled: true

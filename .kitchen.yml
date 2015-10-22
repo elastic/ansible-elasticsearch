@@ -64,4 +64,14 @@ suites:
     attributes:
     provisioner:
       playbook: test/integration/package.yml
+  - name: config
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/config.yml
+  - name: multi
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/multi.yml
 

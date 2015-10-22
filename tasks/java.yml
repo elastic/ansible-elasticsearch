@@ -1,8 +1,8 @@
 ---
 - name: RedHat - Ensure Java is installed
-  yum: name={{ java_rhel }} state=latest
+  yum: name={{ java }} state=latest
   when: ansible_os_family == 'RedHat'
   
 - name: Debian - Ensure Java is installed
-  apt: name={{ java_debian }} state=present update_cache=yes
+  apt: name={{ java }} state=present update_cache=yes force=yes
   when: ansible_os_family == 'Debian'

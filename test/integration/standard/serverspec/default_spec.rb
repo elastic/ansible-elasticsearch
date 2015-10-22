@@ -14,7 +14,7 @@ context "basic tests" do
     it { should be_installed }
   end
 
-  describe file('/etc/elasticsearch/elasticsearch.yml') do
+  describe file('/etc/elasticsearch/elasticsearch/elasticsearch.yml') do
     it { should be_file }
   end
 

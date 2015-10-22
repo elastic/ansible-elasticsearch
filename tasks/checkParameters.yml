@@ -1,0 +1,10 @@
+# Check for mandatory parameters
+
+- fail: msg="Parameter 'es_http_port' must be defined when multicast is disabled"
+  when: es_multicast_enabled == false and es_http_port is not defined
+
+- fail: msg="Parameter 'es_transport_tcp_port' must be defined when multicast is disabled"
+  when: es_multicast_enabled == false and es_transport_tcp_port is not defined
+
+- fail: msg="Parameter 'es_unicast_hosts' must be defined when multicast is disabled"
+  when: es_multicast_enabled == false and es_unicast_hosts is not defined

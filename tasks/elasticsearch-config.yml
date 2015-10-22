@@ -1,0 +1,117 @@
+---
+
+# Configure Elasticsearch Node
+
+# Create an instance specific default file
+- name: Copy Default File for Instance
+  command: creates={{instance_default_file}} cp "{{default_file}}"  "{{instance_default_file}}"
+  when: instance_default_file != default_file
+
+- debug: msg="DEBUG {{ hostvars[inventory_hostname] }}"
+
+# Create an instance specific init file
+- name: Copy Init File for Instance
+  command: creates={{instance_init_script}} cp "{{init_script}}" "{{instance_init_script}}"
+  when: instance_init_script != init_script
+
+
+#Create Config directory
+- name: Create Config Directory
+  file: path={{ instance_config_directory }} state=directory owner={{ es_user }} group={{ es_group }}
+
+#Copy the config template
+- name: Copy configuration file
+  template: src=elasticsearch.yml.j2 dest={{instance_config_directory}}/elasticsearch.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+
+# Apply changes to the default file for this instance
+- name: Configure config directory
+  lineinfile: dest={{instance_default_file}} regexp="^CONF_DIR" insertafter="^#CONF_DIR" line="CONF_DIR={{ instance_config_directory }}"
+  register: elasticsearch_configure
+
+- name: Configure config file
+  lineinfile: dest={{instance_default_file}} regexp="^CONF_FILE" insertafter="^#CONF_FILE" line="CONF_FILE={{ instance_config_directory }}/elasticsearch.yml"
+  register: elasticsearch_configure
+
+- name: Configure memory in defaults
+  lineinfile: dest={{instance_default_file}} regexp="^ES_HEAP_SIZE" insertafter="^#ES_HEAP_SIZE" line="ES_HEAP_SIZE={{ es_heap_size }}"
+  when: es_heap_size is defined
+  register: elasticsearch_configure
+
+#We only have to set these if they are specified. The start scripts will by default use the NAME set later on constructing directory names to avoid collisions.
+
+- name: Configure max open files
+  lineinfile: dest={{instance_default_file}} regexp="^MAX_OPEN_FILES" insertafter="^#MAX_OPEN_FILES" line="MAX_OPEN_FILES={{ es_max_open_files }}"
+  when: es_max_open_files is defined
+  register: elasticsearch_configure
+
+#For directories we also use the {{ es_node_name_prefix }}{{inventory_hostname}} - this helps if we have a shared SAN.  {{es_node_name_prefix}}{{default_file | basename} could potentially be used -
+#init script effectively means this is the default.
+
+#Create PID directory
+- name: Create PID Directory
+  file: path={{pid_dir}}/{{ es_node_name_prefix }}{{inventory_hostname}} state=directory owner={{ es_user }} group={{ es_group }}
+
+- name: Configure PID directory
+  lineinfile: dest={{instance_default_file}} regexp="^PID_DIR" insertafter="^#PID_DIR" line="PID_DIR={{pid_dir}}/{{ es_node_name_prefix }}{{inventory_hostname}}"
+  register: elasticsearch_configure
+
+- set_fact: es_data_dir={{default_data_dir}}
+  when: es_data_dir is undefined
+
+#include the host name as potentially shared SAN
+- name: Create data dir
+  file: state=directory path={{ es_data_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}} owner={{ es_user }} group={{ es_group }}
+
+- name: Configure data store
+  lineinfile: dest={{instance_default_file}} regexp="^DATA_DIR" insertafter="^#DATA_DIR" line="DATA_DIR={{ es_data_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}}"
+  register: elasticsearch_configure
+
+- set_fact: es_work_dir={{default_work_dir}}
+  when: es_work_dir is undefined
+
+- name: Create work dir
+  file: state=directory path={{ es_work_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}} owner={{ es_user }} group={{ es_group }}
+
+- name: Configure work directory
+  lineinfile: dest={{instance_default_file}} regexp="^WORK_DIR" insertafter="^#WORK_DIR" line="WORK_DIR={{ es_work_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}}"
+  register: elasticsearch_configure
+
+- set_fact: es_log_dir={{default_log_dir}}
+  when: es_log_dir is undefined
+
+- name: Create log dir
+  file: state=directory path={{ es_log_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}} owner={{ es_user }} group={{ es_group }}
+
+- name: Configure log directory
+  lineinfile: dest={{instance_default_file}} regexp="^LOG_DIR" insertafter="^#LOG_DIR" line="LOG_DIR={{ es_log_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}}"
+  register: elasticsearch_configure
+
+#required so that the ES_HOME does not change between instances
+
+- name: Configure elasticsearch home
+  lineinfile: dest={{instance_default_file}} regexp="^ES_HOME" insertafter="^#ES_HOME" line="ES_HOME={{es_home}}"
+  register: elasticsearch_configure
+
+- name: Configure elasticsearch user
+  lineinfile: dest={{instance_default_file}} regexp="^ES_USER" insertafter="^#ES_USER" line="ES_USER={{ es_user }}"
+  when: es_user is defined
+  register: elasticsearch_configure
+
+- name: Configure elasticsearch group
+  lineinfile: dest={{instance_default_file}} regexp="^ES_GROUP" insertafter="^#ES_GROUP" line="ES_GROUP={{ es_group }}"
+  when: es_group is defined
+  register: elasticsearch_configure
+
+#Apply changes to init script - NAME can be changed in Debian start script
+- name: Name Node in Init Script
+  lineinfile: dest={{instance_init_script}} regexp="^NAME" line="NAME={{es_node_name_prefix}}{{default_file | basename}}"
+  register: elasticsearch_configure
+  when: ansible_os_family == 'Debian'
+
+- debug: msg="For {{ instance_init_script }} using default {{ instance_default_file }}"
+
+- name: Environment in Init Script
+  lineinfile: dest={{instance_init_script}} regexp="^ES_ENV_FILE" line="ES_ENV_FILE={{instance_default_file}}"
+  register: elasticsearch_configure
+  when: ansible_os_family == 'RedHat'
+

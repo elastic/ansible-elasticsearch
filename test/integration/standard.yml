@@ -2,7 +2,7 @@
 - name: wrapper playbook for kitchen testing "elasticsearch"
   hosts: localhost
   roles:
-    - elasticsearch
+    - { role: elasticsearch, es_multicast_enabled: true}
   vars:
     es_use_repository: "true"
     es_plugins:

@@ -1,4 +1,8 @@
 ---
+- name: check-parameters
+  include: checkParameters.yml
+- name: os-specific vars
+  include_vars: "{{ansible_os_family}}.yml"
 - include: java.yml
 - include: elasticsearch.yml
 - include: elasticsearch-plugins.yml

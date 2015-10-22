@@ -1,5 +1,6 @@
 ---
-dependencies: []
+
+allow_duplicates: yes
 
 galaxy_info:
   author: Robin Clarke

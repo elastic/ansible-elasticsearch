@@ -1,0 +1,11 @@
+---
+java: "openjdk-7-jre-headless"
+default_file: "/etc/default/elasticsearch"
+init_script: "/etc/init.d/elasticsearch"
+es_conf_dir: "/etc/elasticsearch"
+es_home: "/usr/share/elasticsearch"
+
+default_data_dir: "/var/lib/elasticsearch"
+default_log_dir: "/var/log/elasticsearch"
+default_work_dir: "/tmp/elasticsearch"
+default_pid_dir: "/var/run/elasticsearch"

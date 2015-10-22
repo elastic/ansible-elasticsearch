@@ -1,21 +1,31 @@
 ---
-# Trigger Debian section
-- name: Include Debian specific Elasticsearch
+- set_fact: instance_default_file={{default_file | dirname}}/{{es_node_name_prefix}}{{default_file | basename}}
+- set_fact: instance_init_script={{init_script | dirname }}/{{es_node_name_prefix}}{{init_script | basename}}
+- set_fact: instance_config_directory={{ es_conf_dir }}/{{es_node_name_prefix}}elasticsearch
+
+
+
+# Install OS specific elasticsearch - this can be abbreviated in version 2.0.0
+- name: Include specific Elasticsearch
   include: elasticsearch-Debian.yml
   when: ansible_os_family == 'Debian'
 
-# Trigger Redhat section
-- name: Include RedHat specific Elasticsearch
+- name: Include specific Elasticsearch
   include: elasticsearch-RedHat.yml
   when: ansible_os_family == 'RedHat'
 
+#Configuration file for elasticsearch
+- name: Elasticsearch configuration
+  include: elasticsearch-config.yml
+
 # Make sure the service is started, and restart if necessary
 - name: Start elasticsearch service
-  service: name=elasticsearch state=started
+  service: name={{instance_init_script | basename}} state=started
   when: es_start_service
   register: elasticsearch_started
+
 - name: Restart elasticsearch service if new version installed
-  service: name=elasticsearch state=restarted
+  service: name={{instance_init_script | basename}} state=restarted
   when: es_start_service and 
     ( elasticsearch_install.changed or elasticsearch_configure.changed )
     and not elasticsearch_started.changed
