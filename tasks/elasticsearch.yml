@@ -1,7 +1,8 @@
 ---
-- set_fact: instance_default_file={{default_file | dirname}}/{{es_node_name_prefix}}{{default_file | basename}}
-- set_fact: instance_init_script={{init_script | dirname }}/{{es_node_name_prefix}}{{init_script | basename}}
-- set_fact: instance_config_directory={{ es_conf_dir }}/{{es_node_name_prefix}}elasticsearch
+- debug: msg="Node configuration {{ es_config }} "
+- set_fact: instance_default_file={{default_file | dirname}}/{{es_config["node_name_prefix"]}}{{default_file | basename}}
+- set_fact: instance_init_script={{init_script | dirname }}/{{es_config['node_name_prefix']}}{{init_script | basename}}
+- set_fact: instance_config_directory={{ es_conf_dir }}/{{es_config['node_name_prefix']}}elasticsearch
 
 
 

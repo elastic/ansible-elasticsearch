@@ -4,9 +4,9 @@
   hosts: localhost
   roles:
     #expand to all available parameters
-    - { role: elasticsearch, es_unicast_hosts: "localhost:9301", es_http_port: "9201", es_transport_tcp_port: "9301", es_data_node: false, es_master_node: true, es_m_lock_enabled: true, es_multicast_enabled: false, es_node_name_prefix: "node1_", es_cluster_name: "custom-cluster" }
+    - { role: elasticsearch, es_config: { node_name_prefix: "node1_", cluster_name: "custom-cluster", unicast_hosts: "localhost:9301", http_port: "9201", transport_tcp_port: "9301", data_node: false, master_node: true, m_lock_enabled: true, multicast_enabled: false } }
   vars:
     es_scripts: false
     es_templates: false
     es_version_lock: false
-    es_m_lock_enabled: true
+    es_config: { "m_lock_enabled": true }

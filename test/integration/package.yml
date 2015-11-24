@@ -2,5 +2,5 @@
 - name: Elasticsearch Package tests
   hosts: localhost
   roles:
-    - { role: elasticsearch, es_multicast_enabled: true}
+    - { role: elasticsearch, es_config: { "multicast_enabled": true } }
   vars:

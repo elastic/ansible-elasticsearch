@@ -44,15 +44,15 @@
   when: es_max_open_files is defined
   register: elasticsearch_configure
 
-#For directories we also use the {{ es_node_name_prefix }}{{inventory_hostname}} - this helps if we have a shared SAN.  {{es_node_name_prefix}}{{default_file | basename} could potentially be used -
+#For directories we also use the {{ es_config['node_name_prefix'] }}{{inventory_hostname}} - this helps if we have a shared SAN.  {{es_config['node_name_prefix']}}{{default_file | basename} could potentially be used -
 #init script effectively means this is the default.
 
 #Create PID directory
 - name: Create PID Directory
-  file: path={{pid_dir}}/{{ es_node_name_prefix }}{{inventory_hostname}} state=directory owner={{ es_user }} group={{ es_group }}
+  file: path={{pid_dir}}/{{ es_config['node_name_prefix'] }}{{inventory_hostname}} state=directory owner={{ es_user }} group={{ es_group }}
 
 - name: Configure PID directory
-  lineinfile: dest={{instance_default_file}} regexp="^PID_DIR" insertafter="^#PID_DIR" line="PID_DIR={{pid_dir}}/{{ es_node_name_prefix }}{{inventory_hostname}}"
+  lineinfile: dest={{instance_default_file}} regexp="^PID_DIR" insertafter="^#PID_DIR" line="PID_DIR={{pid_dir}}/{{ es_config['node_name_prefix'] }}{{inventory_hostname}}"
   register: elasticsearch_configure
 
 - set_fact: es_data_dir={{default_data_dir}}
@@ -60,30 +60,30 @@
 
 #include the host name as potentially shared SAN
 - name: Create data dir
-  file: state=directory path={{ es_data_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}} owner={{ es_user }} group={{ es_group }}
+  file: state=directory path={{ es_data_dir }}/{{ es_config['node_name_prefix'] }}{{inventory_hostname}} owner={{ es_user }} group={{ es_group }}
 
 - name: Configure data store
-  lineinfile: dest={{instance_default_file}} regexp="^DATA_DIR" insertafter="^#DATA_DIR" line="DATA_DIR={{ es_data_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}}"
+  lineinfile: dest={{instance_default_file}} regexp="^DATA_DIR" insertafter="^#DATA_DIR" line="DATA_DIR={{ es_data_dir }}/{{ es_config['node_name_prefix'] }}{{inventory_hostname}}"
   register: elasticsearch_configure
 
 - set_fact: es_work_dir={{default_work_dir}}
   when: es_work_dir is undefined
 
 - name: Create work dir
-  file: state=directory path={{ es_work_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}} owner={{ es_user }} group={{ es_group }}
+  file: state=directory path={{ es_work_dir }}/{{ es_config['node_name_prefix'] }}{{inventory_hostname}} owner={{ es_user }} group={{ es_group }}
 
 - name: Configure work directory
-  lineinfile: dest={{instance_default_file}} regexp="^WORK_DIR" insertafter="^#WORK_DIR" line="WORK_DIR={{ es_work_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}}"
+  lineinfile: dest={{instance_default_file}} regexp="^WORK_DIR" insertafter="^#WORK_DIR" line="WORK_DIR={{ es_work_dir }}/{{ es_config['node_name_prefix'] }}{{inventory_hostname}}"
   register: elasticsearch_configure
 
 - set_fact: es_log_dir={{default_log_dir}}
   when: es_log_dir is undefined
 
 - name: Create log dir
-  file: state=directory path={{ es_log_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}} owner={{ es_user }} group={{ es_group }}
+  file: state=directory path={{ es_log_dir }}/{{ es_config['node_name_prefix'] }}{{inventory_hostname}} owner={{ es_user }} group={{ es_group }}
 
 - name: Configure log directory
-  lineinfile: dest={{instance_default_file}} regexp="^LOG_DIR" insertafter="^#LOG_DIR" line="LOG_DIR={{ es_log_dir }}/{{ es_node_name_prefix }}{{inventory_hostname}}"
+  lineinfile: dest={{instance_default_file}} regexp="^LOG_DIR" insertafter="^#LOG_DIR" line="LOG_DIR={{ es_log_dir }}/{{ es_config['node_name_prefix'] }}{{inventory_hostname}}"
   register: elasticsearch_configure
 
 #required so that the ES_HOME does not change between instances
@@ -104,7 +104,7 @@
 
 #Apply changes to init script - NAME can be changed in Debian start script
 - name: Name Node in Init Script
-  lineinfile: dest={{instance_init_script}} regexp="^NAME" line="NAME={{es_node_name_prefix}}{{default_file | basename}}"
+  lineinfile: dest={{instance_init_script}} regexp="^NAME" line="NAME={{es_config['node_name_prefix']}}{{default_file | basename}}"
   register: elasticsearch_configure
   when: ansible_os_family == 'Debian'
 

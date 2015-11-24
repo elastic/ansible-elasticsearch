@@ -3,6 +3,6 @@
 - name: Elasticsearch Config tests
   hosts: localhost
   roles:
-    - { role: elasticsearch, es_node_name_prefix: "node1_", es_unicast_hosts: "localhost:9300", es_http_port: "9201", es_transport_tcp_port: "9301", es_data_node: true, es_master_node: false, es_m_lock_enabled: true, es_multicast_enabled: false }
-    - { role: elasticsearch, es_node_name_prefix: "master_", es_unicast_hosts: "localhost:9300", es_http_port: "9200", es_transport_tcp_port: "9300", es_data_node: false, es_master_node: true, es_m_lock_enabled: true, es_multicast_enabled: false }
+    - { role: elasticsearch, es_config: { "multicast_enabled": false, node_name_prefix: "master_", unicast_hosts: "localhost:9300", http_port: "9200", transport_tcp_port: "9300", data_node: false, master_node: true, m_lock_enabled: true,multicast_enabled: false } }
+    - { role: elasticsearch, es_config: { "multicast_enabled": false, node_name_prefix: "node1_", unicast_hosts: "localhost:9300", http_port: "9201", transport_tcp_port: "9301", data_node: true, master_node: false, m_lock_enabled: true,multicast_enabled: false } }
   vars:

@@ -18,6 +18,7 @@ platforms:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
         - apt-get update && apt-get -y -q install ansible python-apt python-pycurl
       use_sudo: false
+      #run_command: "-e ENV ANSIBLE_HASH_BEHAVIOUR=merge"
   - name: debian-7
     driver_config:
       image: electrical/debian:7.3
@@ -26,12 +27,16 @@ platforms:
         - echo 'deb http://http.debian.net/debian/ wheezy-backports main' >> /etc/apt/sources.list
         - apt-get update
         - apt-get install -y -q ansible
+        - apt-get install -y -q net-tools
       use_sudo: false
   - name: debian-8
     driver_config:
       image: electrical/debian:8
       privileged: true
-      provision_command: apt-get -y -q install ansible
+      provision_command:
+        - apt-get update
+        - apt-get install -y -q ansible
+        - apt-get install -y -q net-tools
       use_sudo: false
   - name: centos-6
     driver_config:

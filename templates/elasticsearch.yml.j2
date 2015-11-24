@@ -29,29 +29,29 @@
 # Cluster name identifies your cluster for auto-discovery. If you're running
 # multiple clusters on the same network, make sure you're using unique names.
 #
-cluster.name: {{ es_cluster_name }}
+cluster.name: {{ es_config['cluster_name'] }}
 
 #################################### Node #####################################
 
 # Node names are generated dynamically on startup, so you're relieved
 # from configuring them manually. You can tie this node to a specific name:
 #
-node.name: {{es_node_name_prefix}}{{inventory_hostname}}
+node.name: {{ es_config['node_name_prefix'] }}{{inventory_hostname}}
 
 # Every node can be configured to allow or deny being eligible as the master,
 # and to allow or deny to store the data.
 #
 # Allow this node to be eligible as a master node (enabled by default):
 #
-{% if es_master_node is defined %}
-node.master: {{es_master_node | lower}}
+{% if es_config['master_node'] is defined %}
+node.master: {{ es_config['master_node'] | lower}}
 {% endif %}
 
 #
 # Allow this node to store data (enabled by default):
 #
-{% if es_data_node is defined %}
-node.data: {{es_data_node | lower}}
+{% if es_config['data_node'] is defined %}
+node.data: {{ es_config['data_node'] | lower}}
 {% endif %}
 
 # Use the Cluster Health API [http://localhost:9200/_cluster/health], the
@@ -65,8 +65,8 @@ node.data: {{es_data_node | lower}}
 # for customized shard allocation filtering, or allocation awareness. An attribute
 # is a simple key value pair, similar to node.key: value, here is an example:
 #
-{% if es_node_rack is defined %}
-node.rack: {{ es_node_rack }}
+{% if es_config['node_rack'] is defined %}
+node.rack: {{ es_config['node_rack'] }}
 {% endif %}
 
 # By default, multiple nodes are allowed to start from the same installation location
@@ -89,13 +89,13 @@ node.rack: {{ es_node_rack }}
 
 # Set the number of shards (splits) of an index (5 by default) if provided:
 
-{% if es_index_number_of_shards is defined %}
-index.number_of_shards: {{ es_index_number_of_shards }}
+{% if es_config['index_number_of_shards'] is defined %}
+index.number_of_shards: {{ es_config['index_number_of_shards'] }}
 {% endif %}
 
 # Set the number of replicas (additional copies) of an index (1 by default) if provided:
-{% if es_index_number_of_replicas is defined %}
-index.number_of_replicas: {{ es_index_number_of_replicas }}
+{% if es_config['index_number_of_replicas'] is defined %}
+index.number_of_replicas: {{ es_config['index_number_of_replicas'] }}
 {% endif %}
 
 
@@ -124,10 +124,7 @@ index.number_of_replicas: {{ es_index_number_of_replicas }}
 #################################### Paths ####################################
 
 # Path to directory containing configuration (this file and logging.yml):
-#
-{% if es_conf_dir is defined %}
-path.conf: {{ es_conf_dir }}
-{% endif %}
+path.conf: {{ instance_config_directory }}
 
 
 # Path to directory where to store index data allocated for this node.
@@ -169,8 +166,8 @@ path.logs: {{ es_log_dir }}
 #
 # Set this property to true to lock the memory:
 #
-{% if es_m_lock_enabled is defined %}
-bootstrap.mlockall: {{es_m_lock_enabled | lower}}
+{% if es_config['m_lock_enabled'] is defined %}
+bootstrap.mlockall: {{ es_config['m_lock_enabled'] | lower}}
 {% endif %}
 
 
@@ -200,15 +197,15 @@ bootstrap.mlockall: {{es_m_lock_enabled | lower}}
 
 # Set both 'bind_host' and 'publish_host':
 #
-{% if es_network_host is defined %}
-network.host: {{ es_network_host }}
+{% if es_config['network_host'] is defined %}
+network.host: {{ es_config['network_host'] }}
 {% endif %}
 
 
 # Set a custom port for the node to node communication (9300 by default):
 #
-{% if es_transport_tcp_port is defined %}
-transport.tcp.port: {{ es_transport_tcp_port }}
+{% if es_config['transport_tcp_port'] is defined %}
+transport.tcp.port: {{ es_config['transport_tcp_port'] }}
 {% endif %}
 
 # Enable compression for all communication between nodes (disabled by default):
@@ -217,8 +214,8 @@ transport.tcp.port: {{ es_transport_tcp_port }}
 
 # Set a custom port to listen for HTTP traffic (9200 by default):
 #
-{% if es_http_port is defined %}
-http.port: {{ es_http_port }}
+{% if es_config['http_port'] is defined %}
+http.port: {{ es_config['http_port'] }}
 {% endif %}
 
 # Set a custom allowed content length:
@@ -316,7 +313,7 @@ http.port: {{ es_http_port }}
 #
 # 1. Disable multicast discovery (enabled by default):
 #
-discovery.zen.ping.multicast.enabled: {{es_multicast_enabled | lower }}
+discovery.zen.ping.multicast.enabled: {{ es_config['multicast_enabled'] | lower }}
 
 #
 # 2. Configure an initial list of master nodes in the cluster
@@ -325,8 +322,8 @@ discovery.zen.ping.multicast.enabled: {{es_multicast_enabled | lower }}
 
 #We put all the current eligible masters in here.  If not specified, we assumes its a master
 
-{% if es_multicast_enabled is defined and not es_multicast_enabled %}
-discovery.zen.ping.unicast.hosts: {{es_unicast_hosts}}
+{% if es_config['multicast_enabled'] is defined and not es_config['multicast_enabled'] %}
+discovery.zen.ping.unicast.hosts: {{ es_config['unicast_hosts'] }}
 {% endif %}
 
 

@@ -29,7 +29,7 @@ hosts: my_host
     - .... your tasks ...
 ```
 
-By default es_multicast_enabled is false.  If this is not to true, the user is required to specify the following additional parameters:
+By default es_multicast_enabled is false and the user is required to specify the following additional parameters:
 
 1. es_http_port - the http port for the node
 2. es_transport_tcp_port - the transport port for the node

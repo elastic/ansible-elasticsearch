@@ -9,6 +9,9 @@ es_scripts: false
 es_templates: false
 es_user: elasticsearch
 es_group: elasticsearch
-es_cluster_name: elasticsearch
-es_multicast_enabled: false
-es_node_name_prefix: ""
+
+es_config: {
+  "cluster_name": elasticsearch,
+  "multicast_enabled": false,
+  "node_name_prefix": ""
+}
