@@ -2,5 +2,4 @@
 java: "openjdk-7-jre-headless"
 default_file: "/etc/default/elasticsearch"
 init_script: "/etc/init.d/elasticsearch"
-es_conf_dir: "/etc/elasticsearch"
 es_home: "/usr/share/elasticsearch"

@@ -18,3 +18,7 @@ path.data: {{ data_dir }}
 path.work: {{ work_dir }}
 
 path.logs: {{ log_dir }}
+
+{% if es_scripts and es_config['path.scripts'] is not defined %}
+path.scripts: {{ es_conf_dir }}/{{es_instance_name}}/scripts
+{% endif %}

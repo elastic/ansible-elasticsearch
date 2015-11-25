@@ -13,4 +13,4 @@
   when: es_config['discovery.zen.ping.multicast.enabled'] == false and es_config['discovery.zen.ping.unicast.hosts'] is not defined
 
 
-# If multicast is false OR if > 2.0 AND not defined as true (or explictly false)
+# If multicast is false OR if > 2.0 AND not defined as true (or explicitly false)

@@ -2,5 +2,4 @@
 java: "java-1.8.0-openjdk.x86_64"
 default_file: "/etc/sysconfig/elasticsearch"
 init_script: "/etc/init.d/elasticsearch"
-es_conf_dir: "/etc/elasticsearch"
 es_home: "/usr/share/elasticsearch"

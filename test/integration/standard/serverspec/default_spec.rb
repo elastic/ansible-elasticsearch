@@ -20,7 +20,7 @@ context "basic tests" do
 
   describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
     it { should contain 'node.name: localhost-node1' }
-    it { should contain 'cluster.name: "elasticsearch"' }
+    it { should contain 'cluster.name: elasticsearch' }
     it { should contain 'path.conf: /etc/elasticsearch/node1' }
     it { should contain 'path.data: /var/lib/elasticsearch/localhost-node1' }
     it { should contain 'path.work: /tmp/elasticsearch/localhost-node1' }

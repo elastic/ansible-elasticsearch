@@ -1,2 +1,3 @@
 ---
 es_package_url: "https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch"
+es_conf_dir: "/etc/elasticsearch"

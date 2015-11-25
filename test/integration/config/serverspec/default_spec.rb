@@ -30,9 +30,34 @@ context "basic tests" do
     it { should contain 'bootstrap.mlockall: true' }
     it { should contain 'discovery.zen.ping.unicast.hosts: localhost:9301' }
     it { should contain 'path.conf: /etc/elasticsearch/node1' }
-    it { should contain 'path.data: /var/lib/elasticsearch/localhost-node1' }
-    it { should contain 'path.work: /tmp/elasticsearch/localhost-node1' }
-    it { should contain 'path.logs: /var/log/elasticsearch/localhost-node1' }
+    it { should contain 'path.data: /opt/elasticsearch/data/localhost-node1' }
+    it { should contain 'path.work: /opt/elasticsearch/temp/localhost-node1' }
+    it { should contain 'path.logs: /opt/elasticsearch/logs/localhost-node1' }
+  end
+
+  #test directories exist
+  describe file('/etc/elasticsearch/node1') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/opt/elasticsearch/data/localhost-node1') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/opt/elasticsearch/logs/localhost-node1') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/opt/elasticsearch/temp/localhost-node1') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/etc/init.d/node1_elasticsearch') do
+    it { should be_file }
   end
 
   #test we started on the correct port was used
