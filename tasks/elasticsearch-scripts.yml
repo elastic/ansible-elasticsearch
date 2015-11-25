@@ -1,12 +1,12 @@
 ---
 
-- set_fact: es_script_dir={{ es_log_dir }}/{{inventory_hostname}}-{{ es_instance_name }}
+- set_fact: es_script_dir={{ es_conf_dir }}/{{es_instance_name}}/scripts
 
 - set_fact: es_script_dir={{es_config['path.scripts']}}
-  when: es_config['path.scripts'] is not defined
+  when: es_config['path.scripts'] is defined
 
 - name: Create script dir
   file: state=directory path={{ es_script_dir }} owner={{ es_user }} group={{ es_group }}
 
 - name: Copy scripts to elasticsearch
-  copy: src=scripts dest={{ es_scripts_dir }}
+  copy: src={{es_scripts_src}} dest={{ es_script_dir }}
