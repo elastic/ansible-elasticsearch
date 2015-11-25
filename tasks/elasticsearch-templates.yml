@@ -1,5 +1,6 @@
 ---
 #TODO: How to handle in multi node
+# 1. Template directory needs to be specifiable. 2. Port needs to based on configuration
 - name: Copy templates to elasticsearch
   copy: src=templates dest=/etc/elasticsearch/
 

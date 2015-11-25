@@ -23,6 +23,11 @@ context "basic tests" do
     it { should be_owned_by 'elasticsearch' }
   end
 
+  describe file('/etc/elasticsearch/node1/scripts/calculate-score.groovy') do
+    it { should be_file }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
   describe 'Node listening' do
     it 'listening in port 9200' do
       expect(port 9200).to be_listening

@@ -6,7 +6,6 @@ es_use_repository: true
 es_start_service: true
 es_plugins_reinstall: false
 es_scripts: false
-es_scripts_src: scripts
 es_templates: false
 es_user: elasticsearch
 es_group: elasticsearch
