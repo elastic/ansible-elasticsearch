@@ -18,6 +18,10 @@ context "basic tests" do
     it { should be_file }
   end
 
+  describe file('/etc/elasticsearch/node1/logging.yml') do
+    it { should be_file }
+  end
+
   describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
     it { should contain 'node.name: localhost-node1' }
     it { should contain 'cluster.name: elasticsearch' }

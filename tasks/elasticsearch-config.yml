@@ -16,13 +16,10 @@
   command: creates={{instance_default_file}} cp "{{default_file}}"  "{{instance_default_file}}"
   when: instance_default_file != default_file
 
-- debug: msg="DEBUG {{ hostvars[inventory_hostname] }}"
-
 # Create an instance specific init file
 - name: Copy Init File for Instance
   command: creates={{instance_init_script}} cp "{{init_script}}" "{{instance_init_script}}"
   when: instance_init_script != init_script
-
 
 #Create Config directory
 - name: Create Config Directory
@@ -47,7 +44,6 @@
   register: elasticsearch_configure
 
 #We only have to set these if they are specified. The start scripts will by default use the NAME set later on constructing directory names to avoid collisions.
-
 - name: Configure max open files
   lineinfile: dest={{instance_default_file}} regexp="^MAX_OPEN_FILES" insertafter="^#MAX_OPEN_FILES" line="MAX_OPEN_FILES={{ es_max_open_files }}"
   when: es_max_open_files is defined
@@ -115,3 +111,9 @@
   register: elasticsearch_configure
   when: ansible_os_family == 'RedHat'
 
+#Copy the logging.yml - TODO: i.e we may template this.
+- name: Copy Logging.yml for Instance
+  command: creates={{instance_config_directory}}/logging.yml cp "{{ es_conf_dir }}/logging.yml" "{{instance_config_directory}}/logging.yml"
+  when: instance_init_script != init_script
+
+- file: path={{instance_config_directory}}/logging.yml state=touch owner={{ es_user }} group={{ es_group }}

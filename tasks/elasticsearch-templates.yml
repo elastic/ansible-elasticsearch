@@ -1,16 +1,21 @@
 ---
 #TODO: How to handle in multi node
-# 1. Template directory needs to be specifiable. 2. Port needs to based on configuration
+# 1. Template directory needs to be specifiable
 - name: Copy templates to elasticsearch
   copy: src=templates dest=/etc/elasticsearch/
 
+- set_fact: http_port=9200
+
+- set_fact: http_port={{es_config['http.port']}}
+  when: es_config['http.port'] is defined
+
 - name: Wait for elasticsearch to startup
-  wait_for: port=9200 delay=10
+  wait_for: port={{http_port}} delay=10
 
 - name: Get template files 
   shell: find . -maxdepth 1 -type f | sed "s#\./##" | sed "s/.json//" chdir=/etc/elasticsearch/templates
   register: resultstemplate
 
 - name: Install template(s)
-  command: 'curl -sL -XPUT http://localhost:9200/_template/{{item}} -d @/etc/elasticsearch/templates/{{item}}.json'
+  command: "curl -sL -XPUT http://localhost:{{http_port}}/_template/{{item}} -d @/etc/elasticsearch/templates/{{item}}.json"
   with_items: resultstemplate.stdout_lines
