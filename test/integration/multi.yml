@@ -3,6 +3,6 @@
 - name: Elasticsearch Config tests
   hosts: localhost
   roles:
-    - { role: elasticsearch, es_config: { "multicast_enabled": false, node_name_prefix: "master_", unicast_hosts: "localhost:9300", http_port: "9200", transport_tcp_port: "9300", data_node: false, master_node: true, m_lock_enabled: true,multicast_enabled: false } }
-    - { role: elasticsearch, es_config: { "multicast_enabled": false, node_name_prefix: "node1_", unicast_hosts: "localhost:9300", http_port: "9201", transport_tcp_port: "9301", data_node: true, master_node: false, m_lock_enabled: true,multicast_enabled: false } }
+    - { role: elasticsearch, es_instance_name: "master", es_config: { "discovery.zen.ping.multicast.enabled": false, discovery.zen.ping.unicast.hosts: "localhost:9300", http.port: 9200, transport.tcp.port: 9300, node.data: false, node.master: true, bootstrap.mlockall: true, discovery.zen.ping.multicast.enabled: false } }
+    - { role: elasticsearch, es_instance_name: "node1", es_config: { "discovery.zen.ping.multicast.enabled": false,  discovery.zen.ping.unicast.hosts: "localhost:9300", http.port: 9201, transport.tcp.port: 9301, node.data: true, node.master: false, discovery.zen.ping.multicast.enabled: false } }
   vars:

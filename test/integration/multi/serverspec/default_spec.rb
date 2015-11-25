@@ -18,33 +18,43 @@ context "basic tests" do
     it { should be_installed }
   end
 
-  describe file('/etc/elasticsearch/node1_elasticsearch/elasticsearch.yml') do
+  describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
     it { should be_file }
   end
 
-  describe file('/etc/elasticsearch/master_elasticsearch/elasticsearch.yml') do
+  describe file('/etc/elasticsearch/master/elasticsearch.yml') do
     it { should be_file }
   end
 
   #test configuration parameters have been set - test all appropriately set in config file
-  describe file('/etc/elasticsearch/node1_elasticsearch/elasticsearch.yml') do
+  describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
     it { should contain 'http.port: 9201' }
     it { should contain 'transport.tcp.port: 9301' }
     it { should contain 'node.data: true' }
     it { should contain 'node.master: false' }
     it { should contain 'discovery.zen.ping.multicast.enabled: false' }
-    it { should contain 'node.name: node1_localhost' }
+    it { should contain 'node.name: localhost-node1' }
+    it { should_not contain 'bootstrap.mlockall: true' }
+    it { should contain 'path.conf: /etc/elasticsearch/node1' }
+    it { should contain 'path.data: /var/lib/elasticsearch/localhost-node1' }
+    it { should contain 'path.work: /tmp/elasticsearch/localhost-node1' }
+    it { should contain 'path.logs: /var/log/elasticsearch/localhost-node1' }
   end
 
 
   #test configuration parameters have been set for master - test all appropriately set in config file
-  describe file('/etc/elasticsearch/master_elasticsearch/elasticsearch.yml') do
+  describe file('/etc/elasticsearch/master/elasticsearch.yml') do
     it { should contain 'http.port: 9200' }
     it { should contain 'transport.tcp.port: 9300' }
     it { should contain 'node.data: false' }
     it { should contain 'node.master: true' }
     it { should contain 'discovery.zen.ping.multicast.enabled: false' }
-    it { should contain 'node.name: master_localhost' }
+    it { should contain 'node.name: localhost-master' }
+    it { should contain 'bootstrap.mlockall: true' }
+    it { should contain 'path.conf: /etc/elasticsearch/master' }
+    it { should contain 'path.data: /var/lib/elasticsearch/localhost-master' }
+    it { should contain 'path.work: /tmp/elasticsearch/localhost-master' }
+    it { should contain 'path.logs: /var/log/elasticsearch/localhost-master' }
   end
 
   describe 'Master listening' do

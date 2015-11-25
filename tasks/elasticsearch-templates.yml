@@ -1,4 +1,5 @@
 ---
+#TODO: How to handle in multi node
 - name: Copy templates to elasticsearch
   copy: src=templates dest=/etc/elasticsearch/
 

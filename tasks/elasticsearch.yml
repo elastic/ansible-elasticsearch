@@ -1,10 +1,10 @@
 ---
+
+- set_fact: instance_default_file={{default_file | dirname}}/{{es_instance_name}}_{{default_file | basename}}
+- set_fact: instance_init_script={{init_script | dirname }}/{{es_instance_name}}_{{init_script | basename}}
+- set_fact: instance_config_directory={{ es_conf_dir }}/{{es_instance_name}}
+
 - debug: msg="Node configuration {{ es_config }} "
-- set_fact: instance_default_file={{default_file | dirname}}/{{es_config["node_name_prefix"]}}{{default_file | basename}}
-- set_fact: instance_init_script={{init_script | dirname }}/{{es_config['node_name_prefix']}}{{init_script | basename}}
-- set_fact: instance_config_directory={{ es_conf_dir }}/{{es_config['node_name_prefix']}}elasticsearch
-
-
 
 # Install OS specific elasticsearch - this can be abbreviated in version 2.0.0
 - name: Include specific Elasticsearch
@@ -18,6 +18,9 @@
 #Configuration file for elasticsearch
 - name: Elasticsearch configuration
   include: elasticsearch-config.yml
+
+#We remove the node.name key as it may be set by another node on the same server
+
 
 # Make sure the service is started, and restart if necessary
 - name: Start elasticsearch service

@@ -1,10 +1,16 @@
 # Check for mandatory parameters
 
-- fail: msg="Parameter 'es_http_port' must be defined when multicast is disabled"
-  when: es_config['multicast_enabled'] == false and es_config['http_port'] is not defined
+- fail: msg="es_instance_name must be specified"
+  when: es_instance_name is not defined
 
-- fail: msg="Parameter 'es_transport_tcp_port' must be defined when multicast is disabled"
-  when: es_config['multicast_enabled'] == false and es_config['transport_tcp_port'] is not defined
+- fail: msg="Parameter 'http.port' must be defined when multicast is disabled"
+  when: es_config['discovery.zen.ping.multicast.enabled'] == false and es_config['http.port'] is not defined
 
-- fail: msg="Parameter 'es_unicast_hosts' must be defined when multicast is disabled"
-  when: es_config['multicast_enabled'] == false and es_config['unicast_hosts'] is not defined
+- fail: msg="Parameter 'transport.tcp.port' must be defined when multicast is disabled"
+  when: es_config['discovery.zen.ping.multicast.enabled'] == false and es_config['transport.tcp.port'] is not defined
+
+- fail: msg="Parameter 'discovery.zen.ping.unicast.hosts' must be defined when multicast is disabled"
+  when: es_config['discovery.zen.ping.multicast.enabled'] == false and es_config['discovery.zen.ping.unicast.hosts'] is not defined
+
+
+# If multicast is false OR if > 2.0 AND not defined as true (or explictly false)

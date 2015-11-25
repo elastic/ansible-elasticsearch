@@ -7,8 +7,8 @@
 - include: elasticsearch.yml
 - include: elasticsearch-plugins.yml
   when: es_plugins is defined
-- include: elasticsearch-scripts.yml
-  when: es_scripts
-- include: elasticsearch-templates.yml
-  when: es_templates
+#- include: elasticsearch-scripts.yml
+#  when: es_scripts
+#- include: elasticsearch-templates.yml
+#  when: es_templates
 

@@ -6,7 +6,7 @@ context "basic tests" do
     it { should exist }
   end
 
-  describe service('elasticsearch') do
+  describe service('node1_elasticsearch') do
     it { should be_running }
   end
 
@@ -14,8 +14,23 @@ context "basic tests" do
     it { should be_installed }
   end
 
-  describe file('/etc/elasticsearch/elasticsearch/elasticsearch.yml') do
+  describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
     it { should be_file }
+  end
+
+  describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
+    it { should contain 'node.name: localhost-node1' }
+    it { should contain 'cluster.name: "elasticsearch"' }
+    it { should contain 'path.conf: /etc/elasticsearch/node1' }
+    it { should contain 'path.data: /var/lib/elasticsearch/localhost-node1' }
+    it { should contain 'path.work: /tmp/elasticsearch/localhost-node1' }
+    it { should contain 'path.logs: /var/log/elasticsearch/localhost-node1' }
+  end
+
+  describe 'Node listening' do
+    it 'listening in port 9200' do
+      expect(port 9200).to be_listening
+    end
   end
 
   describe 'plugin' do
