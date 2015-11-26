@@ -3,7 +3,7 @@
 allow_duplicates: yes
 
 galaxy_info:
-  author: Robin Clarke
+  author: Robin Clarke, Jakob Reiter, Dale McDiarmid
   description: Elasticsearch for Linux
   company: "Elastic.co"
   license: "license (Apache)"

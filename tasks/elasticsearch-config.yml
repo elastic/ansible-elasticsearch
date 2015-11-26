@@ -111,9 +111,25 @@
   register: elasticsearch_configure
   when: ansible_os_family == 'RedHat'
 
-#Copy the logging.yml - TODO: i.e we may template this.
+#Copy the logging.yml
 - name: Copy Logging.yml for Instance
   command: creates={{instance_config_directory}}/logging.yml cp "{{ es_conf_dir }}/logging.yml" "{{instance_config_directory}}/logging.yml"
   when: instance_init_script != init_script
 
 - file: path={{instance_config_directory}}/logging.yml state=touch owner={{ es_user }} group={{ es_group }}
+
+#Configure mlock if enabled
+- name: Configure mlock
+  lineinfile: dest={{instance_default_file}} regexp="^MAX_LOCKED_MEMORY" insertafter="^#MAX_LOCKED_MEMORY" line="MAX_LOCKED_MEMORY=unlimited"
+  when: es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True
+  register: elasticsearch_configure
+
+#Change for systemd setting to ensure mlock is achieved
+
+- stat: path=/usr/lib/systemd/system/elasticsearch.service
+  register: systemd_service
+
+- name: Configure systemd
+  lineinfile: dest=/usr/lib/systemd/system/elasticsearch.service regexp="^LimitMEMLOCK" insertafter="^#LimitMEMLOCK" line="LimitMEMLOCK=infinity"
+  when: es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True and systemd_service.stat.exists == True
+  register: elasticsearch_configure

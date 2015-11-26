@@ -67,6 +67,11 @@ context "basic tests" do
     its(:exit_status) { should eq 0 }
   end
 
+  #test to make sure mlock was applied
+  describe command('curl "localhost:9201/_nodes/process?pretty" | grep mlockall') do
+    its(:stdout) { should match /\"mlockall\" : true/ }
+    its(:exit_status) { should eq 0 }
+  end
 
 end
 
