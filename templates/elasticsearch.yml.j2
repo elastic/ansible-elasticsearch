@@ -1,4 +1,7 @@
+
+{% if es_config %}
 {{ es_config | to_nice_yaml }}
+{% endif %}
 
 {% if es_config['cluster.name'] is not defined %}
 cluster.name: elasticsearch

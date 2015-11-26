@@ -1,6 +1,6 @@
 ---
 #Test explicit setting of parameters and variables
-- name: Elasticsearch Package tests
+- name: Elasticsearch Config tests
   hosts: localhost
   roles:
     #expand to all available parameters

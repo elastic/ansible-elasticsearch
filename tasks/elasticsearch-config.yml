@@ -128,6 +128,7 @@
 
 - stat: path=/usr/lib/systemd/system/elasticsearch.service
   register: systemd_service
+  when: es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True
 
 - name: Configure systemd
   lineinfile: dest=/usr/lib/systemd/system/elasticsearch.service regexp="^LimitMEMLOCK" insertafter="^#LimitMEMLOCK" line="LimitMEMLOCK=infinity"
