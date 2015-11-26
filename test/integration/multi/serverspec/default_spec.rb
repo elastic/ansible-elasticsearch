@@ -87,5 +87,64 @@ context "basic tests" do
     end
   end
 
+  #test to make sure mlock was applied
+  describe command('curl "localhost:9200/_nodes/process?pretty" | grep mlockall') do
+    its(:stdout) { should match /\"mlockall\" : true/ }
+    its(:exit_status) { should eq 0 }
+  end
+
+  #test to make sure mlock was not applied
+  describe command('curl "localhost:9201/_nodes/process?pretty" | grep mlockall') do
+    its(:stdout) { should match /\"mlockall\" : false/ }
+    its(:exit_status) { should eq 0 }
+  end
+
+  describe file('/etc/elasticsearch/templates') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/etc/elasticsearch/templates/basic.json') do
+    it { should be_file }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe 'Template Installed' do
+    it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
+      command = command('curl localhost:9200/_template/basic')
+      expect(command.stdout).to match(/basic/)
+      expect(command.exit_status).to eq(0)
+    end
+  end
+
+  describe 'Template Installed' do
+    it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
+      command = command('curl localhost:9201/_template/basic')
+      expect(command.stdout).to match(/basic/)
+      expect(command.exit_status).to eq(0)
+    end
+  end
+
+  #Confirm scripts are on both nodes
+  describe file('/etc/elasticsearch/node1/scripts') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/etc/elasticsearch/node1/scripts/calculate-score.groovy') do
+    it { should be_file }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/etc/elasticsearch/master/scripts') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/etc/elasticsearch/master/scripts/calculate-score.groovy') do
+    it { should be_file }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
 end
 
