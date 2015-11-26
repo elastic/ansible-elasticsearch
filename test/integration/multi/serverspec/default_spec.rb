@@ -52,7 +52,7 @@ context "basic tests" do
     it { should contain 'node.name: localhost-master' }
     it { should contain 'bootstrap.mlockall: true' }
     it { should contain 'path.conf: /etc/elasticsearch/master' }
-    it { should contain 'path.data: /var/lib/elasticsearch/localhost-master' }
+    it { should contain 'path.data: /opt/elasticsearch/localhost-master' }
     it { should contain 'path.work: /tmp/elasticsearch/localhost-master' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-master' }
   end
@@ -146,5 +146,19 @@ context "basic tests" do
     it { should be_owned_by 'elasticsearch' }
   end
 
+  #Confirm that the data directory has only been set for the first node
+  describe file('/opt/elasticsearch/localhost-master') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/opt/elasticsearch/localhost-node1') do
+    it { should_not exist }
+  end
+
+  describe file('/var/lib/elasticsearch/localhost-node1') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
 end
 
