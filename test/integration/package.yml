@@ -5,3 +5,4 @@
     - { role: elasticsearch, es_config: { "discovery.zen.ping.multicast.enabled": true }, es_instance_name: "node1" }
   vars:
     es_scripts: true
+    es_templates: true

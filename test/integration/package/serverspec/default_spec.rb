@@ -34,5 +34,23 @@ context "basic tests" do
     end
   end
 
+  describe file('/etc/elasticsearch/templates') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/etc/elasticsearch/templates/basic.json') do
+    it { should be_file }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe 'Template Installed' do
+    it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
+      command = command('curl localhost:9200/_template/basic')
+      expect(command.stdout).to match(/basic/)
+      expect(command.exit_status).to eq(0)
+    end
+  end
+
 end
 
