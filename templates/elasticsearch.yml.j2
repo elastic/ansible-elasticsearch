@@ -1,0 +1,23 @@
+
+{% if es_config %}
+{{ es_config | to_nice_yaml }}
+{% endif %}
+
+{% if es_config['cluster.name'] is not defined %}
+cluster.name: elasticsearch
+{% endif %}
+
+{% if es_config['node.name'] is not defined %}
+node.name: {{inventory_hostname}}-{{es_instance_name}}
+{% endif %}
+
+#################################### Paths ####################################
+
+# Path to directory containing configuration (this file and logging.yml):
+path.conf: {{ instance_config_directory }}
+
+path.data: {{ data_dir }}
+
+path.work: {{ work_dir }}
+
+path.logs: {{ log_dir }}

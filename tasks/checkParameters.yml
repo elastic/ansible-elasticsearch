@@ -1,0 +1,19 @@
+# Check for mandatory parameters
+
+- fail: msg="es_instance_name must be specified"
+  when: es_instance_name is not defined
+
+- set_fact: multi_cast={{ (es_version | version_compare('2.0', '<') and es_config['discovery.zen.ping.multicast.enabled'] is not defined) or es_config['discovery.zen.ping.multicast.enabled']}}
+
+- fail: msg="Parameter 'http.port' must be defined when multicast is disabled"
+  when: not multi_cast and es_config['http.port'] is not defined
+
+- fail: msg="Parameter 'transport.tcp.port' must be defined when multicast is disabled"
+  when: not multi_cast and es_config['transport.tcp.port'] is not defined
+
+- fail: msg="Parameter 'discovery.zen.ping.unicast.hosts' must be defined when multicast is disabled"
+  when: not multi_cast and es_config['discovery.zen.ping.unicast.hosts'] is not defined
+
+#If the user attempts to lock memory they must specify a heap size
+- fail: msg="If locking memory with bootstrap.mlockall a heap size must be specified"
+  when: es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True and es_heap_size is not defined

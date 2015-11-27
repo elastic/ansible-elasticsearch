@@ -1,0 +1,12 @@
+---
+#Test explicit setting of parameters and variables
+- name: Elasticsearch Config tests
+  hosts: localhost
+  roles:
+    #expand to all available parameters
+    - { role: elasticsearch, es_instance_name: "node1", es_data_dir: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", es_work_dir: "/opt/elasticsearch/temp", es_config: {node.name: "node1", cluster.name: "custom-cluster", discovery.zen.ping.unicast.hosts: "localhost:9301", http.port: 9201, transport.tcp.port: 9301, node.data: false, node.master: true, bootstrap.mlockall: true, discovery.zen.ping.multicast.enabled: false } }
+  vars:
+    es_scripts: false
+    es_templates: false
+    es_version_lock: false
+    es_heap_size: 1g

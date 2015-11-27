@@ -26,12 +26,16 @@ platforms:
         - echo 'deb http://http.debian.net/debian/ wheezy-backports main' >> /etc/apt/sources.list
         - apt-get update
         - apt-get install -y -q ansible
+        - apt-get install -y -q net-tools
       use_sudo: false
   - name: debian-8
     driver_config:
       image: electrical/debian:8
       privileged: true
-      provision_command: apt-get -y -q install ansible
+      provision_command:
+        - apt-get update
+        - apt-get install -y -q ansible
+        - apt-get install -y -q net-tools
       use_sudo: false
   - name: centos-6
     driver_config:
@@ -46,8 +50,6 @@ platforms:
         - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
         - yum -y install initscripts
-        #        - BUSSER_ROOT="/tmp/verifier" GEM_HOME="/tmp/verifier/gems" GEM_PATH="/tmp/verifier/gems" GEM_CACHE="/tmp/verifier/gems/cache" gem install --no-rdoc --no-ri rake
-        #        - chown kitchen:kitchen /tmp/verifier -R
         - yum clean all
       run_command: "/usr/sbin/init"
       privileged: true
@@ -64,4 +66,14 @@ suites:
     attributes:
     provisioner:
       playbook: test/integration/package.yml
+  - name: config
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/config.yml
+  - name: multi
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/multi.yml
 
