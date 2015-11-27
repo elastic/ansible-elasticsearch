@@ -162,3 +162,11 @@ Following variables affect the versions installed:
 
 * ```java_repos``` (an array of repositories to be added to allow java to be installed)
 * ```java_packages``` (an array of packages to be installed to get Java installed)
+
+## Notes
+
+* The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
+* The playbook relies on the inventory_name of each host to ensure its directories are unique
+* Systemd scripts are by default installed in addition to init scripts.  This is pending improvement and currently relies on the user to determine the prefered mechanism.
+* Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
+* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  
