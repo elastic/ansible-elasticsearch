@@ -43,6 +43,11 @@
   when: es_heap_size is defined
   register: elasticsearch_configure
 
+- name: Remove memory in defaults
+  lineinfile: dest={{instance_default_file}} regexp="^ES_HEAP_SIZE" line="ES_HEAP_SIZE=" state=absent
+  when: es_heap_size is not defined
+  register: elasticsearch_configure
+
 - debug: msg="{{elasticsearch_configure}}"
 
 #We only have to set these if they are specified. The start scripts will by default set this value.
