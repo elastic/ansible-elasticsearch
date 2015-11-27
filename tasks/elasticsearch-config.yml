@@ -158,8 +158,3 @@
 - name: Remove systemd
   lineinfile: dest=/usr/lib/systemd/system/elasticsearch.service regexp="^LimitMEMLOCK" line="LimitMEMLOCK=infinity" state=absent
   when: not m_lock_enabled
-
-- debug: msg="{{m_lock_enabled}}"
-
-
-- debug: msg="{{elasticsearch_configure}}"
