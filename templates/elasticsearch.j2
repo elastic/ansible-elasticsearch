@@ -66,6 +66,7 @@ ES_GROUP={{es_group}}
 # When using Systemd, this setting is ignored and the LimitNOFILE defined in
 # /usr/lib/systemd/system/elasticsearch.service takes precedence
 {% if es_max_open_files is defined %}
+#MAX_OPEN_FILES
 MAX_OPEN_FILES={{es_max_open_files}}
 {% endif %}
 
@@ -75,6 +76,7 @@ MAX_OPEN_FILES={{es_max_open_files}}
 # When using Systemd, the LimitMEMLOCK property must be set
 # in /usr/lib/systemd/system/elasticsearch.service
 {% if m_lock_enabled %}
+#MAX_LOCKED_MEMORY=
 MAX_LOCKED_MEMORY=unlimited
 {% endif %}
 
