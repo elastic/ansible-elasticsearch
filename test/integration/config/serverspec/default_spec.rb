@@ -61,16 +61,22 @@ context "basic tests" do
   end
 
   #test we started on the correct port was used
-  describe command('curl "localhost:9201" | grep status') do
+  describe command('curl -s "localhost:9201" | grep status') do
     #TODO: This is returning an empty string
     #its(:stdout) { should match /\"status\" : 200/ }
     its(:exit_status) { should eq 0 }
   end
 
   #test to make sure mlock was applied
-  describe command('curl "localhost:9201/_nodes/process?pretty" | grep mlockall') do
-    its(:stdout) { should match /\"mlockall\" : true/ }
+  describe command('curl -s "localhost:9201/_nodes/process?pretty" | grep mlockall') do
+    its(:stdout) { should match /true/ }
     its(:exit_status) { should eq 0 }
+  end
+
+  describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
+    it { should be_file }
+    it { should contain 'LimitMEMLOCK=infinity' }
+    it { should contain 'EnvironmentFile=-/etc/sysconfig/node1_elasticsearch' }
   end
 
 end

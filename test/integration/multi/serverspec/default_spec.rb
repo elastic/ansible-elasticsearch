@@ -18,16 +18,9 @@ context "basic tests" do
     it { should be_installed }
   end
 
-  describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
-    it { should be_file }
-  end
-
-  describe file('/etc/elasticsearch/master/elasticsearch.yml') do
-    it { should be_file }
-  end
-
   #test configuration parameters have been set - test all appropriately set in config file
   describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
+    it { should be_file }
     it { should contain 'http.port: 9201' }
     it { should contain 'transport.tcp.port: 9301' }
     it { should contain 'node.data: true' }
@@ -44,6 +37,7 @@ context "basic tests" do
 
   #test configuration parameters have been set for master - test all appropriately set in config file
   describe file('/etc/elasticsearch/master/elasticsearch.yml') do
+    it { should be_file }
     it { should contain 'http.port: 9200' }
     it { should contain 'transport.tcp.port: 9300' }
     it { should contain 'node.data: false' }
@@ -150,15 +144,30 @@ context "basic tests" do
   end
 
   #test to make sure mlock was applied
-  describe command('curl "localhost:9200/_nodes/localhost-master/process?pretty" | grep mlockall') do
+  describe command('curl -s "localhost:9200/_nodes/localhost-master/process?pretty=true" | grep mlockall') do
     its(:stdout) { should match /true/ }
     its(:exit_status) { should eq 0 }
   end
 
   #test to make sure mlock was not applied
-  describe command('curl "localhost:9201/_nodes/localhost-node1/process?pretty" | grep mlockall') do
+  describe command('curl -s "localhost:9201/_nodes/localhost-node1/process?pretty=true" | grep mlockall') do
     its(:stdout) { should match /false/ }
     its(:exit_status) { should eq 0 }
   end
+
+
+  #Test server spec file has been created and modified
+  describe file('/usr/lib/systemd/system/master_elasticsearch.service') do
+    it { should be_file }
+    it { should contain 'LimitMEMLOCK=infinity' }
+    it { should contain 'EnvironmentFile=-/etc/sysconfig/master_elasticsearch' }
+  end
+
+  describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
+    it { should be_file }
+    it { should_not contain 'LimitMEMLOCK=infinity' }
+    it { should contain 'EnvironmentFile=-/etc/sysconfig/node1_elasticsearch' }
+  end
+
 end
 

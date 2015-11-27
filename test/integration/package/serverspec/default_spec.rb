@@ -46,7 +46,7 @@ context "basic tests" do
 
   describe 'Template Installed' do
     it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
-      command = command('curl localhost:9200/_template/basic')
+      command = command('curl -s "localhost:9200/_template/basic"')
       expect(command.stdout).to match(/basic/)
       expect(command.exit_status).to eq(0)
     end
