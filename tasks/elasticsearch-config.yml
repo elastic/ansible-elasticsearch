@@ -5,8 +5,7 @@
 #This relies on elasticsearch installing a serviced script to determine whether one should be copied.
 - stat: path={{sysd_script}}
   register: systemd_service
-
-- set_fact: use_system_d={{systemd_service.stat.exists and (ansible_os_family == 'RedHat' or ansible_distribution_version | version_compare('8', '<'))}}
+- set_fact: use_system_d={{systemd_service.stat.exists and (not ansible_distribution == 'Debian' or ansible_distribution_version | version_compare('8', '<'))}}
 
 - set_fact: instance_sysd_script={{sysd_script | dirname }}/{{es_instance_name}}_{{sysd_script | basename}}
   when: use_system_d

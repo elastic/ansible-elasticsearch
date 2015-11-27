@@ -73,10 +73,5 @@ context "basic tests" do
     its(:exit_status) { should eq 0 }
   end
 
-  describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
-    it { should be_file }
-    it { should contain 'LimitMEMLOCK=infinity' }
-  end
-
 end
 

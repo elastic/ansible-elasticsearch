@@ -156,16 +156,5 @@ context "basic tests" do
   end
 
 
-  #Test server spec file has been created and modified
-  describe file('/usr/lib/systemd/system/master_elasticsearch.service') do
-    it { should be_file }
-    it { should contain 'LimitMEMLOCK=infinity' }
-  end
-
-  describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
-    it { should be_file }
-    it { should_not contain 'LimitMEMLOCK=infinity' }
-  end
-
 end
 

@@ -1,6 +1,13 @@
 # ansible-elasticsearch
 
-Ansible playbook / roles / tasks for Elasticsearch.  Currently it will work on Debian and RedHat based linux systems.
+Ansible playbook / roles / tasks for Elasticsearch.  Currently it will work on Debian and RedHat based linux systems.  Tested platforms are:
+
+* Ubuntu 1404
+* Debian 7
+* Debian 8
+* Centos 7
+* Centos 8
+
 
 ## Usage
 
