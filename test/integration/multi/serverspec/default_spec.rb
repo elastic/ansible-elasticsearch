@@ -87,18 +87,6 @@ context "basic tests" do
     end
   end
 
-  #test to make sure mlock was applied
-  describe command('curl "localhost:9200/_nodes/localhost-master/process?pretty" | grep mlockall') do
-    its(:stdout) { should match /\"mlockall\" : true/ }
-    its(:exit_status) { should eq 0 }
-  end
-
-  #test to make sure mlock was not applied
-  describe command('curl "localhost:9201/_nodes/localhost-node1/process?pretty" | grep mlockall') do
-    its(:stdout) { should match /\"mlockall\" : false/ }
-    its(:exit_status) { should eq 0 }
-  end
-
   describe file('/etc/elasticsearch/templates') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
@@ -159,6 +147,18 @@ context "basic tests" do
   describe file('/var/lib/elasticsearch/localhost-node1') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
+  end
+
+  #test to make sure mlock was applied
+  describe command('curl "localhost:9200/_nodes/localhost-master/process?pretty" | grep mlockall') do
+    its(:stdout) { should match /true/ }
+    its(:exit_status) { should eq 0 }
+  end
+
+  #test to make sure mlock was not applied
+  describe command('curl "localhost:9201/_nodes/localhost-node1/process?pretty" | grep mlockall') do
+    its(:stdout) { should match /false/ }
+    its(:exit_status) { should eq 0 }
   end
 end
 

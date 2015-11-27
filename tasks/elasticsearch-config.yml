@@ -1,6 +1,14 @@
 ---
 
 # Configure Elasticsearch Node
+
+#This relies on elasticsearch installing a serviced script to determine whether one should be copied.
+- stat: path={{sysd_script}}
+  register: systemd_service
+
+- set_fact: instance_sysd_script={{sysd_script | dirname }}/{{es_instance_name}}_{{sysd_script | basename}}
+  when: systemd_service.stat.exists
+
 #For directories we also use the {{inventory_hostname}}-{{ es_instance_name }} - this helps if we have a shared SAN.
 
 - set_fact: pid_dir={{es_pid_dir}}/{{inventory_hostname}}-{{ es_instance_name }}
@@ -45,12 +53,12 @@
 #Copy the instance specific init file
 - name: Copy Redhat Init File for Instance
   template: src=init/redhat/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
-  when: ansible_os_family == 'Redhat'
+  when: ansible_os_family == 'RedHat'
 
 #Copy the systemd specific file if systemd is installed
 - name: Copy Systemd File for Instance
   template: src=systemd/elasticsearch.j2 dest={{instance_sysd_script}} mode=0644 force=yes
-  when: systemd_service
+  when: systemd_service.stat.exists
   notify: restart elasticsearch
 
 #Copy the logging.yml
