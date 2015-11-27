@@ -19,8 +19,6 @@
 - name: Elasticsearch configuration
   include: elasticsearch-config.yml
 
-#We remove the node.name key as it may be set by another node on the same server
-
 
 # Make sure the service is started, and restart if necessary
 - name: Start elasticsearch service

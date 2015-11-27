@@ -112,7 +112,6 @@ An example of a two server deployment, each with 1 node on one server and 2 node
     es_templates: false
     es_version_lock: false
     es_cluster_name: test-cluster
-    m_lock_enabled: true
     ansible_user: ansible
     es_plugins:
      - plugin: elasticsearch/license
@@ -128,7 +127,6 @@ An example of a two server deployment, each with 1 node on one server and 2 node
     es_templates: false
     es_version_lock: false
     es_cluster_name: test-cluster
-    m_lock_enabled: false
     ansible_user: ansible
     es_plugins:
      - plugin: elasticsearch/license

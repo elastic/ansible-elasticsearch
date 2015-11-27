@@ -43,12 +43,19 @@
   when: es_heap_size is defined
   register: elasticsearch_configure
 
-#We only have to set these if they are specified. The start scripts will by default use the NAME set later on constructing directory names to avoid collisions.
+- debug: msg="{{elasticsearch_configure}}"
+
+#We only have to set these if they are specified. The start scripts will by default set this value.
 - name: Configure max open files
   lineinfile: dest={{instance_default_file}} regexp="^MAX_OPEN_FILES" insertafter="^#MAX_OPEN_FILES" line="MAX_OPEN_FILES={{ es_max_open_files }}"
   when: es_max_open_files is defined
   register: elasticsearch_configure
 
+#If the setting is not specified we remove it if its present.  This will mean it reverts to the value in the init script.
+- name: Remove max open files
+  lineinfile: dest={{instance_default_file}} regexp="^MAX_OPEN_FILES" line="MAX_OPEN_FILES=" state=absent
+  when: es_max_open_files is not defined
+  register: elasticsearch_configure
 
 #For directories we also use the {{inventory_hostname}}-{{ es_instance_name }} - this helps if we have a shared SAN.
 
@@ -117,20 +124,37 @@
   when: instance_init_script != init_script
 
 - file: path={{instance_config_directory}}/logging.yml state=touch owner={{ es_user }} group={{ es_group }}
+  changed_when: false
+
+- set_fact: m_lock_enabled={{ es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True }}
 
 #Configure mlock if enabled
 - name: Configure mlock
   lineinfile: dest={{instance_default_file}} regexp="^MAX_LOCKED_MEMORY" insertafter="^#MAX_LOCKED_MEMORY" line="MAX_LOCKED_MEMORY=unlimited"
-  when: es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True
+  when: m_lock_enabled
   register: elasticsearch_configure
 
-#Change for systemd setting to ensure mlock is achieved
+#Removed mlock if not enabled and present
+- name: Remove mlock
+  lineinfile: dest={{instance_default_file}} regexp="^MAX_LOCKED_MEMORY" line="MAX_LOCKED_MEMORY=unlimited" state=absent
+  when: not m_lock_enabled
 
 - stat: path=/usr/lib/systemd/system/elasticsearch.service
   register: systemd_service
-  when: es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True
+  when: m_lock_enabled
 
+#Change for systemd setting to ensure mlock is achieved
 - name: Configure systemd
   lineinfile: dest=/usr/lib/systemd/system/elasticsearch.service regexp="^LimitMEMLOCK" insertafter="^#LimitMEMLOCK" line="LimitMEMLOCK=infinity"
-  when: es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True and systemd_service.stat.exists == True
+  when: m_lock_enabled and systemd_service.stat.exists == True
   register: elasticsearch_configure
+
+#Remove setting if mlock is disabled
+- name: Remove systemd
+  lineinfile: dest=/usr/lib/systemd/system/elasticsearch.service regexp="^LimitMEMLOCK" line="LimitMEMLOCK=infinity" state=absent
+  when: not m_lock_enabled
+
+- debug: msg="{{m_lock_enabled}}"
+
+
+- debug: msg="{{elasticsearch_configure}}"
