@@ -1,6 +1,7 @@
 ---
 
 # Configure Elasticsearch Node
+#For directories we also use the {{inventory_hostname}}-{{ es_instance_name }} - this helps if we have a shared SAN.
 
 - set_fact: pid_dir={{es_pid_dir}}/{{inventory_hostname}}-{{ es_instance_name }}
 
@@ -10,151 +11,49 @@
 
 - set_fact: work_dir={{ es_work_dir }}/{{inventory_hostname}}-{{ es_instance_name }}
 
-
-# Create an instance specific default file
-- name: Copy Default File for Instance
-  command: creates={{instance_default_file}} cp "{{default_file}}"  "{{instance_default_file}}"
-  when: instance_default_file != default_file
-
-# Create an instance specific init file
-- name: Copy Init File for Instance
-  command: creates={{instance_init_script}} cp "{{init_script}}" "{{instance_init_script}}"
-  when: instance_init_script != init_script
-
-#Create Config directory
-- name: Create Config Directory
-  file: path={{ instance_config_directory }} state=directory owner={{ es_user }} group={{ es_group }}
-
-#Copy the config template
-- name: Copy configuration file
-  template: src=elasticsearch.yml.j2 dest={{instance_config_directory}}/elasticsearch.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
-
-# Apply changes to the default file for this instance
-- name: Configure config directory
-  lineinfile: dest={{instance_default_file}} regexp="^CONF_DIR" insertafter="^#CONF_DIR" line="CONF_DIR={{ instance_config_directory }}"
-  register: elasticsearch_configure
-
-- name: Configure config file
-  lineinfile: dest={{instance_default_file}} regexp="^CONF_FILE" insertafter="^#CONF_FILE" line="CONF_FILE={{ instance_config_directory }}/elasticsearch.yml"
-  register: elasticsearch_configure
-
-- name: Configure memory in defaults
-  lineinfile: dest={{instance_default_file}} regexp="^ES_HEAP_SIZE" insertafter="^#ES_HEAP_SIZE" line="ES_HEAP_SIZE={{ es_heap_size }}"
-  when: es_heap_size is defined
-  register: elasticsearch_configure
-
-- name: Remove memory in defaults
-  lineinfile: dest={{instance_default_file}} regexp="^ES_HEAP_SIZE" line="ES_HEAP_SIZE=" state=absent
-  when: es_heap_size is not defined
-  register: elasticsearch_configure
-
-- debug: msg="{{elasticsearch_configure}}"
-
-#We only have to set these if they are specified. The start scripts will by default set this value.
-- name: Configure max open files
-  lineinfile: dest={{instance_default_file}} regexp="^MAX_OPEN_FILES" insertafter="^#MAX_OPEN_FILES" line="MAX_OPEN_FILES={{ es_max_open_files }}"
-  when: es_max_open_files is defined
-  register: elasticsearch_configure
-
-#If the setting is not specified we remove it if its present.  This will mean it reverts to the value in the init script.
-- name: Remove max open files
-  lineinfile: dest={{instance_default_file}} regexp="^MAX_OPEN_FILES" line="MAX_OPEN_FILES=" state=absent
-  when: es_max_open_files is not defined
-  register: elasticsearch_configure
-
-#For directories we also use the {{inventory_hostname}}-{{ es_instance_name }} - this helps if we have a shared SAN.
-
-#Create PID directory
+#Create required directories
 - name: Create PID Directory
   file: path={{ pid_dir }} state=directory owner={{ es_user }} group={{ es_group }}
 
-- name: Configure PID directory
-  lineinfile: dest={{instance_default_file}} regexp="^PID_DIR" insertafter="^#PID_DIR" line="PID_DIR={{ pid_dir }}"
-  register: elasticsearch_configure
-
-#include the host name as potentially shared SAN
 - name: Create data dir
   file: state=directory path={{ data_dir }} owner={{ es_user }} group={{ es_group }}
-
-- name: Configure data store
-  lineinfile: dest={{instance_default_file}} regexp="^DATA_DIR" insertafter="^#DATA_DIR" line="DATA_DIR={{ data_dir }}"
-  register: elasticsearch_configure
 
 - name: Create work dir
   file: state=directory path={{ work_dir }} owner={{ es_user }} group={{ es_group }}
 
-- name: Configure work directory
-  lineinfile: dest={{instance_default_file}} regexp="^WORK_DIR" insertafter="^#WORK_DIR" line="WORK_DIR={{ work_dir }}"
-  register: elasticsearch_configure
-
 - name: Create log dir
   file: state=directory path={{ log_dir }} owner={{ es_user }} group={{ es_group }}
 
-- name: Configure log directory
-  lineinfile: dest={{instance_default_file}} regexp="^LOG_DIR" insertafter="^#LOG_DIR" line="LOG_DIR={{ log_dir }}"
-  register: elasticsearch_configure
+- name: Create Config Directory
+  file: path={{ instance_config_directory }} state=directory owner={{ es_user }} group={{ es_group }}
 
-#required so that the ES_HOME does not change between instances
+#Copy the config template
+- name: Copy Configuration File
+  template: src=elasticsearch.yml.j2 dest={{instance_config_directory}}/elasticsearch.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  notify: restart elasticsearch
 
-- name: Configure elasticsearch home
-  lineinfile: dest={{instance_default_file}} regexp="^ES_HOME" insertafter="^#ES_HOME" line="ES_HOME={{es_home}}"
-  register: elasticsearch_configure
+#Copy the instance specific default file
+- name: Copy Default File for Instance
+  template: src=elasticsearch.j2 dest={{instance_default_file}} mode=0644 force=yes
+  notify: restart elasticsearch
 
-- name: Configure elasticsearch user
-  lineinfile: dest={{instance_default_file}} regexp="^ES_USER" insertafter="^#ES_USER" line="ES_USER={{ es_user }}"
-  when: es_user is defined
-  register: elasticsearch_configure
-
-- name: Configure elasticsearch group
-  lineinfile: dest={{instance_default_file}} regexp="^ES_GROUP" insertafter="^#ES_GROUP" line="ES_GROUP={{ es_group }}"
-  when: es_group is defined
-  register: elasticsearch_configure
-
-#Apply changes to init script - NAME can be changed in Debian start script
-- name: Name Node in Init Script
-  lineinfile: dest={{instance_init_script}} regexp="^NAME" line="NAME={{es_instance_name}}_{{default_file | basename}}"
-  register: elasticsearch_configure
+#Copy the instance specific init file
+- name: Copy Debian Init File for Instance
+  template: src=init/debian/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
   when: ansible_os_family == 'Debian'
 
-- debug: msg="For {{ instance_init_script }} using default {{ instance_default_file }}"
+#Copy the instance specific init file
+- name: Copy Redhat Init File for Instance
+  template: src=init/redhat/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
+  when: ansible_os_family == 'Redhat'
 
-- name: Environment in Init Script
-  lineinfile: dest={{instance_init_script}} regexp="^ES_ENV_FILE" line="ES_ENV_FILE={{instance_default_file}}"
-  register: elasticsearch_configure
-  when: ansible_os_family == 'RedHat'
+#Copy the systemd specific file if systemd is installed
+- name: Copy Systemd File for Instance
+  template: src=systemd/elasticsearch.j2 dest={{instance_sysd_script}} mode=0644 force=yes
+  when: systemd_service
+  notify: restart elasticsearch
 
 #Copy the logging.yml
-- name: Copy Logging.yml for Instance
-  command: creates={{instance_config_directory}}/logging.yml cp "{{ es_conf_dir }}/logging.yml" "{{instance_config_directory}}/logging.yml"
-  when: instance_init_script != init_script
-
-- file: path={{instance_config_directory}}/logging.yml state=touch owner={{ es_user }} group={{ es_group }}
-  changed_when: false
-
-- set_fact: m_lock_enabled={{ es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True }}
-
-#Configure mlock if enabled
-- name: Configure mlock
-  lineinfile: dest={{instance_default_file}} regexp="^MAX_LOCKED_MEMORY" insertafter="^#MAX_LOCKED_MEMORY" line="MAX_LOCKED_MEMORY=unlimited"
-  when: m_lock_enabled
-  register: elasticsearch_configure
-
-#Removed mlock if not enabled and present
-- name: Remove mlock
-  lineinfile: dest={{instance_default_file}} regexp="^MAX_LOCKED_MEMORY" line="MAX_LOCKED_MEMORY=unlimited" state=absent
-  when: not m_lock_enabled
-
-- stat: path=/usr/lib/systemd/system/elasticsearch.service
-  register: systemd_service
-  when: m_lock_enabled
-
-#Change for systemd setting to ensure mlock is achieved
-- name: Configure systemd
-  lineinfile: dest=/usr/lib/systemd/system/elasticsearch.service regexp="^LimitMEMLOCK" insertafter="^#LimitMEMLOCK" line="LimitMEMLOCK=infinity"
-  when: m_lock_enabled and systemd_service.stat.exists == True
-  register: elasticsearch_configure
-
-#Remove setting if mlock is disabled
-- name: Remove systemd
-  lineinfile: dest=/usr/lib/systemd/system/elasticsearch.service regexp="^LimitMEMLOCK" line="LimitMEMLOCK=infinity" state=absent
-  when: not m_lock_enabled
+- name: Copy Systemd File for Instance
+  template: src=logging.yml.j2 dest={{instance_config_directory}}/logging.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  notify: restart elasticsearch

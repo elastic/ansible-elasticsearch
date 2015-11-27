@@ -3,6 +3,11 @@
 - set_fact: instance_default_file={{default_file | dirname}}/{{es_instance_name}}_{{default_file | basename}}
 - set_fact: instance_init_script={{init_script | dirname }}/{{es_instance_name}}_{{init_script | basename}}
 - set_fact: instance_config_directory={{ es_conf_dir }}/{{es_instance_name}}
+- stat: path={{sysd_script}}
+  register: systemd_service
+- set_fact: instance_sysd_script={{sysd_script | dirname }}/{{es_instance_name}}_{{sysd_script | basename}}
+  when: systemd_service
+- set_fact: m_lock_enabled={{ es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True }}
 
 - debug: msg="Node configuration {{ es_config }} "
 
@@ -28,6 +33,4 @@
 
 - name: Restart elasticsearch service if new version installed
   service: name={{instance_init_script | basename}} state=restarted enabled=yes
-  when: es_start_service and 
-    ( elasticsearch_install.changed or elasticsearch_configure.changed )
-    and not elasticsearch_started.changed
+  when: es_start_service and elasticsearch_install.changed and not elasticsearch_started.changed
