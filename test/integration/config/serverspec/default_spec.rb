@@ -76,7 +76,6 @@ context "basic tests" do
   describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
     it { should be_file }
     it { should contain 'LimitMEMLOCK=infinity' }
-    it { should contain 'EnvironmentFile=-/etc/sysconfig/node1_elasticsearch' }
   end
 
 end

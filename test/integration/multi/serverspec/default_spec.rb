@@ -160,13 +160,11 @@ context "basic tests" do
   describe file('/usr/lib/systemd/system/master_elasticsearch.service') do
     it { should be_file }
     it { should contain 'LimitMEMLOCK=infinity' }
-    it { should contain 'EnvironmentFile=-/etc/sysconfig/master_elasticsearch' }
   end
 
   describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
     it { should be_file }
     it { should_not contain 'LimitMEMLOCK=infinity' }
-    it { should contain 'EnvironmentFile=-/etc/sysconfig/node1_elasticsearch' }
   end
 
 end
