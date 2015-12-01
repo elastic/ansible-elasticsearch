@@ -5,8 +5,8 @@ Ansible playbook / roles / tasks for Elasticsearch.  Currently it will work on D
 * Ubuntu 1404
 * Debian 7
 * Debian 8
+* Centos 6
 * Centos 7
-* Centos 8
 
 
 ## Usage
