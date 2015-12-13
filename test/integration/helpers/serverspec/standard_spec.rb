@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-context "basic tests" do
+shared_examples 'standard::init' do |es_version|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -39,10 +39,10 @@ context "basic tests" do
     end
   end
 
-  describe 'plugin' do
-    it 'should be reported as existing', :retry => 3, :retry_wait => 10 do
-      command = command('curl -s localhost:9200/_nodes/?plugin | grep kopf')
-      expect(command.stdout).to match(/kopf/)
+  describe 'version check' do
+    it 'should be reported as version '+es_version do
+      command = command('curl -s localhost:9200 | grep number')
+      expect(command.stdout).to match(es_version)
       expect(command.exit_status).to eq(0)
     end
   end

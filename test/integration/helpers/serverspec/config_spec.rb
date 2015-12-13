@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-context "basic tests" do
+shared_examples 'config::init' do |es_version|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -61,7 +61,7 @@ context "basic tests" do
   end
 
   #test we started on the correct port was used
-  describe command('curl -s "localhost:9201" | grep status') do
+  describe command('curl -s "localhost:9201"') do
     #TODO: This is returning an empty string
     #its(:stdout) { should match /\"status\" : 200/ }
     its(:exit_status) { should eq 0 }
@@ -72,6 +72,21 @@ context "basic tests" do
     its(:stdout) { should match /true/ }
     its(:exit_status) { should eq 0 }
   end
+
+
+  describe 'version check' do
+    it 'should be reported as version '+es_version do
+      command = command('curl -s localhost:9201 | grep number')
+      expect(command.stdout).to match(es_version)
+      expect(command.exit_status).to eq(0)
+    end
+  end
+
+  #Not copied on Debian 8
+  #describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
+  #  it { should be_file }
+  #  it { should contain 'LimitMEMLOCK=infinity' }
+  #end
 
 end
 

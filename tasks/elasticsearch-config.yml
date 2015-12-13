@@ -12,7 +12,7 @@
 
 #For directories we also use the {{inventory_hostname}}-{{ es_instance_name }} - this helps if we have a shared SAN.
 
-- set_fact: pid_dir={{es_pid_dir}}/{{inventory_hostname}}-{{ es_instance_name }}
+- set_fact: pid_dir={{ es_pid_dir }}/{{inventory_hostname}}-{{ es_instance_name }}
 
 - set_fact: data_dir={{ es_data_dir }}/{{inventory_hostname}}-{{ es_instance_name }}
 
@@ -34,11 +34,14 @@
   file: state=directory path={{ log_dir }} owner={{ es_user }} group={{ es_group }}
 
 - name: Create Config Directory
-  file: path={{ instance_config_directory }} state=directory owner={{ es_user }} group={{ es_group }}
+  file: path={{ conf_dir }} state=directory owner={{ es_user }} group={{ es_group }}
+
+- name: Create Plugin Directory
+  file: state=directory path={{ plugin_dir }} owner={{ es_user }} group={{ es_group }}
 
 #Copy the config template
 - name: Copy Configuration File
-  template: src=elasticsearch.yml.j2 dest={{instance_config_directory}}/elasticsearch.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=elasticsearch.yml.j2 dest={{conf_dir}}/elasticsearch.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   notify: restart elasticsearch
 
 #Copy the instance specific default file
@@ -64,5 +67,5 @@
 
 #Copy the logging.yml
 - name: Copy Logging.yml File for Instance
-  template: src=logging.yml.j2 dest={{instance_config_directory}}/logging.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=logging.yml.j2 dest={{conf_dir}}/logging.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   notify: restart elasticsearch

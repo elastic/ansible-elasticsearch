@@ -1,4 +1,4 @@
 
 - name: restart elasticsearch
   service: name={{instance_init_script | basename}} state=restarted enabled=yes
-  when: es_start_service and not elasticsearch_started.changed
+  when: es_start_service and (not elasticsearch_started.changed or plugin_installed.changed)

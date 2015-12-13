@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-context "basic tests" do
+shared_examples 'package::init' do  |es_version,plugins|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -22,6 +22,8 @@ context "basic tests" do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
+
+
 
   describe file('/etc/elasticsearch/node1/scripts/calculate-score.groovy') do
     it { should be_file }
@@ -51,6 +53,34 @@ context "basic tests" do
       expect(command.exit_status).to eq(0)
     end
   end
+
+  describe 'version check' do
+    it 'should be reported as version '+es_version do
+      command = command('curl -s localhost:9200 | grep number')
+      expect(command.stdout).to match(es_version)
+      expect(command.exit_status).to eq(0)
+    end
+  end
+
+  describe file('/usr/share/elasticsearch/plugins/node1') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+
+  for plugin in plugins
+    describe file('/usr/share/elasticsearch/plugins/node1/'+plugin) do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
+
+    describe command('curl -s localhost:9200/_nodes/plugins?pretty=true | grep '+plugin) do
+      its(:exit_status) { should eq 0 }
+    end
+
+  end
+
+  #path.plugins: /usr/share/elasticsearch/plugins/node1
 
 end
 

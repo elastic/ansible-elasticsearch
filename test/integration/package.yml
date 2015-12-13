@@ -2,7 +2,7 @@
 - name: Elasticsearch Package tests
   hosts: localhost
   roles:
-    - { role: elasticsearch, es_config: { "discovery.zen.ping.multicast.enabled": true }, es_instance_name: "node1" }
+    - { role: elasticsearch, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300" }, es_instance_name: "node1" }
   vars:
     es_scripts: true
     es_templates: true

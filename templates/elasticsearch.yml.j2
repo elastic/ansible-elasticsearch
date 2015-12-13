@@ -14,10 +14,12 @@ node.name: {{inventory_hostname}}-{{es_instance_name}}
 #################################### Paths ####################################
 
 # Path to directory containing configuration (this file and logging.yml):
-path.conf: {{ instance_config_directory }}
+path.conf: {{ conf_dir }}
 
 path.data: {{ data_dir }}
 
 path.work: {{ work_dir }}
 
 path.logs: {{ log_dir }}
+
+path.plugins: {{ plugin_dir }}

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-context "basic tests" do
+shared_examples 'multi::init' do  |es_version|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -155,6 +155,33 @@ context "basic tests" do
     its(:exit_status) { should eq 0 }
   end
 
+  describe 'version check on master' do
+    it 'should be reported as version '+es_version do
+      command = command('curl -s localhost:9200 | grep number')
+      expect(command.stdout).to match(es_version)
+      expect(command.exit_status).to eq(0)
+    end
+  end
+
+  describe 'version check on data' do
+    it 'should be reported as version '+es_version do
+      command = command('curl -s localhost:9201 | grep number')
+      expect(command.stdout).to match(es_version)
+      expect(command.exit_status).to eq(0)
+    end
+  end
+
+
+  #Test server spec file has been created and modified
+  #describe file('/usr/lib/systemd/system/master_elasticsearch.service') do
+  #  it { should be_file }
+  #  it { should contain 'LimitMEMLOCK=infinity' }
+  #end
+
+  #describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
+  #  it { should be_file }
+  #  it { should_not contain 'LimitMEMLOCK=infinity' }
+  #end
 
 end
 
