@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-shared_examples 'multi::init' do  |es_version|
+shared_examples 'multi::init' do  |es_version,plugins|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -171,8 +171,42 @@ shared_examples 'multi::init' do  |es_version|
     end
   end
 
+  #Multi node plugin tests
+  describe file('/opt/elasticsearch/plugins/node1') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
 
-  #Test server spec file has been created and modified
+  describe file('/opt/elasticsearch/plugins/master') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+
+  for plugin in plugins
+    describe file('/opt/elasticsearch/plugins/node1/'+plugin) do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
+
+    describe file('/opt/elasticsearch/plugins/master/'+plugin) do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
+
+    describe command('curl -s localhost:9200/_nodes/plugins?pretty=true | grep '+plugin) do
+      its(:exit_status) { should eq 0 }
+    end
+
+    describe command('curl -s localhost:9201/_nodes/plugins?pretty=true | grep '+plugin) do
+      its(:exit_status) { should eq 0 }
+    end
+  end
+
+
+
+
+  #Test server spec file has been created and modified - currently not possible as not copied for debian 8
   #describe file('/usr/lib/systemd/system/master_elasticsearch.service') do
   #  it { should be_file }
   #  it { should contain 'LimitMEMLOCK=infinity' }

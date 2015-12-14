@@ -6,3 +6,4 @@
   vars:
     es_scripts: true
     es_templates: true
+#Plugins installed for this test are specified in .kitchen.yml under suite

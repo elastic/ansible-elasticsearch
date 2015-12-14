@@ -16,6 +16,10 @@ shared_examples 'package::init' do  |es_version,plugins|
 
   describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
     it { should be_file }
+    it { should contain 'path.plugins: /usr/share/elasticsearch/plugins/node1' }
+    it { should contain 'http.port: 9200' }
+    it { should contain 'transport.tcp.port: 9300' }
+    it { should contain 'discovery.zen.ping.unicast.hosts: localhost:9300' }
   end
 
   describe file('/etc/elasticsearch/node1/scripts') do
@@ -77,10 +81,7 @@ shared_examples 'package::init' do  |es_version,plugins|
     describe command('curl -s localhost:9200/_nodes/plugins?pretty=true | grep '+plugin) do
       its(:exit_status) { should eq 0 }
     end
-
   end
-
-  #path.plugins: /usr/share/elasticsearch/plugins/node1
 
 end
 

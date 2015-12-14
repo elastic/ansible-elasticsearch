@@ -80,6 +80,12 @@ suites:
   - name: multi-2x
     run_list:
     attributes:
+      extra_vars:
+        es_plugins:
+          - plugin: lmenezes/elasticsearch-kopf
+            version: master
+          - plugin: license
+          - plugin: marvel-agent
     provisioner:
       playbook: test/integration/multi.yml
   - name: standard-1x
@@ -117,5 +123,10 @@ suites:
       extra_vars:
         es_major_version: 1.7
         es_version: 1.7.3
+        es_plugins:
+          - plugin: lmenezes/elasticsearch-kopf
+            version: master
+          - plugin: elasticsearch/marvel
+            version: latest
     provisioner:
       playbook: test/integration/multi.yml

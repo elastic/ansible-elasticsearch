@@ -69,3 +69,5 @@
 - name: Copy Logging.yml File for Instance
   template: src=logging.yml.j2 dest={{conf_dir}}/logging.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   notify: restart elasticsearch
+
+#Clean up un-wanted package scripts to avoid confusion
