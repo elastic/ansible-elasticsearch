@@ -1,6 +1,6 @@
 ---
-es_major_version: "1.7"
-es_version: "1.7.3"
+es_major_version: "2.x"
+es_version: "2.1.0"
 es_version_lock: false
 es_use_repository: true
 es_start_service: true
@@ -15,3 +15,4 @@ es_pid_dir: "/var/run/elasticsearch"
 es_data_dir: "/var/lib/elasticsearch"
 es_log_dir: "/var/log/elasticsearch"
 es_work_dir: "/tmp/elasticsearch"
+es_plugin_dir: "/usr/share/elasticsearch/plugins"

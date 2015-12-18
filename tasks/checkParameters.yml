@@ -1,17 +1,17 @@
 # Check for mandatory parameters
 
-- fail: msg="es_instance_name must be specified"
-  when: es_instance_name is not defined
+- fail: msg="es_instance_name must be specified and cannot be blank"
+  when: es_instance_name is not defined or es_instance_name == ''
 
-- set_fact: multi_cast={{ (es_version | version_compare('2.0', '<') and es_config['discovery.zen.ping.multicast.enabled'] is not defined) or es_config['discovery.zen.ping.multicast.enabled']}}
+- set_fact: multi_cast={{ (es_version | version_compare('2.0', '<') and es_config['discovery.zen.ping.multicast.enabled'] is not defined) or (es_config['discovery.zen.ping.multicast.enabled'] is defined and es_config['discovery.zen.ping.multicast.enabled'])}}
 
-- fail: msg="Parameter 'http.port' must be defined when multicast is disabled"
+- debug: msg="WARNING - It is recommended you specify the parameter 'http.port' when multicast is disabled"
   when: not multi_cast and es_config['http.port'] is not defined
 
-- fail: msg="Parameter 'transport.tcp.port' must be defined when multicast is disabled"
+- debug: msg="WARNING - It is recommended you specify the parameter 'transport.tcp.port' when multicast is disabled"
   when: not multi_cast and es_config['transport.tcp.port'] is not defined
 
-- fail: msg="Parameter 'discovery.zen.ping.unicast.hosts' must be defined when multicast is disabled"
+- debug: msg="WARNING - It is recommended you specify the parameter 'discovery.zen.ping.unicast.hosts' when multicast is disabled"
   when: not multi_cast and es_config['discovery.zen.ping.unicast.hosts'] is not defined
 
 #If the user attempts to lock memory they must specify a heap size

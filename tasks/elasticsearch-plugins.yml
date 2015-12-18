@@ -1,15 +1,26 @@
 ---
+
 - name: Remove elasticsearch plugins
-  command: /usr/share/elasticsearch/bin/plugin --remove {{ item.plugin }} --silent
+  command: "{{es_home}}/bin/plugin remove {{ item.plugin }} --silent"
   ignore_errors: yes
   with_items: es_plugins
   when: ( ansible_os_family == 'RedHat' or ansible_os_family == 'Debian' ) and es_plugins_reinstall
+  notify: restart elasticsearch
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
 
 - name: Install elasticsearch plugins
   #debug: var=item
-  command: /usr/share/elasticsearch/bin/plugin --install {{ item.plugin }}/{{ item.version }} --silent
-  register: command_result
-  failed_when: "'Failed to install' in command_result.stderr"
-  changed_when: command_result.rc == 0
+  command: "{{es_home}}/bin/plugin install {{ item.plugin }}{% if item.version is defined and item.version != '' %}/{{ item.version }}{% endif %} --silent"
+  register: plugin_installed
+  failed_when: "'Failed to install' in plugin_installed.stderr"
+  changed_when: plugin_installed.rc == 0
   with_items: es_plugins
-  when: ( ansible_os_family == 'RedHat' or ansible_os_family == 'Debian' )
+  when: ansible_os_family == 'RedHat' or ansible_os_family == 'Debian'
+  notify: restart elasticsearch
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
+
+#Set permissions on plugins directory
+- name: Set Plugin Directory Permissions
+  file: state=directory path={{ plugin_dir }} owner={{ es_user }} group={{ es_group }} recurse=yes
