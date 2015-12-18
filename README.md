@@ -144,7 +144,8 @@ Make sure your hosts are defined in your ```inventory``` file with the appropria
 
 Then run it:
 
-```ansible-playbook -i hosts ./your-playbook.yml
+```
+ansible-playbook -i hosts ./your-playbook.yml
 ```
 
 ### Additional Configuration
@@ -160,10 +161,12 @@ Following variables affect the versions installed:
 * ```es_plugins``` (an array of plugin definitons e.g.:
 
 ```
-    es_plugins:
-      - plugin: elasticsearch-cloud-aws
-        version: 2.5.0
- ```
+  es_plugins:
+    - plugin: elasticsearch-cloud-aws
+      version: 2.5.0
+```
+ 
+ 
 Earlier examples illustrate the installation of plugins for 2.x.  The correct use of this parameter varies depending on the version of Elasticsearch being installed:
  
  - 2.x. - For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  
