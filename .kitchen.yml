@@ -36,7 +36,11 @@ platforms:
         - apt-get update
         - apt-get install -y -q ansible
         - apt-get install -y -q net-tools
+        - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
+        - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+        - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
       use_sudo: false
+      run_command: "/sbin/init"
   - name: centos-6
     driver_config:
       image: electrical/centos:6.4-1
