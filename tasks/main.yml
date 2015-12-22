@@ -11,4 +11,3 @@
   when: es_scripts
 - include: elasticsearch-templates.yml
   when: es_templates
-
