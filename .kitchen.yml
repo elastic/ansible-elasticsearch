@@ -8,6 +8,8 @@ provisioner:
   roles_path: ../
   require_ansible_repo: true
   ansible_verbose: true
+  http_proxy: <%= ENV['HTTP_PROXY'] %>
+  https_proxy: <%= ENV['HTTPS_PROXY'] %>
 
 platforms:
   - name: ubuntu-14.04
