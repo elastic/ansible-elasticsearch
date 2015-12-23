@@ -8,6 +8,7 @@ Ansible role for Elasticsearch.  Currently this works on Debian and RedHat based
 * Centos 6
 * Centos 7
 
+The latest Elasticsearch versions of 1.7.x and 2.1.x are actively tested.
 
 ## Usage
 
@@ -191,9 +192,9 @@ controlled by the following parameters:
 
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
-* Systemd scripts are by default installed in addition to init scripts - with the exception of Debian 8.  This is pending improvement and currently relies on the user to determine the preferred mechanism.
 * Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
 * KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of each major release i.e. 1.7.3 and 2.1.0 on
 all supported platforms. 
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and 
 Elasticsearch restarted where required.
+* Systemd is used for Ubuntu versions >= 15, Debian >=8, Centos >=7.  All other versions use init for service scripts.
