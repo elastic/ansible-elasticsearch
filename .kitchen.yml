@@ -10,6 +10,7 @@ provisioner:
   ansible_verbose: true
   http_proxy: <%= ENV['HTTP_PROXY'] %>
   https_proxy: <%= ENV['HTTPS_PROXY'] %>
+  no_proxy: localhost,127.0.0.1
 
 platforms:
   - name: ubuntu-14.04
