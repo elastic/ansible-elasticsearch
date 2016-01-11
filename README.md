@@ -155,8 +155,8 @@ Additional parameters to es_config allow the customization of the Java and Elast
 
 Following variables affect the versions installed:
 
-* ```es_major_version``` (e.g. "1.5" ).  Should be consistent with es_version.
-* ```es_version``` (e.g. "1.5.2").  For versions > 2.x this must be "2.x".
+* ```es_major_version``` (e.g. "1.5" ). Should be consistent with es_version. For versions >= 2.0 this must be "2.x".
+* ```es_version``` (e.g. "1.5.2").  
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` (an array of plugin definitons e.g.:
