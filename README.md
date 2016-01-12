@@ -173,6 +173,14 @@ Earlier examples illustrate the installation of plugins for 2.x.  The correct us
  - 2.x. - For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  
  For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.
  - 1.x - Full path and version is required for both community and official plugins e.g. "elasticsearch/marvel"
+ - For offline installs, or internally hosted plugin files, specify the custom_url parameter for the plugin e.g:
+ 
+ ```
+  es_plugins:
+    - plugin: elasticsearch-cloud-aws
+      version: 2.5.0
+      custom_url: file:///path/to/pluginfile.zip
+```
  
 If installing Marvel or Watcher, ensure the license plugin is also specified.  Shield configuration is currently not supported but planned for later versions.
 
