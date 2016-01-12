@@ -179,7 +179,7 @@ Earlier examples illustrate the installation of plugins for 2.x.  The correct us
   es_plugins:
     - plugin: elasticsearch-cloud-aws
       version: 2.5.0
-      custom_url: file:///path/to/pluginfile.zip
+      url: file:///path/to/pluginfile.zip
 ```
  
 If installing Marvel or Watcher, ensure the license plugin is also specified.  Shield configuration is currently not supported but planned for later versions.
