@@ -1,6 +1,5 @@
 ---
-#TODO: How to handle in multi node
-# 1. Template directory needs to be specifiable
+
 - name: Copy templates to elasticsearch
   copy: src=templates dest=/etc/elasticsearch/ owner={{ es_user }} group={{ es_group }}
 
