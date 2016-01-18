@@ -10,10 +10,7 @@
 #Relies on elasticsearch distribution installing a serviced script to determine whether one should be copied.
 
 
-- stat: path={{sysd_script}}
-  register: systemd_service
-
-- set_fact: use_system_d={{systemd_service.stat.exists and ((ansible_distribution == 'Debian' and ansible_distribution_version | version_compare('8', '>=')) or (ansible_distribution == 'CentOS' and ansible_distribution_version | version_compare('7', '>=')) or (ansible_distribution == 'Ubuntu' and ansible_distribution_version | version_compare('15', '>='))) }}
+- set_fact: use_system_d={{(ansible_distribution == 'Debian' and ansible_distribution_version | version_compare('8', '>=')) or (ansible_distribution == 'CentOS' and ansible_distribution_version | version_compare('7', '>=')) or (ansible_distribution == 'Ubuntu' and ansible_distribution_version | version_compare('15', '>=')) }}
 
 - set_fact: instance_sysd_script={{sysd_script | dirname }}/{{es_instance_name}}_{{sysd_script | basename}}
   when: use_system_d
@@ -81,3 +78,17 @@
   notify: restart elasticsearch
 
 #Clean up un-wanted package scripts to avoid confusion
+
+- name: Delete Default Init
+  file: dest=/etc/init.d/elasticsearch state=absent
+
+- name: Delete Default Environment File
+  file: dest=/etc/default/elasticsearch state=absent
+  when: ansible_os_family == 'Debian'
+
+- name: Delete Default Environment File
+  file: dest=/etc/sysconfig/elasticsearch state=absent
+  when: ansible_os_family == 'RedHat'
+
+- name: Delete Default Sysconfig File
+  file: dest=/usr/lib/systemd/system/elasticsearch.service state=absent

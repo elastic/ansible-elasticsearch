@@ -16,17 +16,3 @@
 - name: Include specific Elasticsearch
   include: elasticsearch-RedHat.yml
   when: ansible_os_family == 'RedHat'
-
-#Configuration file for elasticsearch
-- name: Elasticsearch configuration
-  include: elasticsearch-config.yml
-
-# Make sure the service is started, and restart if necessary
-- name: Start elasticsearch service
-  service: name={{instance_init_script | basename}} state=started enabled=yes
-  when: es_start_service
-  register: elasticsearch_started
-
-- name: Restart elasticsearch service if new version installed
-  service: name={{instance_init_script | basename}} state=restarted enabled=yes
-  when: es_start_service and elasticsearch_install.changed and not elasticsearch_started.changed
