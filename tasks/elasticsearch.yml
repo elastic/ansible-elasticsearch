@@ -8,7 +8,10 @@
 
 - debug: msg="Node configuration {{ es_config }} "
 
-# Install OS specific elasticsearch - this can be abbreviated in version 2.0.0
+#- name: Include specific Elasticsearch
+#  include: "elasticsearch-{{ansible_os_family}}.yml"
+
+#Install OS specific elasticsearch - this can be abbreviated in version 2.0.0
 - name: Include specific Elasticsearch
   include: elasticsearch-Debian.yml
   when: ansible_os_family == 'Debian'
