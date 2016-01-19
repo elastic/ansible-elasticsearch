@@ -1,10 +1,19 @@
 ---
 
+#es_plugins_reinstall will be set to true if elasticsearch_install.changed i.e. we have changed ES version
+- set_fact: es_plugins_reinstall=true
+  when: elasticsearch_install.changed
+
+#List currently installed plugins
+
+
+
+#This needs to removed installed plugins not those listed
 - name: Remove elasticsearch plugins
   command: "{{es_home}}/bin/plugin remove {{ item.plugin }} --silent"
   ignore_errors: yes
   with_items: es_plugins
-  when: ( ansible_os_family == 'RedHat' or ansible_os_family == 'Debian' ) and es_plugins_reinstall
+  when: es_plugins_reinstall
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"

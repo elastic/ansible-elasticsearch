@@ -1,0 +1,6 @@
+# Make sure the service is started, and restart if necessary
+- name: Start elasticsearch service
+  service: name={{instance_init_script | basename}} state=started enabled=yes
+  when: es_start_service
+  register: elasticsearch_started
+

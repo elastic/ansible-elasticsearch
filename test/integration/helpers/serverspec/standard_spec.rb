@@ -47,5 +47,21 @@ shared_examples 'standard::init' do |es_version|
     end
   end
 
+  describe file('/etc/init.d/elasticsearch') do
+    it { should_not exist }
+  end
+
+  describe file('/etc/default/elasticsearch') do
+    it { should_not exist }
+  end
+
+  describe file('/etc/sysconfig/elasticsearch') do
+    it { should_not exist }
+  end
+
+  describe file('/usr/lib/systemd/system/elasticsearch.service') do
+    it { should_not exist }
+  end
+
 end
 
