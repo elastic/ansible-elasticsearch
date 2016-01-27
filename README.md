@@ -100,6 +100,8 @@ A more complex example:
         - plugin: marvel-agent
         - plugin: lmenezes/elasticsearch-kopf
           version: master
+          proxy_host: proxy.example.com
+          proxy_port: 8080
 ```
 
 ### Multi Node Server Installations
@@ -166,8 +168,7 @@ Following variables affect the versions installed:
     - plugin: elasticsearch-cloud-aws
       version: 2.5.0
 ```
- 
- 
+
 Earlier examples illustrate the installation of plugins for 2.x.  The correct use of this parameter varies depending on the version of Elasticsearch being installed:
  
  - 2.x. - For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  
@@ -187,6 +188,25 @@ controlled by the following parameters:
 * ```es_log_dir``` - defaults to "/var/log/elasticsearch".
 * ```es_work_dir``` - defaults to "/tmp/elasticsearch".
 * ```es_plugin_dir``` - defaults to "/usr/share/elasticsearch/plugins".
+
+### Proxy
+
+To define proxy globaly, set the following variables:
+
+* ```es_proxy_host``` - global proxy host
+* ```es_proxy_port``` - global proxy port
+
+To define proxy only for a particular plugin during its installation:
+
+```
+  es_plugins:
+    - plugin: elasticsearch-cloud-aws
+      version: 2.5.0
+      proxy_host: proxy.example.com
+      proxy_port: 8080
+```
+
+> For plugins installation, proxy_host and proxy_port are used first if they are defined and fallback to the global proxy settings if not.
 
 ## Notes
 
