@@ -2,7 +2,7 @@
 
 Ansible role for Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
 
-* Ubuntu 1404
+* Ubuntu 14.04
 * Debian 7
 * Debian 8
 * Centos 6
@@ -68,7 +68,7 @@ When not utilizing multicast, the following should be set to ensure a successful
 
 * ```es_config['http.port']``` - the http port for the node
 * ```es_config['transport.tcp.port']``` - the transport port for the node
-* ```es_config['discovery.zen.ping.unicast.hosts']``` - the unicast discovery list, in the comma separated format "<host>:<port>,<host>:<port>" (typically the clusters dedicated masters)
+* ```es_config['discovery.zen.ping.unicast.hosts']``` - the unicast discovery list, in the comma separated format ```"<host>:<port>,<host>:<port>"``` (typically the clusters dedicated masters)
 * ```es_config['network.host']``` - sets both network.bind_host and network.publish_host to the same host value. The network.bind_host setting allows to control the host different network components will bind on.  
 
 The network.publish_host setting allows to control the host the node will publish itself within the cluster so other nodes will be able to connect to it. 
