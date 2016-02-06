@@ -2,7 +2,7 @@
 
 Ansible role for Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
 
-* Ubuntu 1404
+* Ubuntu 14.04
 * Debian 7
 * Debian 8
 * Centos 6
