@@ -76,7 +76,33 @@ The network.publish_host setting allows to control the host the node will publis
 See https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html for further details on default binding behaviour and available options.
 The role makes no attempt to enforce the setting of these are requires users to specify them appropriately.  IT is recommended master nodes are listed and thus deployed first where possible.
 
-A more complex example:
+### Elasticsearch 2.x with basic marvel support
+
+```
+- name: Elasticsearch with basic marvel configuration
+  hosts: localhost
+  roles:
+    #expand to all available parameters
+    - { role: elasticsearch, es_instance_name: "node1", es_data_dir: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", es_work_dir: "/opt/elasticsearch/temp", es_config: {node.name: "node1", cluster.name: "custom-cluster", discovery.zen.ping.unicast.hosts: "localhost:9301", http.port: 9201, transport.tcp.port: 9301, node.data: false, node.master: true, bootstrap.mlockall: true, discovery.zen.ping.multicast.enabled: false }, es_marvel_agent: {marvel.agent.exporters.type: "http", marvel.agent.exporters.host: "http://172.17.0.2:9200" } }
+  vars:
+    es_major_version: 2.x
+    es_scripts: false
+    es_templates: false
+    es_version_lock: false
+    es_heap_size: 1g
+    es_plugins:
+        - plugin: license
+        - plugin: marvel-agent
+```
+The marvel-agent configuration support is very basic currently and only works with elasticsearch >= 2.x. Just like ```es_config``` you can define ```es_marvel_agent``` with the following parameters:
+
+* ```marvel.agent.exporters.type:``` set it to ```http``` for sending data to a remote marvel host.
+* ```marvel.agent.exporters.host``` define the remote marvel host, in this format ```http://<host>:<port>```.
+
+Be sure to include ```es_plugins``` and the ```license``` and ```marvel-agent``` plugins into your playbook, as in aboves example. 
+
+
+### A more complex example
 
 ```
 ---
@@ -101,6 +127,8 @@ A more complex example:
         - plugin: lmenezes/elasticsearch-kopf
           version: master
 ```
+
+### 
 
 ### Multi Node Server Installations
 
