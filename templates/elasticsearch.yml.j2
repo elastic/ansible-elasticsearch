@@ -23,3 +23,10 @@ path.work: {{ work_dir }}
 path.logs: {{ log_dir }}
 
 path.plugins: {{ plugin_dir }}
+
+{% if es_marvel_agent %}
+marvel.agent.exporters:
+  id1:
+    type: {{ es_marvel_agent['marvel.agent.exporters.type'] }}
+    host: {{ es_marvel_agent['marvel.agent.exporters.host'] }}
+{% endif %}
