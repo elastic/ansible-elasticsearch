@@ -10,4 +10,5 @@
   when: es_config['path.scripts'] is defined
 
 - name: Copy scripts to elasticsearch
-  copy: src=scripts dest={{ es_script_dir }} owner={{ es_user }} group={{ es_group }}
+  copy: src={{ item }} dest={{ es_script_dir }} owner={{ es_user }} group={{ es_group }}
+  with_fileglob: es_scripts_fileglob | default("scripts")
