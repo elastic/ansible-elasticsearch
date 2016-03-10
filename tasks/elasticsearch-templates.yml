@@ -1,7 +1,8 @@
 ---
 
 - name: Copy templates to elasticsearch
-  copy: src=templates dest=/etc/elasticsearch/ owner={{ es_user }} group={{ es_group }}
+  copy: src={{ item }} dest=/etc/elasticsearch/ owner={{ es_user }} group={{ es_group }}
+  with_fileglob: es_templates_fileglob | default("templates")
 
 - set_fact: http_port=9200
 

@@ -188,6 +188,10 @@ controlled by the following parameters:
 * ```es_work_dir``` - defaults to "/tmp/elasticsearch".
 * ```es_plugin_dir``` - defaults to "/usr/share/elasticsearch/plugins".
 
+This role ships with sample scripts and templates located in the [files/scripts/](files/scripts) and [files/templates/](files/templates) directories, respectively. These variables are used with the Ansible [with_fileglob](http://docs.ansible.com/ansible/playbooks_loops.html#id4) loop. When setting the globs, be sure to use an absolute path.
+* ```es_scripts_fileglob``` - defaults to `<role>/files/scripts/`.
+* ```es_templates_fileglob``` - defaults to `<role>/files/templates/`.
+
 ## Notes
 
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
