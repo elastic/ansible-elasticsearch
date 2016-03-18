@@ -13,7 +13,7 @@ es_group: elasticsearch
 es_config: {}
 #Need to provide default directories
 es_pid_dir: "/var/run/elasticsearch"
-es_data_dir: "/var/lib/elasticsearch"
+es_data_dirs: "/var/lib/elasticsearch"
 es_log_dir: "/var/log/elasticsearch"
 es_work_dir: "/tmp/elasticsearch"
 es_plugin_dir: "/usr/share/elasticsearch/plugins"

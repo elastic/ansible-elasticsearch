@@ -9,7 +9,7 @@
 - include: elasticsearch-scripts.yml
   when: es_scripts
 - include: elasticsearch-plugins.yml
-  when: es_plugins is defined
+  when: es_plugins is defined or es_plugins_reinstall
 - include: elasticsearch-service.yml
 - include: elasticsearch-templates.yml
   when: es_templates
