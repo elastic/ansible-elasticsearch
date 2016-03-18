@@ -16,7 +16,7 @@ node.name: {{inventory_hostname}}-{{es_instance_name}}
 # Path to directory containing configuration (this file and logging.yml):
 path.conf: {{ conf_dir }}
 
-path.data: {{ data_dir }}
+path.data: {{ data_dirs | array_to_str }}
 
 path.work: {{ work_dir }}
 
