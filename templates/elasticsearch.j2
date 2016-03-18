@@ -9,7 +9,7 @@ ES_HOME={{es_home}}
 CONF_DIR={{conf_dir}}
 
 # Elasticsearch data directory
-DATA_DIR={{data_dir}}
+DATA_DIR={{ data_dirs | array_to_str }}
 
 # Elasticsearch logs directory
 LOG_DIR={{log_dir}}
