@@ -30,7 +30,7 @@ shared_examples 'config::init' do |es_version|
     it { should contain 'bootstrap.mlockall: true' }
     it { should contain 'discovery.zen.ping.unicast.hosts: localhost:9301' }
     it { should contain 'path.conf: /etc/elasticsearch/node1' }
-    it { should contain 'path.data: /opt/elasticsearch/data/localhost-node1' }
+    it { should contain 'path.data: /opt/elasticsearch/data-1/localhost-node1,/opt/elasticsearch/data-2/localhost-node1' }
     it { should contain 'path.work: /opt/elasticsearch/temp/localhost-node1' }
     it { should contain 'path.logs: /opt/elasticsearch/logs/localhost-node1' }
   end
@@ -41,7 +41,12 @@ shared_examples 'config::init' do |es_version|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  describe file('/opt/elasticsearch/data/localhost-node1') do
+  describe file('/opt/elasticsearch/data-1/localhost-node1') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/opt/elasticsearch/data-2/localhost-node1') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
@@ -80,6 +85,27 @@ shared_examples 'config::init' do |es_version|
       expect(command.stdout).to match(es_version)
       expect(command.exit_status).to eq(0)
     end
+  end
+
+
+  describe file('/etc/init.d/elasticsearch') do
+    it { should_not exist }
+  end
+
+  describe file('/etc/default/elasticsearch') do
+    it { should_not exist }
+  end
+
+  describe file('/etc/sysconfig/elasticsearch') do
+    it { should_not exist }
+  end
+
+  describe file('/usr/lib/systemd/system/elasticsearch.service') do
+    it { should_not exist }
+  end
+
+  describe file('/etc/elasticsearch/elasticsearch.yml') do
+    it { should_not exist }
   end
 
   #Not copied on Debian 8
