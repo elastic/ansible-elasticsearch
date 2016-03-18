@@ -8,9 +8,9 @@ provisioner:
   roles_path: ../
   require_ansible_repo: true
   ansible_verbose: true
-  http_proxy: <%= ENV['HTTP_PROXY'] %>
-  https_proxy: <%= ENV['HTTPS_PROXY'] %>
-  no_proxy: localhost,127.0.0.1
+  #http_proxy: <%= ENV['HTTP_PROXY'] %>
+  #https_proxy: <%= ENV['HTTPS_PROXY'] %>
+  #no_proxy: localhost,127.0.0.1
 
 platforms:
   - name: ubuntu-14.04
@@ -21,6 +21,7 @@ platforms:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
         - apt-get update && apt-get -y -q install ansible python-apt python-pycurl
       use_sudo: false
+      ansible_platform: ubuntu
   - name: debian-7
     driver_config:
       image: electrical/debian:7.3
@@ -31,6 +32,7 @@ platforms:
         - apt-get install -y -q ansible
         - apt-get install -y -q net-tools
       use_sudo: false
+      ansible_platform: debian
   - name: debian-8
     driver_config:
       image: electrical/debian:8
@@ -44,11 +46,13 @@ platforms:
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
       use_sudo: false
       run_command: "/sbin/init"
+      ansible_platform: debian
   - name: centos-6
     driver_config:
       image: electrical/centos:6.4-1
       privileged: true
       use_sudo: false
+      ansible_platform: centos
   - name: centos-7
     driver_config:
       image: electrical/centos:7
@@ -61,6 +65,7 @@ platforms:
       run_command: "/usr/sbin/init"
       privileged: true
       use_sudo: false
+      ansible_platform: centos
 
 suites:
   - name: standard-2x
