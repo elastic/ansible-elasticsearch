@@ -63,5 +63,9 @@ shared_examples 'standard::init' do |es_version|
     it { should_not exist }
   end
 
+  describe file('/etc/elasticsearch/elasticsearch.yml') do
+    it { should_not exist }
+  end
+
 end
 

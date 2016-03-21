@@ -30,7 +30,7 @@ shared_examples 'config::init' do |es_version|
     it { should contain 'bootstrap.mlockall: true' }
     it { should contain 'discovery.zen.ping.unicast.hosts: localhost:9301' }
     it { should contain 'path.conf: /etc/elasticsearch/node1' }
-    it { should contain 'path.data: /opt/elasticsearch/data/localhost-node1' }
+    it { should contain 'path.data: /opt/elasticsearch/data-1/localhost-node1,/opt/elasticsearch/data-2/localhost-node1' }
     it { should contain 'path.work: /opt/elasticsearch/temp/localhost-node1' }
     it { should contain 'path.logs: /opt/elasticsearch/logs/localhost-node1' }
   end
@@ -41,7 +41,12 @@ shared_examples 'config::init' do |es_version|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  describe file('/opt/elasticsearch/data/localhost-node1') do
+  describe file('/opt/elasticsearch/data-1/localhost-node1') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/opt/elasticsearch/data-2/localhost-node1') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
@@ -54,10 +59,6 @@ shared_examples 'config::init' do |es_version|
   describe file('/opt/elasticsearch/temp/localhost-node1') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe file('/etc/init.d/node1_elasticsearch') do
-    it { should be_file }
   end
 
   #test we started on the correct port was used
@@ -82,11 +83,42 @@ shared_examples 'config::init' do |es_version|
     end
   end
 
-  #Not copied on Debian 8
-  #describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
-  #  it { should be_file }
-  #  it { should contain 'LimitMEMLOCK=infinity' }
-  #end
+  describe file('/etc/init.d/elasticsearch') do
+    it { should_not exist }
+  end
 
+  describe file('/etc/default/elasticsearch') do
+    it { should_not exist }
+  end
+
+  describe file('/etc/sysconfig/elasticsearch') do
+    it { should_not exist }
+  end
+
+  describe file('/usr/lib/systemd/system/elasticsearch.service') do
+    it { should_not exist }
+  end
+
+  describe file('/etc/elasticsearch/elasticsearch.yml') do
+    it { should_not exist }
+  end
+
+  #Init vs Systemd tests
+  #Ubuntu 15 and up
+  #Debian 8 and up
+  #Centos 7 and up
+
+  if (((os[:family] == 'redhat' || os[:family] == 'centos') && os[:release].to_f >= 7.0) ||
+      (os[:family] == 'ubuntu' && os[:release].to_f >= 15.0) ||
+      (os[:family] == 'debian' && os[:release].to_f >= 8.0))
+    describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
+      it { should be_file }
+      it { should contain 'LimitMEMLOCK=infinity' }
+    end
+  else
+    describe file('/etc/init.d/node1_elasticsearch') do
+      it { should be_file }
+    end
+  end
 end
 
