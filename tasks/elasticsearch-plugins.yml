@@ -5,7 +5,6 @@
   when: elasticsearch_install.changed or es_plugins is not defined or es_plugins is none
 
 - set_fact: list_command="list"
-
 - set_fact: list_command="--list"
   when: es_version | version_compare('2.0', '<')
 
@@ -40,7 +39,7 @@
     {% endif %}
     --silent
   register: plugin_installed
-  failed_when: "'Failed to install' in plugin_installed.stderr"
+  failed_when: "'ERROR' in plugin_installed.stdout"
   changed_when: plugin_installed.rc == 0
   with_items: es_plugins
   when: es_plugins is defined and not es_plugins is none

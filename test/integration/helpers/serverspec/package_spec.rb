@@ -103,5 +103,9 @@ shared_examples 'package::init' do  |es_version,plugins|
     it { should_not exist }
   end
 
+  describe file('/etc/elasticsearch/logging.yml') do
+    it { should_not exist }
+  end
+
 end
 

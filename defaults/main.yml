@@ -17,3 +17,4 @@ es_data_dirs: "/var/lib/elasticsearch"
 es_log_dir: "/var/log/elasticsearch"
 es_work_dir: "/tmp/elasticsearch"
 es_plugin_dir: "/usr/share/elasticsearch/plugins"
+es_proxy_port: 8080
