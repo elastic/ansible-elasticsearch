@@ -3,6 +3,9 @@
 - fail: msg="es_instance_name must be specified and cannot be blank"
   when: es_instance_name is not defined or es_instance_name == ''
 
+- fail: msg="es_proxy_port must be specified and cannot be blank when es_proxy_host is defined"
+  when: (es_proxy_port is not defined or es_proxy_port == '') and (es_proxy_host is defined and es_proxy_host != '')
+
 - set_fact: multi_cast={{ (es_version | version_compare('2.0', '<') and es_config['discovery.zen.ping.multicast.enabled'] is not defined) or (es_config['discovery.zen.ping.multicast.enabled'] is defined and es_config['discovery.zen.ping.multicast.enabled'])}}
 
 - debug: msg="WARNING - It is recommended you specify the parameter 'http.port' when multicast is disabled"

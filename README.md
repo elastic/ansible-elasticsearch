@@ -122,6 +122,8 @@ A more complex example:
         - plugin: marvel-agent
         - plugin: lmenezes/elasticsearch-kopf
           version: master
+          proxy_host: proxy.example.com
+          proxy_port: 8080
 ```
 
 ### Multi Node Server Installations
@@ -208,8 +210,7 @@ Following variables affect the versions installed:
     - plugin: elasticsearch-cloud-aws
       version: 2.5.0
 ```
- 
- 
+
 Earlier examples illustrate the installation of plugins for 2.x.  The correct use of this parameter varies depending on the version of Elasticsearch being installed:
  
  - 2.x. - For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  
@@ -235,6 +236,25 @@ controlled by the following parameters:
 This role ships with sample scripts and templates located in the [files/scripts/](files/scripts) and [files/templates/](files/templates) directories, respectively. These variables are used with the Ansible [with_fileglob](http://docs.ansible.com/ansible/playbooks_loops.html#id4) loop. When setting the globs, be sure to use an absolute path.
 * ```es_scripts_fileglob``` - defaults to `<role>/files/scripts/`.
 * ```es_templates_fileglob``` - defaults to `<role>/files/templates/`.
+
+### Proxy
+
+To define proxy globaly, set the following variables:
+
+* ```es_proxy_host``` - global proxy host
+* ```es_proxy_port``` - global proxy port
+
+To define proxy only for a particular plugin during its installation:
+
+```
+  es_plugins:
+    - plugin: elasticsearch-cloud-aws
+      version: 2.5.0
+      proxy_host: proxy.example.com
+      proxy_port: 8080
+```
+
+> For plugins installation, proxy_host and proxy_port are used first if they are defined and fallback to the global proxy settings if not.
 
 ## Notes
 

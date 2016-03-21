@@ -30,7 +30,15 @@
 
 - name: Install elasticsearch plugins
   #debug: var=item
-  command: "{{es_home}}/bin/plugin install {{ item.plugin }}{% if item.version is defined and item.version != '' %}/{{ item.version }}{% endif %} --silent"
+  command: >
+    {{es_home}}/bin/plugin install
+    {{ item.plugin }}{% if item.version is defined and item.version != '' %}/{{ item.version }}{% endif %}
+    {% if item.proxy_host is defined and item.proxy_host != '' and item.proxy_port is defined and item.proxy_port != ''%}
+    -DproxyHost={{ item.proxy_host }} -DproxyPort={{ item.proxy_port }}
+    {% elif es_proxy_host is defined and es_proxy_host != '' %}
+    -DproxyHost={{ es_proxy_host }} -DproxyPort={{ es_proxy_port }}
+    {% endif %}
+    --silent
   register: plugin_installed
   failed_when: "'Failed to install' in plugin_installed.stderr"
   changed_when: plugin_installed.rc == 0
