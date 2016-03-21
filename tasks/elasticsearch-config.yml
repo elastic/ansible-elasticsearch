@@ -56,13 +56,13 @@
 #Copy the instance specific init file
 - name: Copy Debian Init File for Instance
   template: src=init/debian/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
-  when: ansible_os_family == 'Debian'
+  when: ansible_os_family == 'Debian' and not use_system_d
   notify: restart elasticsearch
 
 #Copy the instance specific init file
 - name: Copy Redhat Init File for Instance
   template: src=init/redhat/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
-  when: ansible_os_family == 'RedHat'
+  when: ansible_os_family == 'RedHat' and not use_system_d
   notify: restart elasticsearch
 
 #Copy the systemd specific file if systemd is installed
