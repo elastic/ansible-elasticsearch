@@ -103,13 +103,12 @@ shared_examples 'config::init' do |es_version|
     it { should_not exist }
   end
 
-
   #Init vs Systemd tests
   #Ubuntu 15 and up
   #Debian 8 and up
   #Centos 7 and up
 
-  if ((os[:family] == 'centos' && os[:release].to_f >= 7.0) ||
+  if (((os[:family] == 'redhat' || os[:family] == 'centos') && os[:release].to_f >= 7.0) ||
       (os[:family] == 'ubuntu' && os[:release].to_f >= 15.0) ||
       (os[:family] == 'debian' && os[:release].to_f >= 8.0))
     describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
