@@ -8,7 +8,7 @@ Ansible role for Elasticsearch.  Currently this works on Debian and RedHat based
 * Centos 6
 * Centos 7
 
-The latest Elasticsearch versions of 1.7.x and 2.1.x are actively tested.
+The latest Elasticsearch versions of 1.7.x and 2.x are actively tested.
 
 ## Usage
 
@@ -54,7 +54,18 @@ The following illustrates applying configuration parameters to an Elasticsearch 
   hosts: localhost
   roles:
     #expand to all available parameters
-    - { role: elasticsearch, es_instance_name: "node1", es_data_dir: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", es_work_dir: "/opt/elasticsearch/temp", es_config: {node.name: "node1", cluster.name: "custom-cluster", discovery.zen.ping.unicast.hosts: "localhost:9301", http.port: 9201, transport.tcp.port: 9301, node.data: false, node.master: true, bootstrap.mlockall: true, discovery.zen.ping.multicast.enabled: false } }
+    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", es_work_dir: "/opt/elasticsearch/temp", 
+    es_config: {
+        node.name: "node1", 
+        cluster.name: "custom-cluster",
+        discovery.zen.ping.unicast.hosts: "localhost:9301",
+        http.port: 9201,
+        transport.tcp.port: 9301,
+        node.data: false,
+        node.master: true,
+        bootstrap.mlockall: true,
+        discovery.zen.ping.multicast.enabled: false } 
+    }
   vars:
     es_scripts: false
     es_templates: false
@@ -84,7 +95,18 @@ A more complex example:
   hosts: localhost
   roles:
     #expand to all available parameters
-    - { role: elasticsearch, es_instance_name: "node1", es_data_dir: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", es_work_dir: "/opt/elasticsearch/temp", es_config: {node.name: "node1", cluster.name: "custom-cluster", discovery.zen.ping.unicast.hosts: "localhost:9301", http.port: 9201, transport.tcp.port: 9301, node.data: false, node.master: true, bootstrap.mlockall: true, discovery.zen.ping.multicast.enabled: false } }
+    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", es_work_dir: "/opt/elasticsearch/temp", 
+    es_config: {
+        node.name: "node1", 
+        cluster.name: "custom-cluster", 
+        discovery.zen.ping.unicast.hosts: "localhost:9301", 
+        http.port: 9201, 
+        transport.tcp.port: 9301, 
+        node.data: false, 
+        node.master: true, 
+        bootstrap.mlockall: true, 
+        discovery.zen.ping.multicast.enabled: false } 
+    }
   vars:
     es_scripts: false
     es_templates: false
@@ -100,6 +122,8 @@ A more complex example:
         - plugin: marvel-agent
         - plugin: lmenezes/elasticsearch-kopf
           version: master
+          proxy_host: proxy.example.com
+          proxy_port: 8080
 ```
 
 ### Multi Node Server Installations
@@ -126,8 +150,28 @@ recommended in any multi node cluster configuration.
 
 - hosts: data_nodes
   roles:
-    - { role: elasticsearch, es_instance_name: "node1", es_data_dir: "/opt/elasticsearch", es_config: { "discovery.zen.ping.multicast.enabled": false, discovery.zen.ping.unicast.hosts: "elastic02:9300", http.port: 9200, transport.tcp.port: 9300, node.data: true, node.master: false, bootstrap.mlockall: false, discovery.zen.ping.multicast.enabled: false } }
-    - { role: elasticsearch, es_instance_name: "node2", es_config: { "discovery.zen.ping.multicast.enabled": false, discovery.zen.ping.unicast.hosts: "elastic02:9300", http.port: 9201, transport.tcp.port: 9301, node.data: true, node.master: false, bootstrap.mlockall: false, discovery.zen.ping.multicast.enabled: false } }
+    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch", 
+    es_config: {
+        "discovery.zen.ping.multicast.enabled": false,
+        discovery.zen.ping.unicast.hosts: "elastic02:9300",
+        http.port: 9200,
+        transport.tcp.port: 9300,
+        node.data: true,
+        node.master: false,
+        bootstrap.mlockall: false,
+        discovery.zen.ping.multicast.enabled: false } 
+    }
+    - { role: elasticsearch, es_instance_name: "node2", 
+    es_config: {
+        "discovery.zen.ping.multicast.enabled": false,
+        discovery.zen.ping.unicast.hosts: "elastic02:9300",
+        http.port: 9201,
+        transport.tcp.port: 9301,
+        node.data: true,
+        node.master: false,
+        bootstrap.mlockall: false,
+        discovery.zen.ping.multicast.enabled: false } 
+    }
   vars:
     es_scripts: false
     es_templates: false
@@ -159,15 +203,14 @@ Following variables affect the versions installed:
 * ```es_version``` (e.g. "1.5.2").  
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
-* ```es_plugins``` (an array of plugin definitons e.g.:
+* ```es_plugins``` (an array of plugin definitions e.g.:
 
 ```
   es_plugins:
     - plugin: elasticsearch-cloud-aws
       version: 2.5.0
 ```
- 
- 
+
 Earlier examples illustrate the installation of plugins for 2.x.  The correct use of this parameter varies depending on the version of Elasticsearch being installed:
  
  - 2.x. - For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  
@@ -183,14 +226,35 @@ By default, each node on a host will be installed to use unique pid, plugin, wor
 controlled by the following parameters:
 
 * ```es_pid_dir``` - defaults to "/var/run/elasticsearch".
-* ```es_data_dir``` - defaults to "/var/lib/elasticsearch".
+* ```es_data_dirs``` - defaults to "/var/lib/elasticsearch".  This can be a list or comma separated string e.g. ["/opt/elasticsearch/data-1","/opt/elasticsearch/data-2"] or "/opt/elasticsearch/data-1,/opt/elasticsearch/data-2"
 * ```es_log_dir``` - defaults to "/var/log/elasticsearch".
 * ```es_work_dir``` - defaults to "/tmp/elasticsearch".
 * ```es_plugin_dir``` - defaults to "/usr/share/elasticsearch/plugins".
+* ```es_restart_on_change``` - defaults to true.  If false, changes will not result in Elasticsearch being restarted.
+* ```es_plugins_reinstall``` - defaults to false.  If true, all currently installed plugins will be removed from a node.  Listed plugins will then be re-installed.  
 
 This role ships with sample scripts and templates located in the [files/scripts/](files/scripts) and [files/templates/](files/templates) directories, respectively. These variables are used with the Ansible [with_fileglob](http://docs.ansible.com/ansible/playbooks_loops.html#id4) loop. When setting the globs, be sure to use an absolute path.
 * ```es_scripts_fileglob``` - defaults to `<role>/files/scripts/`.
 * ```es_templates_fileglob``` - defaults to `<role>/files/templates/`.
+
+### Proxy
+
+To define proxy globaly, set the following variables:
+
+* ```es_proxy_host``` - global proxy host
+* ```es_proxy_port``` - global proxy port
+
+To define proxy only for a particular plugin during its installation:
+
+```
+  es_plugins:
+    - plugin: elasticsearch-cloud-aws
+      version: 2.5.0
+      proxy_host: proxy.example.com
+      proxy_port: 8080
+```
+
+> For plugins installation, proxy_host and proxy_port are used first if they are defined and fallback to the global proxy settings if not.
 
 ## Notes
 
@@ -203,3 +267,8 @@ all supported platforms.
 Elasticsearch restarted where required.
 * Systemd is used for Ubuntu versions >= 15, Debian >=8, Centos >=7.  All other versions use init for service scripts.
 
+## IMPORTANT NOTES RE PLUGIN MANAGEMENT
+
+* If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 2.x.
+* If no plugins are listed in the playbook for a node, all currently installed plugins will be removed.
+* The role does not currently support automatic detection of differences between installed and listed plugins (other than if none are listed).   Should users wish to change installed plugins should set es_plugins_reinstall to true.  This will cause all currently installed plugins to be removed and those listed to be installed.  Change detection will be implemented in future releases.
