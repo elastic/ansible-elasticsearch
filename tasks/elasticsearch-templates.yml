@@ -8,7 +8,7 @@
 
 - name: Copy templates to elasticsearch
   copy: src={{ item }} dest=/etc/elasticsearch/ owner={{ es_user }} group={{ es_group }}
-  with_fileglob: es_templates_fileglob
+  with_fileglob: "{{ es_templates_fileglob }}"
 
 - set_fact: http_port=9200
 
@@ -24,4 +24,4 @@
 
 - name: Install template(s)
   command: "curl -sL -XPUT http://localhost:{{http_port}}/_template/{{item}} -d @/etc/elasticsearch/templates/{{item}}.json"
-  with_items: resultstemplate.stdout_lines
+  with_items: "{{ resultstemplate.stdout_lines }}"
