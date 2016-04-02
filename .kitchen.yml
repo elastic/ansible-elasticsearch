@@ -48,6 +48,7 @@ platforms:
       image:  dliappis/centos:6
       privileged: true
       provision_command:
+        - yum remove -y ansible
         - yum -y install gmp-devel python-devel python-pip
         - pip install ansible
       use_sudo: false
@@ -55,6 +56,7 @@ platforms:
     driver_config:
       image: dliappis/centos:7
       provision_command:
+        - yum remove -y ansible
         - yum -y install gmp-devel python-devel python-pip
         - yum -y groupinstall "Development Tools"
         - pip install ansible
