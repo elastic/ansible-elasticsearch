@@ -225,6 +225,9 @@ shared_examples 'multi::init' do  |es_version,plugins|
     it { should_not exist }
   end
 
+  describe file('/etc/elasticsearch/logging.yml') do
+    it { should_not exist }
+  end
 
 
   #Test server spec file has been created and modified - currently not possible as not copied for debian 8

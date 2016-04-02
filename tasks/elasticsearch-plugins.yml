@@ -5,7 +5,6 @@
   when: elasticsearch_install.changed or es_plugins is not defined or es_plugins is none
 
 - set_fact: list_command="list"
-
 - set_fact: list_command="--list"
   when: es_version | version_compare('2.0', '<')
 
@@ -31,16 +30,9 @@
 - name: Install elasticsearch plugins
   #debug: var=item
   command: >
-    {{es_home}}/bin/plugin install
-    {{ item.plugin }}{% if item.version is defined and item.version != '' %}/{{ item.version }}{% endif %}
-    {% if item.proxy_host is defined and item.proxy_host != '' and item.proxy_port is defined and item.proxy_port != ''%}
-    -DproxyHost={{ item.proxy_host }} -DproxyPort={{ item.proxy_port }}
-    {% elif es_proxy_host is defined and es_proxy_host != '' %}
-    -DproxyHost={{ es_proxy_host }} -DproxyPort={{ es_proxy_port }}
-    {% endif %}
-    --silent
+    {{es_home}}/bin/plugin install {{ item.plugin }}{% if item.version is defined and item.version != '' %}/{{ item.version }}{% endif %} {% if item.proxy_host is defined and item.proxy_host != '' and item.proxy_port is defined and item.proxy_port != ''%} -DproxyHost={{ item.proxy_host }} -DproxyPort={{ item.proxy_port }} {% elif es_proxy_host is defined and es_proxy_host != '' %} -DproxyHost={{ es_proxy_host }} -DproxyPort={{ es_proxy_port }} {% endif %} --silent
   register: plugin_installed
-  failed_when: "'Failed to install' in plugin_installed.stderr"
+  failed_when: "'ERROR' in plugin_installed.stdout"
   changed_when: plugin_installed.rc == 0
   with_items: es_plugins
   when: es_plugins is defined and not es_plugins is none

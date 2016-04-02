@@ -103,6 +103,10 @@ shared_examples 'config::init' do |es_version|
     it { should_not exist }
   end
 
+  describe file('/etc/elasticsearch/logging.yml') do
+    it { should_not exist }
+  end
+
   #Init vs Systemd tests
   #Ubuntu 15 and up
   #Debian 8 and up
