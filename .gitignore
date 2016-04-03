@@ -1,5 +1,6 @@
 .kitchen/
 *.lock
+*.pyc
 .vendor
 .bundle
 Converging

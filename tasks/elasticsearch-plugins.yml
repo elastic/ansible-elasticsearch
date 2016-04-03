@@ -20,7 +20,7 @@
 - name: Remove elasticsearch plugins
   command: "{{es_home}}/bin/plugin remove {{item}} --silent"
   ignore_errors: yes
-  with_items: installed_plugins.stdout_lines
+  with_items: "{{ installed_plugins.stdout_lines }}"
   when: es_plugins_reinstall and installed_plugins.stdout_lines | length > 0 and not 'No plugin detected' in installed_plugins.stdout_lines[0]
   notify: restart elasticsearch
   environment:
@@ -34,7 +34,7 @@
   register: plugin_installed
   failed_when: "'ERROR' in plugin_installed.stdout"
   changed_when: plugin_installed.rc == 0
-  with_items: es_plugins
+  with_items: "{{ es_plugins }}"
   when: es_plugins is defined and not es_plugins is none
   notify: restart elasticsearch
   environment:
