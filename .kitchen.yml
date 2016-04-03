@@ -15,7 +15,7 @@ provisioner:
 platforms:
   - name: ubuntu-14.04
     driver_config:
-      image: dliappis/ubuntu:14.04
+      image: dliappis/ubuntuhetzner:14.04
       privileged: true
       provision_command:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
@@ -45,7 +45,7 @@ platforms:
       run_command: "/sbin/init"
   - name: centos-6
     driver_config:
-      image:  dliappis/centos:6
+      image:  dliappis/centoshetzner:6
       privileged: true
       provision_command:
         - yum remove -y ansible
@@ -54,7 +54,7 @@ platforms:
       use_sudo: false
   - name: centos-7
     driver_config:
-      image: dliappis/centos:7
+      image: dliappis/centoshetzner:7
       provision_command:
         - yum remove -y ansible
         - yum -y install gmp-devel python-devel python-pip
