@@ -137,12 +137,11 @@ recommended in any multi node cluster configuration.
 ```
 - hosts: master_nodes
   roles:
-    - { role: elasticsearch, es_instance_name: "node1", es_heap_size: "1g", es_config: { "discovery.zen.ping.multicast.enabled": false, discovery.zen.ping.unicast.hosts: "elastic02:9300", http.port: 9200, transport.tcp.port: 9300, node.data: false, node.master: true, bootstrap.mlockall: false, discovery.zen.ping.multicast.enabled: false } }
+    - { role: elasticsearch, es_instance_name: "node1", es_heap_size: "1g", es_config: {cluster.name: "test-cluster", "discovery.zen.ping.multicast.enabled": false, discovery.zen.ping.unicast.hosts: "elastic02:9300", http.port: 9200, transport.tcp.port: 9300, node.data: false, node.master: true, bootstrap.mlockall: false, discovery.zen.ping.multicast.enabled: false } }
   vars:
     es_scripts: false
     es_templates: false
     es_version_lock: false
-    es_cluster_name: test-cluster
     ansible_user: ansible
     es_plugins:
      - plugin: elasticsearch/license
@@ -159,6 +158,7 @@ recommended in any multi node cluster configuration.
         node.data: true,
         node.master: false,
         bootstrap.mlockall: false,
+        cluster.name: "test-cluster",
         discovery.zen.ping.multicast.enabled: false } 
     }
     - { role: elasticsearch, es_instance_name: "node2", 
@@ -170,13 +170,13 @@ recommended in any multi node cluster configuration.
         node.data: true,
         node.master: false,
         bootstrap.mlockall: false,
+        cluster.name: "test-cluster",
         discovery.zen.ping.multicast.enabled: false } 
     }
   vars:
     es_scripts: false
     es_templates: false
     es_version_lock: false
-    es_cluster_name: test-cluster
     ansible_user: ansible
     es_plugins:
      - plugin: elasticsearch/license
