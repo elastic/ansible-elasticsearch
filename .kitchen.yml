@@ -48,18 +48,11 @@ platforms:
       image:  dliappis/centos:6
       privileged: true
       provision_command:
-        - yum remove -y ansible
-        - yum -y install gmp-devel python-devel python-pip
-        - pip install ansible
       use_sudo: false
   - name: centos-7
     driver_config:
       image: dliappis/centos:7
       provision_command:
-        - yum remove -y ansible
-        - yum -y install gmp-devel python-devel python-pip
-        - yum -y groupinstall "Development Tools"
-        - pip install ansible
         - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
