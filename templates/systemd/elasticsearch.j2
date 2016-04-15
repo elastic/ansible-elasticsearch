@@ -16,6 +16,9 @@ User={{es_user}}
 Group={{es_group}}
 
 ExecStart={{es_home}}/bin/elasticsearch \
+{% if es_version | version_compare('1.0.0', '<') %}
+                                        -f \
+{% endif %}
                                         -Des.pidfile=${PID_DIR}/elasticsearch.pid \
                                         -Des.default.path.home=${ES_HOME} \
                                         -Des.default.path.logs=${LOG_DIR} \
