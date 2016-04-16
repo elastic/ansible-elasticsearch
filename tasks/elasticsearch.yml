@@ -8,6 +8,10 @@
 
 - debug: msg="Node configuration {{ es_config }} "
 
+- name: Include optional user and group creation. 
+  when: (es_user_id is defined) and (es_group_id is defined)
+  include: elasticsearch-optional-user.yml
+
 #- name: Include specific Elasticsearch
 #  include: "elasticsearch-{{ansible_os_family}}.yml"
 

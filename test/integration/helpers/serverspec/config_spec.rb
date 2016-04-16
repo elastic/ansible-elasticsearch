@@ -5,6 +5,14 @@ shared_examples 'config::init' do |es_version|
   describe user('elasticsearch') do
     it { should exist }
   end
+  
+  describe group('elasticsearch') do
+    it { should have_gid 333 }
+  end
+
+  describe user('elasticsearch') do
+    it { should have_uid 333 }
+  end
 
   describe service('node1_elasticsearch') do
     it { should be_running }

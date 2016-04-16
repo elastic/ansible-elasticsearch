@@ -221,6 +221,10 @@ If installing Marvel or Watcher, ensure the license plugin is also specified.  S
 
 * ```es_user``` - defaults to elasticsearch.
 * ```es_group``` - defaults to elasticsearch.
+* ```es_user_id``` - default is undefined.
+* ```es_group_id``` - default is undefined.
+
+Both ```es_user_id``` and ```es_group_id``` must be set for the user and group ids to be set. 
 
 By default, each node on a host will be installed to use unique pid, plugin, work, data and log directories.  These directories are created, using the instance and host name, beneath default locations ]
 controlled by the following parameters:
