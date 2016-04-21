@@ -5,6 +5,7 @@ es_version_lock: false
 es_use_repository: true
 es_start_service: true
 update_java: false
+install_java: true
 es_restart_on_change: true
 es_plugins_reinstall: false
 es_scripts: false
