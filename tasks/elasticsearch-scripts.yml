@@ -1,9 +1,13 @@
 ---
 
 - set_fact: es_script_dir={{ es_conf_dir }}/{{es_instance_name}}
+  tags:
+      - always
 
 - set_fact: es_script_dir={{es_config['path.scripts']}}
   when: es_config['path.scripts'] is defined
+  tags:
+      - always
 
 - name: Create script dir
   file: state=directory path={{ es_script_dir }} owner={{ es_user }} group={{ es_group }}

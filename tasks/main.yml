@@ -5,6 +5,8 @@
       - check
 - name: os-specific vars
   include_vars: "{{ansible_os_family}}.yml"
+  tags:
+      - always
 - include: java.yml
   tags:
       - java
