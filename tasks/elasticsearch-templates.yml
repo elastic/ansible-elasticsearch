@@ -24,4 +24,4 @@
 
 - name: Install template(s)
   command: "curl -sL -XPUT http://localhost:{{http_port}}/_template/{{item}} -d @/etc/elasticsearch/templates/{{item}}.json"
-  with_items: "{{ resultstemplate.stdout_lines }}"
+  with_items: "{{ resultstemplate.stdout_lines | default([]) }}"
