@@ -4,6 +4,7 @@
 - name: os-specific vars
   include_vars: "{{ansible_os_family}}.yml"
 - include: java.yml
+  when: es_java_install
 - include: elasticsearch.yml
 - include: elasticsearch-config.yml
 - include: elasticsearch-scripts.yml

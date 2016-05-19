@@ -4,6 +4,7 @@ es_version: "2.2.0"
 es_version_lock: false
 es_use_repository: true
 es_start_service: true
+es_java_install: true
 update_java: false
 es_restart_on_change: true
 es_plugins_reinstall: false
