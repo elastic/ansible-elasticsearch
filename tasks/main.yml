@@ -24,6 +24,8 @@
   when: es_plugins is defined or es_plugins_reinstall
   tags:
       - plugins
+- include: elasticsearch-shield.yml
+  when: es_install_shield
 - include: elasticsearch-service.yml
   tags:
       - service
