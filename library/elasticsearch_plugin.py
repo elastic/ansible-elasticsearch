@@ -61,7 +61,6 @@ def main():
   my_env = os.environ.copy() 
   my_env["ES_HOME"] = params["es_home"]
   my_env["ES_INCLUDE"] = params["instance_default_file"]
-  my_env["ES_CLASSPATH"] = params["es_home"] + "/lib"
   my_env["CONF_DIR"] = params["conf_dir"]
 
   # Should come from {{ es_home }} !!!!
