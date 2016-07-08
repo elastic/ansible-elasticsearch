@@ -2,11 +2,17 @@
 
 #es_plugins_reinstall will be set to true if elasticsearch_install.changed i.e. we have changed ES version, or if no plugins listed. Otherwise it is false and requires explicitly setting.
 - set_fact: es_plugins_reinstall=true
-  when: elasticsearch_install.changed or es_plugins is not defined or es_plugins is none
+  when: (elasticsearch_install is defined and elasticsearch_install.changed) or es_plugins is not defined or es_plugins is none
+  tags:
+      - always
 
 - set_fact: list_command="list"
+  tags:
+      - always
 - set_fact: list_command="--list"
   when: es_version | version_compare('2.0', '<')
+  tags:
+      - always
 
 #List currently installed plugins
 - shell: "{{es_home}}/bin/plugin {{list_command}} | sed -n '1!p' | cut -d '-' -f2-"

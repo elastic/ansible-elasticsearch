@@ -11,9 +11,13 @@
   with_fileglob: "{{ es_templates_fileglob }}"
 
 - set_fact: http_port=9200
+  tags:
+      - always
 
 - set_fact: http_port={{es_config['http.port']}}
   when: es_config['http.port'] is defined
+  tags:
+      - always
 
 - name: Wait for elasticsearch to startup
   wait_for: port={{http_port}} delay=10

@@ -40,6 +40,8 @@ The simplest configuration therefore consists of:
 
 The above installs a single node 'node1' on the hosts 'localhost'.
 
+This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
+
 ### Basic Elasticsearch Configuration
 
 All Elasticsearch configuration parameters are supported.  This is achieved using a configuration map parameter 'es_config' which is serialized into the elasticsearch.yml file.  
