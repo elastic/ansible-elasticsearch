@@ -26,6 +26,8 @@
       - plugins
 - include: elasticsearch-shield.yml
   when: es_install_shield
+  tags:
+      - shield
 - include: elasticsearch-service.yml
   tags:
       - service
