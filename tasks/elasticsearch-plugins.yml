@@ -30,7 +30,13 @@
   notify: restart elasticsearch
 
 - name: Install elasticsearch plugins
-  elasticsearch_plugin: plugin={{ item.plugin }} state=present es_home={{ es_home }} conf_dir={{ conf_dir }} instance_default_file={{ instance_default_file }}
+  elasticsearch_plugin:
+    plugin={{ item.plugin }}
+    version="{% if item.version is defined %}{{ item.version }}{% else %}{{ None }}{% endif %}"
+    state=present
+    es_home={{ es_home }}
+    conf_dir={{ conf_dir }}
+    instance_default_file={{ instance_default_file }}
   with_items: "{{ es_plugins }}"
   when: es_plugins is defined and not es_plugins is none
   notify: restart elasticsearch

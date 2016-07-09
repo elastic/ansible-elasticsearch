@@ -47,6 +47,7 @@ def main():
   module = AnsibleModule(
     argument_spec = dict(
       plugin   = dict(required=True, aliases=['name']),
+      version  = dict(default=None),
       state    = dict(default="present", options=['present', 'absent']),
       es_home  = dict(default="/usr/share/elasticsearch"),
       conf_dir = dict(default="/etc/elasticsearch"),
@@ -91,7 +92,10 @@ def main():
   if plugin_state != params['state']:
     if params['state'] == "present":
       action = " install"
-      plugin = params['plugin']
+      if params['version'] is not None and params['version'] != '':
+        plugin = params['plugin'] + "/" + params['version']
+      else:
+        plugin = params['plugin']
     else:
       action = " remove"
       plugin = plugin_short
