@@ -46,7 +46,8 @@ returns
 def main():
   module = AnsibleModule(
     argument_spec = dict(
-      plugin   = dict(required=True, aliases=['name']),
+      plugin   = dict(required=True),
+      name     = dict(default=None),
       version  = dict(default=None),
       state    = dict(default="present", options=['present', 'absent']),
       es_home  = dict(default="/usr/share/elasticsearch"),
@@ -75,7 +76,10 @@ def main():
   #  Deal with plugins that contain a logner "path"
   parts = params['plugin'].split("/")
   if len(parts) > 1:
-    plugin_short = parts[1]
+    if params['name'] is not None:
+      plugin_short = params['name']
+    else:
+      plugin_short = parts[1]
   else:
     plugin_short = params['plugin'].strip()
   rcommand = escmd + " list | grep -- '- " + plugin_short + "$'"

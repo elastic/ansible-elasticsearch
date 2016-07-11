@@ -33,6 +33,7 @@
   elasticsearch_plugin:
     plugin={{ item.plugin }}
     version="{% if item.version is defined %}{{ item.version }}{% else %}{{ None }}{% endif %}"
+    name="{% if item.name is defined %}{{ item.name }}{% else %}{{ item.plugin }}{% endif %}"
     state=present
     es_home={{ es_home }}
     conf_dir={{ conf_dir }}
