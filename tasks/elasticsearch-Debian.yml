@@ -1,13 +1,9 @@
 ---
 
 - set_fact: force_install=no
-  tags:
-      - always
 
 - set_fact: force_install=yes
   when: es_allow_downgrades
-  tags:
-      - always
 
 - name: Debian - Add Elasticsearch repository key
   apt_key: url="http://packages.elasticsearch.org/GPG-KEY-elasticsearch" state=present
