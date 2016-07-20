@@ -3,9 +3,13 @@
 # es_plugins_reinstall will be set to true if elasticsearch_install_from_repo.changed or elasticsearch_install_from_package.changed
 # i.e. we have changed ES version(or we have clean installation of ES), or if no plugins listed. Otherwise it is false and requires explicitly setting.
 - set_fact: es_plugins_reinstall=true
-  when: ((elasticsearch_install_from_package is defined and elasticsearch_install_from_repo.changed) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) or es_plugins is not defined or es_plugins is none
+<<<<<<< HEAD
+  when: (elasticsearch_install is defined and elasticsearch_install.changed) or es_plugins is not defined or es_plugins is none
   tags:
       - always
+=======
+  when: (elasticsearch_install_from_repo.changed or elasticsearch_install_from_package.changed) or es_plugins is not defined or es_plugins is none
+>>>>>>> ef1f19ab09d8645ce14c9a7e55d363614ac69237
 
 - set_fact: list_command="list"
   tags:
