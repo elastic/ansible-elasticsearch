@@ -21,4 +21,5 @@ es_log_dir: "/var/log/elasticsearch"
 es_work_dir: "/tmp/elasticsearch"
 es_plugin_dir: "/usr/share/elasticsearch/plugins"
 es_max_open_files: 65536
+es_allow_downgrades: false
 
