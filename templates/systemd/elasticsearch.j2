@@ -7,7 +7,7 @@ After=network-online.target
 [Service]
 Environment=ES_HOME={{es_home}}
 Environment=CONF_DIR={{conf_dir}}
-Environment=DATA_DIR={{ data_dirs | array_to_str }}
+Environment=DATA_DIR={{ data_dirs | join(" ") }}
 Environment=LOG_DIR={{log_dir}}
 Environment=PID_DIR={{pid_dir}}
 EnvironmentFile=-{{instance_default_file}}
