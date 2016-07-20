@@ -217,6 +217,11 @@ Following variables affect the versions installed:
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` (an array of plugin definitions e.g.:
+* ```es_allow_downgrades``` For development purposes only. (true or false (default) )
+* ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
+* ```update_java``` Updates Java to the latest version. (true or false (default))
+
+
 
 ```
   es_plugins:
