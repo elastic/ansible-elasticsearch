@@ -8,6 +8,7 @@
   tags:
       - always
 - include: java.yml
+  when: es_java_install
   tags:
       - java
 - include: elasticsearch.yml
