@@ -1,0 +1,33 @@
+---
+#Check if license is installed
+- name: Check License is installed
+  shell: >
+    {{es_home}}/bin/plugin list | tail -n +2 | grep license
+  register: license_installed
+  ignore_errors: yes
+  changed_when: False
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
+    ES_INCLUDE: "{{ instance_default_file }}"
+
+#Install License if not installed
+- name: Install license plugin
+  command: >
+    {{es_home}}/bin/plugin install license
+  register: license
+  failed_when: "'ERROR' in license_installed  .stdout"
+  changed_when: license.rc == 1
+  when: license_installed.rc == 1
+  notify: restart elasticsearch
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
+    ES_INCLUDE: "{{ instance_default_file }}"
+
+
+- name: Set Plugin Directory Permissions
+  file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes
+
+- include: elasticsearch-shield.yml
+  when: '"shield" in es_xpack_features'
+
+#Any other xpacks plugins requiring configuration to be entered here

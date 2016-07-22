@@ -2,3 +2,7 @@
 - name: restart elasticsearch
   service: name={{instance_init_script | basename}} state=restarted enabled=yes
   when: es_restart_on_change and es_start_service and not elasticsearch_started.changed and ((plugin_installed is defined and plugin_installed.changed) or (elasticsearch_install_from_repo.changed or elasticsearch_install_from_package.changed))
+
+- name: load-native-realms
+  include: ./handlers/shield/elasticsearch-shield-native.yml
+  when: (es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined)
