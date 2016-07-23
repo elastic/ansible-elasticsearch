@@ -1,7 +1,6 @@
 ---
 
-#Test if we need to install shield
-
+#Test if shield is installed
 - shell: "{{es_home}}/bin/plugin list | sed -n '1!p' | grep shield"
   register: shield_installed
   changed_when: False
@@ -11,14 +10,28 @@
     ES_INCLUDE: "{{ instance_default_file }}"
 
 
-#Install Shield if not installed
+#Remove Shield if installed and its not been requested
+- name: Remove shield plugin
+  command: >
+    {{es_home}}/bin/plugin remove shield
+  register: shield_change
+  failed_when: "'ERROR' in shield_change.stdout"
+  changed_when: shield_change.rc == 0
+  when: shield_installed.rc == 0 and (not es_enable_xpack or not '"shield" in es_xpack_features')
+  notify: restart elasticsearch
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
+    ES_INCLUDE: "{{ instance_default_file }}"
+
+
+#Install Shield if not installed and its been requested
 - name: Install shield plugin
   command: >
     {{es_home}}/bin/plugin install shield
-  register: shield
-  failed_when: "'ERROR' in shield_installed.stdout"
-  changed_when: shield.rc == 1
-  when: shield_installed.rc == 1
+  register: shield_change
+  failed_when: "'ERROR' in shield_change.stdout"
+  changed_when: shield_change.rc == 0
+  when: shield_installed.rc == 1 and es_enable_xpack and '"shield" in es_xpack_features'
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
@@ -41,3 +54,4 @@
 - name: Ensure shield conf directory exists
   file: path={{ conf_dir }}/shield state=directory owner={{ es_user }} group={{ es_group }}
   changed_when: False
+  when: es_enable_xpack and '"shield" in es_xpack_features'

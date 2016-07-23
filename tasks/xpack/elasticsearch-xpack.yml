@@ -10,21 +10,36 @@
     CONF_DIR: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
-#Install License if not installed
-- name: Install license plugin
+#Remove license if installed and xpack not enabled
+- name: Remove license plugin
   command: >
-    {{es_home}}/bin/plugin install license
-  register: license
-  failed_when: "'ERROR' in license_installed  .stdout"
-  changed_when: license.rc == 1
-  when: license_installed.rc == 1
+    {{es_home}}/bin/plugin remove license
+  register: license_change
+  failed_when: "'ERROR' in license.stdout"
+  changed_when: license_change.rc == 1
+  when: license_installed.rc == 0 and not es_enable_xpack
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
+
+#Install License if not installed
+- name: Install license plugin
+  command: >
+    {{es_home}}/bin/plugin install license
+  register: license_change
+  failed_when: "'ERROR' in license_change.stdout"
+  changed_when: license_change.rc == 0
+  when: license_installed.rc == 1 and es_enable_xpack
+  notify: restart elasticsearch
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
+    ES_INCLUDE: "{{ instance_default_file }}"
+
+#Include shield as we may need to remove it
 - include: shield/elasticsearch-shield.yml
-  when: '"shield" in es_xpack_features'
+#  when: '"shield" in es_xpack_features'
 
 #Any other xpacks plugins requiring configuration to be entered here
 

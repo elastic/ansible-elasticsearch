@@ -8,7 +8,6 @@
     es_enable_xpack: true
     es_xpack_features:
       - shield
-      - watcher
     es_api_basic_auth_username: es_admin
     es_api_basic_auth_password: changeMe
     es_users:

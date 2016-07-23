@@ -27,8 +27,8 @@
   when: es_plugins is defined or es_plugins_reinstall
   tags:
       - plugins
+  #We always execute xpack as we may need to remove features
 - include: xpack/elasticsearch-xpack.yml
-  when: es_enable_xpack
   tags:
       - xpack
 - include: elasticsearch-service.yml
