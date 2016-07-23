@@ -136,7 +136,6 @@ suites:
             version: latest
     provisioner:
       playbook: test/integration/multi.yml
-  #Currently we only test shield on 2x
   - name: xpack-2x
     run_list:
     attributes:

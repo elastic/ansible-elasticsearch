@@ -23,11 +23,10 @@
     CONF_DIR: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
-
-- name: Set Plugin Directory Permissions
-  file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes
-
-- include: elasticsearch-shield.yml
+- include: shield/elasticsearch-shield.yml
   when: '"shield" in es_xpack_features'
 
 #Any other xpacks plugins requiring configuration to be entered here
+
+- name: Set Plugin Directory Permissions
+  file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes

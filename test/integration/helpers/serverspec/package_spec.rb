@@ -26,8 +26,6 @@ shared_examples 'package::init' do  |es_version,plugins|
     it { should be_owned_by 'elasticsearch' }
   end
 
-
-
   describe file('/etc/elasticsearch/node1/scripts/calculate-score.groovy') do
     it { should be_file }
     it { should be_owned_by 'elasticsearch' }

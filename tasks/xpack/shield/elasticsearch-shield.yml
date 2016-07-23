@@ -37,7 +37,6 @@
   notify: load-native-realms
   when: (es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined)
 
-
 #Ensure shield conf directory is created
 - name: Ensure shield conf directory exists
   file: path={{ conf_dir }}/shield state=directory owner={{ es_user }} group={{ es_group }}
