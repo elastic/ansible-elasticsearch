@@ -10,8 +10,9 @@
   shell: cat {{conf_dir}}/shield/users | awk -F':' '{print $1}'
   register: current_file_users
   when: manage_file_users
+  changed_when: False
 
-- set_fact: users_to_remove={{ current_file_users.stdout_lines | difference ( es_users.file.keys()  ) }}
+- set_fact: users_to_remove={{ current_file_users.stdout_lines | difference (es_users.file.keys()) }}
   when: manage_file_users
 
 #Remove users
@@ -25,12 +26,15 @@
     ES_HOME: "{{es_home}}"
 
 
+- set_fact: users_to_add={{ es_users.file.keys() | difference (current_file_users.stdout_lines) }}
+  when: manage_file_users
+
 #Add users
 - name: Add Users
   command: >
-    {{es_home}}/bin/shield/esusers useradd {{item.key}} -p {{item.value.password}}
-  with_dict: "{{es_users.file}}"
-  when: manage_file_users and es_users.file.keys() | length > 0
+    {{es_home}}/bin/shield/esusers useradd {{item}} -p {{es_users.file[item].password}}
+  with_items: "{{users_to_add}}"
+  when: manage_file_users and users_to_add | length > 0
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_HOME: "{{es_home}}"
@@ -41,6 +45,8 @@
     {{es_home}}/bin/shield/esusers passwd {{item.key}} -p {{item.value.password}}
   with_dict: "{{es_users.file}}"
   when: manage_file_users and es_users.file.keys() | length > 0
+  #Currently no easy way to figure out if the password has changed or to know what it currently is so we can skip.
+  changed_when: False
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_HOME: "{{es_home}}"

@@ -12,10 +12,13 @@
   with_fileglob:
     - "{{ es_templates_fileglob }}"
 
+- name: Ensure elasticsearch is started
+  service: name={{instance_init_script | basename}} state=started enabled=yes
+
 - name: Wait for elasticsearch to startup
   wait_for: port={{es_api_port}} delay=10
 
-- name: Get template files 
+- name: Get template files
   shell: find . -maxdepth 1 -type f | sed "s#\./##" | sed "s/.json//" chdir=/etc/elasticsearch/templates
   register: resultstemplate
 

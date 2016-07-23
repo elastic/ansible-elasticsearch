@@ -1,4 +1,8 @@
 ---
+
+- name: Ensure elasticsearch is started
+  service: name={{instance_init_script | basename}} state=started enabled=yes
+
 - name: Wait for elasticsearch to startup
   wait_for: port={{es_api_port}} delay=10
 
