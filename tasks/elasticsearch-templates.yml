@@ -22,6 +22,10 @@
   shell: find . -maxdepth 1 -type f | sed "s#\./##" | sed "s/.json//" chdir=/etc/elasticsearch/templates
   register: resultstemplate
 
-- name: Install template(s)
-  command: "curl -sL -XPUT http://{{es_api_host}}:{{es_api_port}}/_template/{{item}} -d @/etc/elasticsearch/templates/{{item}}.json"
+#The basic auth details here may not be required - send always if they are defined.  If not needed they will be ignored.
+- name: Install template(s) with auth
+  command: "curl -sL -XPUT http://{{es_api_host}}:{{es_api_port}}/_template/{{item}} -d @/etc/elasticsearch/templates/{{item}}.json {% if es_api_basic_auth_username is defined and es_api_basic_auth_password is defined%}-u {{es_api_basic_auth_username}}:{{es_api_basic_auth_password}}{% endif %}"
   with_items: "{{ resultstemplate.stdout_lines }}"
+
+#Suppose user removes shield on a running node, doesn't specify es_api_basic_auth_username and es_api_basic_auth_password.  The templates will subsequently not be removed.
+#Templates should probably be done after a restart therefore - as a handler.
