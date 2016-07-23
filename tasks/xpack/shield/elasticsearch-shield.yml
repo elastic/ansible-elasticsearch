@@ -10,28 +10,28 @@
     ES_INCLUDE: "{{ instance_default_file }}"
 
 
-#Remove Shield if installed and its not been requested
+#Remove Shield if installed and its not been requested or the ES version has changed
 - name: Remove shield plugin
   command: >
     {{es_home}}/bin/plugin remove shield
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
-  when: shield_installed.rc == 0 and (not es_enable_xpack or not '"shield" in es_xpack_features')
+  when: shield_installed.rc == 0 and (not es_enable_xpack or not '"shield" in es_xpack_features' or es_version_changed)
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
 
-#Install Shield if not installed and its been requested
+#Install Shield if not installed, or the es version has changed (so removed above), and its been requested
 - name: Install shield plugin
   command: >
     {{es_home}}/bin/plugin install shield
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
-  when: shield_installed.rc == 1 and es_enable_xpack and '"shield" in es_xpack_features'
+  when: (shield_installed.rc == 1 or es_version_changed) and es_enable_xpack and '"shield" in es_xpack_features'
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
@@ -42,13 +42,15 @@
 #-----------------------------FILE BASED REALM----------------------------------------
 
 - include: elasticsearch-shield-file.yml
-  when: (es_users is defined and es_users.file) or (es_roles is defined and es_roles.file is defined)
+  when: (es_enable_xpack and '"shield" in es_xpack_features') and ((es_users is defined and es_users.file) or (es_roles is defined and es_roles.file is defined))
 
 #-----------------------------NATIVE BASED REALM----------------------------------------
 # The native realm requires the node to be started so we do as a handler
 - command: /bin/true
   notify: load-native-realms
-  when: (es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined)
+  when: (es_enable_xpack and '"shield" in es_xpack_features') and ((es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined))
+
+#---------------------------------------------------------------------
 
 #Ensure shield conf directory is created
 - name: Ensure shield conf directory exists

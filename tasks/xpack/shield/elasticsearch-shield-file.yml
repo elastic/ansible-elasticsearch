@@ -1,9 +1,5 @@
 ---
-
-- set_fact: manage_file_users=false
-
-- set_fact: manage_file_users=true
-  when: es_users is defined and es_users.file is defined
+- set_fact: manage_file_users=es_users is defined and es_users.file is defined
 
 #List current users
 - name: List Users

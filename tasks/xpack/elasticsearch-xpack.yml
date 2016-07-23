@@ -1,4 +1,7 @@
 ---
+
+- set_fact: es_version_changed=((elasticsearch_install_from_package is defined and elasticsearch_install_from_repo.changed) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed))
+
 #Check if license is installed
 - name: Check License is installed
   shell: >
@@ -17,27 +20,27 @@
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
-  when: license_installed.rc == 0 and not es_enable_xpack
+  when: license_installed.rc == 0 and (not es_enable_xpack or es_version_changed)
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
 
-#Install License if not installed
+#Install License if not installed, or it needs to be reinstalled due to ES change (above task will have removed), and its been requested.
 - name: Install license plugin
   command: >
     {{es_home}}/bin/plugin install license
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
-  when: license_installed.rc == 1 and es_enable_xpack
+  when: (license_installed.rc == 1 or es_version_changed) and es_enable_xpack
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
-#Include shield as we may need to remove it
+#Include shield as we may need to remove it or change it due to es_version_changed
 - include: shield/elasticsearch-shield.yml
 #  when: '"shield" in es_xpack_features'
 
