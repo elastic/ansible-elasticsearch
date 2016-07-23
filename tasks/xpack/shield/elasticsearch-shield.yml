@@ -14,9 +14,9 @@
 - name: Remove shield plugin
   command: >
     {{es_home}}/bin/plugin remove shield
-  register: shield_change
-  failed_when: "'ERROR' in shield_change.stdout"
-  changed_when: shield_change.rc == 0
+  register: xpack_state
+  failed_when: "'ERROR' in xpack_state.stdout"
+  changed_when: xpack_state.rc == 0
   when: shield_installed.rc == 0 and (not es_enable_xpack or not '"shield" in es_xpack_features')
   notify: restart elasticsearch
   environment:
@@ -28,9 +28,9 @@
 - name: Install shield plugin
   command: >
     {{es_home}}/bin/plugin install shield
-  register: shield_change
-  failed_when: "'ERROR' in shield_change.stdout"
-  changed_when: shield_change.rc == 0
+  register: xpack_state
+  failed_when: "'ERROR' in xpack_state.stdout"
+  changed_when: xpack_state.rc == 0
   when: shield_installed.rc == 1 and es_enable_xpack and '"shield" in es_xpack_features'
   notify: restart elasticsearch
   environment:

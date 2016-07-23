@@ -14,9 +14,9 @@
 - name: Remove license plugin
   command: >
     {{es_home}}/bin/plugin remove license
-  register: license_change
-  failed_when: "'ERROR' in license.stdout"
-  changed_when: license_change.rc == 1
+  register: xpack_state
+  failed_when: "'ERROR' in xpack_state.stdout"
+  changed_when: xpack_state.rc == 0
   when: license_installed.rc == 0 and not es_enable_xpack
   notify: restart elasticsearch
   environment:
@@ -28,9 +28,9 @@
 - name: Install license plugin
   command: >
     {{es_home}}/bin/plugin install license
-  register: license_change
-  failed_when: "'ERROR' in license_change.stdout"
-  changed_when: license_change.rc == 0
+  register: xpack_state
+  failed_when: "'ERROR' in xpack_state.stdout"
+  changed_when: xpack_state.rc == 0
   when: license_installed.rc == 1 and es_enable_xpack
   notify: restart elasticsearch
   environment:
