@@ -4,7 +4,7 @@
   roles:
     - { role: elasticsearch, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300" }, es_instance_name: "shield_node" }
   vars:
-    es_templates: false
+    es_templates: true
     es_enable_xpack: true
     es_xpack_features:
       - shield

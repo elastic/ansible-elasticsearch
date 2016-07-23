@@ -141,6 +141,23 @@ shared_examples 'xpack::init' do |es_version|
     its(:exit_status) { should eq 0 }
   end
 
+  describe file('/etc/elasticsearch/templates') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/etc/elasticsearch/templates/basic.json') do
+    it { should be_file }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe 'Template Installed' do
+    it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
+      command = command('curl -s "localhost:9200/_template/basic" -u es_admin:changeMe')
+      expect(command.stdout).to match(/basic/)
+      expect(command.exit_status).to eq(0)
+    end
+  end
 
   #Test contents of Elasticsearch.yml file
 end
