@@ -1,7 +1,5 @@
 ---
 
-- set_fact: es_version_changed=((elasticsearch_install_from_package is defined and elasticsearch_install_from_repo.changed) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed))
-
 #Test if feature is installed
 - shell: "{{es_home}}/bin/plugin list | sed -n '1!p' | grep {{item}}"
   register: feature_installed

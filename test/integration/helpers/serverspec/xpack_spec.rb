@@ -111,6 +111,15 @@ shared_examples 'xpack::init' do |es_version|
     its(:exit_status) { should eq 0 }
   end
 
+  describe file('/usr/share/elasticsearch/plugins/kopf') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep kopf') do
+    its(:exit_status) { should eq 0 }
+  end
+
   #test we haven't installed graph or marvel-agent
 
   describe file('/usr/share/elasticsearch/plugins/graph') do

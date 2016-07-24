@@ -8,6 +8,9 @@
   vars:
     es_templates: true
     es_enable_xpack: true
+    es_plugins:
+      - plugin: lmenezes/elasticsearch-kopf
+        version: master
     es_xpack_features:
       - shield
       - watcher
