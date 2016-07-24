@@ -10,7 +10,25 @@
   shell: find . -maxdepth 1 -type f | sed "s#\./##" | sed "s/.json//" chdir=/etc/elasticsearch/templates
   register: resultstemplate
 
-#The basic auth details here may not be required - send always if they are defined.  If not needed they will be ignored.
-- name: Install template(s) with auth
-  command: "curl -sL -XPUT http://{{es_api_host}}:{{es_api_port}}/_template/{{item}} -d @/etc/elasticsearch/templates/{{item}}.json {% if es_api_basic_auth_username is defined and es_api_basic_auth_password is defined%}-u {{es_api_basic_auth_username}}:{{es_api_basic_auth_password}}{% endif %}"
+- name: Install templates without auth
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_template/{{item}}
+    method: PUT
+    status_code: 200
+    body_format: json
+    body: "{{ lookup('file', '/etc/elasticsearch/templates/'+item+'.json') }}"
+  when: not es_enable_xpack or not es_xpack_features is defined or not '"shield" in es_xpack_features'
+  with_items: "{{ resultstemplate.stdout_lines }}"
+
+- name: Install templates with auth
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_template/{{item}}
+    method: PUT
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+    body_format: json
+    body: "{{ lookup('file', '/etc/elasticsearch/templates/'+item+'.json') }}"
+  when: es_enable_xpack and es_xpack_features is defined and '"shield" in es_xpack_features'
   with_items: "{{ resultstemplate.stdout_lines }}"

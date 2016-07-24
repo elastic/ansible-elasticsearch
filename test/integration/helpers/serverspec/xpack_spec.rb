@@ -195,6 +195,14 @@ shared_examples 'xpack::init' do |es_version|
     end
   end
 
+  #This is possibly subject to format changes in the response across versions so may fail in the future
+  describe 'Template Contents Correct' do
+    it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
+      command = command('curl -s "localhost:9200/_template/basic" -u es_admin:changeMe | md5sum')
+      expect(command.stdout).to match(/153b1a45daf48ccee80395b85c61e332/)
+    end
+  end
+
   #Test contents of Elasticsearch.yml file
   describe file('/etc/elasticsearch/shield_node/elasticsearch.yml') do
     it { should contain 'shield.authc.realms.file1.order: 0' }
