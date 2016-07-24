@@ -160,5 +160,12 @@ shared_examples 'xpack::init' do |es_version|
   end
 
   #Test contents of Elasticsearch.yml file
+  describe file('/etc/elasticsearch/shield_node/elasticsearch.yml') do
+    it { should contain 'shield.authc.realms.file1.order: 0' }
+    it { should contain 'shield.authc.realms.file1.type: file' }
+    it { should contain 'shield.authc.realms.native1.order: 1' }
+    it { should contain 'shield.authc.realms.native1.type: native' }
+  end
+
 end
 

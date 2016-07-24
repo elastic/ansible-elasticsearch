@@ -21,6 +21,10 @@
 - fail: msg="If locking memory with bootstrap.mlockall a heap size must be specified"
   when: es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True and es_heap_size is not defined
 
+#Don't support xpack on versions < 2.0
+- fail: msg="Use of the xpack notation is not supported on versions < 2.0.  Marvel-agent and watcher can be installed as plugins.  Version > 2.0 is required for shield."
+  when: es_enable_xpack and version_compare('2.0', '<')
+
 #Check if working with shield we have an es_api_basic_auth_username and es_api_basic_auth_username - otherwise any http calls wont work
 - fail: msg="Enabling shield requires an es_api_basic_auth_username and es_api_basic_auth_password to be provided to allow cluster operations"
   when: es_enable_xpack and '"shield" in es_xpack_features' and es_api_basic_auth_username is not defined and es_api_basic_auth_password is not defined
