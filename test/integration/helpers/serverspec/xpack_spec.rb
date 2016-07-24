@@ -110,7 +110,7 @@ shared_examples 'xpack::init' do |es_version|
   describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep watcher') do
     its(:exit_status) { should eq 0 }
   end
-  
+
   #test we haven't installed graph or marvel-agent
 
   describe file('/usr/share/elasticsearch/plugins/graph') do
