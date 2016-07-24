@@ -74,8 +74,6 @@ suites:
         es_plugins:
           - plugin: lmenezes/elasticsearch-kopf
             version: master
-          - plugin: license
-          - plugin: marvel-agent
     provisioner:
       playbook: test/integration/package.yml
   - name: config-2x
@@ -90,8 +88,6 @@ suites:
         es_plugins:
           - plugin: lmenezes/elasticsearch-kopf
             version: master
-          - plugin: license
-          - plugin: marvel-agent
     provisioner:
       playbook: test/integration/multi.yml
   - name: standard-1x

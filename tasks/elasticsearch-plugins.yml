@@ -10,8 +10,8 @@
 - set_fact: list_command="--list"
   when: es_version | version_compare('2.0', '<')
 
-#List currently installed plugins
-- shell: "{{es_home}}/bin/plugin {{list_command}} | sed -n '1!p' | cut -d '-' -f2-"
+#List currently installed plugins - ignore xpack if > v 2.0
+- shell: "{{es_home}}/bin/plugin {{list_command}} | sed -n '1!p' | cut -d '-' -f2-{% if {{es_version}} | version_compare('2.0', '>') %} | grep -vE 'shield|watcher|marvel-agent|graph'{% endif %}"
   register: installed_plugins
   changed_when: False
   ignore_errors: yes
