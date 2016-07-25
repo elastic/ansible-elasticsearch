@@ -55,6 +55,7 @@ platforms:
         - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
+        - rm /etc/yum.repos.d/epel*repo /etc/yum.repos.d/puppetlabs-pc1.repo
         - yum -y install initscripts
         - yum clean all
       run_command: "/usr/sbin/init"
