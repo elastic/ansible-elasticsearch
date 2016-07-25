@@ -1,0 +1,34 @@
+---
+
+- name: Ensure elasticsearch is started
+  service: name={{instance_init_script | basename}} state=started enabled=yes
+
+- name: Wait for elasticsearch to startup
+  wait_for: port={{es_api_port}} delay=10
+
+- name: Get template files
+  shell: find . -maxdepth 1 -type f | sed "s#\./##" | sed "s/.json//" chdir=/etc/elasticsearch/templates
+  register: resultstemplate
+
+- name: Install templates without auth
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_template/{{item}}
+    method: PUT
+    status_code: 200
+    body_format: json
+    body: "{{ lookup('file', '/etc/elasticsearch/templates/'+item+'.json') }}"
+  when: not es_enable_xpack or not es_xpack_features is defined or not '"shield" in es_xpack_features'
+  with_items: "{{ resultstemplate.stdout_lines }}"
+
+- name: Install templates with auth
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_template/{{item}}
+    method: PUT
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+    body_format: json
+    body: "{{ lookup('file', '/etc/elasticsearch/templates/'+item+'.json') }}"
+  when: es_enable_xpack and es_xpack_features is defined and '"shield" in es_xpack_features'
+  with_items: "{{ resultstemplate.stdout_lines }}"

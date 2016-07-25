@@ -251,7 +251,6 @@ controlled by the following parameters:
 * ```es_data_dirs``` - defaults to "/var/lib/elasticsearch".  This can be a list or comma separated string e.g. ["/opt/elasticsearch/data-1","/opt/elasticsearch/data-2"] or "/opt/elasticsearch/data-1,/opt/elasticsearch/data-2"
 * ```es_log_dir``` - defaults to "/var/log/elasticsearch".
 * ```es_work_dir``` - defaults to "/tmp/elasticsearch".
-* ```es_plugin_dir``` - defaults to "/usr/share/elasticsearch/plugins".
 * ```es_restart_on_change``` - defaults to true.  If false, changes will not result in Elasticsearch being restarted.
 * ```es_plugins_reinstall``` - defaults to false.  If true, all currently installed plugins will be removed from a node.  Listed plugins will then be re-installed.  
 
