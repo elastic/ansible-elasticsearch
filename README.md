@@ -40,6 +40,8 @@ The simplest configuration therefore consists of:
 
 The above installs a single node 'node1' on the hosts 'localhost'.
 
+This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
+
 ### Basic Elasticsearch Configuration
 
 All Elasticsearch configuration parameters are supported.  This is achieved using a configuration map parameter 'es_config' which is serialized into the elasticsearch.yml file.  
@@ -137,12 +139,22 @@ recommended in any multi node cluster configuration.
 ```
 - hosts: master_nodes
   roles:
-    - { role: elasticsearch, es_instance_name: "node1", es_heap_size: "1g", es_config: { "discovery.zen.ping.multicast.enabled": false, discovery.zen.ping.unicast.hosts: "elastic02:9300", http.port: 9200, transport.tcp.port: 9300, node.data: false, node.master: true, bootstrap.mlockall: false, discovery.zen.ping.multicast.enabled: false } }
+    - { role: elasticsearch, es_instance_name: "node1", es_heap_size: "1g",
+    es_config: {
+        cluster.name: "test-cluster",
+        "discovery.zen.ping.multicast.enabled": false,
+        discovery.zen.ping.unicast.hosts: "elastic02:9300",
+        http.port: 9200,
+        transport.tcp.port: 9300,
+        node.data: false,
+        node.master: true,
+        bootstrap.mlockall: false,
+        discovery.zen.ping.multicast.enabled: false }
+    }
   vars:
     es_scripts: false
     es_templates: false
     es_version_lock: false
-    es_cluster_name: test-cluster
     ansible_user: ansible
     es_plugins:
      - plugin: elasticsearch/license
@@ -159,6 +171,7 @@ recommended in any multi node cluster configuration.
         node.data: true,
         node.master: false,
         bootstrap.mlockall: false,
+        cluster.name: "test-cluster",
         discovery.zen.ping.multicast.enabled: false } 
     }
     - { role: elasticsearch, es_instance_name: "node2", 
@@ -170,13 +183,13 @@ recommended in any multi node cluster configuration.
         node.data: true,
         node.master: false,
         bootstrap.mlockall: false,
+        cluster.name: "test-cluster",
         discovery.zen.ping.multicast.enabled: false } 
     }
   vars:
     es_scripts: false
     es_templates: false
     es_version_lock: false
-    es_cluster_name: test-cluster
     ansible_user: ansible
     es_plugins:
      - plugin: elasticsearch/license
@@ -204,6 +217,11 @@ Following variables affect the versions installed:
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` (an array of plugin definitions e.g.:
+* ```es_allow_downgrades``` For development purposes only. (true or false (default) )
+* ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
+* ```update_java``` Updates Java to the latest version. (true or false (default))
+
+
 
 ```
   es_plugins:
@@ -221,6 +239,10 @@ If installing Marvel or Watcher, ensure the license plugin is also specified.  S
 
 * ```es_user``` - defaults to elasticsearch.
 * ```es_group``` - defaults to elasticsearch.
+* ```es_user_id``` - default is undefined.
+* ```es_group_id``` - default is undefined.
+
+Both ```es_user_id``` and ```es_group_id``` must be set for the user and group ids to be set. 
 
 By default, each node on a host will be installed to use unique pid, plugin, work, data and log directories.  These directories are created, using the instance and host name, beneath default locations ]
 controlled by the following parameters:
