@@ -3,6 +3,8 @@ es_major_version: "2.x"
 es_version: "2.2.0"
 es_version_lock: false
 es_use_repository: true
+es_apt_key: "http://packages.elasticsearch.org/GPG-KEY-elasticsearch"
+es_apt_url: "deb http://packages.elastic.co/elasticsearch/{{ es_major_version }}/debian stable main"
 es_start_service: true
 es_java_install: true
 update_java: false
