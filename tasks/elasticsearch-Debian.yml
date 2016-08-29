@@ -28,5 +28,5 @@
   register: elasticsearch_install_from_package
 
 # ansible uri module requires httplib2
-- name: pip httplib2
-  apt: deb=python-httplib2
+- name: python-httplib2
+  apt: name=python-httplib2
