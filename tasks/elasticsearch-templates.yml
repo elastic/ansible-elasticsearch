@@ -22,12 +22,13 @@
       - always
 
 - name: Wait for elasticsearch to startup
-  wait_for: port={{http_port}} delay=10
+  wait_for: host="{{ es_config['network.host'] | default('localost') }}" port={{http_port}} delay=10
+  tags: testlookup
 
-- name: Get template files 
+- name: Get template files
   shell: find . -maxdepth 1 -type f | sed "s#\./##" | sed "s/.json//" chdir=/etc/elasticsearch/templates
   register: resultstemplate
 
 - name: Install template(s)
-  command: "curl -sL -XPUT http://localhost:{{http_port}}/_template/{{item}} -d @/etc/elasticsearch/templates/{{item}}.json"
+  command: "curl -sL -XPUT http://{{ es_config['network.host'] | default('localost') }}:{{http_port}}/_template/{{item}} -d @/etc/elasticsearch/templates/{{item}}.json"
   with_items: "{{ resultstemplate.stdout_lines }}"
