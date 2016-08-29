@@ -15,7 +15,7 @@
   yum: name=elasticsearch{% if es_version is defined and es_version != ""  %}-{{ es_version }}{% endif %} state=present update_cache=yes
   when: es_use_repository
   register: elasticsearch_install_from_repo
-  until: '"failed" not in result'
+  until: '"failed" not in es_use_repository'
   retries: 5
   delay: 10
 
