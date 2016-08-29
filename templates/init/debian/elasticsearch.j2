@@ -45,11 +45,11 @@ fi
 # The following variables can be overwritten in $DEFAULT
 
 # Run Elasticsearch as this user ID and group ID
-ES_USER=elasticsearch
-ES_GROUP=elasticsearch
+ES_USER={{es_user}}
+ES_GROUP={{es_group}}
 
 # Directory where the Elasticsearch binary distribution resides
-ES_HOME=/usr/share/$NAME
+ES_HOME={{es_home}}
 
 # Heap size defaults to 256m min, 1g max
 # Set ES_HEAP_SIZE to 50% of available RAM, but no more than 31g
@@ -71,13 +71,13 @@ MAX_OPEN_FILES=65535
 #MAX_LOCKED_MEMORY=
 
 # Elasticsearch log directory
-LOG_DIR=/var/log/$NAME
+LOG_DIR={{log_dir}}
 
 # Elasticsearch data directory
-DATA_DIR=/var/lib/$NAME
+DATA_DIR={{ data_dirs | array_to_str }}
 
 # Elasticsearch configuration directory
-CONF_DIR=/etc/$NAME
+CONF_DIR={{conf_dir}}
 
 # Maximum number of VMA (Virtual Memory Areas) a process can own
 MAX_MAP_COUNT=262144
@@ -86,7 +86,7 @@ MAX_MAP_COUNT=262144
 #ES_GC_LOG_FILE=/var/log/elasticsearch/gc.log
 
 # Elasticsearch PID file directory
-PID_DIR="/var/run/elasticsearch"
+PID_DIR={{pid_dir}}
 
 # End of variables that can be overwritten in $DEFAULT
 
@@ -103,7 +103,7 @@ fi
 
 # Define other required variables
 PID_FILE="$PID_DIR/$NAME.pid"
-DAEMON=$ES_HOME/bin/elasticsearch
+DAEMON={{es_home}}/bin/elasticsearch
 DAEMON_OPTS="-d -p $PID_FILE --default.path.home=$ES_HOME --default.path.logs=$LOG_DIR --default.path.data=$DATA_DIR --default.path.conf=$CONF_DIR"
 
 export ES_HEAP_SIZE
