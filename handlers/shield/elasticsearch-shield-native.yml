@@ -72,6 +72,7 @@
   uri:
     url: http://{{es_api_host}}:{{es_api_port}}/_shield/role
     method: GET
+    body_format: json
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
