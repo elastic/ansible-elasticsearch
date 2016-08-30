@@ -1,6 +1,7 @@
 __author__ = 'dale mcdiarmid'
 
 import re
+import os.path
 
 def modify_list(values=[], pattern='', replacement='', ignorecase=False):
     ''' Perform a `re.sub` on every item in the list'''
@@ -28,9 +29,16 @@ def extract_role_users(users={}):
     return role_users
 
 
+def filename(filename=''):
+    return os.path.splitext(os.path.basename(filename))[0]
+
+
 class FilterModule(object):
     def filters(self):
         return {'modify_list': modify_list,
         'append_to_list':append_to_list,
         'array_to_str':array_to_str,
-        'extract_role_users':extract_role_users}
+        'extract_role_users':extract_role_users,
+        'filename':filename}
+
+print filename('/etc/elasticsearch/templates/basic.json')
