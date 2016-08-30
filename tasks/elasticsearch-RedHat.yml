@@ -26,4 +26,4 @@
 
 # ansible uri module requires python-httplib2
 - name: python-httplib2
-  yum: name=python-httplib2
+  pip: name=httplib2
