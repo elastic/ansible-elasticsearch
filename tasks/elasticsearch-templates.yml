@@ -12,5 +12,3 @@
   notify: load-templates
   with_fileglob:
     - "{{ es_templates_fileglob | default('') }}"
-
-
