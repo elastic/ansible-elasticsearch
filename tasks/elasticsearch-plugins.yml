@@ -47,4 +47,4 @@
 
 #Set permissions on plugins directory
 - name: Set Plugin Directory Permissions
-  file: state=directory path={{ plugin_dir }} owner={{ es_user }} group={{ es_group }} recurse=yes
+  file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes
