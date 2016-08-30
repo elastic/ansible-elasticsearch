@@ -4,8 +4,6 @@
 # i.e. we have changed ES version(or we have clean installation of ES), or if no plugins listed. Otherwise it is false and requires explicitly setting.
 - set_fact: es_plugins_reinstall={{ ((elasticsearch_install_from_package is defined and elasticsearch_install_from_repo.changed) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) or es_plugins is not defined or es_plugins is none }}
 
-- debug: msg="{{es_plugins_reinstall}}"
-
 - set_fact: list_command="list"
 
 - set_fact: list_command="--list"
@@ -49,5 +47,4 @@
 
 #Set permissions on plugins directory
 - name: Set Plugin Directory Permissions
-  file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes
-  when: es_enable_xpack
+  file: state=directory path={{ plugin_dir }} owner={{ es_user }} group={{ es_group }} recurse=yes
