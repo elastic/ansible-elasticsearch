@@ -1,0 +1,122 @@
+---
+
+- name: Ensure elasticsearch is started
+  service: name={{instance_init_script | basename}} state=started enabled=yes
+
+- name: Wait for elasticsearch to startup
+  wait_for: port={{es_api_port}} delay=10
+
+- set_fact: manage_native_users=false
+
+- set_fact: manage_native_users=true
+  when: es_users is defined and es_users.native is defined
+
+- set_fact: manage_native_roles=false
+
+- set_fact: manage_native_roles=true
+  when: es_roles is defined and es_roles.native is defined
+
+#If the node has just has shield installed it maybe either stopped or started 1. if stopped, we need to start to load native realms 2. if started, we need to restart to load
+
+#List current users
+- name: List Native Users
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_shield/user
+    method: GET
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+    status_code: 200
+  register: user_list_response
+  when: manage_native_users
+
+
+- set_fact: current_users={{user_list_response.json.keys() | list}}
+  when: manage_native_users
+
+#Identify non declared users
+
+- set_fact: users_to_remove={{ current_users | difference ( es_users.native.keys() ) }}
+  when: manage_native_users
+
+#Delete all non required users
+- name: Delete Native Users
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_shield/user/{{item}}
+    method: DELETE
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+  when: manage_native_users and users_to_remove | length > 0
+  with_items: "{{users_to_remove}}"
+
+
+#Overwrite all other users
+- name: Update Native Users
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_shield/user/{{item.key}}
+    method: POST
+    body_format: json
+    body: "{{item.value | to_json}}"
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+  when: manage_native_users and es_users.native.keys() > 0
+  with_dict: "{{es_users.native}}"
+
+#List current roles
+
+- name: List Native Roles
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_shield/role
+    method: GET
+    body_format: json
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+    status_code: 200
+  register: role_list_response
+  when: manage_native_roles
+
+#Identify undeclared roles
+
+- set_fact: current_roles={{role_list_response.json.keys() | list}}
+  when: manage_native_users
+
+- debug: msg="{{current_roles}}"
+
+- set_fact: roles_to_remove={{ current_roles | difference ( es_roles.native.keys()  ) }}
+  when: manage_native_roles
+
+
+#Delete all non required roles
+- name: Delete Native Roles
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_shield/role/{{item}}
+    method: DELETE
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+  when: manage_native_roles and roles_to_remove | length > 0
+  with_items: "{{roles_to_remove}}"
+
+
+#Update other roles
+- name: Update Native Roles
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_shield/role/{{item.key}}
+    method: POST
+    body_format: json
+    body: "{{item.value | to_json}}"
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+  when: manage_native_roles and es_roles.native.keys() > 0
+  with_dict: "{{es_roles.native}}"
+
+
+

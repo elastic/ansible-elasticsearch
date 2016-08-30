@@ -16,7 +16,6 @@ shared_examples 'package::init' do  |es_version,plugins|
 
   describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
     it { should be_file }
-    it { should contain 'path.plugins: /usr/share/elasticsearch/plugins/node1' }
     it { should contain 'http.port: 9200' }
     it { should contain 'transport.tcp.port: 9300' }
     it { should contain 'discovery.zen.ping.unicast.hosts: localhost:9300' }
@@ -26,8 +25,6 @@ shared_examples 'package::init' do  |es_version,plugins|
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
-
-
 
   describe file('/etc/elasticsearch/node1/scripts/calculate-score.groovy') do
     it { should be_file }
@@ -66,14 +63,14 @@ shared_examples 'package::init' do  |es_version,plugins|
     end
   end
 
-  describe file('/usr/share/elasticsearch/plugins/node1') do
+  describe file('/usr/share/elasticsearch/plugins') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
 
 
   for plugin in plugins
-    describe file('/usr/share/elasticsearch/plugins/node1/'+plugin) do
+    describe file('/usr/share/elasticsearch/plugins/'+plugin) do
       it { should be_directory }
       it { should be_owned_by 'elasticsearch' }
     end

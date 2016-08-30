@@ -8,5 +8,4 @@
   vars:
     es_scripts: true
     es_templates: true
-    es_plugin_dir: "/opt/elasticsearch/plugins"
 #Plugins installed for this test are specified in .kitchen.yml under suite

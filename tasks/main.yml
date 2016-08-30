@@ -1,12 +1,14 @@
 ---
-- name: check-parameters
-  include: checkParameters.yml
-  tags:
-      - check
 - name: os-specific vars
   include_vars: "{{ansible_os_family}}.yml"
   tags:
       - always
+
+- name: check-set-parameters
+  include: elasticsearch-parameters.yml
+  tags:
+      - always
+
 - include: java.yml
   when: es_java_install
   tags:
@@ -25,10 +27,10 @@
   when: es_plugins is defined or es_plugins_reinstall
   tags:
       - plugins
-- include: elasticsearch-shield.yml
-  when: es_install_shield
+  #We always execute xpack as we may need to remove features
+- include: xpack/elasticsearch-xpack.yml
   tags:
-      - shield
+      - xpack
 - include: elasticsearch-service.yml
   tags:
       - service

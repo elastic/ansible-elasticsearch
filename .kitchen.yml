@@ -8,6 +8,7 @@ provisioner:
   roles_path: ../
   require_ansible_repo: true
   ansible_verbose: true
+  ansible_version: 2.0.2
   http_proxy: <%= ENV['HTTP_PROXY'] %>
   https_proxy: <%= ENV['HTTPS_PROXY'] %>
   no_proxy: localhost,127.0.0.1
@@ -19,7 +20,7 @@ platforms:
       privileged: true
       provision_command:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
-        - apt-get update && apt-get -y -q install ansible python-apt python-pycurl
+        - apt-get update && apt-get -y -q install python-apt python-pycurl
       use_sudo: false
   - name: debian-7
     driver_config:
@@ -27,7 +28,6 @@ platforms:
       privileged: true
       provision_command:
         - apt-get update && apt-get -y install python python-dev python-pip build-essential libyaml-dev python-yaml
-        - pip install ansible
         - apt-get install -y -q net-tools
       use_sudo: false
   - name: debian-8
@@ -36,7 +36,6 @@ platforms:
       privileged: true
       provision_command:
         - apt-get update && apt-get -y install python python-dev python-pip build-essential libyaml-dev python-yaml curl wget
-        - pip install ansible
         - apt-get install -y -q net-tools
         - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
@@ -56,6 +55,7 @@ platforms:
         - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
+        - rm /etc/yum.repos.d/epel*repo /etc/yum.repos.d/puppetlabs-pc1.repo
         - yum -y install initscripts
         - yum clean all
       run_command: "/usr/sbin/init"
@@ -75,8 +75,6 @@ suites:
         es_plugins:
           - plugin: lmenezes/elasticsearch-kopf
             version: master
-          - plugin: license
-          - plugin: marvel-agent
     provisioner:
       playbook: test/integration/package.yml
   - name: config-2x
@@ -91,8 +89,6 @@ suites:
         es_plugins:
           - plugin: lmenezes/elasticsearch-kopf
             version: master
-          - plugin: license
-          - plugin: marvel-agent
     provisioner:
       playbook: test/integration/multi.yml
   - name: standard-1x
@@ -137,3 +133,8 @@ suites:
             version: latest
     provisioner:
       playbook: test/integration/multi.yml
+  - name: xpack-2x
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/xpack.yml

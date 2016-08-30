@@ -173,28 +173,7 @@ shared_examples 'multi::init' do  |es_version,plugins|
     end
   end
 
-  #Multi node plugin tests
-  describe file('/opt/elasticsearch/plugins/node1') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe file('/opt/elasticsearch/plugins/master') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-
   for plugin in plugins
-    describe file('/opt/elasticsearch/plugins/node1/'+plugin) do
-      it { should be_directory }
-      it { should be_owned_by 'elasticsearch' }
-    end
-
-    describe file('/opt/elasticsearch/plugins/master/'+plugin) do
-      it { should be_directory }
-      it { should be_owned_by 'elasticsearch' }
-    end
 
     describe command('curl -s localhost:9200/_nodes/plugins?pretty=true | grep '+plugin) do
       its(:exit_status) { should eq 0 }
@@ -202,6 +181,11 @@ shared_examples 'multi::init' do  |es_version,plugins|
 
     describe command('curl -s localhost:9201/_nodes/plugins?pretty=true | grep '+plugin) do
       its(:exit_status) { should eq 0 }
+    end
+
+    describe file('/usr/share/elasticsearch/plugins/'+plugin) do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
     end
   end
 

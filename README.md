@@ -8,7 +8,7 @@ Ansible role for Elasticsearch.  Currently this works on Debian and RedHat based
 * Centos 6
 * Centos 7
 
-The latest Elasticsearch versions of 1.7.x and 2.x are actively tested.  **Only Ansible versions 2.x are supported.**
+The latest Elasticsearch versions of 1.7.x and 2.x are actively tested.  **Only Ansible versions > 2.1.2 are supported.**
 
 ## Usage
 
@@ -49,7 +49,7 @@ The use of a map ensures the Ansible playbook does not need to be updated to ref
 
 In addition to the es_config map, several other parameters are supported for additional functions e.g. script installation.  These can be found in the role's defaults/main.yml file.
 
-The following illustrates applying configuration parameters to an Elasticsearch instance.  By default, Elasticsearch 2.1.0 is installed.
+The following illustrates applying configuration parameters to an Elasticsearch instance.  By default, Elasticsearch 2.3.4 is installed.
 
 ```
 - name: Elasticsearch with custom configuration
@@ -251,7 +251,6 @@ controlled by the following parameters:
 * ```es_data_dirs``` - defaults to "/var/lib/elasticsearch".  This can be a list or comma separated string e.g. ["/opt/elasticsearch/data-1","/opt/elasticsearch/data-2"] or "/opt/elasticsearch/data-1,/opt/elasticsearch/data-2"
 * ```es_log_dir``` - defaults to "/var/log/elasticsearch".
 * ```es_work_dir``` - defaults to "/tmp/elasticsearch".
-* ```es_plugin_dir``` - defaults to "/usr/share/elasticsearch/plugins".
 * ```es_restart_on_change``` - defaults to true.  If false, changes will not result in Elasticsearch being restarted.
 * ```es_plugins_reinstall``` - defaults to false.  If true, all currently installed plugins will be removed from a node.  Listed plugins will then be re-installed.  
 
@@ -283,7 +282,7 @@ To define proxy only for a particular plugin during its installation:
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
 * Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
-* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of each major release i.e. 1.7.3 and 2.1.0 on
+* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of each major release i.e. 1.7.3 and 2.3.4 on
 all supported platforms. 
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and 
 Elasticsearch restarted where required.

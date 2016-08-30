@@ -1,0 +1,64 @@
+---
+- set_fact: manage_file_users=es_users is defined and es_users.file is defined
+
+#List current users
+- name: List Users
+  shell: cat {{conf_dir}}/shield/users | awk -F':' '{print $1}'
+  register: current_file_users
+  when: manage_file_users
+  changed_when: False
+
+- set_fact: users_to_remove={{ current_file_users.stdout_lines | difference (es_users.file.keys()) }}
+  when: manage_file_users
+
+#Remove users
+- name: Remove Users
+  command: >
+    {{es_home}}/bin/shield/esusers userdel {{item}}
+  when: manage_file_users and (users_to_remove | length > 0)
+  with_items: "{{users_to_remove}}"
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
+    ES_HOME: "{{es_home}}"
+
+
+- set_fact: users_to_add={{ es_users.file.keys() | difference (current_file_users.stdout_lines) }}
+  when: manage_file_users
+
+#Add users
+- name: Add Users
+  command: >
+    {{es_home}}/bin/shield/esusers useradd {{item}} -p {{es_users.file[item].password}}
+  with_items: "{{users_to_add}}"
+  when: manage_file_users and users_to_add | length > 0
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
+    ES_HOME: "{{es_home}}"
+
+#Set passwords for all users declared - Required as the useradd will not change existing user passwords
+- name: Set User Passwords
+  command: >
+    {{es_home}}/bin/shield/esusers passwd {{item.key}} -p {{item.value.password}}
+  with_dict: "{{es_users.file}}"
+  when: manage_file_users and es_users.file.keys() | length > 0
+  #Currently no easy way to figure out if the password has changed or to know what it currently is so we can skip.
+  changed_when: False
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
+    ES_HOME: "{{es_home}}"
+
+- set_fact: users_roles={{es_users.file | extract_role_users}}
+  when: manage_file_users
+
+#Copy Roles files
+- name: Copy roles.yml File for Instance
+  template: src=shield/roles.yml.j2 dest={{conf_dir}}/shield/roles.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  when: es_roles is defined and es_roles.file is defined
+
+#Overwrite users_roles file
+- name: Copy User Roles
+  template: src=shield/users_roles.j2 dest={{conf_dir}}/shield/users_roles mode=0644 force=yes
+  when: manage_file_users and users_roles | length > 0
+
+#TODO: Support for mapping file
+

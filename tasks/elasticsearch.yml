@@ -1,24 +1,6 @@
 ---
 
-- set_fact: instance_default_file={{default_file | dirname}}/{{es_instance_name}}_{{default_file | basename}}
-  tags:
-      - always
-- set_fact: instance_init_script={{init_script | dirname }}/{{es_instance_name}}_{{init_script | basename}}
-  tags:
-      - always
-- set_fact: conf_dir={{ es_conf_dir }}/{{es_instance_name}}
-  tags:
-      - always
-- set_fact: plugin_dir={{ es_plugin_dir }}/{{es_instance_name}}
-  tags:
-      - always
-- set_fact: m_lock_enabled={{ es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True }}
-  tags:
-      - always
-
-- debug: msg="Node configuration {{ es_config }} "
-
-- name: Include optional user and group creation. 
+- name: Include optional user and group creation.
   when: (es_user_id is defined) and (es_group_id is defined)
   include: elasticsearch-optional-user.yml
 

@@ -1,0 +1,55 @@
+---
+
+- set_fact: es_version_changed={{ ((elasticsearch_install_from_package is defined and elasticsearch_install_from_repo.changed) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) }}
+
+#enabling xpack installs the license. Not a xpack feature and does not need to be specified - TODO: we should append it to the list if xpack is enabled and remove this
+
+#Check if license is installed
+- name: Check License is installed
+  shell: >
+    {{es_home}}/bin/plugin list | tail -n +2 | grep license
+  register: license_installed
+  ignore_errors: yes
+  failed_when: "'ERROR' in license_installed.stdout"
+  changed_when: False
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
+    ES_INCLUDE: "{{ instance_default_file }}"
+
+#Remove license if installed and xpack not enabled
+- name: Remove license plugin
+  command: >
+    {{es_home}}/bin/plugin remove license
+  register: xpack_state
+  failed_when: "'ERROR' in xpack_state.stdout"
+  changed_when: xpack_state.rc == 0
+  when: license_installed.rc == 0 and (not es_enable_xpack or es_version_changed)
+  notify: restart elasticsearch
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
+    ES_INCLUDE: "{{ instance_default_file }}"
+
+#Install License if not installed, or it needs to be reinstalled due to ES change (above task will have removed), and its been requested.
+- name: Install license plugin
+  command: >
+    {{es_home}}/bin/plugin install license
+  register: xpack_state
+  failed_when: "'ERROR' in xpack_state.stdout"
+  changed_when: xpack_state.rc == 0
+  when: (license_installed.rc == 1 or es_version_changed) and es_enable_xpack
+  notify: restart elasticsearch
+  environment:
+    CONF_DIR: "{{ conf_dir }}"
+    ES_INCLUDE: "{{ instance_default_file }}"
+
+#We loop on all as we may need to remove some features.
+- include: elasticsearch-xpack-install.yml
+  with_items: "{{supported_xpack_features}}"
+
+#Shield configuration
+- include: shield/elasticsearch-shield.yml
+
+#Add any feature specific configuration here
+
+- name: Set Plugin Directory Permissions
+  file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes

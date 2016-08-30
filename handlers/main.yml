@@ -1,4 +1,17 @@
 
 - name: restart elasticsearch
   service: name={{instance_init_script | basename}} state=restarted enabled=yes
-  when: es_restart_on_change and es_start_service and not elasticsearch_started.changed and ((plugin_installed is defined and plugin_installed.changed) or (elasticsearch_install_from_repo.changed or elasticsearch_install_from_package.changed))
+  when: es_restart_on_change and es_start_service and not elasticsearch_started.changed and ((plugin_installed is defined and plugin_installed.changed) or (xpack_state.changed) or (elasticsearch_install_from_repo.changed or elasticsearch_install_from_package.changed))
+
+- name: load-native-realms
+  include: ./handlers/shield/elasticsearch-shield-native.yml
+  when: (es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined)
+
+
+#Templates are a handler as they need to come after a restart e.g. suppose user removes shield on a running node and doesn't
+#specify es_api_basic_auth_username and es_api_basic_auth_password.  The templates will subsequently not be removed if we don't wait for the node to restart.
+#Templates done after restart therefore - as a handler.
+
+- name: load-templates
+  include: ./handlers/elasticsearch-templates.yml
+  when: es_templates
