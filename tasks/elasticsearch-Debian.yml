@@ -14,7 +14,7 @@
   when: es_use_repository
 
 - name: Debian - Ensure elasticsearch is installed
-  apt: name=elasticsearch{% if es_version is defined and es_version != "" %}={{ es_version }}{% endif %} state=present force={{force_install}} cache_valid_time=86400
+  apt: name=elasticsearch{% if es_version is defined and es_version != "" %}={{ es_version }}{% endif %} state=present force={{force_install}} allow_unauthenticated={{ 'false' if es_apt_key else 'true' }} cache_valid_time=86400
   when: es_use_repository
   register: elasticsearch_install_from_repo
 
