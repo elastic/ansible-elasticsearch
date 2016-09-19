@@ -49,7 +49,44 @@
 #Shield configuration
 - include: shield/elasticsearch-shield.yml
 
-#Add any feature specific configuration here
+# Activate ES lience
+- name: Activate ES license (without shield authentication)
+  uri:
+    method: PUT
+    url: "http://{{es_api_host}}:{{es_api_port}}/_license?acknowledge=true"
+    body_format: json
+    body: "{{ es_xpack_license }}"
+    return_content: yes
+  register: license_activated
+  no_log: True
+  when: es_xpack_license is defined and es_xpack_license != '' and es_enable_xpack and '"shield" not in es_xpack_features
+  failed_when: >
+    license_activated.status != 200 or
+    license_activated.json.license_status is not defined or 
+    license_activated.json.license_status != 'valid'
 
+- name: Activate ES license (with shield authentication)
+  uri:
+    method: PUT
+    url: "http://{{es_api_host}}:{{es_api_port}}/_license?acknowledge=true"
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    body_format: json
+    force_basic_auth: yes
+    body: "{{ es_xpack_license }}"
+    return_content: yes
+  register: license_activated
+  no_log: True
+  when: es_xpack_license is defined and es_xpack_license != '' and es_enable_xpack and '"shield" in es_xpack_features
+  failed_when: >
+    license_activated.status != 200 or
+    license_activated.json.license_status is not defined or 
+    license_activated.json.license_status != 'valid'
+
+- debug:
+    msg: "License: {{ license_activated.content }}"
+  when: es_xpack_license is defined and es_xpack_license != '' and es_enable_xpack
+
+#Add any feature specific configuration here
 - name: Set Plugin Directory Permissions
   file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes
