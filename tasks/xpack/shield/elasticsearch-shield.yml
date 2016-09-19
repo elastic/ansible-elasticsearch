@@ -21,6 +21,12 @@
   template: src=shield/role_mapping.yml.j2 dest={{conf_dir}}/shield/role_mapping.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   when: es_role_mapping is defined
 
+#-----------------------------AUTH FILE----------------------------------------
+
+- name: Copy message auth key to elasticsearch
+  copy: src={{ es_message_auth_file }} dest={{conf_dir}}/shield/system_key owner={{ es_user }} group={{ es_group }} mode=0600 force=yes
+  when: es_message_auth_file is defined
+
 #------------------------------------------------------------------------------------
 
 #Ensure shield conf directory is created
