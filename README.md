@@ -293,3 +293,7 @@ Elasticsearch restarted where required.
 * If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 2.x.
 * If no plugins are listed in the playbook for a node, all currently installed plugins will be removed.
 * The role does not currently support automatic detection of differences between installed and listed plugins (other than if none are listed).   Should users wish to change installed plugins should set es_plugins_reinstall to true.  This will cause all currently installed plugins to be removed and those listed to be installed.  Change detection will be implemented in future releases.
+
+## Questions on Usage
+
+We welcome questions on how to use the role.  However, in order to keep the github issues list focused on "issues" we ask the community to raise questions at https://discuss.elastic.co/c/elasticsearch.  This is monitored by the maintainers.
