@@ -16,6 +16,12 @@
       - watcher
     es_api_basic_auth_username: es_admin
     es_api_basic_auth_password: changeMe
+    es_role_mapping:
+      power_user:
+        - "cn=admins,dc=example,dc=com"
+      user:
+        - "cn=users,dc=example,dc=com"
+        - "cn=admins,dc=example,dc=com"
     es_users:
       native:
         kibana4_server:

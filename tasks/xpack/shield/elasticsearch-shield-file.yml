@@ -60,5 +60,3 @@
   template: src=shield/users_roles.j2 dest={{conf_dir}}/shield/users_roles mode=0644 force=yes
   when: manage_file_users and users_roles | length > 0
 
-#TODO: Support for mapping file
-

@@ -211,5 +211,14 @@ shared_examples 'xpack::init' do |es_version|
     it { should contain 'shield.authc.realms.native1.type: native' }
   end
 
+  #Test contents of role_mapping.yml
+  describe file('/etc/elasticsearch/shield_node/shield/role_mapping.yml') do
+    it { should be_owned_by 'elasticsearch' }
+    it { should contain 'power_user:' }
+    it { should contain '- cn=admins,dc=example,dc=com' }
+    it { should contain 'user:' }
+    it { should contain '- cn=admins,dc=example,dc=com' }
+  end
+
 end
 
