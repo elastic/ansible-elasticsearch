@@ -220,5 +220,16 @@ shared_examples 'xpack::init' do |es_version|
     it { should contain '- cn=admins,dc=example,dc=com' }
   end
 
+
+  describe file('/etc/elasticsearch/shield_node/shield/system_key') do
+    it { should be_owned_by 'elasticsearch' }
+    it { should be_writable.by('owner') }
+    it { should be_writable.by_user('elasticsearch') }
+    it { should be_readable.by('owner') }
+    it { should be_readable.by_user('elasticsearch') }
+    it { should_not be_executable }
+    #Test contents as expected
+    its(:md5sum) { should eq '6ff0e6c4380a6ac0f6e04d871c0ca5e8' }
+  end
 end
 
