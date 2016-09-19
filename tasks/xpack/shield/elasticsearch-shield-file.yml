@@ -31,6 +31,7 @@
     {{es_home}}/bin/shield/esusers useradd {{item}} -p {{es_users.file[item].password}}
   with_items: "{{users_to_add}}"
   when: manage_file_users and users_to_add | length > 0
+  no_log: True
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_HOME: "{{es_home}}"
@@ -43,6 +44,7 @@
   when: manage_file_users and es_users.file.keys() | length > 0
   #Currently no easy way to figure out if the password has changed or to know what it currently is so we can skip.
   changed_when: False
+  no_log: True
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_HOME: "{{es_home}}"
