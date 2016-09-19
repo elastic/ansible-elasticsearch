@@ -14,7 +14,14 @@
   notify: load-native-realms
   when: (es_enable_xpack and '"shield" in es_xpack_features') and ((es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined))
 
-#---------------------------------------------------------------------
+#-----------------------------ROLE MAPPING ----------------------------------------
+
+#Copy Roles files
+- name: Copy role_mapping.yml File for Instance
+  template: src=shield/role_mapping.yml.j2 dest={{conf_dir}}/shield/role_mapping.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  when: es_role_mapping is defined
+
+#------------------------------------------------------------------------------------
 
 #Ensure shield conf directory is created
 - name: Ensure shield conf directory exists
