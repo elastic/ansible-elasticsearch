@@ -12,8 +12,14 @@ Environment=LOG_DIR={{log_dir}}
 Environment=PID_DIR={{pid_dir}}
 EnvironmentFile=-{{instance_default_file}}
 
+WorkingDirectory={{es_home}}
+
 User={{es_user}}
 Group={{es_group}}
+
+{% if es_version | version_compare('2.0', '>=') %}
+ExecStartPre=/usr/share/elasticsearch/bin/elasticsearch-systemd-pre-exec
+{% endif %}
 
 ExecStart={{es_home}}/bin/elasticsearch \
                                         -Des.pidfile=${PID_DIR}/elasticsearch.pid \
@@ -24,11 +30,8 @@ ExecStart={{es_home}}/bin/elasticsearch \
 
 
 
-# Connects standard output to /dev/null
-StandardOutput=null
-
-# Connects standard error to journal
-StandardError=journal
+StandardOutput=journal
+StandardError=inherit
 
 # Specifies the maximum file descriptor number that can be opened by this process
 LimitNOFILE={{es_max_open_files}}
