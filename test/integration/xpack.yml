@@ -8,6 +8,7 @@
   vars:
     es_templates: true
     es_enable_xpack: true
+    es_xpack_license: <%= ENV['ES_XPACK_LICENSE'] %>
     es_plugins:
       - plugin: lmenezes/elasticsearch-kopf
         version: master
