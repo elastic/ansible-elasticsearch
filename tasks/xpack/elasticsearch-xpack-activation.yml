@@ -1,4 +1,4 @@
-
+---
 - name: Activate ES license (without shield authentication)
   uri:
     method: PUT
@@ -11,7 +11,7 @@
   when: '"shield" not in es_xpack_features
   failed_when: >
     license_activated.status != 200 or
-    license_activated.json.license_status is not defined or 
+    license_activated.json.license_status is not defined or
     license_activated.json.license_status != 'valid'
 
 - name: Activate ES license (with shield authentication)
@@ -29,7 +29,7 @@
   when: '"shield" in es_xpack_features
   failed_when: >
     license_activated.status != 200 or
-    license_activated.json.license_status is not defined or 
+    license_activated.json.license_status is not defined or
     license_activated.json.license_status != 'valid'
 
 - debug:
