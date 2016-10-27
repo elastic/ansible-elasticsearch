@@ -14,6 +14,7 @@
   when: es_use_repository and es_apt_key
 
 - name: Debian - Add elasticsearch repository
+  apt_repository: repo="{{ es_apt_url_old }}" state=absent
   apt_repository: repo="{{ es_apt_url }}" state=present
   when: es_use_repository
 
