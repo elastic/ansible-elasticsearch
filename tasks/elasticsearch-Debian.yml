@@ -5,15 +5,19 @@
 - set_fact: force_install=yes
   when: es_allow_downgrades
 
+- name: Debian - Install apt-transport-https to support https APT downloads
+  apt: name=apt-transport-https state=present
+  when: es_use_repository
+
 - name: Debian - Add Elasticsearch repository key
   apt_key: url="{{ es_apt_key }}" state=present
   when: es_use_repository and es_apt_key
 
-- name: Debian - add elasticsearch repository
+- name: Debian - Add elasticsearch repository
   apt_repository: repo="{{ es_apt_url }}" state=present
   when: es_use_repository
 
-- name: Debian - include versionlock
+- name: Debian - Include versionlock
   include: elasticsearch-Debian-version-lock.yml
   when: es_version_lock
 
