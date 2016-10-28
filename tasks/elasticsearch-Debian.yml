@@ -14,7 +14,10 @@
   when: es_use_repository and es_apt_key
 
 - name: Debian - Add elasticsearch repository
-  apt_repository: repo="{{ es_apt_url }}" state=present
+  apt_repository: repo={{ item.repo }} state={{ item.state}}
+  with_items:
+    - { repo: "{{ es_apt_url_old }}", state: "absent" }
+    - { repo: "{{ es_apt_url }}", state: "present" }
   when: es_use_repository
 
 - name: Debian - Include versionlock
