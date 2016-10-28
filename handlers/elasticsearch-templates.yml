@@ -6,7 +6,6 @@
 - name: Wait for elasticsearch to startup
   wait_for: host={% if es_config['network.host'] is defined %}{{es_config['network.host']}}{% else %}{{es_api_host}}{% endif %} port={% if es_config['http.port'] is defined %}{{es_config['http.port']}}{% else %}{{es_api_port}}{% endif %} delay=10
 
-
 - name: Get template files
   find: paths="/etc/elasticsearch/templates" patterns="*.json"
   register: templates
