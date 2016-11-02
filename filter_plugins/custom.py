@@ -41,4 +41,3 @@ class FilterModule(object):
         'extract_role_users':extract_role_users,
         'filename':filename}
 
-print filename('/etc/elasticsearch/templates/basic.json')
