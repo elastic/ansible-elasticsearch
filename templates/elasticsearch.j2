@@ -33,7 +33,13 @@ ES_HEAP_SIZE={{es_heap_size}}
 #ES_DIRECT_SIZE=
 
 # Additional Java OPTS
+{% if es_java_opts is defined and es_java_opts %}
+{% for java_opt in es_java_opts %}
+ES_JAVA_OPTS="{{java_opt}}"
+{% endfor %}
+{% else %}
 #ES_JAVA_OPTS=
+{% endif %}
 
 # Configure restart on package upgrade (true, every other setting will lead to not restarting)
 #ES_RESTART_ON_UPGRADE=true

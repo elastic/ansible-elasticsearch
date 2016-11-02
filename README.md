@@ -216,17 +216,19 @@ Following variables affect the versions installed:
 * ```es_version``` (e.g. "1.5.2").  
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
-* ```es_plugins``` (an array of plugin definitions e.g.:
-* ```es_allow_downgrades``` For development purposes only. (true or false (default) )
-* ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
-* ```update_java``` Updates Java to the latest version. (true or false (default))
-
-
-
-```
+* ```es_plugins``` an array of plugin definitions e.g.:
+```yml
   es_plugins:
     - plugin: elasticsearch-cloud-aws
       version: 2.5.0
+```
+* ```es_allow_downgrades``` For development purposes only. (true or false (default) )
+* ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
+* ```update_java``` Updates Java to the latest version. (true or false (default))
+* ```es_java_opts``` an array of java options. E.g.:
+```yml
+es_java_opts:
+  - "-Djava.io.tmpdir=/data/tmp/elasticsearch"
 ```
 
 Earlier examples illustrate the installation of plugins for 2.x.  The correct use of this parameter varies depending on the version of Elasticsearch being installed:
