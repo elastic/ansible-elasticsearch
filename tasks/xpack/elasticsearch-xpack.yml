@@ -7,7 +7,7 @@
 #Check if license is installed
 - name: Check License is installed
   shell: >
-    {{es_home}}/bin/plugin list | tail -n +2 | grep license
+    {{es_home}}/bin/{{ es_binary_prefix }}plugin list | tail -n +2 | grep license
   register: license_installed
   ignore_errors: yes
   failed_when: "'ERROR' in license_installed.stdout"
@@ -19,7 +19,7 @@
 #Remove license if installed and xpack not enabled
 - name: Remove license plugin
   command: >
-    {{es_home}}/bin/plugin remove license
+    {{es_home}}/bin/{{ es_binary_prefix }}plugin remove license
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
@@ -32,7 +32,7 @@
 #Install License if not installed, or it needs to be reinstalled due to ES change (above task will have removed), and its been requested.
 - name: Install license plugin
   command: >
-    {{es_home}}/bin/plugin install license
+    {{es_home}}/bin/{{ es_binary_prefix }}plugin install license
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
