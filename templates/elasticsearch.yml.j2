@@ -18,6 +18,8 @@ path.conf: {{ conf_dir }}
 
 path.data: {{ data_dirs | array_to_str }}
 
+{% if es_version | version_compare('2.0', '<=') %}
 path.work: {{ work_dir }}
+{% endif %}
 
 path.logs: {{ log_dir }}

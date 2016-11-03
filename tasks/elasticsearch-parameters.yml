@@ -18,8 +18,8 @@
   when: not multi_cast and es_config['discovery.zen.ping.unicast.hosts'] is not defined
 
 #If the user attempts to lock memory they must specify a heap size
-- fail: msg="If locking memory with bootstrap.mlockall a heap size must be specified"
-  when: es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True and es_heap_size is not defined
+- fail: msg="If locking memory with bootstrap.mlockall (or bootstrap.memory_lock) a heap size must be specified"
+  when: (es_config['bootstrap.mlockall'] is defined or es_config['bootstrap.memory_lock'] is defined) and es_config['bootstrap.mlockall'] == True and es_heap_size is not defined
 
 #Don't support xpack on versions < 2.0
 - fail: msg="Use of the xpack notation is not supported on versions < 2.0.  Marvel-agent and watcher can be installed as plugins.  Version > 2.0 is required for shield."
@@ -32,7 +32,7 @@
 - set_fact: instance_default_file={{default_file | dirname}}/{{es_instance_name}}_{{default_file | basename}}
 - set_fact: instance_init_script={{init_script | dirname }}/{{es_instance_name}}_{{init_script | basename}}
 - set_fact: conf_dir={{ es_conf_dir }}/{{es_instance_name}}
-- set_fact: m_lock_enabled={{ es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True }}
+- set_fact: m_lock_enabled={{ (es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True) or (es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True) }}
 
 #Use systemd for the following distributions:
 #Ubuntu 15 and up
