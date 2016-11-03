@@ -31,9 +31,6 @@
 - include: xpack/elasticsearch-xpack.yml
   tags:
       - xpack
-- include: elasticsearch-service.yml
-  tags:
-      - service
 - include: elasticsearch-templates.yml
   when: es_templates
   tags:
