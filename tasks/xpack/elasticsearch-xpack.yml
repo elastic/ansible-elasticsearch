@@ -1,6 +1,6 @@
 ---
 
-- set_fact: es_version_changed={{ ((elasticsearch_install_from_package is defined and elasticsearch_install_from_repo.changed) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) }}
+- set_fact: es_version_changed={{ ((elasticsearch_install_from_package is defined and (debian_elasticsearch_install_from_repo.changed or redhat_elasticsearch_install_from_repo.changed)) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) }}
 
 #enabling xpack installs the license. Not a xpack feature and does not need to be specified - TODO: we should append it to the list if xpack is enabled and remove this
 
