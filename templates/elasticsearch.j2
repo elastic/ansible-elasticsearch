@@ -14,7 +14,7 @@ DATA_DIR={{ data_dirs | array_to_str }}
 # Elasticsearch logs directory
 LOG_DIR={{log_dir}}
 
-{% if es_version | version_compare('2.0', '<=') %}
+{% if es_version | version_compare('5.0', '<') %}
 # Elasticsearch work directory
 WORK_DIR={{work_dir}}
 {% endif %}
@@ -22,7 +22,7 @@ WORK_DIR={{work_dir}}
 # Elasticsearch PID directory
 PID_DIR={{pid_dir}}
 
-{% if es_version | version_compare('2.0', '<=') %}
+{% if es_version | version_compare('5.0', '<') %}
 # Heap size defaults to 256m min, 1g max
 # Set ES_HEAP_SIZE to 50% of available RAM, but no more than 31g
 {% if es_heap_size is defined %}
@@ -78,7 +78,7 @@ MAX_OPEN_FILES={{es_max_open_files}}
 {% endif %}
 
 # The maximum number of bytes of memory that may be locked into RAM
-# Set to "unlimited" if you use the 'bootstrap.{% if es_version | version_compare('2.0', '>') %}memory_lock{% else %}mlockall{% endif %}: true' option
+# Set to "unlimited" if you use the 'bootstrap.{% if es_version | version_compare('5.0', '<=') %}memory_lock{% else %}mlockall{% endif %}: true' option
 # in elasticsearch.yml (ES_HEAP_SIZE  must also be set).
 # When using Systemd, the LimitMEMLOCK property must be set
 # in /usr/lib/systemd/system/elasticsearch.service

@@ -104,7 +104,7 @@ fi
 # Define other required variables
 PID_FILE="$PID_DIR/$NAME.pid"
 DAEMON={{es_home}}/bin/elasticsearch
-{% if es_version | version_compare('2.0', '<=') %}
+{% if es_version | version_compare('5.0', '<') %}
 DAEMON_OPTS="-d -p $PID_FILE --default.path.home=$ES_HOME --default.path.logs=$LOG_DIR --default.path.data=$DATA_DIR --default.path.conf=$CONF_DIR"
 {% else %}
 DAEMON_OPTS="-d -p $PID_FILE -Edefault.path.home=$ES_HOME -Edefault.path.logs=$LOG_DIR -Edefault.path.data=$DATA_DIR -Edefault.path.conf=$CONF_DIR"

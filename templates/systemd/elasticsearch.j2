@@ -22,7 +22,7 @@ ExecStartPre=/usr/share/elasticsearch/bin/elasticsearch-systemd-pre-exec
 {% endif %}
 
 ExecStart={{es_home}}/bin/elasticsearch \
-{% if es_version | version_compare('2.0', '<=') %}
+{% if es_version | version_compare('5.0', '<') %}
                                         -Des.pidfile=${PID_DIR}/elasticsearch.pid \
                                         -Des.default.path.home=${ES_HOME} \
                                         -Des.default.path.logs=${LOG_DIR} \
@@ -45,7 +45,7 @@ StandardError=inherit
 LimitNOFILE={{es_max_open_files}}
 
 # Specifies the maximum number of bytes of memory that may be locked into RAM
-# Set to "infinity" if you use the 'bootstrap.{% if es_version | version_compare('2.0', '>') %}memory_lock{% else %}mlockall{% endif %}: true' option
+# Set to "infinity" if you use the 'bootstrap.{% if es_version | version_compare('5.0', '<=') %}memory_lock{% else %}mlockall{% endif %}: true' option
 # in elasticsearch.yml and 'MAX_LOCKED_MEMORY=unlimited' in {{instance_default_file}}
 {% if m_lock_enabled %}
 LimitMEMLOCK=infinity
