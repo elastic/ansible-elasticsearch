@@ -17,7 +17,7 @@
 
 #List currently installed plugins - ignore xpack if > v 2.0
 - name: Check installed elasticsearch plugins
-  shell: "{{es_home}}/bin/{{ es_binary_prefix }}plugin {{list_command}}{% if es_version | version_compare('2.0', '>') %} | grep -vE '{{supported_xpack_features | join('|')}}|license'{% endif %}"
+  shell: "{{es_home}}/bin/{{ es_binary_prefix }}plugin {{list_command}}{% if es_version | version_compare('5.0', '<') %} | sed -n '1!p' | cut -d '-' -f2-{% endif %}{% if es_version | version_compare('2.0', '>') %} | grep -vE '{{supported_xpack_features | join('|')}}|license'{% endif %}"
   register: installed_plugins
   failed_when: "'ERROR' in installed_plugins.stdout"
   changed_when: False

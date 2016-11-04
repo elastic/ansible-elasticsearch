@@ -1,7 +1,7 @@
 ---
 
 #Test if feature is installed
-- shell: "{{es_home}}/bin/{{ es_binary_prefix }}plugin list | sed -n '1!p' | grep {{item}}"
+- shell: "{{es_home}}/bin/{{ es_binary_prefix }}plugin list{% if es_version | version_compare('5.0', '<') %} | sed -n '1!p' | cut -d '-' -f2-{% endif %} | grep {{item}}"
   register: feature_installed
   changed_when: False
   failed_when: "'ERROR' in feature_installed.stdout"
