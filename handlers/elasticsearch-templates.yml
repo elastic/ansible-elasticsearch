@@ -4,7 +4,7 @@
   service: name={{instance_init_script | basename}} state=started enabled=yes
 
 - name: Wait for elasticsearch to startup
-  wait_for: port={{es_api_port}} delay=10
+  wait_for: host={% if es_config['network.host'] is defined %}{{es_config['network.host']}}{% else %}{{es_api_host}}{% endif %} port={% if es_config['http.port'] is defined %}{{es_config['http.port']}}{% else %}{{es_api_port}}{% endif %} delay=10
 
 - name: Get template files
   find: paths="/etc/elasticsearch/templates" patterns="*.json"
@@ -12,7 +12,7 @@
 
 - name: Install templates without auth
   uri:
-    url: "http://{{es_api_host}}:{{es_api_port}}/_template/{{item.path | filename}}"
+    url: "http://{% if es_config['network.host'] is defined %}{{es_config['network.host']}}{% else %}{{es_api_host}}{% endif %}:{% if es_config['http.port'] is defined %}{{es_config['http.port']}}{% else %}{{es_api_port}}{% endif %}/_template/{{item.path | filename}}"
     method: PUT
     status_code: 200
     body_format: json
@@ -22,7 +22,7 @@
 
 - name: Install templates with auth
   uri:
-    url: "http://{{es_api_host}}:{{es_api_port}}/_template/{{item.path | filename}}"
+    url: "http://{% if es_config['network.host'] is defined %}{{es_config['network.host']}}{% else %}{{es_api_host}}{% endif %}:{% if es_config['http.port'] is defined %}{{es_config['http.port']}}{% else %}{{es_api_port}}{% endif %}/_template/{{item.path | filename}}"
     method: PUT
     status_code: 200
     user: "{{es_api_basic_auth_username}}"
