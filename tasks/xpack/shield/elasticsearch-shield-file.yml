@@ -1,6 +1,12 @@
 ---
 - set_fact: manage_file_users=es_users is defined and es_users.file is defined
 
+#Ensure shield conf directory is created
+- name: Ensure shield conf directory exists (file)
+  file: path={{ conf_dir }}/shield state=directory owner={{ es_user }} group={{ es_group }}
+  changed_when: False
+  when: es_enable_xpack and '"shield" in es_xpack_features'
+
 #List current users
 - name: List Users
   shell: cat {{conf_dir}}/shield/users | awk -F':' '{print $1}'
@@ -60,3 +66,6 @@
   template: src=shield/users_roles.j2 dest={{conf_dir}}/shield/users_roles mode=0644 force=yes
   when: manage_file_users and users_roles | length > 0
 
+#Set permission on shield directory. E.g. if 2 nodes are installed on the same machine, the second node will not get the users file created at install, causing the files being created at es_users call and then having the wrong Permissions.
+- name: Set Shield Directory Permissions Recursive
+  file: state=directory path={{conf_dir}}/shield/ owner={{ es_user }} group={{ es_group }} recurse=yes
