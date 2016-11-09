@@ -34,9 +34,7 @@ ES_HEAP_SIZE={{es_heap_size}}
 
 # Additional Java OPTS
 {% if es_java_opts is defined and es_java_opts %}
-{% for java_opt in es_java_opts %}
-ES_JAVA_OPTS="{{java_opt}}"
-{% endfor %}
+ES_JAVA_OPTS="{{es_java_opts | default([]) | join(' ')}}"
 {% else %}
 #ES_JAVA_OPTS=
 {% endif %}
