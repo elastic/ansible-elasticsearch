@@ -29,3 +29,11 @@ es_xpack_features: []
 #They do not effect the current configuration
 es_api_host: "localhost"
 es_api_port: 9200
+
+# Since ansible 2.2 the following variables need to be defined
+# to allow the role to be conditionally played with a when condition.
+pid_dir: ''
+log_dir: ''
+work_dir: ''
+conf_dir: ''
+data_dirs: ''
