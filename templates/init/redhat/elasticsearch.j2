@@ -90,10 +90,12 @@ checkJava() {
 start() {
     checkJava
     [ -x $exec ] || exit 5
+{% if es_version | version_compare('5.0', '<') %}
     if [ -n "$MAX_LOCKED_MEMORY" -a -z "$ES_HEAP_SIZE" ]; then
         echo "MAX_LOCKED_MEMORY is set - ES_HEAP_SIZE must also be set"
         return 7
     fi
+{% endif %}
     if [ -n "$MAX_OPEN_FILES" ]; then
         ulimit -n $MAX_OPEN_FILES
     fi

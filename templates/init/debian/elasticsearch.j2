@@ -51,9 +51,11 @@ ES_GROUP={{es_group}}
 # Directory where the Elasticsearch binary distribution resides
 ES_HOME={{es_home}}
 
+{% if es_version | version_compare('5.0', '<') %}
 # Heap size defaults to 256m min, 1g max
 # Set ES_HEAP_SIZE to 50% of available RAM, but no more than 31g
 #ES_HEAP_SIZE=2g
+{% endif %}
 
 # Heap new generation
 #ES_HEAP_NEWSIZE=
@@ -137,10 +139,12 @@ case "$1" in
   start)
 	checkJava
 
+{% if es_version | version_compare('5.0', '<') %}
 	if [ -n "$MAX_LOCKED_MEMORY" -a -z "$ES_HEAP_SIZE" ]; then
 		log_failure_msg "MAX_LOCKED_MEMORY is set - ES_HEAP_SIZE must also be set"
 		exit 1
 	fi
+{% endif %}
 
 	log_daemon_msg "Starting $DESC"
 
