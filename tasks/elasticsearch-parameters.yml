@@ -27,7 +27,7 @@
 
 #Check if working with shield we have an es_api_basic_auth_username and es_api_basic_auth_username - otherwise any http calls wont work
 - fail: msg="Enabling shield requires an es_api_basic_auth_username and es_api_basic_auth_password to be provided to allow cluster operations"
-  when: es_enable_xpack and '"shield" in es_xpack_features' and es_api_basic_auth_username is not defined and es_api_basic_auth_password is not defined
+  when: es_enable_xpack and ("shield" in es_xpack_features) and es_api_basic_auth_username is not defined and es_api_basic_auth_password is not defined
 
 - set_fact: instance_default_file={{default_file | dirname}}/{{es_instance_name}}_{{default_file | basename}}
 - set_fact: instance_init_script={{init_script | dirname }}/{{es_instance_name}}_{{init_script | basename}}
