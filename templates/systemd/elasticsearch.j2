@@ -10,7 +10,6 @@ Environment=CONF_DIR={{conf_dir}}
 Environment=DATA_DIR={{ data_dirs | array_to_str }}
 Environment=LOG_DIR={{log_dir}}
 Environment=PID_DIR={{pid_dir}}
-Environment=ES_JVM_OPTIONS={{conf_dir}}/jvm.options
 EnvironmentFile=-{{instance_default_file}}
 
 WorkingDirectory={{es_home}}
