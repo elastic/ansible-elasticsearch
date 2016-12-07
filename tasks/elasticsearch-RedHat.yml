@@ -24,6 +24,13 @@
   when: not es_use_repository
   register: elasticsearch_install_from_package
 
+#Install EPEL repository first to be able to install python-pip afterwards
+- name: Install EPEL
+  yum: name=http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm state=present update_cache=yes
+
+- name: Install python-pip
+  yum: name=python-pip state=present update_cache=yes
+
 # ansible uri module requires python-httplib2
 - name: python-httplib2
   pip: name=httplib2
