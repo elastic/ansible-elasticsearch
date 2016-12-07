@@ -24,6 +24,9 @@
   when: not es_use_repository
   register: elasticsearch_install_from_package
 
+- name: Install pip
+  easy_install: name=pip
+
 # ansible uri module requires python-httplib2
 - name: python-httplib2
   pip: name=httplib2
