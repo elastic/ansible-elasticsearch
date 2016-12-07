@@ -49,9 +49,9 @@
     method: PUT
     status_code: 200
     body_format: json
-    body: "{{ lookup('file', item.path) }}"
+    body: "{{ item.stdout }}"
   when: not es_enable_xpack or not es_xpack_features is defined or not '"shield" in es_xpack_features'
-  with_items: "{{ templates.files }}"
+  with_items: "{{ es_template_files_contents.results }}"
 
 - name: Install templates with auth
   uri:
@@ -62,6 +62,6 @@
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
     body_format: json
-    body: "{{ lookup('file', item.path) }}"
+    body: "{{ item.stdout }}"
   when: es_enable_xpack and es_xpack_features is defined and '"shield" in es_xpack_features'
-  with_items: "{{ templates.files }}"
+  with_items: "{{ es_template_files_contents.results }}"
