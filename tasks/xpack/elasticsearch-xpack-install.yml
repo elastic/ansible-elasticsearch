@@ -1,7 +1,7 @@
 ---
 
 #Test if feature is installed
-- shell: "{{es_home}}/bin/plugin list | sed -n '1!p' | grep {{item}}"
+- shell: "{{es_home}}/bin/{{ es_binary_prefix }}plugin list{% if es_version | version_compare('5.0', '<') %} | sed -n '1!p' | cut -d '-' -f2-{% endif %} | grep {{item}}"
   register: feature_installed
   changed_when: False
   failed_when: "'ERROR' in feature_installed.stdout"
@@ -14,7 +14,7 @@
 #Remove Plugin if installed and its not been requested or the ES version has changed
 - name: Remove {{item}} plugin
   command: >
-    {{es_home}}/bin/plugin remove shield
+    {{es_home}}/bin/{{ es_binary_prefix }}plugin remove shield
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
@@ -28,7 +28,7 @@
 #Install plugin if not installed, or the es version has changed (so removed above), and its been requested
 - name: Install {{item}} plugin
   command: >
-    {{es_home}}/bin/plugin install {{item}}
+    {{es_home}}/bin/{{ es_binary_prefix }}plugin install {{item}}
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
