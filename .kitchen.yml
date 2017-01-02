@@ -42,6 +42,12 @@ platforms:
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
       use_sudo: false
       run_command: "/sbin/init"
+  - name: centos-6
+    driver_config:
+      image: dliappis/centos-devopsci:6
+      privileged: true
+      provision_command:
+      use_sudo: false
   - name: centos-7
     driver_config:
       image: dliappis/centos-devopsci:7
