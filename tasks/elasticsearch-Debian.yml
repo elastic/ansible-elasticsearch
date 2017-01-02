@@ -37,7 +37,3 @@
   apt: deb=/tmp/elasticsearch-{{ es_version }}.deb
   when: not es_use_repository
   register: elasticsearch_install_from_package
-
-# ansible uri module requires httplib2
-- name: python-httplib2
-  apt: name=python-httplib2
