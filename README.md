@@ -3,12 +3,10 @@
 Ansible role for Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
 
 * Ubuntu 14.04
-* Debian 7
 * Debian 8
-* Centos 6
 * Centos 7
 
-The latest Elasticsearch versions of 1.7.x and 2.x are actively tested.  **Only Ansible versions > 2.1.2 are supported.**
+The latest Elasticsearch versions of 2.x are actively tested.  **Only Ansible versions > 2.1.2 are supported.**. 5.x will be available shortly.
 
 ## Usage
 
@@ -75,7 +73,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
     es_heap_size: 1g
 ```
 `
-The role utilises Elasticsearch version defaults.  Multicast is therefore enabled for 1.x and disabled for 2.x (plugin required in 2.x).  If using 1.x it is strongly recommended you disable
+The role utilises Elasticsearch version defaults.  Multicast is therefore enabled for 1.x (legacy) and disabled for 2.x (plugin required in 2.x).  If using 1.x it is strongly recommended you disable
 multicast and specify the required uni-cast settings for a production environment. 
 When not utilizing multicast, the following should be set to ensure a successful cluster forms.
 
@@ -127,6 +125,11 @@ A more complex example:
           proxy_host: proxy.example.com
           proxy_port: 8080
 ```
+
+#### Important Note
+
+The role uses es_api_host and es_api_port to communicate with the node for actions only achievable via http e.g. to install templates.  These default to "localhost" and 9200 respectively.  
+If the node is deployed to bind on either a different host or port, these must be changed.
 
 ### Multi Node Server Installations
 
@@ -212,8 +215,10 @@ Additional parameters to es_config allow the customization of the Java and Elast
 
 Following variables affect the versions installed:
 
-* ```es_major_version``` (e.g. "1.5" ). Should be consistent with es_version. For versions >= 2.0 this must be "2.x".
-* ```es_version``` (e.g. "1.5.2").  
+* ```es_major_version``` (e.g. "2.4" ). Should be consistent with es_version. For versions >= 2.0 this must be "2.x".
+* ```es_version``` (e.g. "2.4.2").  
+* ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
+* ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200.
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` an array of plugin definitions e.g.:
@@ -235,7 +240,6 @@ Earlier examples illustrate the installation of plugins for 2.x.  The correct us
  
  - 2.x. - For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  
  For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.
- - 1.x - Full path and version is required for both community and official plugins e.g. "elasticsearch/marvel"
  
 If installing Marvel or Watcher, ensure the license plugin is also specified.  Shield configuration is currently not supported but planned for later versions.
 
