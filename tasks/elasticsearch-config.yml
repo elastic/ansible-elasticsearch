@@ -43,7 +43,9 @@
 - name: Copy Systemd File for Instance
   template: src=systemd/elasticsearch.j2 dest={{instance_sysd_script}} mode=0644 force=yes
   when: use_system_d
-  notify: restart elasticsearch
+  notify:
+  - reload systemd configuration
+  - restart elasticsearch
 
 #Copy the logging.yml
 - name: Copy Logging.yml File for Instance
@@ -64,7 +66,7 @@
   when: ansible_os_family == 'RedHat'
 
 - name: Delete Default Sysconfig File
-  file: dest=/usr/lib/systemd/system/elasticsearch.service state=absent
+  file: dest="{{ sysd_script }}" state=absent
 
 - name: Delete Default Configuration File
   file: dest=/etc/elasticsearch/elasticsearch.yml state=absent
