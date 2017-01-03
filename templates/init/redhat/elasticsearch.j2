@@ -63,6 +63,7 @@ export ES_HEAP_SIZE
 export ES_HEAP_NEWSIZE
 export ES_DIRECT_SIZE
 export ES_JAVA_OPTS
+export ES_JVM_OPTIONS
 export ES_GC_LOG_FILE
 export ES_STARTUP_SLEEP_TIME
 export JAVA_HOME
@@ -90,9 +91,9 @@ checkJava() {
 start() {
     checkJava
     [ -x $exec ] || exit 5
-{% if es_version | version_compare('5.0', '<') %}
+{% if es_version | version_compare('2.4', '==') %}
     if [ -n "$MAX_LOCKED_MEMORY" -a -z "$ES_HEAP_SIZE" ]; then
-        echo "MAX_LOCKED_MEMORY is set - ES_HEAP_SIZE must also be set"
+        echo "MAX_LOCKED_MEMORY is set - ES_HEAP_SIZE must also be set when version < 5.0"
         return 7
     fi
 {% endif %}
