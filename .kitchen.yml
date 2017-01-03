@@ -22,14 +22,6 @@ platforms:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
         - apt-get update && apt-get -y -q install python-apt python-pycurl
       use_sudo: false
-  - name: debian-7
-    driver_config:
-      image: dliappis/debian-devopsci:7
-      privileged: true
-      provision_command:
-        - apt-get update && apt-get -y install python python-dev python-pip build-essential libyaml-dev python-yaml
-        - apt-get install -y -q net-tools
-      use_sudo: false
   - name: debian-8
     driver_config:
       image: dliappis/debian-devopsci:8
@@ -43,12 +35,6 @@ platforms:
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
       use_sudo: false
       run_command: "/sbin/init"
-  - name: centos-6
-    driver_config:
-      image: dliappis/centos-devopsci:6
-      privileged: true
-      provision_command:
-      use_sudo: false
   - name: centos-7
     driver_config:
       image: dliappis/centos-devopsci:7
@@ -90,48 +76,6 @@ suites:
         es_plugins:
           - plugin: lmenezes/elasticsearch-kopf
             version: master
-    provisioner:
-      playbook: test/integration/multi.yml
-  - name: standard-1x
-    provisioner:
-      playbook: test/integration/standard.yml
-    run_list:
-    attributes:
-      extra_vars:
-        es_major_version: 1.7
-        es_version: 1.7.3
-  - name: package-1x
-    run_list:
-    attributes:
-      extra_vars:
-        es_major_version: 1.7
-        es_version: 1.7.3
-        es_plugins:
-          - plugin: lmenezes/elasticsearch-kopf
-            version: master
-          - plugin: elasticsearch/marvel
-            version: latest
-    provisioner:
-      playbook: test/integration/package.yml
-  - name: config-1x
-    run_list:
-    attributes:
-      extra_vars:
-        es_major_version: 1.7
-        es_version: 1.7.3
-    provisioner:
-      playbook: test/integration/config.yml
-  - name: multi-1x
-    run_list:
-    attributes:
-      extra_vars:
-        es_major_version: 1.7
-        es_version: 1.7.3
-        es_plugins:
-          - plugin: lmenezes/elasticsearch-kopf
-            version: master
-          - plugin: elasticsearch/marvel
-            version: latest
     provisioner:
       playbook: test/integration/multi.yml
   - name: xpack-2x

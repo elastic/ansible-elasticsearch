@@ -3,41 +3,8 @@
 - name: Ensure elasticsearch is started
   service: name={{instance_init_script | basename}} state=started enabled=yes
 
-- set_fact:
-    es_config_host: "{{ item }}"
-  with_items: "{{ es_config['network.host'] }}"
-  when: 
-    - es_config['network.host'] is defined and es_config['network.host'] is not string
-    - not item | match('^_.*_$')
-    - es_config_host is not defined
-  
-- set_fact:
-    es_config_host: "{{ es_config['network.host'] }}"
-  when: 
-    - es_config['network.host'] is defined and es_config['network.host'] is string
-    - not es_config['network.host'] | match('^_.*_$')
-
-- set_fact:
-    es_config_port: "{{ es_config['network.port'] }}"
-  when: 
-    - es_config['network.port'] is defined and es_config['network.port'] is number
-
-- set_fact:
-    es_config_port: "{{ es_config['network.port'].split('-').0 }}"
-  when: 
-    - es_config['network.port'] is defined and es_config['network.port'] is string
-    - es_config['network.port'] | match('^\d')
-
 - name: Wait for elasticsearch to startup
-  wait_for:
-    host: "{% if es_config_host is defined %}{{es_config_host}}{% else %}{{es_api_host}}{% endif %}"
-    port: "{% if es_config_port is defined %}{{es_config_port}}{% else %}{{es_api_port}}{% endif %}" 
-    delay: 10
-
-- name: Gather template files contents
-  shell: "cat /etc/elasticsearch/templates/{{ item }}"
-  with_items: "{{ es_template_files }}"
-  register: es_template_files_contents
+  wait_for: host={{es_api_host}} port={{es_api_port}} delay=10
 
 - name: Get template files
   find: paths="/etc/elasticsearch/templates" patterns="*.json"
@@ -45,17 +12,17 @@
 
 - name: Install templates without auth
   uri:
-    url: "http://{% if es_config_host is defined %}{{es_config_host}}{% else %}{{es_api_host}}{% endif %}:{% if es_config_port is defined %}{{es_config_port}}{% else %}{{es_api_port}}{% endif %}/_template/{{item.path | filename}}"
+    url: "http://{{es_api_host}}:{{es_api_port}}/_template/{{item.path | filename}}"
     method: PUT
     status_code: 200
     body_format: json
     body: "{{ item.stdout }}"
   when: not es_enable_xpack or not es_xpack_features is defined or not '"shield" in es_xpack_features'
-  with_items: "{{ es_template_files_contents.results }}"
+  with_items: "{{ templates.files }}"
 
 - name: Install templates with auth
   uri:
-    url: "http://{% if es_config_host is defined %}{{es_config_host}}{% else %}{{es_api_host}}{% endif %}:{% if es_config_port is defined %}{{es_config_port}}{% else %}{{es_api_port}}{% endif %}/_template/{{item.path | filename}}"
+    url: "http://{{es_api_host}}:{{es_api_port}}/_template/{{item.path | filename}}"
     method: PUT
     status_code: 200
     user: "{{es_api_basic_auth_username}}"
@@ -64,4 +31,4 @@
     body_format: json
     body: "{{ item.stdout }}"
   when: es_enable_xpack and es_xpack_features is defined and '"shield" in es_xpack_features'
-  with_items: "{{ es_template_files_contents.results }}"
+  with_items: "{{ templates.files }}"
