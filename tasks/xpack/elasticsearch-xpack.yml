@@ -5,7 +5,7 @@
 #enabling xpack installs the license. Not a xpack feature and does not need to be specified - TODO: we should append it to the list if xpack is enabled and remove this
 
 #Check if license is installed
-- name: Check License is installed
+- name: Check License plugin is installed
   shell: >
     {{es_home}}/bin/plugin list | tail -n +2 | grep license
   register: license_installed
@@ -48,10 +48,6 @@
 
 #Shield configuration
 - include: shield/elasticsearch-shield.yml
-
-# Activate ES lience
-- include: elasticsearch-xpack-activation.yml
-  when: es_enable_xpack and es_xpack_license is defined and es_xpack_license != ''
 
 #Add any feature specific configuration here
 - name: Set Plugin Directory Permissions

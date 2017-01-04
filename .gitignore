@@ -1,4 +1,5 @@
 .kitchen/
+license.json
 *.pyc
 .vendor
 .bundle
