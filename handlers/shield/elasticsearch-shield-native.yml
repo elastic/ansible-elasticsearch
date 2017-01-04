@@ -68,6 +68,7 @@
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
   when: manage_native_users and es_users.native.keys() > 0
+  no_log: True
   with_dict: "{{es_users.native}}"
 
 #List current roles

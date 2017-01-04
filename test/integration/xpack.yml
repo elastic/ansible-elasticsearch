@@ -5,6 +5,7 @@
     - { role: elasticsearch, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300",
     "shield.authc.realms.file1.type": "file","shield.authc.realms.file1.order": 0, "shield.authc.realms.native1.type": "native","shield.authc.realms.native1.order": 1 },
     es_instance_name: "shield_node" }
+  include_vars: <%= ENV['ES_XPACK_LICENSE_FILE'] %>
   vars:
     es_templates: true
     es_enable_xpack: true

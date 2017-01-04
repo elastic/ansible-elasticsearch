@@ -49,7 +49,10 @@
 #Shield configuration
 - include: shield/elasticsearch-shield.yml
 
-#Add any feature specific configuration here
+# Activate ES lience
+- include: elasticsearch-xpack-activation.yml
+  when: es_enable_xpack and es_xpack_license is defined and es_xpack_license != ''
 
+#Add any feature specific configuration here
 - name: Set Plugin Directory Permissions
   file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes
