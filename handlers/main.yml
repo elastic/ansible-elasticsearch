@@ -6,13 +6,6 @@
   service: name={{instance_init_script | basename}} state=restarted enabled=yes
   when: es_restart_on_change and es_start_service and ((plugin_installed is defined and plugin_installed.changed) or (config_updated is defined and config_updated.changed) or (xpack_state.changed) or (debian_elasticsearch_install_from_repo.changed or redhat_elasticsearch_install_from_repo.changed or elasticsearch_install_from_package.changed))
 
-# Assumes all handlers need to be started as likely to make HTTP calls
-- name: Ensure elasticsearch is started
-  service: name={{instance_init_script | basename}} state=started enabled=yes
-
-- name: Wait for elasticsearch to startup
-  wait_for: host={{es_api_host}} port={{es_api_port}} delay=10
-
 # All security specific actions should go in here
 - name: activate-shield
   include: ./handlers/shield/elasticsearch-shield.yml

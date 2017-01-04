@@ -1,5 +1,10 @@
 ---
+- name: Ensure elasticsearch is started
+  service: name={{instance_init_script | basename}} state=started enabled=yes
 
+- name: Wait for elasticsearch to startup
+  wait_for: host={{es_api_host}} port={{es_api_port}} delay=10
+  
 - name: activate-license
   include: ./handlers/shield/elasticsearch-xpack-activation.yml
   when: es_enable_xpack and es_xpack_license is defined and es_xpack_license != ''
