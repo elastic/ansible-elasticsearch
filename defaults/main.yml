@@ -9,6 +9,7 @@ es_apt_url_old: "deb http://packages.elastic.co/elasticsearch/{{ es_major_versio
 es_start_service: true
 es_java_install: true
 update_java: false
+install_java: true
 es_restart_on_change: true
 es_plugins_reinstall: false
 es_scripts: false
