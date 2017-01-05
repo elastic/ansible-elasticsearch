@@ -1,11 +1,5 @@
 ---
 
-- name: Ensure elasticsearch is started
-  service: name={{instance_init_script | basename}} state=started enabled=yes
-
-- name: Wait for elasticsearch to startup
-  wait_for: host={{es_api_host}} port={{es_api_port}} delay=10
-
 - set_fact: manage_native_users=false
 
 - set_fact: manage_native_users=true
@@ -68,6 +62,7 @@
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
   when: manage_native_users and es_users.native.keys() > 0
+  no_log: True
   with_dict: "{{es_users.native}}"
 
 #List current roles

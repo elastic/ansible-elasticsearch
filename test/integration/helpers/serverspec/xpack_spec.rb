@@ -87,6 +87,15 @@ shared_examples 'xpack::init' do |es_version|
   describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep license') do
     its(:exit_status) { should eq 0 }
   end
+  
+  #Test if x-pack is activated
+  describe 'x-pack activation' do
+    it 'should be activated and valid' do
+      command = command('curl -s localhost:9200/_license?pretty=true -u es_admin:changeMe')
+      expect(command.stdout).to match('"status" : "active"')
+      expect(command.exit_status).to eq(0)
+    end
+  end
 
   describe file('/usr/share/elasticsearch/plugins/shield') do
     it { should be_directory }
