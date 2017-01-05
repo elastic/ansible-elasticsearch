@@ -20,7 +20,6 @@ platforms:
       privileged: true
       provision_command:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
-        - apt-get install -y -q net-tools
         - apt-get update && apt-get -y -q install python-apt python-pycurl
       use_sudo: false
       volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
@@ -75,7 +74,8 @@ suites:
     attributes:
       extra_vars:
         es_plugins:
-          - plugin: mapper-murmur3
+          - plugin: lmenezes/elasticsearch-kopf
+            version: master
     provisioner:
       playbook: test/integration/package.yml
   - name: config-2x
@@ -88,7 +88,8 @@ suites:
     attributes:
       extra_vars:
         es_plugins:
-          - plugin: mapper-murmur3
+          - plugin: lmenezes/elasticsearch-kopf
+            version: master
     provisioner:
       playbook: test/integration/multi.yml
   - name: xpack-2x

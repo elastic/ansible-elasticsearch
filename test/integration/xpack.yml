@@ -10,7 +10,8 @@
     es_enable_xpack: true
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
     es_plugins:
-      - plugin: mapper-murmur3
+      - plugin: lmenezes/elasticsearch-kopf
+        version: master
     es_xpack_features:
       - shield
       - watcher
