@@ -296,6 +296,8 @@ es_roles:
 es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
 ``` 
 
+X-Pack configuration parameters can be added to the elasticsearch.yml file using the normal `es_config` parameter.
+
 For a full example see [here](https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack.yml)
 
 
