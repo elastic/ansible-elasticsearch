@@ -120,12 +120,12 @@ shared_examples 'xpack::init' do |es_version|
     its(:exit_status) { should eq 0 }
   end
 
-  describe file('/usr/share/elasticsearch/plugins/kopf') do
+  describe file('/usr/share/elasticsearch/plugins/mapper-murmur3') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
 
-  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep kopf') do
+  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep mapper-murmur3') do
     its(:exit_status) { should eq 0 }
   end
 
