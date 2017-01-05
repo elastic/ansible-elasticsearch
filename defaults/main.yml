@@ -1,6 +1,6 @@
 ---
 es_major_version: "2.x"
-es_version: "2.3.4"
+es_version: "2.4.3"
 es_version_lock: false
 es_use_repository: true
 es_apt_key: "https://packages.elasticsearch.org/GPG-KEY-elasticsearch"

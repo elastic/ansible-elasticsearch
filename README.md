@@ -47,7 +47,7 @@ The use of a map ensures the Ansible playbook does not need to be updated to ref
 
 In addition to the es_config map, several other parameters are supported for additional functions e.g. script installation.  These can be found in the role's defaults/main.yml file.
 
-The following illustrates applying configuration parameters to an Elasticsearch instance.  By default, Elasticsearch 2.3.4 is installed.
+The following illustrates applying configuration parameters to an Elasticsearch instance.  By default, Elasticsearch 2.4.3 is installed.
 
 ```
 - name: Elasticsearch with custom configuration
@@ -209,6 +209,99 @@ Then run it:
 ansible-playbook -i hosts ./your-playbook.yml
 ```
 
+### Installing X-Pack Features
+
+X-Pack features, such as Shield, are supported for Elasticsearch 2.4 only. This feature is currently experimental.  To enable X-Pack set the parameter `es_enable_xpack` to true and list the required features in the parameter `es_xpack_features`.  The following additional parameters allow X-Pack to be configured:
+
+* ```es_message_auth_file``` System Key field to allow message authentication. This file should be placed in the 'files' directory.
+* ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/shield/current/mapping-roles.html)
+
+```
+es_role_mapping:
+  power_user:
+    - "cn=admins,dc=example,dc=com"
+  user:
+    - "cn=users,dc=example,dc=com"
+    - "cn=admins,dc=example,dc=com"
+```
+
+* ```es_users``` - Users can be declared here as yml. Two sub keys 'native' and 'file' determine the realm under which realm the user is created.  Beneath each of these keys users should be declared as yml entries. e.g.
+
+```
+es_users:
+  native:
+    kibana4_server:
+      password: changeMe
+      roles:
+        - kibana4_server
+  file:
+    es_admin:
+      password: changeMe
+      roles:
+        - admin
+    testUser:
+      password: changeMeAlso!
+      roles:
+        - power_user
+        - user
+```
+            
+            
+* ```es_roles``` - Elasticsearch roles can be declared here as yml. Two sub keys 'native' and 'file' determine how the role is created i.e. either through a file or http(native) call.  Beneath each key list the roles with appropriate permissions, using the file based format described [here] (https://www.elastic.co/guide/en/shield/current/_file_based_roles.html) e.g.
+
+```
+es_roles:
+  file:
+    admin:
+      cluster:
+        - all
+      indices:
+        - names: '*'
+          privileges:
+            - all
+    power_user:
+      cluster:
+        - monitor
+      indices:
+        - names: '*'
+          privileges:
+            - all
+    user:
+      indices:
+        - names: '*'
+          privileges:
+            - read
+    kibana4_server:
+      cluster:
+          - monitor
+      indices:
+        - names: '.kibana'
+          privileges:
+            - all
+  native:
+    logstash:
+      cluster:
+        - manage_index_templates
+      indices:
+        - names: 'logstash-*'
+          privileges:
+            - write
+            - delete
+            - create_index
+```                
+                
+* ```es_xpack_license``` - X-Pack license.  The license should be declared as a json blob.  Alternative use Ansible vault or copy the license to the target machine as part of a playbook and access via a lookup e.g.
+
+```
+es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
+``` 
+
+X-Pack configuration parameters can be added to the elasticsearch.yml file using the normal `es_config` parameter.
+
+For a full example see [here](https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack.yml)
+
+
+
 ### Additional Configuration
 
 Additional parameters to es_config allow the customization of the Java and Elasticsearch versions, in addition to role behaviour. Options include:
@@ -219,6 +312,8 @@ Following variables affect the versions installed:
 * ```es_version``` (e.g. "2.4.2").  
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200.
+* ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Shield is enabled. Ensure this user is admin.
+* ```es_api_basic_auth_password``` The password associated with the user declared in `es_api_basic_auth_username`
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` an array of plugin definitions e.g.:
@@ -239,7 +334,7 @@ es_java_opts:
 Earlier examples illustrate the installation of plugins for 2.x.  The correct use of this parameter varies depending on the version of Elasticsearch being installed:
  
  - 2.x. - For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  
- For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.
+ For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.  This approach should NOT be used for X-Pack related plugins e.g. Shield.  See X-Pack below for details here.
  
 If installing Marvel or Watcher, ensure the license plugin is also specified.  Shield configuration is currently not supported but planned for later versions.
 
@@ -288,7 +383,7 @@ To define proxy only for a particular plugin during its installation:
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
 * Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
-* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of each major release i.e. 1.7.3 and 2.3.4 on
+* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of 2.x on
 all supported platforms. 
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and 
 Elasticsearch restarted where required.
