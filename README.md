@@ -49,7 +49,7 @@ The use of a map ensures the Ansible playbook does not need to be updated to ref
 
 In addition to the es_config map, several other parameters are supported for additional functions e.g. script installation.  These can be found in the role's defaults/main.yml file.
 
-The following illustrates applying configuration parameters to an Elasticsearch instance.  By default, Elasticsearch 2.4.3 is installed.
+The following illustrates applying configuration parameters to an Elasticsearch instance.  By default, Elasticsearch 5.1.1 is installed.
 
 ```
 - name: Elasticsearch with custom configuration
@@ -211,7 +211,7 @@ ansible-playbook -i hosts ./your-playbook.yml
 
 ### Installing X-Pack Features
 
-X-Pack features, such as Shield, are supported for Elasticsearch 2.4 only. This feature is currently experimental.  To enable X-Pack set the parameter `es_enable_xpack` to true and list the required features in the parameter `es_xpack_features`.  The following additional parameters allow X-Pack to be configured:
+X-Pack features, such as Security, are supported. This feature is currently experimental.  To enable X-Pack set the parameter `es_enable_xpack` to true and list the required features in the parameter `es_xpack_features`.  The following additional parameters allow X-Pack to be configured:
 
 * ```es_message_auth_file``` System Key field to allow message authentication. This file should be placed in the 'files' directory.
 * ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/shield/current/mapping-roles.html)
@@ -320,7 +320,7 @@ Following variables affect the versions installed:
 ```yml
   es_plugins:
     - plugin: elasticsearch-cloud-aws
-      version: 2.5.0
+      version: 5.0.0
 ```
 * ```es_allow_downgrades``` For development purposes only. (true or false (default) )
 * ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
@@ -368,7 +368,7 @@ To define proxy only for a particular plugin during its installation:
 ```
   es_plugins:
     - plugin: elasticsearch-cloud-aws
-      version: 2.5.0
+      version: 5.0.0
       proxy_host: proxy.example.com
       proxy_port: 8080
 ```
