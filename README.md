@@ -209,7 +209,9 @@ ansible-playbook -i hosts ./your-playbook.yml
 
 ### Installing X-Pack Features
 
-X-Pack features, such as Shield, are supported for Elasticsearch 2.4 only. This feature is currently experimental.  To enable X-Pack set the parameter `es_enable_xpack` to true and list the required features in the parameter `es_xpack_features`.  The following additional parameters allow X-Pack to be configured:
+X-Pack features, such as Shield, are supported for Elasticsearch 2.4 only. This feature is currently experimental.  To enable X-Pack set the parameter `es_enable_xpack` to true and list the required features in the parameter `es_xpack_features`.  
+
+The following additional parameters allow X-Pack to be configured:
 
 * ```es_message_auth_file``` System Key field to allow message authentication. This file should be placed in the 'files' directory.
 * ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/shield/current/mapping-roles.html)
@@ -298,6 +300,7 @@ X-Pack configuration parameters can be added to the elasticsearch.yml file using
 
 For a full example see [here](https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack.yml)
 
+SSL is currently not supported in 2.x.
 
 
 ### Additional Configuration
