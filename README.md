@@ -1,12 +1,12 @@
 # ansible-elasticsearch
 
-Ansible role for Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
+Ansible role for 2.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
 
-* Ubuntu 14.04
+* Ubuntu 14.04/16.04
 * Debian 8
 * Centos 7
 
-The latest Elasticsearch versions of 2.x are actively tested.  **Only Ansible versions > 2.1.2 are supported.**. 5.x will be available shortly.
+The latest Elasticsearch versions of 2.x are actively tested.  **Only Ansible versions > 2.1.2 are supported.**.
 
 ## Usage
 
@@ -331,10 +331,7 @@ es_java_opts:
   - "-Djava.io.tmpdir=/data/tmp/elasticsearch"
 ```
 
-Earlier examples illustrate the installation of plugins for 2.x.  The correct use of this parameter varies depending on the version of Elasticsearch being installed:
- 
- - 2.x. - For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  
- For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.  This approach should NOT be used for X-Pack related plugins e.g. Shield.  See X-Pack below for details here.
+Earlier examples illustrate the installation of plugins using `es_plugins`.  For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.  This approach should NOT be used for X-Pack related plugins e.g. Shield.  See X-Pack below for details here.
  
 If installing Marvel or Watcher, ensure the license plugin is also specified.  Shield configuration is currently not supported but planned for later versions.
 
@@ -388,6 +385,7 @@ all supported platforms.
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and 
 Elasticsearch restarted where required.
 * Systemd is used for Ubuntu versions >= 15, Debian >=8, Centos >=7.  All other versions use init for service scripts.
+* In order to run x-pack tests a license file with shield enabled is required. A trial license is appropriate. Set the environment variable `ES_XPACK_LICENSE_FILE` to the full path of the license file prior to running tests.
 
 ## IMPORTANT NOTES RE PLUGIN MANAGEMENT
 
