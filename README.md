@@ -1,12 +1,14 @@
 # ansible-elasticsearch
 
-Ansible role for Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
+THIS ROLE IS UNDER DEVELOPMENT FOR 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.
 
-* Ubuntu 14.04
+Ansible role for 5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
+
+* Ubuntu 14.04/16.04
 * Debian 8
 * Centos 7
 
-The latest Elasticsearch versions of 2.x are actively tested.  **Only Ansible versions > 2.1.2 are supported.**. 5.x will be available shortly.
+The latest Elasticsearch versions of 5.x are actively tested.  **Only Ansible versions > 2.2.0 are supported.**.
 
 ## Usage
 
@@ -73,9 +75,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
     es_heap_size: 1g
 ```
 `
-The role utilises Elasticsearch version defaults.  Multicast is therefore enabled for 1.x (legacy) and disabled for 2.x (plugin required in 2.x).  If using 1.x it is strongly recommended you disable
-multicast and specify the required uni-cast settings for a production environment. 
-When not utilizing multicast, the following should be set to ensure a successful cluster forms.
+The role utilises Elasticsearch version defaults.  Multicast is therefore disabled for 5.x.  The following should be set to ensure a successful cluster forms.
 
 * ```es_config['http.port']``` - the http port for the node
 * ```es_config['transport.tcp.port']``` - the transport port for the node
@@ -308,8 +308,8 @@ Additional parameters to es_config allow the customization of the Java and Elast
 
 Following variables affect the versions installed:
 
-* ```es_major_version``` (e.g. "2.4" ). Should be consistent with es_version. For versions >= 2.0 this must be "2.x".
-* ```es_version``` (e.g. "2.4.2").  
+* ```es_major_version``` (e.g. "5.1" ). Should be consistent with es_version. For versions >= 5.0 this must be "5.x".
+* ```es_version``` (e.g. "5.1.1").  
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200.
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Shield is enabled. Ensure this user is admin.
@@ -331,10 +331,7 @@ es_java_opts:
   - "-Djava.io.tmpdir=/data/tmp/elasticsearch"
 ```
 
-Earlier examples illustrate the installation of plugins for 2.x.  The correct use of this parameter varies depending on the version of Elasticsearch being installed:
- 
- - 2.x. - For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  
- For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.  This approach should NOT be used for X-Pack related plugins e.g. Shield.  See X-Pack below for details here.
+Earlier examples illustrate the installation of plugins using `es_plugins`.  For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.  This approach should NOT be used for X-Pack related plugins e.g. Shield.  See X-Pack below for details here.
  
 If installing Marvel or Watcher, ensure the license plugin is also specified.  Shield configuration is currently not supported but planned for later versions.
 
@@ -383,15 +380,16 @@ To define proxy only for a particular plugin during its installation:
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
 * Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
-* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of 2.x on
+* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of 5.x on
 all supported platforms. 
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and 
 Elasticsearch restarted where required.
 * Systemd is used for Ubuntu versions >= 15, Debian >=8, Centos >=7.  All other versions use init for service scripts.
+* In order to run x-pack tests a license file with shield enabled is required. A trial license is appropriate. Set the environment variable `ES_XPACK_LICENSE_FILE` to the full path of the license file prior to running tests.
 
 ## IMPORTANT NOTES RE PLUGIN MANAGEMENT
 
-* If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 2.x.
+* If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 5.x.
 * If no plugins are listed in the playbook for a node, all currently installed plugins will be removed.
 * The role does not currently support automatic detection of differences between installed and listed plugins (other than if none are listed).   Should users wish to change installed plugins should set es_plugins_reinstall to true.  This will cause all currently installed plugins to be removed and those listed to be installed.  Change detection will be implemented in future releases.
 
