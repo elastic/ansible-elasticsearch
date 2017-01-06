@@ -3,7 +3,7 @@
 # elasticsearch <summary>
 #
 # chkconfig:   2345 80 20
-# description: Starts and stops a single elasticsearch instance on this system 
+# description: Starts and stops a single elasticsearch instance on this system
 #
 
 ### BEGIN INIT INFO
@@ -90,10 +90,12 @@ checkJava() {
 start() {
     checkJava
     [ -x $exec ] || exit 5
+{% if es_version | version_compare('5.0', '<') %}
     if [ -n "$MAX_LOCKED_MEMORY" -a -z "$ES_HEAP_SIZE" ]; then
         echo "MAX_LOCKED_MEMORY is set - ES_HEAP_SIZE must also be set"
         return 7
     fi
+{% endif %}
     if [ -n "$MAX_OPEN_FILES" ]; then
         ulimit -n $MAX_OPEN_FILES
     fi
@@ -116,7 +118,11 @@ start() {
     cd $ES_HOME
     echo -n $"Starting $prog: "
     # if not running, start it up here, usually something like "daemon $exec"
+{% if es_version | version_compare('5.0', '<') %}
     daemon --user $ES_USER --pidfile $pidfile $exec -p $pidfile -d -Des.default.path.home=$ES_HOME -Des.default.path.logs=$LOG_DIR -Des.default.path.data=$DATA_DIR -Des.default.path.conf=$CONF_DIR
+{% else %}
+    daemon --user $ES_USER --pidfile $pidfile $exec -p $pidfile -d -Edefault.path.home=$ES_HOME -Edefault.path.logs=$LOG_DIR -Edefault.path.data=${DATA_DIR} -Edefault.path.conf=$CONF_DIR
+{% endif %}
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile
