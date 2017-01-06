@@ -73,9 +73,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
     es_heap_size: 1g
 ```
 `
-The role utilises Elasticsearch version defaults.  Multicast is therefore enabled for 1.x (legacy) and disabled for 2.x (plugin required in 2.x).  If using 1.x it is strongly recommended you disable
-multicast and specify the required uni-cast settings for a production environment. 
-When not utilizing multicast, the following should be set to ensure a successful cluster forms.
+The role utilises Elasticsearch version defaults.  Multicast is therefore disabled for 5.x.  The following should be set to ensure a successful cluster forms.
 
 * ```es_config['http.port']``` - the http port for the node
 * ```es_config['transport.tcp.port']``` - the transport port for the node
