@@ -1,6 +1,6 @@
 # ansible-elasticsearch
 
-THIS ROLE IS UNDER DEVELOPMENT FOR 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.
+**THIS ROLE IS UNDER DEVELOPMENT FOR 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
 
 Ansible role for 5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
 
