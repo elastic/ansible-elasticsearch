@@ -13,7 +13,7 @@
 
 #Remove Plugin if installed and its not been requested or the ES version has changed
 - name: Remove {{item}} plugin
-  command: {{es_home}}/bin/plugin remove {{item}}
+  command: "{{es_home}}/bin/plugin remove {{item}}"
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
