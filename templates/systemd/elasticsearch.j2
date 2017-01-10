@@ -17,26 +17,22 @@ WorkingDirectory={{es_home}}
 User={{es_user}}
 Group={{es_group}}
 
-{% if es_version | version_compare('2.0', '>=') %}
 ExecStartPre=/usr/share/elasticsearch/bin/elasticsearch-systemd-pre-exec
-{% endif %}
 
 ExecStart={{es_home}}/bin/elasticsearch \
-{% if es_version | version_compare('5.0', '<') %}
-                                        -Des.pidfile=${PID_DIR}/elasticsearch.pid \
-                                        -Des.default.path.home=${ES_HOME} \
-                                        -Des.default.path.logs=${LOG_DIR} \
-                                        -Des.default.path.data=${DATA_DIR} \
-                                        -Des.default.path.conf=${CONF_DIR}
-{% else %}
-                                        -p ${PID_DIR}/elasticsearch.pid \
-                                        -Edefault.path.home=${ES_HOME} \
-                                        -Edefault.path.logs=${LOG_DIR} \
-                                        -Edefault.path.data=${DATA_DIR} \
-                                        -Edefault.path.conf=${CONF_DIR}
-{% endif %}
+                                    -p ${PID_DIR}/elasticsearch.pid \
+                                    --quiet \
+                                    -Edefault.path.logs=${LOG_DIR} \
+                                    -Edefault.path.data=${DATA_DIR} \
+                                    -Edefault.path.conf=${CONF_DIR}
 
 
+# StandardOutput is configured to redirect to journalctl since
+# some error messages may be logged in standard output before
+# elasticsearch logging system is initialized. Elasticsearch
+# stores its logs in /var/log/elasticsearch and does not use
+# journalctl by default. If you also want to enable journalctl
+# logging, you can simply remove the "quiet" option from ExecStart.
 
 StandardOutput=journal
 StandardError=inherit
