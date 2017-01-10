@@ -1,4 +1,4 @@
 ---
-java: "{% if es_java is defined %}{{es_java}}{%elif (ansible_distribution == 'Ubuntu' and ansible_distribution_version | version_compare('15.10', '>=')) %}openjdk-8-jre-headless{% else %}openjdk-7-jre-headless{% endif %}" 
+java: "{% if es_java is defined %}{{es_java}}{% else %}openjdk-8-jre-headless{% endif %}"
 default_file: "/etc/default/elasticsearch"
 es_home: "/usr/share/elasticsearch"
