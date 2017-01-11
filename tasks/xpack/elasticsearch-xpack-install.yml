@@ -1,23 +1,23 @@
 ---
 
 #Test if feature is installed
-- shell: "{{es_home}}/bin/elasticsearch-plugin list{% if es_version | version_compare('5.0', '<') %} | sed -n '1!p' | cut -d '-' -f2-{% endif %} | grep {{item}}"
-  register: feature_installed
+- shell: "{{es_home}}/bin/elasticsearch-plugin list | grep x-pack"
+  register: x_pack_installed
   changed_when: False
-  failed_when: "'ERROR' in feature_installed.stdout"
+  failed_when: "'ERROR' in x_pack_installed.stdout"
   ignore_errors: yes
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
 
-#Remove Plugin if installed and its not been requested or the ES version has changed
-- name: Remove {{item}} plugin
-  command: "{{es_home}}/bin/plugin remove {{item}}"
+#Remove X-Pack if installed and its not been requested or the ES version has changed
+- name: Remove x-pack plugin
+  command: "{{es_home}}/bin/elasticsearch-plugin remove x-pack"
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
-  when: feature_installed.rc == 0 and (not es_enable_xpack or not '"{{item}}" in es_xpack_features' or es_version_changed)
+  when: x_pack_installed.rc == 0 and (not es_enable_xpack or es_version_changed)
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
@@ -25,13 +25,13 @@
 
 
 #Install plugin if not installed, or the es version has changed (so removed above), and its been requested
-- name: Install {{item}} plugin
+- name: Install x-pack plugin
   command: >
-    {{es_home}}/bin/elasticsearch-plugin install {{item}}
+    {{es_home}}/bin/elasticsearch-plugin install x-pack
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
-  when: (feature_installed.rc == 1 or es_version_changed) and es_enable_xpack and "{{item}}" in es_xpack_features
+  when: (feature_installed.rc == 1 or es_version_changed) and es_enable_xpack
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
