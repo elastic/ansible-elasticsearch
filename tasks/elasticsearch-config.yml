@@ -48,21 +48,14 @@
   - restart elasticsearch
 
 #Copy the logging.yml
-- name: Copy Logging.yml File for Instance
-  template: src=logging.yml.j2 dest={{conf_dir}}/logging.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
-  notify: restart elasticsearch
-  when: es_version | version_compare('5.0', '<')
 
 - name: Copy log4j2.properties File for Instance
   template: src=log4j2.properties.j2 dest={{conf_dir}}/log4j2.properties owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   notify: restart elasticsearch
-  when: es_version | version_compare('5.0', '>=')
 
-# Copy the JVM Options (5.x only)
 - name: Copy jvm.options File for Instance
   template: src=jvm.options.j2 dest={{conf_dir}}/jvm.options owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   notify: restart elasticsearch
-  when: es_version | version_compare('5.0', '>=')
 
 #Clean up un-wanted package scripts to avoid confusion
 
