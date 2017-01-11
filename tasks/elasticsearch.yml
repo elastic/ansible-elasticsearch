@@ -1,10 +1,5 @@
 ---
 
-- set_fact: es_binary_prefix=""
-
-- set_fact: es_binary_prefix="elasticsearch-"
-  when: es_version | version_compare('5.0', '>=')
-
 - name: Include optional user and group creation.
   when: (es_user_id is defined) and (es_group_id is defined)
   include: elasticsearch-optional-user.yml

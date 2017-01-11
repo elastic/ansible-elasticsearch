@@ -13,6 +13,7 @@
   when: es_java_install
   tags:
       - java
+
 - include: elasticsearch.yml
   tags:
       - install
