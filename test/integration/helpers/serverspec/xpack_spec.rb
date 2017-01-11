@@ -78,7 +78,7 @@ shared_examples 'xpack::init' do |es_version|
   end
 
 
-  #Check security,watcher and license plugins are installed
+  #Check x-pack and license plugins are installed
   describe file('/usr/share/elasticsearch/plugins/license') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
@@ -97,27 +97,23 @@ shared_examples 'xpack::init' do |es_version|
     end
   end
 
-  describe file('/usr/share/elasticsearch/plugins/security') do
+  describe file('/usr/share/elasticsearch/plugins/x-pack') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
 
-  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep security') do
+  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep x-pack') do
     its(:exit_status) { should eq 0 }
   end
 
-  describe file('/etc/elasticsearch/security_node/security') do
+  describe file('/etc/elasticsearch/security_node/x-pack') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
 
-  describe file('/usr/share/elasticsearch/plugins/watcher') do
+  describe file('/usr/share/elasticsearch/plugins/x-pack') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep watcher') do
-    its(:exit_status) { should eq 0 }
   end
 
   describe file('/usr/share/elasticsearch/plugins/kopf') do
@@ -127,24 +123,6 @@ shared_examples 'xpack::init' do |es_version|
 
   describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep kopf') do
     its(:exit_status) { should eq 0 }
-  end
-
-  #test we haven't installed graph or marvel-agent
-
-  describe file('/usr/share/elasticsearch/plugins/graph') do
-    it { should_not exist }
-  end
-
-  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep graph') do
-    its(:exit_status) { should eq 1 }
-  end
-
-  describe file('/usr/share/elasticsearch/plugins/marvel-agent') do
-    it { should_not exist }
-  end
-
-  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep marvel-agent') do
-    its(:exit_status) { should eq 1 }
   end
 
 
