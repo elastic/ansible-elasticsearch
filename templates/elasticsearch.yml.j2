@@ -23,3 +23,19 @@ path.work: {{ work_dir }}
 {% endif %}
 
 path.logs: {{ log_dir }}
+
+{% if not "security" in es_xpack_features %}
+xpack.security.enabled: false
+{% endif %}
+
+{% if not "monitoring" in es_xpack_features %}
+xpack.monitoring.enabled: false
+{% endif %}
+
+{% if not "alerting" in es_xpack_features %}
+xpack.watcher.enabled: false
+{% endif %}
+
+{% if not "reporting" in es_xpack_features %}
+xpack.reporting.enabled: false
+{% endif %}

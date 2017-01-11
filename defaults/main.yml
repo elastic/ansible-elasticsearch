@@ -24,7 +24,7 @@ es_work_dir: "/tmp/elasticsearch"
 es_max_open_files: 65536
 es_allow_downgrades: false
 es_enable_xpack: false
-es_xpack_features: []
+es_xpack_features: ["alerting","monitoring","graph","security","reporting"]
 #These are used for internal operations performed by ansible.
 #They do not effect the current configuration
 es_api_host: "localhost"
