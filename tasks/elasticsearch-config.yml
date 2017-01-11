@@ -79,8 +79,8 @@
 - name: Delete Default Logging File
   file: dest=/etc/elasticsearch/logging.yml state=absent
 
-- name: Delete Default Logging File (5.x)
+- name: Delete Default Logging File
   file: dest=/etc/elasticsearch/log4j2.properties state=absent
 
-- name: Delete Default JVM Options File (5.x)
+- name: Delete Default JVM Options File
   file: dest=/etc/elasticsearch/jvm.options state=absent

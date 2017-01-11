@@ -1,0 +1,36 @@
+---
+#Security specific configuration done here
+
+#TODO: 1. Skip users with no password defined or error 2. Passwords | length > 6
+
+#-----------------------------FILE BASED REALM----------------------------------------
+
+- include: elasticsearch-security-file.yml
+  when: (es_enable_xpack and '"security" in es_xpack_features') and ((es_users is defined and es_users.file) or (es_roles is defined and es_roles.file is defined))
+
+#-----------------------------NATIVE BASED REALM----------------------------------------
+# The native realm requires the node to be started so we do as a handler
+- command: /bin/true
+  notify: activate-security
+  when: (es_enable_xpack and '"security" in es_xpack_features') and ((es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined))
+
+#-----------------------------ROLE MAPPING ----------------------------------------
+
+#Copy Roles files
+- name: Copy role_mapping.yml File for Instance
+  template: src=security/role_mapping.yml.j2 dest={{conf_dir}}/x-pack/role_mapping.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  when: es_role_mapping is defined
+
+#-----------------------------AUTH FILE----------------------------------------
+
+- name: Copy message auth key to elasticsearch
+  copy: src={{ es_message_auth_file }} dest={{conf_dir}}/x-pack/system_key owner={{ es_user }} group={{ es_group }} mode=0600 force=yes
+  when: es_message_auth_file is defined
+
+#------------------------------------------------------------------------------------
+
+#Ensure security conf directory is created
+- name: Ensure security conf directory exists
+  file: path={{ conf_dir }}/security state=directory owner={{ es_user }} group={{ es_group }}
+  changed_when: False
+  when: es_enable_xpack and '"security" in es_xpack_features'

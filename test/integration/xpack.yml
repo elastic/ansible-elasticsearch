@@ -3,8 +3,8 @@
   hosts: localhost
   roles:
     - { role: elasticsearch, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300",
-    "shield.authc.realms.file1.type": "file","shield.authc.realms.file1.order": 0, "shield.authc.realms.native1.type": "native","shield.authc.realms.native1.order": 1 },
-    es_instance_name: "shield_node" }
+    "xpack.security.authc.realms.file1.type": "file","xpack.security.authc.realms.file1.order": 0, "xpack.security.authc.realms.native1.type": "native","xpack.security.authc.realms.native1.order": 1 },
+    es_instance_name: "security_node" }
   vars:
     es_templates: true
     es_enable_xpack: true
@@ -13,8 +13,8 @@
       - plugin: lmenezes/elasticsearch-kopf
         version: master
     es_xpack_features:
-      - shield
-      - watcher
+      - security
+      - alerting
     es_api_basic_auth_username: es_admin
     es_api_basic_auth_password: changeMe
     es_message_auth_file: system_key

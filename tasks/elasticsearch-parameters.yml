@@ -19,9 +19,9 @@
 - fail: msg="If locking memory with bootstrap.mlockall (or bootstrap.memory_lock) a heap size must be specified"
   when: (es_config['bootstrap.mlockall'] is defined or es_config['bootstrap.memory_lock'] is defined) and es_config['bootstrap.mlockall'] == True and es_heap_size is not defined
 
-#Check if working with shield we have an es_api_basic_auth_username and es_api_basic_auth_username - otherwise any http calls wont work
-- fail: msg="Enabling shield requires an es_api_basic_auth_username and es_api_basic_auth_password to be provided to allow cluster operations"
-  when: es_enable_xpack and ("shield" in es_xpack_features) and es_api_basic_auth_username is not defined and es_api_basic_auth_password is not defined
+#Check if working with security we have an es_api_basic_auth_username and es_api_basic_auth_username - otherwise any http calls wont work
+- fail: msg="Enabling security requires an es_api_basic_auth_username and es_api_basic_auth_password to be provided to allow cluster operations"
+  when: es_enable_xpack and ("security" in es_xpack_features) and es_api_basic_auth_username is not defined and es_api_basic_auth_password is not defined
 
 - set_fact: instance_default_file={{default_file | dirname}}/{{es_instance_name}}_{{default_file | basename}}
 - set_fact: instance_init_script={{init_script | dirname }}/{{es_instance_name}}_{{init_script | basename}}

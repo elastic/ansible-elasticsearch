@@ -1,15 +1,15 @@
 ---
 - set_fact: manage_file_users=es_users is defined and es_users.file is defined
 
-#Ensure shield conf directory is created
-- name: Ensure shield conf directory exists (file)
-  file: path={{ conf_dir }}/shield state=directory owner={{ es_user }} group={{ es_group }}
+#Ensure x-pack conf directory is created
+- name: Ensure x-pack conf directory exists (file)
+  file: path={{ conf_dir }}/x-pack state=directory owner={{ es_user }} group={{ es_group }}
   changed_when: False
-  when: es_enable_xpack and '"shield" in es_xpack_features'
+  when: es_enable_xpack and '"security" in es_xpack_features'
 
 #List current users
 - name: List Users
-  shell: cat {{conf_dir}}/shield/users | awk -F':' '{print $1}'
+  shell: cat {{conf_dir}}/x-pack/users | awk -F':' '{print $1}'
   register: current_file_users
   when: manage_file_users
   changed_when: False
@@ -20,7 +20,7 @@
 #Remove users
 - name: Remove Users
   command: >
-    {{es_home}}/bin/shield/esusers userdel {{item}}
+    {{es_home}}/bin/x-pack/users userdel {{item}}
   when: manage_file_users and (users_to_remove | length > 0)
   with_items: "{{users_to_remove | default([])}}"
   environment:
@@ -34,7 +34,7 @@
 #Add users
 - name: Add Users
   command: >
-    {{es_home}}/bin/shield/esusers useradd {{item}} -p {{es_users.file[item].password}}
+    {{es_home}}/bin/x-pack/users useradd {{item}} -p {{es_users.file[item].password}}
   with_items: "{{users_to_add | default([])}}"
   when: manage_file_users and users_to_add | length > 0
   no_log: True
@@ -45,7 +45,7 @@
 #Set passwords for all users declared - Required as the useradd will not change existing user passwords
 - name: Set User Passwords
   command: >
-    {{es_home}}/bin/shield/esusers passwd {{item.key}} -p {{item.value.password}}
+    {{es_home}}/bin/x-pack/users passwd {{item.key}} -p {{item.value.password}}
   with_dict: "{{(es_users | default({'file':{}})).file}}"
   when: manage_file_users and es_users.file.keys() | length > 0
   #Currently no easy way to figure out if the password has changed or to know what it currently is so we can skip.
@@ -60,14 +60,14 @@
 
 #Copy Roles files
 - name: Copy roles.yml File for Instance
-  template: src=shield/roles.yml.j2 dest={{conf_dir}}/shield/roles.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=security/roles.yml.j2 dest={{conf_dir}}/x-pack/roles.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   when: es_roles is defined and es_roles.file is defined
 
 #Overwrite users_roles file
 - name: Copy User Roles
-  template: src=shield/users_roles.j2 dest={{conf_dir}}/shield/users_roles mode=0644 force=yes
+  template: src=security/users_roles.j2 dest={{conf_dir}}/x-pack/users_roles mode=0644 force=yes
   when: manage_file_users and users_roles | length > 0
 
-#Set permission on shield directory. E.g. if 2 nodes are installed on the same machine, the second node will not get the users file created at install, causing the files being created at es_users call and then having the wrong Permissions.
-- name: Set Shield Directory Permissions Recursive
-  file: state=directory path={{conf_dir}}/shield/ owner={{ es_user }} group={{ es_group }} recurse=yes
+#Set permission on security directory. E.g. if 2 nodes are installed on the same machine, the second node will not get the users file created at install, causing the files being created at es_users call and then having the wrong Permissions.
+- name: Set Security Directory Permissions Recursive
+  file: state=directory path={{conf_dir}}/x-pack/ owner={{ es_user }} group={{ es_group }} recurse=yes

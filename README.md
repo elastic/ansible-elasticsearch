@@ -119,7 +119,6 @@ A more complex example:
     es_plugins_reinstall: false
     es_plugins:
         - plugin: license
-        - plugin: marvel-agent
         - plugin: lmenezes/elasticsearch-kopf
           version: master
           proxy_host: proxy.example.com
@@ -214,7 +213,7 @@ ansible-playbook -i hosts ./your-playbook.yml
 X-Pack features, such as Security, are supported. This feature is currently experimental.  To enable X-Pack set the parameter `es_enable_xpack` to true and list the required features in the parameter `es_xpack_features`.  The following additional parameters allow X-Pack to be configured:
 
 * ```es_message_auth_file``` System Key field to allow message authentication. This file should be placed in the 'files' directory.
-* ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/shield/current/mapping-roles.html)
+* ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/x-pack/current/mapping-roles.html)
 
 ```
 es_role_mapping:
@@ -247,7 +246,7 @@ es_users:
 ```
             
             
-* ```es_roles``` - Elasticsearch roles can be declared here as yml. Two sub keys 'native' and 'file' determine how the role is created i.e. either through a file or http(native) call.  Beneath each key list the roles with appropriate permissions, using the file based format described [here] (https://www.elastic.co/guide/en/shield/current/_file_based_roles.html) e.g.
+* ```es_roles``` - Elasticsearch roles can be declared here as yml. Two sub keys 'native' and 'file' determine how the role is created i.e. either through a file or http(native) call.  Beneath each key list the roles with appropriate permissions, using the file based format described [here] (https://www.elastic.co/guide/en/x-pack/current/file-realm.html) e.g.
 
 ```
 es_roles:
@@ -312,7 +311,7 @@ Following variables affect the versions installed:
 * ```es_version``` (e.g. "5.1.1").  
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200.
-* ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Shield is enabled. Ensure this user is admin.
+* ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
 * ```es_api_basic_auth_password``` The password associated with the user declared in `es_api_basic_auth_username`
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
@@ -331,9 +330,9 @@ es_java_opts:
   - "-Djava.io.tmpdir=/data/tmp/elasticsearch"
 ```
 
-Earlier examples illustrate the installation of plugins using `es_plugins`.  For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.  This approach should NOT be used for X-Pack related plugins e.g. Shield.  See X-Pack below for details here.
+Earlier examples illustrate the installation of plugins using `es_plugins`.  For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.  This approach should NOT be used for X-Pack related plugins e.g. Security.  See X-Pack below for details here.
  
-If installing Marvel or Watcher, ensure the license plugin is also specified.  Shield configuration is currently not supported but planned for later versions.
+If installing Monitoring or Alerting, ensure the license plugin is also specified.  Security configuration is currently not supported but planned for later versions.
 
 * ```es_user``` - defaults to elasticsearch.
 * ```es_group``` - defaults to elasticsearch.
@@ -385,7 +384,7 @@ all supported platforms.
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and 
 Elasticsearch restarted where required.
 * Systemd is used for Ubuntu versions >= 15, Debian >=8, Centos >=7.  All other versions use init for service scripts.
-* In order to run x-pack tests a license file with shield enabled is required. A trial license is appropriate. Set the environment variable `ES_XPACK_LICENSE_FILE` to the full path of the license file prior to running tests.
+* In order to run x-pack tests a license file with security enabled is required. A trial license is appropriate. Set the environment variable `ES_XPACK_LICENSE_FILE` to the full path of the license file prior to running tests.
 
 ## IMPORTANT NOTES RE PLUGIN MANAGEMENT
 
