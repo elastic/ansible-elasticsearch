@@ -31,7 +31,7 @@
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
-  when: (feature_installed.rc == 1 or es_version_changed) and es_enable_xpack
+  when: (x_pack_installed.rc == 1 or es_version_changed) and es_enable_xpack
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
