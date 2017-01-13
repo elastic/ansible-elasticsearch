@@ -74,8 +74,7 @@ suites:
     attributes:
       extra_vars:
         es_plugins:
-          - plugin: lmenezes/elasticsearch-kopf
-            version: master
+          - plugin: ingest-geoip
     provisioner:
       playbook: test/integration/package.yml
   - name: config-5x
@@ -88,8 +87,7 @@ suites:
     attributes:
       extra_vars:
         es_plugins:
-          - plugin: lmenezes/elasticsearch-kopf
-            version: master
+          - plugin: ingest-geoip
     provisioner:
       playbook: test/integration/multi.yml
   - name: xpack-5x
