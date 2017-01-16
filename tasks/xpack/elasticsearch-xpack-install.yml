@@ -27,7 +27,7 @@
 #Install plugin if not installed, or the es version has changed (so removed above), and its been requested
 - name: Install x-pack plugin
   command: >
-    {{es_home}}/bin/elasticsearch-plugin install --batch x-pack {% if es_proxy_host is defined and es_proxy_host != '' %} -Dhttp.proxyHost={{ es_proxy_host }} -Dhttp.proxyPort={{ es_proxy_port }} {% endif %}
+    {{es_home}}/bin/elasticsearch-plugin install --silent --batch x-pack {% if es_proxy_host is defined and es_proxy_host != '' %} -Dhttp.proxyHost={{ es_proxy_host }} -Dhttp.proxyPort={{ es_proxy_port }} {% endif %}
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
   changed_when: xpack_state.rc == 0
