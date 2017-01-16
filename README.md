@@ -300,6 +300,14 @@ X-Pack configuration parameters can be added to the elasticsearch.yml file using
 
 For a full example see [here](https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack.yml)
 
+####Important Note for Native Realm Configuration
+
+In order for native users and roles to be configured, the role calls the Elasticsearch API.  Given security is installed this requires definition of two parameters:
+
+* ```es_api_basic_auth_username``` - admin username
+* ```es_api_basic_auth_password``` - admin password
+
+These can either be set to a user declared in the file based realm, with admin permissions, or the default "elastic" superuser (default password is changeme).
 
 
 ### Additional Configuration

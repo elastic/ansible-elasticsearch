@@ -28,12 +28,11 @@
   register: user_list_response
   when: manage_native_users
 
-
-- set_fact: current_users={{user_list_response.json.keys() | list}}
+#Current users not inc. the elastic user which is reserved and cannot be deleted
+- set_fact: current_users={{user_list_response.json.keys() | list | difference(['elastic'] )}}
   when: manage_native_users
 
 #Identify non declared users
-
 - set_fact: users_to_remove={{ current_users | difference ( es_users.native.keys() ) }}
   when: manage_native_users
 

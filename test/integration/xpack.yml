@@ -14,8 +14,8 @@
     es_xpack_features:
       - security
       - alerting
-    es_api_basic_auth_username: es_admin
-    es_api_basic_auth_password: changeMe
+    es_api_basic_auth_username: elastic
+    es_api_basic_auth_password: changeme
     es_message_auth_file: system_key
     es_role_mapping:
       power_user:
