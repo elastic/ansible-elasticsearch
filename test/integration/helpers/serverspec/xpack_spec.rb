@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-shared_examples 'xpack::init' do |es_version|
+shared_examples 'xpack::init' do |es_version,plugins|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -19,7 +19,7 @@ shared_examples 'xpack::init' do |es_version|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  describe file('/etc/elasticsearch/security_node/logging.yml') do
+  describe file('/etc/elasticsearch/security_node/log4j2.properties') do
     it { should be_file }
     it { should be_owned_by 'elasticsearch' }
   end
@@ -29,7 +29,6 @@ shared_examples 'xpack::init' do |es_version|
     it { should contain 'cluster.name: elasticsearch' }
     it { should contain 'path.conf: /etc/elasticsearch/security_node' }
     it { should contain 'path.data: /var/lib/elasticsearch/localhost-security_node' }
-    it { should contain 'path.work: /tmp/elasticsearch/localhost-security_node' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-security_node' }
   end
 
@@ -77,17 +76,6 @@ shared_examples 'xpack::init' do |es_version|
     it { should be_owned_by 'elasticsearch' }
   end
 
-
-  #Check x-pack and license plugins are installed
-  describe file('/usr/share/elasticsearch/plugins/license') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep license') do
-    its(:exit_status) { should eq 0 }
-  end
-  
   #Test if x-pack is activated
   describe 'x-pack activation' do
     it 'should be activated and valid' do
@@ -116,15 +104,16 @@ shared_examples 'xpack::init' do |es_version|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  describe file('/usr/share/elasticsearch/plugins/kopf') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
+  for plugin in plugins
+    describe file('/usr/share/elasticsearch/plugins/'+plugin) do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
 
-  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep kopf') do
-    its(:exit_status) { should eq 0 }
+    describe command('curl -s -u es_admin:changeMe localhost:9200/_nodes/plugins?pretty=true | grep '+plugin) do
+      its(:exit_status) { should eq 0 }
+    end
   end
-
 
   #Test users file, users_roles and roles.yml
   describe file('/etc/elasticsearch/security_node/x-pack/users_roles') do
@@ -148,19 +137,19 @@ shared_examples 'xpack::init' do |es_version|
 
 
   #Test native roles and users are loaded
-  describe command('curl -s localhost:9200/_xpack/security/user -u es_admin:changeMe | md5sum | grep 557a730df7136694131b5b7012a5ffad') do
+  describe command('curl -s localhost:9200/_xpack/security/user -u es_admin:changeMe | md5sum | grep 243b362bd47623c0b91a1fafbce2b6f5') do
     its(:exit_status) { should eq 0 }
   end
 
-  describe command('curl -s localhost:9200/_xpack/security/user -u es_admin:changeMe | grep "{\"kibana4_server\":{\"username\":\"kibana4_server\",\"roles\":\[\"kibana4_server\"\],\"full_name\":null,\"email\":null,\"metadata\":{}}}"') do
+  describe command('curl -s localhost:9200/_xpack/security/user -u es_admin:changeMe | grep "{\"elastic\":{\"username\":\"elastic\",\"roles\":\[\"superuser\"\],\"full_name\":null,\"email\":null,\"metadata\":{\"_reserved\":true},\"enabled\":true},\"kibana\":{\"username\":\"kibana\",\"roles\":\[\"kibana\"\],\"full_name\":null,\"email\":null,\"metadata\":{\"_reserved\":true},\"enabled\":true},\"kibana4_server\":{\"username\":\"kibana4_server\",\"roles\":\[\"kibana4_server\"\],\"full_name\":null,\"email\":null,\"metadata\":{},\"enabled\":true}}"') do
     its(:exit_status) { should eq 0 }
   end
 
-  describe command('curl -s localhost:9200/_xpack/security/role -u es_admin:changeMe | grep "{\"logstash\":{\"cluster\":\[\"manage_index_templates\"\],\"indices\":\[{\"names\":\[\"logstash-\*\"\],\"privileges\":\[\"write\",\"delete\",\"create_index\"\]}\],\"run_as\":\[\]}}"') do
+  describe command('curl -s localhost:9200/_xpack/security/role -u es_admin:changeMe | grep "{\"superuser\":{\"cluster\":\[\"all\"\],\"indices\":\[{\"names\":\[\"\*\"\],\"privileges\":\[\"all\"\]}\],\"run_as\":\[\"\*\"\],\"metadata\":{\"_reserved\":true}},\"transport_client\":{\"cluster\":\[\"transport_client\"\],\"indices\":\[\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"kibana_user\":{\"cluster\":\[\"monitor\"\],\"indices\":\[{\"names\":\[\".kibana\*\"\],\"privileges\":\[\"manage\",\"read\",\"index\",\"delete\"\]}\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"monitoring_user\":{\"cluster\":\[\],\"indices\":\[{\"names\":\[\"\.marvel-es-\*\",\".monitoring-\*\"\],\"privileges\":\[\"read\"\]}\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"remote_monitoring_agent\":{\"cluster\":\[\"manage_index_templates\",\"manage_ingest_pipelines\",\"monitor\"\],\"indices\":\[{\"names\":\[\"\.marvel-es-\*\",\"\.monitoring-\*\"\],\"privileges\":\[\"all\"\]}\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"ingest_admin\":{\"cluster\":\[\"manage_index_templates\",\"manage_pipeline\"\],\"indices\":\[\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"reporting_user\":{\"cluster\":\[\],\"indices\":\[{\"names\":\[\"\.reporting-\*\"\],\"privileges\":\[\"read\",\"write\"\]}\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"logstash\":{\"cluster\":\[\"manage_index_templates\"\],\"indices\":\[{\"names\":\[\"logstash-\*\"\],\"privileges\":\[\"write\",\"delete\",\"create_index\"\]}\],\"run_as\":\[\],\"metadata\":{}}}"') do
     its(:exit_status) { should eq 0 }
   end
 
-  describe command('curl -s localhost:9200/_xpack/security/role -u es_admin:changeMe | md5sum | grep 6d14f09ef1eea64adf4d4a9c04229629') do
+  describe command('curl -s localhost:9200/_xpack/security/role -u es_admin:changeMe | md5sum | grep 78a0696c9c9690042cec2c1f16860cfc') do
     its(:exit_status) { should eq 0 }
   end
 

@@ -28,8 +28,8 @@
   register: user_list_response
   when: manage_native_users
 
-#Current users not inc. the elastic user which is reserved and cannot be deleted
-- set_fact: current_users={{user_list_response.json.keys() | list | difference(['elastic'] )}}
+#Current users not inc. those reserved
+- set_fact: current_users={{ user_list_response.json | filter_reserved }}
   when: manage_native_users
 
 #Identify non declared users
@@ -48,11 +48,10 @@
   when: manage_native_users and users_to_remove | length > 0
   with_items: "{{users_to_remove}}"
 
-
 #Overwrite all other users
 - name: Update Native Users
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/{{item.key}}
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{item.key}}
     method: POST
     body_format: json
     body: "{{item.value | to_json}}"
@@ -61,11 +60,10 @@
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
   when: manage_native_users and es_users.native.keys() > 0
-  no_log: True
+  #no_log: True
   with_dict: "{{es_users.native}}"
 
-#List current roles
-
+#List current roles not. inc those reserved
 - name: List Native Roles
   uri:
     url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role
@@ -78,11 +76,8 @@
   register: role_list_response
   when: manage_native_roles
 
-#Identify undeclared roles
-
-- set_fact: current_roles={{role_list_response.json.keys() | list}}
-  when: manage_native_users
-
+- set_fact: current_roles={{ role_list_response.json | filter_reserved }}
+  when: manage_native_roles
 - debug: msg="{{current_roles}}"
 
 - set_fact: roles_to_remove={{ current_roles | difference ( es_roles.native.keys()  ) }}
