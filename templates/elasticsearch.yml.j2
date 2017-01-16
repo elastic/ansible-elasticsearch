@@ -35,7 +35,3 @@ xpack.monitoring.enabled: false
 {% if not "alerting" in es_xpack_features %}
 xpack.watcher.enabled: false
 {% endif %}
-
-{% if not "reporting" in es_xpack_features %}
-xpack.reporting.enabled: false
-{% endif %}

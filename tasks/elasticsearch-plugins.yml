@@ -9,7 +9,7 @@
 
 #List currently installed plugins - ignore xpack if > v 2.0
 - name: Check installed elasticsearch plugins
-  shell: "{{es_home}}/bin/elasticsearch-plugin list | grep -vE 'x-pack|license'"
+  shell: "{{es_home}}/bin/elasticsearch-plugin list | grep -vE 'x-pack'"
   register: installed_plugins
   failed_when: "'ERROR' in installed_plugins.stdout"
   changed_when: False
