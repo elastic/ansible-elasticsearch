@@ -35,11 +35,10 @@ shared_examples 'config::init' do |es_version|
     it { should contain 'discovery.zen.ping.multicast.enabled: false' }
     it { should contain 'cluster.name: custom-cluster' }
     it { should contain 'node.name: node1' }
-    it { should contain 'bootstrap.mlockall: true' }
+    it { should contain 'bootstrap.memory_lock: true' }
     it { should contain 'discovery.zen.ping.unicast.hosts: localhost:9301' }
     it { should contain 'path.conf: /etc/elasticsearch/node1' }
     it { should contain 'path.data: /opt/elasticsearch/data-1/localhost-node1,/opt/elasticsearch/data-2/localhost-node1' }
-    it { should contain 'path.work: /opt/elasticsearch/temp/localhost-node1' }
     it { should contain 'path.logs: /opt/elasticsearch/logs/localhost-node1' }
   end
 
@@ -77,7 +76,7 @@ shared_examples 'config::init' do |es_version|
   end
 
   #test to make sure mlock was applied
-  describe command('curl -s "localhost:9201/_nodes/process?pretty" | grep mlockall') do
+  describe command('curl -s "localhost:9201/_nodes/process?pretty" | grep memory_lock') do
     its(:stdout) { should match /true/ }
     its(:exit_status) { should eq 0 }
   end

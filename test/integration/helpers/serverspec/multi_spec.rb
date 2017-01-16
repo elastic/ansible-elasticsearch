@@ -27,7 +27,7 @@ shared_examples 'multi::init' do  |es_version,plugins|
     it { should contain 'node.master: false' }
     it { should contain 'discovery.zen.ping.multicast.enabled: false' }
     it { should contain 'node.name: localhost-node1' }
-    it { should_not contain 'bootstrap.mlockall: true' }
+    it { should_not contain 'bootstrap.memory_lock: true' }
     it { should contain 'path.conf: /etc/elasticsearch/node1' }
     it { should contain 'path.data: /opt/elasticsearch/data-1/localhost-node1,/opt/elasticsearch/data-2/localhost-node1' }
     it { should contain 'path.work: /tmp/elasticsearch/localhost-node1' }
@@ -44,7 +44,7 @@ shared_examples 'multi::init' do  |es_version,plugins|
     it { should contain 'node.master: true' }
     it { should contain 'discovery.zen.ping.multicast.enabled: false' }
     it { should contain 'node.name: localhost-master' }
-    it { should contain 'bootstrap.mlockall: true' }
+    it { should contain 'bootstrap.memory_lock: true' }
     it { should contain 'path.conf: /etc/elasticsearch/master' }
     it { should contain 'path.data: /opt/elasticsearch/master/localhost-master' }
     it { should contain 'path.work: /tmp/elasticsearch/localhost-master' }
@@ -146,13 +146,13 @@ shared_examples 'multi::init' do  |es_version,plugins|
   end
 
   #test to make sure mlock was applied
-  describe command('curl -s "localhost:9200/_nodes/localhost-master/process?pretty=true" | grep mlockall') do
+  describe command('curl -s "localhost:9200/_nodes/localhost-master/process?pretty=true" | grep memory_lock') do
     its(:stdout) { should match /true/ }
     its(:exit_status) { should eq 0 }
   end
 
   #test to make sure mlock was not applied
-  describe command('curl -s "localhost:9201/_nodes/localhost-node1/process?pretty=true" | grep mlockall') do
+  describe command('curl -s "localhost:9201/_nodes/localhost-node1/process?pretty=true" | grep memory_lock') do
     its(:stdout) { should match /false/ }
     its(:exit_status) { should eq 0 }
   end

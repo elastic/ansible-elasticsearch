@@ -16,8 +16,8 @@
   when: es_config['discovery.zen.ping.unicast.hosts'] is not defined
 
 #If the user attempts to lock memory they must specify a heap size
-- fail: msg="If locking memory with bootstrap.mlockall (or bootstrap.memory_lock) a heap size must be specified"
-  when: (es_config['bootstrap.mlockall'] is defined or es_config['bootstrap.memory_lock'] is defined) and es_config['bootstrap.mlockall'] == True and es_heap_size is not defined
+- fail: msg="If locking memory with bootstrap.memory_lock a heap size must be specified"
+  when: es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True and es_heap_size is not defined
 
 #Check if working with security we have an es_api_basic_auth_username and es_api_basic_auth_username - otherwise any http calls wont work
 - fail: msg="Enabling security requires an es_api_basic_auth_username and es_api_basic_auth_password to be provided to allow cluster operations"
@@ -26,7 +26,7 @@
 - set_fact: instance_default_file={{default_file | dirname}}/{{es_instance_name}}_{{default_file | basename}}
 - set_fact: instance_init_script={{init_script | dirname }}/{{es_instance_name}}_{{init_script | basename}}
 - set_fact: conf_dir={{ es_conf_dir }}/{{es_instance_name}}
-- set_fact: m_lock_enabled={{ (es_config['bootstrap.mlockall'] is defined and es_config['bootstrap.mlockall'] == True) or (es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True) }}
+- set_fact: m_lock_enabled={{ es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True }}
 
 #TODO - if transport.host is not local maybe error on boostrap checks
 

@@ -65,7 +65,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
         transport.tcp.port: 9301,
         node.data: false,
         node.master: true,
-        bootstrap.mlockall: true,
+        bootstrap.memory_lock: true,
         discovery.zen.ping.multicast.enabled: false } 
     }
   vars:
@@ -104,7 +104,7 @@ A more complex example:
         transport.tcp.port: 9301, 
         node.data: false, 
         node.master: true, 
-        bootstrap.mlockall: true, 
+        bootstrap.memory_lock: true, 
         discovery.zen.ping.multicast.enabled: false } 
     }
   vars:
@@ -150,7 +150,7 @@ recommended in any multi node cluster configuration.
         transport.tcp.port: 9300,
         node.data: false,
         node.master: true,
-        bootstrap.mlockall: false,
+        bootstrap.memory_lock: false,
         discovery.zen.ping.multicast.enabled: false }
     }
   vars:
@@ -172,7 +172,7 @@ recommended in any multi node cluster configuration.
         transport.tcp.port: 9300,
         node.data: true,
         node.master: false,
-        bootstrap.mlockall: false,
+        bootstrap.memory_lock: false,
         cluster.name: "test-cluster",
         discovery.zen.ping.multicast.enabled: false } 
     }
@@ -184,7 +184,7 @@ recommended in any multi node cluster configuration.
         transport.tcp.port: 9301,
         node.data: true,
         node.master: false,
-        bootstrap.mlockall: false,
+        bootstrap.memory_lock: false,
         cluster.name: "test-cluster",
         discovery.zen.ping.multicast.enabled: false } 
     }

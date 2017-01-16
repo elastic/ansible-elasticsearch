@@ -76,7 +76,7 @@ MAX_OPEN_FILES={{es_max_open_files}}
 {% endif %}
 
 # The maximum number of bytes of memory that may be locked into RAM
-# Set to "unlimited" if you use the 'bootstrap.{% if es_version | version_compare('5.0', '<=') %}memory_lock{% else %}mlockall{% endif %}: true' option
+# Set to "unlimited" if you use the 'bootstrap.memory_lock: true' option
 # in elasticsearch.yml (ES_HEAP_SIZE  must also be set).
 # When using Systemd, the LimitMEMLOCK property must be set
 # in /usr/lib/systemd/system/elasticsearch.service
