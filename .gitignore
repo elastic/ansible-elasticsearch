@@ -1,3 +1,4 @@
+/vars/Debian.yml
 .kitchen/
 license.json
 *.pyc

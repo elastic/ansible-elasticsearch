@@ -32,7 +32,6 @@ shared_examples 'config::init' do |es_version|
     it { should contain 'transport.tcp.port: 9301' }
     it { should contain 'node.data: false' }
     it { should contain 'node.master: true' }
-    it { should contain 'discovery.zen.ping.multicast.enabled: false' }
     it { should contain 'cluster.name: custom-cluster' }
     it { should contain 'node.name: node1' }
     it { should contain 'bootstrap.memory_lock: true' }
@@ -76,7 +75,7 @@ shared_examples 'config::init' do |es_version|
   end
 
   #test to make sure mlock was applied
-  describe command('curl -s "localhost:9201/_nodes/process?pretty" | grep memory_lock') do
+  describe command('curl -s "localhost:9201/_nodes/process?pretty" | grep mlockall') do
     its(:stdout) { should match /true/ }
     its(:exit_status) { should eq 0 }
   end

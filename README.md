@@ -66,7 +66,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
         node.data: false,
         node.master: true,
         bootstrap.memory_lock: true,
-        discovery.zen.ping.multicast.enabled: false } 
+        } 
     }
   vars:
     es_scripts: false
@@ -75,7 +75,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
     es_heap_size: 1g
 ```
 `
-The role utilises Elasticsearch version defaults.  Multicast is therefore disabled for 5.x.  The following should be set to ensure a successful cluster forms.
+The role utilises Elasticsearch version defaults.  The following should be set to ensure a successful cluster forms.
 
 * ```es_config['http.port']``` - the http port for the node
 * ```es_config['transport.tcp.port']``` - the transport port for the node
@@ -105,7 +105,7 @@ A more complex example:
         node.data: false, 
         node.master: true, 
         bootstrap.memory_lock: true, 
-        discovery.zen.ping.multicast.enabled: false } 
+        } 
     }
   vars:
     es_scripts: false
@@ -144,14 +144,13 @@ recommended in any multi node cluster configuration.
     - { role: elasticsearch, es_instance_name: "node1", es_heap_size: "1g",
     es_config: {
         cluster.name: "test-cluster",
-        "discovery.zen.ping.multicast.enabled": false,
         discovery.zen.ping.unicast.hosts: "elastic02:9300",
         http.port: 9200,
         transport.tcp.port: 9300,
         node.data: false,
         node.master: true,
         bootstrap.memory_lock: false,
-        discovery.zen.ping.multicast.enabled: false }
+        }
     }
   vars:
     es_scripts: false
@@ -166,19 +165,17 @@ recommended in any multi node cluster configuration.
   roles:
     - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch", 
     es_config: {
-        "discovery.zen.ping.multicast.enabled": false,
         discovery.zen.ping.unicast.hosts: "elastic02:9300",
         http.port: 9200,
         transport.tcp.port: 9300,
         node.data: true,
         node.master: false,
         bootstrap.memory_lock: false,
-        cluster.name: "test-cluster",
-        discovery.zen.ping.multicast.enabled: false } 
+        cluster.name: "test-cluster"
+        } 
     }
     - { role: elasticsearch, es_instance_name: "node2", 
     es_config: {
-        "discovery.zen.ping.multicast.enabled": false,
         discovery.zen.ping.unicast.hosts: "elastic02:9300",
         http.port: 9201,
         transport.tcp.port: 9301,
@@ -186,7 +183,7 @@ recommended in any multi node cluster configuration.
         node.master: false,
         bootstrap.memory_lock: false,
         cluster.name: "test-cluster",
-        discovery.zen.ping.multicast.enabled: false } 
+        } 
     }
   vars:
     es_scripts: false

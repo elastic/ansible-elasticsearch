@@ -25,7 +25,6 @@ shared_examples 'multi::init' do  |es_version,plugins|
     it { should contain 'transport.tcp.port: 9301' }
     it { should contain 'node.data: true' }
     it { should contain 'node.master: false' }
-    it { should contain 'discovery.zen.ping.multicast.enabled: false' }
     it { should contain 'node.name: localhost-node1' }
     it { should_not contain 'bootstrap.memory_lock: true' }
     it { should contain 'path.conf: /etc/elasticsearch/node1' }
@@ -42,7 +41,6 @@ shared_examples 'multi::init' do  |es_version,plugins|
     it { should contain 'transport.tcp.port: 9300' }
     it { should contain 'node.data: false' }
     it { should contain 'node.master: true' }
-    it { should contain 'discovery.zen.ping.multicast.enabled: false' }
     it { should contain 'node.name: localhost-master' }
     it { should contain 'bootstrap.memory_lock: true' }
     it { should contain 'path.conf: /etc/elasticsearch/master' }
