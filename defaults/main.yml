@@ -20,7 +20,6 @@ es_config: {}
 es_pid_dir: "/var/run/elasticsearch"
 es_data_dirs: "/var/lib/elasticsearch"
 es_log_dir: "/var/log/elasticsearch"
-es_work_dir: "/tmp/elasticsearch"
 es_max_open_files: 65536
 es_allow_downgrades: false
 es_enable_xpack: false
@@ -34,6 +33,5 @@ es_api_port: 9200
 # to allow the role to be conditionally played with a when condition.
 pid_dir: ''
 log_dir: ''
-work_dir: ''
 conf_dir: ''
 data_dirs: ''

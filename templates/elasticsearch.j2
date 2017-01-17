@@ -14,11 +14,6 @@ DATA_DIR={{ data_dirs | array_to_str }}
 # Elasticsearch logs directory
 LOG_DIR={{log_dir}}
 
-{% if es_version | version_compare('5.0', '<') %}
-# Elasticsearch work directory
-WORK_DIR={{work_dir}}
-{% endif %}
-
 # Elasticsearch PID directory
 PID_DIR={{pid_dir}}
 

@@ -6,7 +6,6 @@
   file: path={{ item }} state=directory owner={{ es_user }} group={{ es_group }}
   with_items:
     - "{{pid_dir}}"
-    - "{{work_dir}}"
     - "{{log_dir}}"
     - "{{conf_dir}}"
 

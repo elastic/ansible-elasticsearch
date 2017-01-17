@@ -18,10 +18,6 @@ path.conf: {{ conf_dir }}
 
 path.data: {{ data_dirs | array_to_str }}
 
-{% if es_version | version_compare('5.0', '<') %}
-path.work: {{ work_dir }}
-{% endif %}
-
 path.logs: {{ log_dir }}
 
 {% if not "security" in es_xpack_features %}

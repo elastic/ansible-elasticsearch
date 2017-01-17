@@ -56,7 +56,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
   hosts: localhost
   roles:
     #expand to all available parameters
-    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", es_work_dir: "/opt/elasticsearch/temp", 
+    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", 
     es_config: {
         node.name: "node1", 
         cluster.name: "custom-cluster",
@@ -95,7 +95,7 @@ A more complex example:
   hosts: localhost
   roles:
     #expand to all available parameters
-    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", es_work_dir: "/opt/elasticsearch/temp", 
+    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", 
     es_config: {
         node.name: "node1", 
         cluster.name: "custom-cluster", 
@@ -351,7 +351,6 @@ controlled by the following parameters:
 * ```es_pid_dir``` - defaults to "/var/run/elasticsearch".
 * ```es_data_dirs``` - defaults to "/var/lib/elasticsearch".  This can be a list or comma separated string e.g. ["/opt/elasticsearch/data-1","/opt/elasticsearch/data-2"] or "/opt/elasticsearch/data-1,/opt/elasticsearch/data-2"
 * ```es_log_dir``` - defaults to "/var/log/elasticsearch".
-* ```es_work_dir``` - defaults to "/tmp/elasticsearch".
 * ```es_restart_on_change``` - defaults to true.  If false, changes will not result in Elasticsearch being restarted.
 * ```es_plugins_reinstall``` - defaults to false.  If true, all currently installed plugins will be removed from a node.  Listed plugins will then be re-installed.  
 
