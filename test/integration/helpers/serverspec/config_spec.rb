@@ -61,12 +61,7 @@ shared_examples 'config::init' do |es_version|
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
-
-  describe file('/opt/elasticsearch/temp/localhost-node1') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
+  
   #test we started on the correct port was used
   describe command('curl -s "localhost:9201"') do
     #TODO: This is returning an empty string
