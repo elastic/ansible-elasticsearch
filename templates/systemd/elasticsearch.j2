@@ -38,7 +38,9 @@ StandardOutput=journal
 StandardError=inherit
 
 # Specifies the maximum file descriptor number that can be opened by this process
+{% if es_max_open_files is defined %}
 LimitNOFILE={{es_max_open_files}}
+{% endif %}
 
 # Specifies the maximum number of bytes of memory that may be locked into RAM
 # Set to "infinity" if you use the 'bootstrap.memory_lock: true' option
