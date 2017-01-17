@@ -73,6 +73,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
     es_templates: false
     es_version_lock: false
     es_heap_size: 1g
+    es_api_port:9201
 ```
 `
 The role utilises Elasticsearch version defaults.  The following should be set to ensure a successful cluster forms.
@@ -117,6 +118,7 @@ A more complex example:
     es_version_lock: false
     es_start_service: false
     es_plugins_reinstall: false
+    es_api_port:9201
     es_plugins:
         - plugin: license
         - plugin: lmenezes/elasticsearch-kopf
@@ -127,8 +129,8 @@ A more complex example:
 
 #### Important Note
 
-The role uses es_api_host and es_api_port to communicate with the node for actions only achievable via http e.g. to install templates.  These default to "localhost" and 9200 respectively.  
-If the node is deployed to bind on either a different host or port, these must be changed.
+**The role uses es_api_host and es_api_port to communicate with the node for actions only achievable via http e.g. to install templates and to check the NODE IS ACTIVE.  These default to "localhost" and 9200 respectively.  
+If the node is deployed to bind on either a different host or port, these must be changed.**
 
 ### Multi Node Server Installations
 
@@ -174,7 +176,7 @@ recommended in any multi node cluster configuration.
         cluster.name: "test-cluster"
         } 
     }
-    - { role: elasticsearch, es_instance_name: "node2", 
+    - { role: elasticsearch, es_instance_name: "node2", es_api_port:9201,
     es_config: {
         discovery.zen.ping.unicast.hosts: "elastic02:9300",
         http.port: 9201,
@@ -317,7 +319,7 @@ Additional parameters to es_config allow the customization of the Java and Elast
 * ```es_major_version``` (e.g. "5.1" ). Should be consistent with es_version. For versions >= 5.0 this must be "5.x".
 * ```es_version``` (e.g. "5.1.2").  
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
-* ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200.
+* ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
 * ```es_api_basic_auth_password``` The password associated with the user declared in `es_api_basic_auth_username`
 * ```es_start_service``` (true (default) or false)
