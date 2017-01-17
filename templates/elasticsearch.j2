@@ -22,26 +22,7 @@ WORK_DIR={{work_dir}}
 # Elasticsearch PID directory
 PID_DIR={{pid_dir}}
 
-{% if es_version | version_compare('5.0', '<') %}
-# Heap size defaults to 256m min, 1g max
-# Set ES_HEAP_SIZE to 50% of available RAM, but no more than 31g
-{% if es_heap_size is defined %}
-ES_HEAP_SIZE={{es_heap_size}}
-{% endif %}
-{% endif %}
-
-# Heap new generation
-#ES_HEAP_NEWSIZE=
-
-# Maximum direct memory
-#ES_DIRECT_SIZE=
-
-# Additional Java OPTS
-{% if es_java_opts is defined and es_java_opts %}
-ES_JAVA_OPTS="{{es_java_opts | default([]) | join(' ')}}"
-{% else %}
-#ES_JAVA_OPTS=
-{% endif %}
+ES_JVM_OPTIONS={{conf_dir}}/jvm.options
 
 # Configure restart on package upgrade (true, every other setting will lead to not restarting)
 #ES_RESTART_ON_UPGRADE=true
@@ -62,6 +43,9 @@ ES_JAVA_OPTS="{{es_java_opts | default([]) | join(' ')}}"
 # For systemd service, the user is usually configured in file /usr/lib/systemd/system/elasticsearch.service
 ES_USER={{es_user}}
 ES_GROUP={{es_group}}
+
+# The number of seconds to wait before checking if Elasticsearch started successfully as a daemon process
+ES_STARTUP_SLEEP_TIME=5
 
 ################################
 # System properties
@@ -89,3 +73,6 @@ MAX_LOCKED_MEMORY=unlimited
 # When using Systemd, this setting is ignored and the 'vm.max_map_count'
 # property is set at boot time in /usr/lib/sysctl.d/elasticsearch.conf
 #MAX_MAP_COUNT=262144
+{% if es_max_map_count is defined %}
+MAX_MAP_COUNT={{es_max_map_count}}
+{% endif %}

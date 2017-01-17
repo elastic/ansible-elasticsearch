@@ -331,11 +331,8 @@ Additional parameters to es_config allow the customization of the Java and Elast
 * ```es_allow_downgrades``` For development purposes only. (true or false (default) )
 * ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
 * ```update_java``` Updates Java to the latest version. (true or false (default))
-* ```es_java_opts``` an array of java options. E.g.:
-```yml
-es_java_opts:
-  - "-Djava.io.tmpdir=/data/tmp/elasticsearch"
-```
+* ```es_max_map_count``` maximum number of VMA (Virtual Memory Areas) a process can own. Default is undefined and not used.
+* ```es_max_open_files``` the maximum file descriptor number that can be opened by this process. Defaults to 65536.
 
 Earlier examples illustrate the installation of plugins using `es_plugins`.  For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.  This approach should NOT be used for X-Pack related plugins e.g. Security.  See X-Pack below for details here.
  
