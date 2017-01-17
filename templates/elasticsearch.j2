@@ -59,8 +59,8 @@ MAX_OPEN_FILES={{es_max_open_files}}
 # in elasticsearch.yml (ES_HEAP_SIZE  must also be set).
 # When using Systemd, the LimitMEMLOCK property must be set
 # in /usr/lib/systemd/system/elasticsearch.service
-{% if m_lock_enabled %}
 #MAX_LOCKED_MEMORY=
+{% if m_lock_enabled %}
 MAX_LOCKED_MEMORY=unlimited
 {% endif %}
 

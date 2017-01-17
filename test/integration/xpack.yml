@@ -6,6 +6,7 @@
     "xpack.security.authc.realms.file1.type": "file","xpack.security.authc.realms.file1.order": 0, "xpack.security.authc.realms.native1.type": "native","xpack.security.authc.realms.native1.order": 1 },
     es_instance_name: "security_node" }
   vars:
+    es_heap_size: "1g"
     es_templates: true
     es_enable_xpack: true
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
