@@ -13,26 +13,36 @@
   when: es_java_install
   tags:
       - java
+
 - include: elasticsearch.yml
   tags:
       - install
+
 - include: elasticsearch-config.yml
   tags:
       - config
+
 - include: elasticsearch-scripts.yml
   when: es_scripts
   tags:
       - scripts
+
 - include: elasticsearch-plugins.yml
   when: es_plugins is defined or es_plugins_reinstall
   tags:
       - plugins
+
   #We always execute xpack as we may need to remove features
 - include: xpack/elasticsearch-xpack.yml
   tags:
       - xpack
+
 - include: elasticsearch-templates.yml
   when: es_templates
   tags:
       - templates
+
 - meta: flush_handlers
+
+- name: Wait for elasticsearch to startup
+  wait_for: host={{es_api_host}} port={{es_api_port}} delay=5 connect_timeout=1

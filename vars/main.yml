@@ -4,4 +4,4 @@ es_conf_dir: "/etc/elasticsearch"
 sysd_script: "/usr/lib/systemd/system/elasticsearch.service"
 init_script: "/etc/init.d/elasticsearch"
 #add supported features here
-supported_xpack_features: ["watcher","marvel-agent","graph","shield"]
+supported_xpack_features: ["alerting","monitoring","graph","security"]

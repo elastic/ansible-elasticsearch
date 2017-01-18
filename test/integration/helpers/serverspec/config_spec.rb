@@ -32,14 +32,12 @@ shared_examples 'config::init' do |es_version|
     it { should contain 'transport.tcp.port: 9301' }
     it { should contain 'node.data: false' }
     it { should contain 'node.master: true' }
-    it { should contain 'discovery.zen.ping.multicast.enabled: false' }
     it { should contain 'cluster.name: custom-cluster' }
     it { should contain 'node.name: node1' }
-    it { should contain 'bootstrap.mlockall: true' }
+    it { should contain 'bootstrap.memory_lock: true' }
     it { should contain 'discovery.zen.ping.unicast.hosts: localhost:9301' }
     it { should contain 'path.conf: /etc/elasticsearch/node1' }
     it { should contain 'path.data: /opt/elasticsearch/data-1/localhost-node1,/opt/elasticsearch/data-2/localhost-node1' }
-    it { should contain 'path.work: /opt/elasticsearch/temp/localhost-node1' }
     it { should contain 'path.logs: /opt/elasticsearch/logs/localhost-node1' }
   end
 
@@ -60,11 +58,6 @@ shared_examples 'config::init' do |es_version|
   end
 
   describe file('/opt/elasticsearch/logs/localhost-node1') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe file('/opt/elasticsearch/temp/localhost-node1') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end

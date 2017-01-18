@@ -1,6 +1,5 @@
 ---
 
-
 - set_fact: java_state="present"
 
 - set_fact: java_state="latest"

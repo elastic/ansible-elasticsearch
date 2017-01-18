@@ -28,9 +28,15 @@ def extract_role_users(users={}):
                 role_users.append(role+":"+user)
     return role_users
 
-
 def filename(filename=''):
     return os.path.splitext(os.path.basename(filename))[0]
+
+def filter_reserved(user_roles={}):
+    not_reserved = []
+    for user_role,details in user_roles.items():
+        if not "metadata" in details or not "_reserved" in details["metadata"] or not details["metadata"]["_reserved"]:
+            not_reserved.append(user_role)
+    return not_reserved
 
 
 class FilterModule(object):
@@ -39,5 +45,6 @@ class FilterModule(object):
         'append_to_list':append_to_list,
         'array_to_str':array_to_str,
         'extract_role_users':extract_role_users,
+        'filter_reserved':filter_reserved,
         'filename':filename}
 

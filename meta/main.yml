@@ -8,7 +8,7 @@ galaxy_info:
   company: "Elastic.co"
   license: "license (Apache)"
   # Require 1.6 for apt deb install
-  min_ansible_version: 2.1.0
+  min_ansible_version: 2.2.0
   platforms:
   - name: EL
     versions:

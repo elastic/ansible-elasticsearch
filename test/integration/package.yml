@@ -6,4 +6,6 @@
   vars:
     es_scripts: true
     es_templates: true
+    es_heap_size: "1g"
+    es_api_port: 9200
 #Plugins installed for this test are specified in .kitchen.yml under suite

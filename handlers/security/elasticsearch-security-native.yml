@@ -14,12 +14,12 @@
 - name: Wait 15 seconds for the Native Relm to come up
   pause: seconds=15
 
-#If the node has just has shield installed it maybe either stopped or started 1. if stopped, we need to start to load native realms 2. if started, we need to restart to load
+#If the node has just has security installed it maybe either stopped or started 1. if stopped, we need to start to load native realms 2. if started, we need to restart to load
 
 #List current users
 - name: List Native Users
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_shield/user
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user
     method: GET
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
@@ -28,19 +28,18 @@
   register: user_list_response
   when: manage_native_users
 
-
-- set_fact: current_users={{user_list_response.json.keys() | list}}
+#Current users not inc. those reserved
+- set_fact: current_users={{ user_list_response.json | filter_reserved }}
   when: manage_native_users
 
 #Identify non declared users
-
 - set_fact: users_to_remove={{ current_users | difference ( es_users.native.keys() ) }}
   when: manage_native_users
 
 #Delete all non required users
 - name: Delete Native Users
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_shield/user/{{item}}
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{item}}
     method: DELETE
     status_code: 200
     user: "{{es_api_basic_auth_username}}"
@@ -49,11 +48,10 @@
   when: manage_native_users and users_to_remove | length > 0
   with_items: "{{users_to_remove}}"
 
-
 #Overwrite all other users
 - name: Update Native Users
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_shield/user/{{item.key}}
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{item.key}}
     method: POST
     body_format: json
     body: "{{item.value | to_json}}"
@@ -65,11 +63,10 @@
   no_log: True
   with_dict: "{{es_users.native}}"
 
-#List current roles
-
+#List current roles not. inc those reserved
 - name: List Native Roles
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_shield/role
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role
     method: GET
     body_format: json
     user: "{{es_api_basic_auth_username}}"
@@ -79,11 +76,8 @@
   register: role_list_response
   when: manage_native_roles
 
-#Identify undeclared roles
-
-- set_fact: current_roles={{role_list_response.json.keys() | list}}
-  when: manage_native_users
-
+- set_fact: current_roles={{ role_list_response.json | filter_reserved }}
+  when: manage_native_roles
 - debug: msg="{{current_roles}}"
 
 - set_fact: roles_to_remove={{ current_roles | difference ( es_roles.native.keys()  ) }}
@@ -93,7 +87,7 @@
 #Delete all non required roles
 - name: Delete Native Roles
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_shield/role/{{item}}
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role/{{item}}
     method: DELETE
     status_code: 200
     user: "{{es_api_basic_auth_username}}"
@@ -106,7 +100,7 @@
 #Update other roles
 - name: Update Native Roles
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_shield/role/{{item.key}}
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role/{{item.key}}
     method: POST
     body_format: json
     body: "{{item.value | to_json}}"

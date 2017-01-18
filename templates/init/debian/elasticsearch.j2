@@ -1,16 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 #
 # /etc/init.d/elasticsearch -- startup script for Elasticsearch
 #
-# Written by Miquel van Smoorenburg <miquels@cistron.nl>.
-# Modified for Debian GNU/Linux	by Ian Murdock <imurdock@gnu.ai.mit.edu>.
-# Modified for Tomcat by Stefan Gybas <sgybas@debian.org>.
-# Modified for Tomcat6 by Thierry Carrez <thierry.carrez@ubuntu.com>.
-# Additional improvements by Jason Brittain <jason.brittain@mulesoft.com>.
-# Modified by Nicolas Huray for Elasticsearch <nicolas.huray@gmail.com>.
-#
 ### BEGIN INIT INFO
-# Provides:          {{es_instance_name}}_{{default_file | basename}}
+# Provides:          elasticsearch
 # Required-Start:    $network $remote_fs $named
 # Required-Stop:     $network $remote_fs $named
 # Default-Start:     2 3 4 5
@@ -34,13 +27,10 @@ if [ `id -u` -ne 0 ]; then
 	exit 1
 fi
 
-
 . /lib/lsb/init-functions
-
 if [ -r /etc/default/rcS ]; then
 	. /etc/default/rcS
 fi
-
 
 # The following variables can be overwritten in $DEFAULT
 
@@ -51,26 +41,16 @@ ES_GROUP={{es_group}}
 # Directory where the Elasticsearch binary distribution resides
 ES_HOME={{es_home}}
 
-{% if es_version | version_compare('5.0', '<') %}
-# Heap size defaults to 256m min, 1g max
-# Set ES_HEAP_SIZE to 50% of available RAM, but no more than 31g
-#ES_HEAP_SIZE=2g
-{% endif %}
-
-# Heap new generation
-#ES_HEAP_NEWSIZE=
-
-# max direct memory
-#ES_DIRECT_SIZE=
-
-# Additional Java OPTS
-#ES_JAVA_OPTS=
-
 # Maximum number of open files
-MAX_OPEN_FILES=65535
+{% if es_max_open_files is defined %}
+MAX_OPEN_FILES={{es_max_open_files}}
+{% endif %}
 
 # Maximum amount of locked memory
 #MAX_LOCKED_MEMORY=
+{% if m_lock_enabled %}
+MAX_LOCKED_MEMORY=unlimited
+{% endif %}
 
 # Elasticsearch log directory
 LOG_DIR={{log_dir}}
@@ -82,13 +62,14 @@ DATA_DIR={{ data_dirs | array_to_str }}
 CONF_DIR={{conf_dir}}
 
 # Maximum number of VMA (Virtual Memory Areas) a process can own
-MAX_MAP_COUNT=262144
-
-# Path to the GC log file
-#ES_GC_LOG_FILE=/var/log/elasticsearch/gc.log
+{% if es_max_map_count is defined %}
+MAX_MAP_COUNT={{es_max_map_count}}
+{% endif %}
 
 # Elasticsearch PID file directory
 PID_DIR={{pid_dir}}
+
+ES_JVM_OPTIONS="{{conf_dir}}/jvm.options"
 
 # End of variables that can be overwritten in $DEFAULT
 
@@ -106,21 +87,18 @@ fi
 # Define other required variables
 PID_FILE="$PID_DIR/$NAME.pid"
 DAEMON={{es_home}}/bin/elasticsearch
-{% if es_version | version_compare('5.0', '<') %}
-DAEMON_OPTS="-d -p $PID_FILE --default.path.home=$ES_HOME --default.path.logs=$LOG_DIR --default.path.data=$DATA_DIR --default.path.conf=$CONF_DIR"
-{% else %}
 DAEMON_OPTS="-d -p $PID_FILE -Edefault.path.home=$ES_HOME -Edefault.path.logs=$LOG_DIR -Edefault.path.data=$DATA_DIR -Edefault.path.conf=$CONF_DIR"
-{% endif %}
 
-export ES_HEAP_SIZE
-export ES_HEAP_NEWSIZE
-export ES_DIRECT_SIZE
 export ES_JAVA_OPTS
-export ES_GC_LOG_FILE
 export JAVA_HOME
+export ES_INCLUDE
+export ES_JVM_OPTIONS
 
 # Check DAEMON exists
-test -x $DAEMON || exit 0
+if [ ! -x "$DAEMON" ]; then
+        echo "The elasticsearch startup script does not exists or it is not executable, tried: $DAEMON"
+        exit 1
+fi
 
 checkJava() {
 	if [ -x "$JAVA_HOME/bin/java" ]; then

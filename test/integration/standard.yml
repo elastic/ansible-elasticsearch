@@ -5,3 +5,4 @@
     - { role: elasticsearch, es_instance_name: "node1" }
   vars:
     es_use_repository: "true"
+    es_heap_size: "1g"

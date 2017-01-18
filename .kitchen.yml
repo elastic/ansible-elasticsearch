@@ -64,35 +64,33 @@ platforms:
       use_sudo: false
 
 suites:
-  - name: standard-2x
+  - name: standard-5x
     provisioner:
       playbook: test/integration/standard.yml
     run_list:
     attributes:
-  - name: package-2x
+  - name: package-5x
     run_list:
     attributes:
       extra_vars:
         es_plugins:
-          - plugin: lmenezes/elasticsearch-kopf
-            version: master
+          - plugin: ingest-geoip
     provisioner:
       playbook: test/integration/package.yml
-  - name: config-2x
+  - name: config-5x
     run_list:
     attributes:
     provisioner:
       playbook: test/integration/config.yml
-  - name: multi-2x
+  - name: multi-5x
     run_list:
     attributes:
       extra_vars:
         es_plugins:
-          - plugin: lmenezes/elasticsearch-kopf
-            version: master
+          - plugin: ingest-geoip
     provisioner:
       playbook: test/integration/multi.yml
-  - name: xpack-2x
+  - name: xpack-5x
     run_list:
     attributes:
     provisioner:

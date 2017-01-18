@@ -19,7 +19,12 @@ shared_examples 'standard::init' do |es_version|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  describe file('/etc/elasticsearch/node1/logging.yml') do
+  describe file('/etc/elasticsearch/node1/log4j2.properties') do
+    it { should be_file }
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/etc/elasticsearch/node1/jvm.options') do
     it { should be_file }
     it { should be_owned_by 'elasticsearch' }
   end
@@ -29,7 +34,6 @@ shared_examples 'standard::init' do |es_version|
     it { should contain 'cluster.name: elasticsearch' }
     it { should contain 'path.conf: /etc/elasticsearch/node1' }
     it { should contain 'path.data: /var/lib/elasticsearch/localhost-node1' }
-    it { should contain 'path.work: /tmp/elasticsearch/localhost-node1' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-node1' }
   end
 
