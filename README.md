@@ -120,9 +120,7 @@ A more complex example:
     es_plugins_reinstall: false
     es_api_port:9201
     es_plugins:
-        - plugin: license
-        - plugin: lmenezes/elasticsearch-kopf
-          version: master
+        - plugin: ingest-geoip
           proxy_host: proxy.example.com
           proxy_port: 8080
 ```
@@ -136,9 +134,9 @@ If the node is deployed to bind on either a different host or port, these must b
 
 The application of the elasticsearch role results in the installation of a node on a host. Specifying the role multiple times for a host therefore results in the installation of multiple nodes for the host. 
 
-An example of a two server deployment, each with 1 node on one server and 2 nodes on another.  The first server holds the master and is thus declared first.  Whilst not mandatory, this is 
-recommended in any multi node cluster configuration.
+An example of a two server deployment is shown below.  The first server holds the master and is thus declared first.  Whilst not mandatory, this is recommended in any multi node cluster configuration.  The second server hosts two data nodes.
 
+**Note the structure of the below playbook for the data nodes.  Whilst a more succinct structures are possible which allow the same role to be applied to a host multiple times, we have found the below structure to be the most reliable with respect to var behaviour.  This is the tested approach.**
 
 ```
 - hosts: master_nodes
@@ -160,8 +158,9 @@ recommended in any multi node cluster configuration.
     es_version_lock: false
     ansible_user: ansible
     es_plugins:
-     - plugin: elasticsearch/license
-       version: latest
+     - plugin: ingest-geoip
+
+
 
 - hosts: data_nodes
   roles:
@@ -176,6 +175,18 @@ recommended in any multi node cluster configuration.
         cluster.name: "test-cluster"
         } 
     }
+  vars:
+    es_scripts: false
+    es_templates: false
+    es_version_lock: false
+    ansible_user: ansible
+    es_api_port: 9200
+    es_plugins:
+    - plugin: ingest-geoip
+    
+    
+- hosts: data_nodes
+  roles:
     - { role: elasticsearch, es_instance_name: "node2", es_api_port:9201,
     es_config: {
         discovery.zen.ping.unicast.hosts: "elastic02:9300",
@@ -191,10 +202,11 @@ recommended in any multi node cluster configuration.
     es_scripts: false
     es_templates: false
     es_version_lock: false
+    es_api_port: 9201
     ansible_user: ansible
     es_plugins:
-     - plugin: elasticsearch/license
-       version: latest
+    - plugin: ingest-geoip
+
 ```
 
 Parameters can additionally be assigned to hosts using the inventory file if desired.
@@ -328,7 +340,6 @@ Additional parameters to es_config allow the customization of the Java and Elast
 ```yml
   es_plugins:
     - plugin: elasticsearch-cloud-aws
-      version: 5.0.0
 ```
 * ```es_allow_downgrades``` For development purposes only. (true or false (default) )
 * ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
@@ -336,7 +347,7 @@ Additional parameters to es_config allow the customization of the Java and Elast
 * ```es_max_map_count``` maximum number of VMA (Virtual Memory Areas) a process can own. Defaults to 262144.
 * ```es_max_open_files``` the maximum file descriptor number that can be opened by this process. Defaults to 65536.
 
-Earlier examples illustrate the installation of plugins using `es_plugins`.  For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  For community based plugins include the full path e.g. "lmenezes/elasticsearch-kopf" and the appropriate version for the target version of Elasticsearch.  This approach should NOT be used for X-Pack related plugins e.g. Security.  See X-Pack below for details here.
+Earlier examples illustrate the installation of plugins using `es_plugins`.  For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  For community based plugins include the full url.  This approach should NOT be used for the X-Pack plugin.  See X-Pack below for details here.
  
 If installing Monitoring or Alerting, ensure the license plugin is also specified.  Security configuration is currently not supported but planned for later versions.
 
@@ -372,7 +383,6 @@ To define proxy only for a particular plugin during its installation:
 ```
   es_plugins:
     - plugin: elasticsearch-cloud-aws
-      version: 5.0.0
       proxy_host: proxy.example.com
       proxy_port: 8080
 ```
