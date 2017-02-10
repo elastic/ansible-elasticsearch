@@ -106,3 +106,10 @@
 # WARNING: This option will be removed in Elasticsearch 6.0.0 and is provided
 # only for migration purposes.
 #-Delasticsearch.json.allow_unquoted_field_names=true
+{% if jmx_remote_monitoring_enabled == true %}
+#-Dcom.sun.management.jmxremote.port={{ jmx_remote_monitoring_port }}
+#-Dcom.sun.management.jmxremote.authenticate={{ jmx_remote_monitoring_auth }}
+#-Dcom.sun.management.jmxremote.ssl={{ jmx_remote_monitoring_ssl }}
+##-Djava.rmi.server.hostname="127.0.0.1"
+-Dcom.sun.management.jmxremote
+{% endif %}
