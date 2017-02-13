@@ -1,4 +1,5 @@
 # ansible-elasticsearch
+[![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
 **THIS ROLE IS FOR 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
 
