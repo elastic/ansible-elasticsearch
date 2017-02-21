@@ -36,3 +36,4 @@ pid_dir: ''
 log_dir: ''
 conf_dir: ''
 data_dirs: ''
+jmx_remote_monitoring_enabled: false
