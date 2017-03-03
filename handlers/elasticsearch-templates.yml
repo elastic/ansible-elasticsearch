@@ -17,7 +17,7 @@
     status_code: 200
     body_format: json
     body: "{{ lookup('file', item.path) }}"
-  when: not es_enable_xpack or not es_xpack_features is defined or not '"security" in es_xpack_features'
+  when: not es_enable_xpack or not es_xpack_features is defined or "security" not in es_xpack_features
   with_items: "{{ templates.files }}"
 
 - name: Install templates with auth
@@ -30,5 +30,5 @@
     force_basic_auth: yes
     body_format: json
     body: "{{ lookup('file', item.path) }}"
-  when: es_enable_xpack and es_xpack_features is defined and '"security" in es_xpack_features'
+  when: es_enable_xpack and es_xpack_features is defined and "security" in es_xpack_features
   with_items: "{{ templates.files }}"
