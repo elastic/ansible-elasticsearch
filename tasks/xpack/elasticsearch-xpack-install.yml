@@ -5,6 +5,7 @@
   register: x_pack_installed
   changed_when: False
   failed_when: "'ERROR' in x_pack_installed.stdout"
+  check_mode: no
   ignore_errors: yes
   environment:
     CONF_DIR: "{{ conf_dir }}"
