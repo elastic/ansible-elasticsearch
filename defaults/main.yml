@@ -36,3 +36,5 @@ pid_dir: ''
 log_dir: ''
 conf_dir: ''
 data_dirs: ''
+# JVM custom parameters
+es_jvm_custom_parameters: ''
