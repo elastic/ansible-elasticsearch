@@ -4,7 +4,7 @@ allow_duplicates: yes
 
 galaxy_info:
   author: Robin Clarke, Jakob Reiter, Dale McDiarmid
-  description: Elasticsearch for Linux
+  description: Elasticsearch for Linux and FreeBSD
   company: "Elastic.co"
   license: "license (Apache)"
   # Require 1.6 for apt deb install
@@ -20,6 +20,13 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - all
+  - name: FreeBSD
+    versions:
+    - 10.0
+    - 10.1
+    - 10.2
+    - 10.3
+    - 11.0
   categories:
     - system
 

@@ -11,3 +11,7 @@
 - name: Include specific Elasticsearch
   include: elasticsearch-RedHat.yml
   when: ansible_os_family == 'RedHat'
+
+- name: Include specifc Elasticsearch
+  include: elasticsearch-FreeBSD.yml
+  when: ansible_os_family == 'FreeBSD'
