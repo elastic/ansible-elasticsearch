@@ -1,6 +1,6 @@
 /vars/Debian.yml
 .kitchen/
-license.json
+license*.json
 *.pyc
 .vendor
 .bundle
