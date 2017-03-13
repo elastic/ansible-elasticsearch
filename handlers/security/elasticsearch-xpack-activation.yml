@@ -9,7 +9,7 @@
     return_content: yes
   register: license_activated
   no_log: True
-  when: not '"security" in es_xpack_features'
+  when: 'not "security" in es_xpack_features'
   failed_when: >
     license_activated.status != 200 or
     license_activated.json.license_status is not defined or
