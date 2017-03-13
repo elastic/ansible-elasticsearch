@@ -3,6 +3,7 @@
 #Test if feature is installed
 - shell: "{{es_home}}/bin/plugin list | sed -n '1!p' | grep {{item}}"
   register: feature_installed
+  check_mode: no
   changed_when: False
   failed_when: "'ERROR' in feature_installed.stdout"
   ignore_errors: yes

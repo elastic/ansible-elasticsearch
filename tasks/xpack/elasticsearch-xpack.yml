@@ -9,6 +9,7 @@
   shell: >
     {{es_home}}/bin/plugin list | tail -n +2 | grep license
   register: license_installed
+  check_mode: no
   ignore_errors: yes
   failed_when: "'ERROR' in license_installed.stdout"
   changed_when: False
