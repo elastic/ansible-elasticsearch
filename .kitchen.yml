@@ -12,6 +12,7 @@ provisioner:
   http_proxy: <%= ENV['HTTP_PROXY'] %>
   https_proxy: <%= ENV['HTTPS_PROXY'] %>
   no_proxy: localhost,127.0.0.1
+  idempotency_test: true
 
 platforms:
   - name: ubuntu-14.04
