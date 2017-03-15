@@ -79,6 +79,9 @@
 - name: Delete Default Sysconfig File
   file: dest="{{ sysd_script }}" state=absent
 
+- name: Delete Default rc.d File
+  file: dest=/usr/local/etc/rc.d/elasticsearch state=absent
+
 - name: Delete Default Configuration File
   file: dest="{{ es_conf_dir }}/elasticsearch.yml" state=absent
 
