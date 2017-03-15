@@ -12,6 +12,8 @@
 name=elasticsearch_{{ es_instance_name }}
 rcvar=elasticsearch_{{ es_instance_name }}_enable
 
+load_rc_config ${name}
+
 : ${elasticsearch_{{ es_instance_name }}_enable:="NO"}
 : ${elasticsearch_{{ es_instance_name }}_user:={{ es_user }}}
 : ${elasticsearch_{{ es_instance_name }}_group:={{ es_group }}}
