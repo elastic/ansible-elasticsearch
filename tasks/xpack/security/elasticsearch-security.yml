@@ -13,7 +13,8 @@
 - command: /bin/true
   notify: activate-security
   when: (es_enable_xpack and '"security" in es_xpack_features') and ((es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined))
-
+  changed_when: False
+  
 #-----------------------------ROLE MAPPING ----------------------------------------
 
 #Copy Roles files
