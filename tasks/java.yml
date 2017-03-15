@@ -8,9 +8,14 @@
 - name: RedHat - Ensure Java is installed
   yum: name={{ java }} state={{java_state}}
   when: ansible_os_family == 'RedHat'
-  
+
+- name: Refresh java repo
+  apt: update_cache=yes
+  changed_when: false
+  when: ansible_os_family == 'Debian'
+
 - name: Debian - Ensure Java is installed
-  apt: name={{ java }} state={{java_state}} update_cache=yes
+  apt: name={{ java }} state={{java_state}}
   when: ansible_os_family == 'Debian'
 
 - command: java -version 2>&1 | grep OpenJDK
