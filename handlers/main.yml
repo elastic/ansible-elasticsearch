@@ -6,10 +6,6 @@
   service: name={{instance_init_script | basename}} state=restarted enabled=yes
   when: es_restart_on_change and es_start_service and ((plugin_installed is defined and plugin_installed.changed) or (config_updated is defined and config_updated.changed) or (xpack_state.changed) or (debian_elasticsearch_install_from_repo.changed or redhat_elasticsearch_install_from_repo.changed or elasticsearch_install_from_package.changed))
 
-# All security specific actions should go in here
-- name: activate-security
-  include: ./handlers/security/elasticsearch-security.yml
-
 #Templates are a handler as they need to come after a restart e.g. suppose user removes security on a running node and doesn't
 #specify es_api_basic_auth_username and es_api_basic_auth_password.  The templates will subsequently not be removed if we don't wait for the node to restart.
 #Templates done after restart therefore - as a handler.
