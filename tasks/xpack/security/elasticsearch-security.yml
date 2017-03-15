@@ -8,12 +8,6 @@
 - include: elasticsearch-security-file.yml
   when: (es_enable_xpack and '"security" in es_xpack_features') and ((es_users is defined and es_users.file) or (es_roles is defined and es_roles.file is defined))
 
-#-----------------------------NATIVE BASED REALM----------------------------------------
-# The native realm requires the node to be started so we do as a handler
-- command: /bin/true
-  notify: activate-security
-  when: (es_enable_xpack and '"security" in es_xpack_features') and ((es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined))
-
 #-----------------------------ROLE MAPPING ----------------------------------------
 
 #Copy Roles files

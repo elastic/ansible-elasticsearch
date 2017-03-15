@@ -21,8 +21,8 @@
 - name: Remove Users
   command: >
     {{es_home}}/bin/x-pack/users userdel {{item}}
-  when: manage_file_users and (users_to_remove | length > 0)
   with_items: "{{users_to_remove | default([])}}"
+  when: manage_file_users and (users_to_remove | length > 0)
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_HOME: "{{es_home}}"

@@ -46,3 +46,11 @@
 
 - name: Wait for elasticsearch to startup
   wait_for: host={{es_api_host}} port={{es_api_port}} delay=5 connect_timeout=1
+
+- name: activate-license
+  include: ./xpack/security/elasticsearch-xpack-activation.yml
+  when: es_enable_xpack and es_xpack_license is defined and es_xpack_license != ''
+
+#perform security actions here now elasticsearch is started
+- include: ./xpack/security/elasticsearch-security-native.yml
+  when: (es_enable_xpack and '"security" in es_xpack_features') and ((es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined))

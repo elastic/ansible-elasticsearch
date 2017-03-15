@@ -46,7 +46,10 @@
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
   when: manage_native_users and users_to_remove | length > 0
-  with_items: "{{users_to_remove}}"
+  with_items: "{{users_to_remove | default([]) }}"
+
+- set_fact: native_users={{ es_users.native }}
+  when: manage_native_users and es_users.native.keys() > 0
 
 #Overwrite all other users
 - name: Update Native Users
@@ -59,9 +62,9 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
-  when: manage_native_users and es_users.native.keys() > 0
+  when: manage_native_users and native_users.keys() > 0
   no_log: True
-  with_dict: "{{es_users.native}}"
+  with_dict: "{{native_users | default({}) }}"
 
 #List current roles not. inc those reserved
 - name: List Native Roles
@@ -94,8 +97,11 @@
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
   when: manage_native_roles and roles_to_remove | length > 0
-  with_items: "{{roles_to_remove}}"
+  with_items: "{{roles_to_remove | default([]) }}"
 
+
+- set_fact: native_roles={{ es_roles.native }}
+  when: manage_native_roles and es_roles.native.keys() > 0
 
 #Update other roles
 - name: Update Native Roles
@@ -108,5 +114,5 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
-  when: manage_native_roles and es_roles.native.keys() > 0
-  with_dict: "{{es_roles.native}}"
+  when: manage_native_roles and native_roles.keys() > 0
+  with_dict: "{{ native_roles | default({})}}"
