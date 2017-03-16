@@ -12,7 +12,7 @@
     es_heap_size: 1g
     es_api_port: 9201
     es_plugins:
-      - plugin: docke
+      - plugin: ingest-geoip
 
 #Modify the above configuration. Final test should evaluate this configuration. Also tests the plugins are added and removed.
 - name: Elasticsearch Config test modify
