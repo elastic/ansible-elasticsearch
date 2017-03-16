@@ -6,5 +6,7 @@
   vars:
     es_use_repository: "true"
     es_heap_size: "1g"
+    es_plugins:
+      - plugin: ingest-geoip
 
 #Do not add tests here. This test is run twice and confirms idempotency.

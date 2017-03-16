@@ -20,7 +20,8 @@ platforms:
       privileged: true
       provision_command:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
-        - apt-get update && apt-get -y -q install python-apt python-pycurl
+        - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip
+        - pip install jmespath
       use_sudo: false
       volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
   - name: ubuntu-16.04
@@ -30,7 +31,8 @@ platforms:
       provision_command:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
         - apt-get install -y -q net-tools
-        - apt-get update && apt-get -y -q install python-apt python-pycurl
+        - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip
+        - pip install jmespath
       use_sudo: false
       volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
       run_command: "/sbin/init"
@@ -45,6 +47,7 @@ platforms:
         - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
+        - pip install jmespath
       volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
       use_sudo: false
       run_command: "/sbin/init"
@@ -58,6 +61,7 @@ platforms:
         - rm /etc/yum.repos.d/epel*repo /etc/yum.repos.d/puppetlabs-pc1.repo
         - yum -y install initscripts
         - yum clean all
+        - pip install jmespath
       volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
       run_command: "/usr/sbin/init"
       privileged: true
@@ -83,9 +87,6 @@ suites:
   - name: multi-5x
     run_list:
     attributes:
-      extra_vars:
-        es_plugins:
-          - plugin: ingest-geoip
     provisioner:
       playbook: test/integration/multi.yml
       idempotency_test: true

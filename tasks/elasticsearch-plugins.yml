@@ -25,7 +25,7 @@
   when: es_plugins_reinstall
 
 #if the plugins listed are different than those requested, we remove those installed but not listed in the config
-- set_fact: plugins_to_remove="{{ installed_plugins.stdout_lines | difference(es_plugins | json_query('es_plugins[*].plugin')) | default([]) }}"
+- set_fact: plugins_to_remove="{{ installed_plugins.stdout_lines | difference(es_plugins | json_query('[*].plugin')) | default([]) }}"
   when: not es_plugins_reinstall
 
 # This removes any currently installed plugins (to prevent errors when reinstalling)
