@@ -40,7 +40,7 @@ shared_examples 'xpack::init' do |es_version,plugins|
 
   describe 'version check' do
     it 'should be reported as version '+es_version do
-      command = command('curl -s localhost:9200 -u es_admin:changeMe | grep number')
+      command = command('curl -s localhost:9200 -u es_admin:changeMeAgain | grep number')
       expect(command.stdout).to match(es_version)
       expect(command.exit_status).to eq(0)
     end
@@ -79,7 +79,7 @@ shared_examples 'xpack::init' do |es_version,plugins|
   #Test if x-pack is activated
   describe 'x-pack activation' do
     it 'should be activated and valid' do
-      command = command('curl -s localhost:9200/_license?pretty=true -u es_admin:changeMe')
+      command = command('curl -s localhost:9200/_license?pretty=true -u es_admin:changeMeAgain')
       expect(command.stdout).to match('"status" : "active"')
       expect(command.exit_status).to eq(0)
     end
@@ -90,7 +90,7 @@ shared_examples 'xpack::init' do |es_version,plugins|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMe | grep x-pack') do
+  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMeAgain | grep x-pack') do
     its(:exit_status) { should eq 0 }
   end
 
@@ -110,7 +110,7 @@ shared_examples 'xpack::init' do |es_version,plugins|
       it { should be_owned_by 'elasticsearch' }
     end
 
-    describe command('curl -s -u es_admin:changeMe localhost:9200/_nodes/plugins?pretty=true | grep '+plugin) do
+    describe command('curl -s localhost:9200/_nodes/plugins -u es_admin:changeMeAgain | grep \'"name":"'+plugin+'","version":"'+es_version+'"\'') do
       its(:exit_status) { should eq 0 }
     end
   end
@@ -137,19 +137,11 @@ shared_examples 'xpack::init' do |es_version,plugins|
 
 
   #Test native roles and users are loaded
-  describe command('curl -s localhost:9200/_xpack/security/user -u es_admin:changeMe | md5sum | grep 243b362bd47623c0b91a1fafbce2b6f5') do
+  describe command('curl -s localhost:9200/_xpack/security/user -u es_admin:changeMeAgain | md5sum | grep 74bcc9f9534b253c1204e264df21496c') do
     its(:exit_status) { should eq 0 }
   end
 
-  describe command('curl -s localhost:9200/_xpack/security/user -u es_admin:changeMe | grep "{\"elastic\":{\"username\":\"elastic\",\"roles\":\[\"superuser\"\],\"full_name\":null,\"email\":null,\"metadata\":{\"_reserved\":true},\"enabled\":true},\"kibana\":{\"username\":\"kibana\",\"roles\":\[\"kibana\"\],\"full_name\":null,\"email\":null,\"metadata\":{\"_reserved\":true},\"enabled\":true},\"kibana4_server\":{\"username\":\"kibana4_server\",\"roles\":\[\"kibana4_server\"\],\"full_name\":null,\"email\":null,\"metadata\":{},\"enabled\":true}}"') do
-    its(:exit_status) { should eq 0 }
-  end
-
-  describe command('curl -s localhost:9200/_xpack/security/role -u es_admin:changeMe | grep "{\"superuser\":{\"cluster\":\[\"all\"\],\"indices\":\[{\"names\":\[\"\*\"\],\"privileges\":\[\"all\"\]}\],\"run_as\":\[\"\*\"\],\"metadata\":{\"_reserved\":true}},\"transport_client\":{\"cluster\":\[\"transport_client\"\],\"indices\":\[\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"kibana_user\":{\"cluster\":\[\"monitor\"\],\"indices\":\[{\"names\":\[\".kibana\*\"\],\"privileges\":\[\"manage\",\"read\",\"index\",\"delete\"\]}\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"monitoring_user\":{\"cluster\":\[\],\"indices\":\[{\"names\":\[\"\.marvel-es-\*\",\".monitoring-\*\"\],\"privileges\":\[\"read\"\]}\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"remote_monitoring_agent\":{\"cluster\":\[\"manage_index_templates\",\"manage_ingest_pipelines\",\"monitor\"\],\"indices\":\[{\"names\":\[\"\.marvel-es-\*\",\"\.monitoring-\*\"\],\"privileges\":\[\"all\"\]}\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"ingest_admin\":{\"cluster\":\[\"manage_index_templates\",\"manage_pipeline\"\],\"indices\":\[\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"reporting_user\":{\"cluster\":\[\],\"indices\":\[{\"names\":\[\"\.reporting-\*\"\],\"privileges\":\[\"read\",\"write\"\]}\],\"run_as\":\[\],\"metadata\":{\"_reserved\":true}},\"logstash\":{\"cluster\":\[\"manage_index_templates\"\],\"indices\":\[{\"names\":\[\"logstash-\*\"\],\"privileges\":\[\"write\",\"delete\",\"create_index\"\]}\],\"run_as\":\[\],\"metadata\":{}}}"') do
-    its(:exit_status) { should eq 0 }
-  end
-
-  describe command('curl -s localhost:9200/_xpack/security/role -u es_admin:changeMe | md5sum | grep 78a0696c9c9690042cec2c1f16860cfc') do
+  describe command('curl -s localhost:9200/_xpack/security/role -u es_admin:changeMeAgain | md5sum | grep 2bf3ffbb9cabf26bb25de6334c4da323') do
     its(:exit_status) { should eq 0 }
   end
 
@@ -165,7 +157,7 @@ shared_examples 'xpack::init' do |es_version,plugins|
 
   describe 'Template Installed' do
     it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
-      command = command('curl -s "localhost:9200/_template/basic" -u es_admin:changeMe')
+      command = command('curl -s "localhost:9200/_template/basic" -u es_admin:changeMeAgain')
       expect(command.stdout).to match(/basic/)
       expect(command.exit_status).to eq(0)
     end
@@ -174,7 +166,7 @@ shared_examples 'xpack::init' do |es_version,plugins|
   #This is possibly subject to format changes in the response across versions so may fail in the future
   describe 'Template Contents Correct' do
     it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
-      command = command('curl -s "localhost:9200/_template/basic" -u es_admin:changeMe | md5sum')
+      command = command('curl -s "localhost:9200/_template/basic" -u es_admin:changeMeAgain | md5sum')
       expect(command.stdout).to match(/153b1a45daf48ccee80395b85c61e332/)
     end
   end

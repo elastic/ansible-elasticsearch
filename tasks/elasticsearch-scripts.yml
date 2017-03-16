@@ -10,7 +10,7 @@
       - always
 
 - name: Create script dir
-  file: state=directory path={{ es_script_dir }} owner={{ es_user }} group={{ es_group }}
+  file: state=directory path={{ es_script_dir }} owner={{ es_user }} group={{ es_group }} recurse=yes
 
 - name: Copy default scripts to elasticsearch
   copy: src=scripts dest={{ es_script_dir }} owner={{ es_user }} group={{ es_group }}

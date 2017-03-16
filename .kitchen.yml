@@ -12,7 +12,6 @@ provisioner:
   http_proxy: <%= ENV['HTTP_PROXY'] %>
   https_proxy: <%= ENV['HTTPS_PROXY'] %>
   no_proxy: localhost,127.0.0.1
-  idempotency_test: true
 
 platforms:
   - name: ubuntu-14.04
@@ -67,15 +66,13 @@ platforms:
 suites:
   - name: standard-5x
     provisioner:
+      idempotency_test: true
       playbook: test/integration/standard.yml
     run_list:
     attributes:
   - name: package-5x
     run_list:
     attributes:
-      extra_vars:
-        es_plugins:
-          - plugin: ingest-geoip
     provisioner:
       playbook: test/integration/package.yml
   - name: config-5x
@@ -91,6 +88,7 @@ suites:
           - plugin: ingest-geoip
     provisioner:
       playbook: test/integration/multi.yml
+      idempotency_test: true
   - name: xpack-5x
     run_list:
     attributes:

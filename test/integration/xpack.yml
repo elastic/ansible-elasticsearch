@@ -1,5 +1,5 @@
 ---
-- name: Elasticsearch Xpack tests
+- name: Elasticsearch Xpack tests initial
   hosts: localhost
   roles:
     - { role: elasticsearch, es_api_port: 9200, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300",
@@ -8,6 +8,7 @@
   vars:
     es_heap_size: "1g"
     es_templates: true
+    es_version: "5.1.2"
     es_enable_xpack: true
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
     es_plugins:
@@ -79,3 +80,45 @@
                 - delete
                 - create_index
 
+#modifies the installation. Changes es_admin password and upgrades ES. Tests confirm the correct version is installed.
+- name: Elasticsearch Xpack modify
+  hosts: localhost
+  roles:
+    - { role: elasticsearch, es_api_port: 9200, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300",
+    "xpack.security.authc.realms.file1.type": "file","xpack.security.authc.realms.file1.order": 0, "xpack.security.authc.realms.native1.type": "native","xpack.security.authc.realms.native1.order": 1 },
+    es_instance_name: "security_node" }
+  vars:
+    es_heap_size: "1g"
+    es_templates: true
+    es_version: "5.2.2"
+    es_enable_xpack: true
+    es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
+    es_plugins:
+      - plugin: ingest-attachment
+    es_xpack_features:
+      - security
+      - alerting
+    es_api_basic_auth_username: elastic
+    es_api_basic_auth_password: changeme
+    es_role_mapping:
+      power_user:
+        - "cn=admins,dc=example,dc=com"
+      user:
+        - "cn=users,dc=example,dc=com"
+        - "cn=admins,dc=example,dc=com"
+    es_users:
+      native:
+        kibana4_server:
+          password: changeMe
+          roles:
+            - kibana4_server
+      file:
+        es_admin:
+          password: changeMeAgain
+          roles:
+            - admin
+        testUser:
+          password: changeMeAlso!
+          roles:
+            - power_user
+            - user
