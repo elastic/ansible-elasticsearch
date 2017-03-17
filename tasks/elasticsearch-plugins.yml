@@ -5,25 +5,35 @@
 - set_fact: es_plugins_reinstall=true
   when: (((debian_elasticsearch_install_from_repo is defined and debian_elasticsearch_install_from_repo.changed) or (redhat_elasticsearch_install_from_repo is defined and redhat_elasticsearch_install_from_repo.changed)) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) or es_plugins is not defined or es_plugins is none
 
-- set_fact: list_command="list"
+- set_fact: list_command=""
+#If we are reinstalling all plugins, e.g. to a version change, we need to remove all plugins (inc. x-pack) to install any plugins. Otherwise we don't consider x-pack so the role stays idempotent.
+- set_fact: list_command="| grep -vE 'x-pack'"
+  when: not es_plugins_reinstall
 
-#List currently installed plugins - ignore xpack if > v 2.0
+#List currently installed plugins. We have to list the directories as the list commmand fails if the ES version is different than the plugin version.
 - name: Check installed elasticsearch plugins
-  shell: "{{es_home}}/bin/elasticsearch-plugin list | grep -vE 'x-pack'"
+  shell: "ls {{es_home}}/plugins {{list_command}}"
   register: installed_plugins
-  failed_when: "'ERROR' in installed_plugins.stdout"
   changed_when: False
   ignore_errors: yes
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
+#if es_plugins_reinstall is set to true we remove ALL plugins
+- set_fact: plugins_to_remove="{{ installed_plugins.stdout_lines | default([]) }}"
+  when: es_plugins_reinstall
+
+#if the plugins listed are different than those requested, we remove those installed but not listed in the config
+- set_fact: plugins_to_remove="{{ installed_plugins.stdout_lines | difference(es_plugins | json_query('[*].plugin')) | default([]) }}"
+  when: not es_plugins_reinstall
+
 # This removes any currently installed plugins (to prevent errors when reinstalling)
 - name: Remove elasticsearch plugins
   command: "{{es_home}}/bin/elasticsearch-plugin remove {{item}} --silent"
   ignore_errors: yes
-  with_items: "{{ installed_plugins.stdout_lines | default([]) }}"
-  when: es_plugins_reinstall and installed_plugins.stdout_lines | length > 0 and not 'No plugin detected' in installed_plugins.stdout_lines[0]
+  with_items: "{{ plugins_to_remove | default([]) }}"
+  when: es_plugins_reinstall and plugins_to_remove | length > 0
   notify: restart elasticsearch
   register: plugin_removed
   environment:

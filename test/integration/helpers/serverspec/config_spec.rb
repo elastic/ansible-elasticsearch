@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-shared_examples 'config::init' do |es_version|
+shared_examples 'config::init' do |es_version,plugins|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -28,14 +28,14 @@ shared_examples 'config::init' do |es_version|
 
   #test configuration parameters have been set - test all appropriately set in config file
   describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
-    it { should contain 'http.port: 9201' }
-    it { should contain 'transport.tcp.port: 9301' }
-    it { should contain 'node.data: false' }
+    it { should contain 'http.port: 9401' }
+    it { should contain 'transport.tcp.port: 9501' }
+    it { should contain 'node.data: true' }
     it { should contain 'node.master: true' }
     it { should contain 'cluster.name: custom-cluster' }
     it { should contain 'node.name: node1' }
     it { should contain 'bootstrap.memory_lock: true' }
-    it { should contain 'discovery.zen.ping.unicast.hosts: localhost:9301' }
+    it { should contain 'discovery.zen.ping.unicast.hosts: localhost:9501' }
     it { should contain 'path.conf: /etc/elasticsearch/node1' }
     it { should contain 'path.data: /opt/elasticsearch/data-1/localhost-node1,/opt/elasticsearch/data-2/localhost-node1' }
     it { should contain 'path.logs: /opt/elasticsearch/logs/localhost-node1' }
@@ -63,14 +63,14 @@ shared_examples 'config::init' do |es_version|
   end
 
   #test we started on the correct port was used
-  describe command('curl -s "localhost:9201"') do
+  describe command('curl -s "localhost:9401"') do
     #TODO: This is returning an empty string
     #its(:stdout) { should match /\"status\" : 200/ }
     its(:exit_status) { should eq 0 }
   end
 
   #test to make sure mlock was applied
-  describe command('curl -s "localhost:9201/_nodes/process?pretty" | grep mlockall') do
+  describe command('curl -s "localhost:9401/_nodes/process?pretty" | grep mlockall') do
     its(:stdout) { should match /true/ }
     its(:exit_status) { should eq 0 }
   end
@@ -78,10 +78,30 @@ shared_examples 'config::init' do |es_version|
 
   describe 'version check' do
     it 'should be reported as version '+es_version do
-      command = command('curl -s localhost:9201 | grep number')
+      command = command('curl -s localhost:9401 | grep number')
       expect(command.stdout).to match(es_version)
       expect(command.exit_status).to eq(0)
     end
+  end
+
+  for plugin in plugins
+    describe file('/usr/share/elasticsearch/plugins/'+plugin) do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
+    #confirm plugins are installed and the correct version
+    describe command('curl -s localhost:9401/_nodes/plugins | grep \'"name":"'+plugin+'","version":"'+es_version+'"\'') do
+      its(:exit_status) { should eq 0 }
+    end
+  end
+
+  #explit test to make sure ingest-geoip is not installed
+  describe file('/usr/share/elasticsearch/plugins/ingest-geoip') do
+    it { should_not exist }
+  end
+  #confirm plugins are installed and the correct version
+  describe command('curl -s localhost:9200/_nodes/plugins | grep \'"name":"ingest-geoip","version":"'+es_version+'"\'') do
+    its(:exit_status) { should eq 1 }
   end
 
   describe file('/etc/init.d/elasticsearch') do

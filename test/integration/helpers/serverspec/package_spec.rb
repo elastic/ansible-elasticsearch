@@ -74,11 +74,12 @@ shared_examples 'package::init' do  |es_version,plugins|
       it { should be_directory }
       it { should be_owned_by 'elasticsearch' }
     end
-
-    describe command('curl -s localhost:9200/_nodes/plugins?pretty=true | grep '+plugin) do
+    #confirm plugins are installed and the correct version
+    describe command('curl -s localhost:9200/_nodes/plugins | grep \'"name":"'+plugin+'","version":"'+es_version+'"\'') do
       its(:exit_status) { should eq 0 }
     end
   end
+
 
   describe file('/etc/init.d/elasticsearch') do
     it { should_not exist }

@@ -1,5 +1,5 @@
 ---
-- name: Elasticsearch Package tests
+- name: Elasticsearch Package test intial
   hosts: localhost
   roles:
     - { role: elasticsearch, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300" }, es_instance_name: "node1" }
@@ -8,4 +8,22 @@
     es_templates: true
     es_heap_size: "1g"
     es_api_port: 9200
-#Plugins installed for this test are specified in .kitchen.yml under suite
+    es_version: "5.1.2"
+    es_plugins:
+      - plugin: ingest-geoip
+
+
+#Tests the plugins have been correctly removed and ES can be upgraded between minor versions. All plugins will be removed and re-installed.
+- name: Elasticsearch Package test modify
+  hosts: localhost
+  roles:
+    - { role: elasticsearch, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300" }, es_instance_name: "node1" }
+  vars:
+    es_scripts: true
+    es_templates: true
+    es_version: "5.2.2"
+    es_heap_size: "1g"
+    es_api_port: 9200
+    es_plugins:
+      - plugin: ingest-attachment
+      - plugin: ingest-geoip

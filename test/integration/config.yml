@@ -1,13 +1,31 @@
 ---
 #Test explicit setting of parameters and variables
-- name: Elasticsearch Config tests
+- name: Elasticsearch Config initial
   hosts: localhost
   roles:
     #expand to all available parameters
-    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: ["/opt/elasticsearch/data-1","/opt/elasticsearch/data-2"], es_log_dir: "/opt/elasticsearch/logs", es_user_id: 333, es_group_id: 333, es_config: {node.name: "node1", cluster.name: "custom-cluster", discovery.zen.ping.unicast.hosts: "localhost:9301", http.port: 9201, transport.tcp.port: 9301, node.data: false, node.master: true, bootstrap.memory_lock: true } }
+    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: ["/opt/elasticsearch/data-1","/opt/elasticsearch/data-2"], es_log_dir: "/opt/elasticsearch/logs", es_user_id: 333, es_group_id: 333, es_config: {node.name: "node1", cluster.name: "custom-cluster", discovery.zen.ping.unicast.hosts: "localhost:9301", http.port: 9201, transport.tcp.port: 9301, node.data: false, node.master: true, bootstrap.memory_lock: false } }
   vars:
     es_scripts: false
     es_templates: false
     es_version_lock: false
     es_heap_size: 1g
     es_api_port: 9201
+    es_plugins:
+      - plugin: ingest-geoip
+
+#Modify the above configuration. Final test should evaluate this configuration. Also tests the plugins are added and removed.
+- name: Elasticsearch Config test modify
+  hosts: localhost
+  roles:
+    #expand to all available parameters
+    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: ["/opt/elasticsearch/data-1","/opt/elasticsearch/data-2"], es_log_dir: "/opt/elasticsearch/logs", es_user_id: 333, es_group_id: 333, es_config: {node.name: "node1", cluster.name: "custom-cluster", discovery.zen.ping.unicast.hosts: "localhost:9501", http.port: 9401, transport.tcp.port: 9501, node.data: true, node.master: true, bootstrap.memory_lock: true } }
+  vars:
+    es_scripts: false
+    es_templates: false
+    es_version_lock: false
+    es_heap_size: 1g
+    es_api_port: 9401
+    es_plugins:
+      - plugin: ingest-attachment
+      - plugin: ingest-user-agent

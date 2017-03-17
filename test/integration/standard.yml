@@ -1,8 +1,12 @@
 ---
-- name: wrapper playbook for kitchen testing "elasticsearch"
+- name: Standard test for single node setup. Tests idempotence.
   hosts: localhost
   roles:
     - { role: elasticsearch, es_instance_name: "node1" }
   vars:
     es_use_repository: "true"
     es_heap_size: "1g"
+    es_plugins:
+      - plugin: ingest-geoip
+
+#Do not add tests here. This test is run twice and confirms idempotency.
