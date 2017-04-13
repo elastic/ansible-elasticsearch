@@ -18,8 +18,9 @@
   apt: name={{ java }} state={{java_state}}
   when: ansible_os_family == 'Debian'
 
-- command: java -version 2>&1 | grep OpenJDK
+- shell: java -version 2>&1 | grep OpenJDK
   register: open_jdk
+  ignore_errors: yes
   changed_when: false
 
 #https://github.com/docker-library/openjdk/issues/19 - ensures tests pass due to java 8 broken certs
