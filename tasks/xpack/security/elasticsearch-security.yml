@@ -3,6 +3,14 @@
 
 #TODO: 1. Skip users with no password defined or error 2. Passwords | length > 6
 
+#Ensure x-pack conf directory is created if necessary
+- name: Ensure x-pack conf directory exists (file)
+  file: path={{ conf_dir }}/x-pack state=directory owner={{ es_user }} group={{ es_group }}
+  changed_when: False
+  when:
+    - es_enable_xpack and '"security" in es_xpack_features'
+    - (es_users is defined and es_users.file) or (es_roles is defined and es_roles.file is defined) or (es_role_mapping is defined)
+
 #-----------------------------FILE BASED REALM----------------------------------------
 
 - include: elasticsearch-security-file.yml
