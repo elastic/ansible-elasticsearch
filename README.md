@@ -50,7 +50,7 @@ The use of a map ensures the Ansible playbook does not need to be updated to ref
 
 In addition to the es_config map, several other parameters are supported for additional functions e.g. script installation.  These can be found in the role's defaults/main.yml file.
 
-The following illustrates applying configuration parameters to an Elasticsearch instance.  By default, Elasticsearch 5.1.2is installed.
+The following illustrates applying configuration parameters to an Elasticsearch instance.  By default, Elasticsearch 5.3.0 is installed.
 
 ```
 - name: Elasticsearch with custom configuration
@@ -330,7 +330,7 @@ These can either be set to a user declared in the file based realm, with admin p
 Additional parameters to es_config allow the customization of the Java and Elasticsearch versions, in addition to role behaviour. Options include:
 
 * ```es_major_version``` (e.g. "5.1" ). Should be consistent with es_version. For versions >= 5.0 this must be "5.x".
-* ```es_version``` (e.g. "5.1.2").  
+* ```es_version``` (e.g. "5.3.0").  
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
