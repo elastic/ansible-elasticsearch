@@ -20,6 +20,10 @@ path.data: {{ data_dirs | array_to_str }}
 
 path.logs: {{ log_dir }}
 
+{% if repo_dirs is defined and repo_dirs|length > 0 %}
+path.repo: ["{{ repo_dirs|join('", "') }}"]
+{% endif %}
+
 {% if not "security" in es_xpack_features %}
 xpack.security.enabled: false
 {% endif %}

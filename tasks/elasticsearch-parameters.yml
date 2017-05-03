@@ -47,3 +47,5 @@
 - set_fact: pid_dir={{ es_pid_dir }}/{{instance_suffix}}
 - set_fact: log_dir={{ es_log_dir }}/{{instance_suffix}}
 - set_fact: data_dirs={{ es_data_dirs | append_to_list('/'+instance_suffix) }}
+- set_fact: repo_dirs={{ es_repo_dirs | append_to_list('/'+instance_suffix) }}
+  when: es_repo_dirs|length > 0
