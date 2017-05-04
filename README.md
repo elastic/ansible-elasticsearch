@@ -114,9 +114,6 @@ A more complex example:
     es_templates: false
     es_version_lock: false
     es_heap_size: 1g
-    es_scripts: false
-    es_templates: false
-    es_version_lock: false
     es_start_service: false
     es_plugins_reinstall: false
     es_api_port:9201
