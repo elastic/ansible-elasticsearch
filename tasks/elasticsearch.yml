@@ -5,9 +5,4 @@
   include: elasticsearch-optional-user.yml
 
 - name: Include specific Elasticsearch
-  include: elasticsearch-Debian.yml
-  when: ansible_os_family == 'Debian'
-
-- name: Include specific Elasticsearch
-  include: elasticsearch-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+  include: elasticsearch-{{ ansible_os_family }}.yml

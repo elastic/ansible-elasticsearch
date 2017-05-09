@@ -2,8 +2,7 @@
 
 # es_plugins_reinstall will be set to true if elasticsearch_install_from_repo.changed or elasticsearch_install_from_package.changed
 # i.e. we have changed ES version(or we have clean installation of ES), or if no plugins listed. Otherwise it is false and requires explicitly setting.
-- set_fact: es_plugins_reinstall=true
-  when: (((debian_elasticsearch_install_from_repo is defined and debian_elasticsearch_install_from_repo.changed) or (redhat_elasticsearch_install_from_repo is defined and redhat_elasticsearch_install_from_repo.changed)) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) or es_plugins is not defined or es_plugins is none
+- set_fact: es_plugins_reinstall={{ es_install.changed }}
 
 - set_fact: list_command=""
 #If we are reinstalling all plugins, e.g. to a version change, we need to remove all plugins (inc. x-pack) to install any plugins. Otherwise we don't consider x-pack so the role stays idempotent.
@@ -52,8 +51,12 @@
     ES_INCLUDE: "{{ instance_default_file }}"
 
 - name: Install elasticsearch plugins
+<<<<<<< HEAD
   become: yes
   command: "{{es_home}}/bin/elasticsearch-plugin install {{ item.plugin }} --batch --silent"
+=======
+  command: "{{es_home}}/bin/elasticsearch-plugin install {{ item.plugin }} --batch --silent "
+>>>>>>> Simplify xpack and add support for es_use_shared_fs: false
   register: plugin_installed
   failed_when: "'ERROR' in plugin_installed.stdout"
   changed_when: plugin_installed.rc == 0
@@ -64,7 +67,11 @@
     CONF_DIR: "{{ conf_dir }}"
     ES_PATH_CONF: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
+<<<<<<< HEAD
     ES_JAVA_OPTS: "{% if item.proxy_host is defined and item.proxy_host != '' and item.proxy_port is defined and item.proxy_port != ''%} -Dhttp.proxyHost={{ item.proxy_host }} -Dhttp.proxyPort={{ item.proxy_port }} -Dhttps.proxyHost={{ item.proxy_host }} -Dhttps.proxyPort={{ item.proxy_port }}  {% elif es_proxy_host is defined and es_proxy_host != '' %} -Dhttp.proxyHost={{ es_proxy_host }} -Dhttp.proxyPort={{ es_proxy_port }} -Dhttps.proxyHost={{ es_proxy_host }} -Dhttps.proxyPort={{ es_proxy_port }} {% endif %}"
+=======
+    ES_JAVA_OPTS: "{% if item.proxy_host is defined and item.proxy_host != '' and item.proxy_port is defined and item.proxy_port != ''%} -DproxyHost={{ item.proxy_host }} -DproxyPort={{ item.proxy_port }} {% elif es_proxy_host is defined and es_proxy_host != '' %} -DproxyHost={{ es_proxy_host }} -DproxyPort={{ es_proxy_port }} {% endif %}"
+>>>>>>> Simplify xpack and add support for es_use_shared_fs: false
   until: plugin_installed.rc == 0
   retries: 5
   delay: 5

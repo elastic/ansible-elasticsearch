@@ -1,0 +1,38 @@
+---
+# Add instance name to paths
+- set_fact: instance_default_file={{default_file | dirname}}/{{es_instance_name}}_{{default_file | basename}}
+- set_fact: instance_init_script={{init_script | dirname }}/{{es_instance_name}}_{{init_script | basename}}
+- set_fact: conf_dir={{ es_conf_dir }}/{{es_instance_name}}
+- set_fact: instance_sysd_script={{sysd_script | dirname }}/{{es_instance_name}}_{{sysd_script | basename}}
+- set_fact: instance_suffix={{inventory_hostname}}-{{ es_instance_name }}
+- set_fact: pid_dir={{ es_pid_dir }}/{{instance_suffix}}
+- set_fact: log_dir={{ es_log_dir }}/{{instance_suffix}}
+- set_fact: data_dirs={{ es_data_dirs | append_to_list('/'+instance_suffix) }}
+
+#Clean up un-wanted package scripts to avoid confusion
+
+- name: Delete Default Init
+  file: dest=/etc/init.d/elasticsearch state=absent
+
+- name: Delete Default Environment File
+  file: dest=/etc/default/elasticsearch state=absent
+  when: ansible_os_family == 'Debian'
+
+- name: Delete Default Environment File
+  file: dest=/etc/sysconfig/elasticsearch state=absent
+  when: ansible_os_family == 'RedHat'
+
+- name: Delete Default Sysconfig File
+  file: dest="{{ sysd_script }}" state=absent
+
+- name: Delete Default Configuration File
+  file: dest=/etc/elasticsearch/elasticsearch.yml state=absent
+
+- name: Delete Default Logging File
+  file: dest=/etc/elasticsearch/logging.yml state=absent
+
+- name: Delete Default Logging File
+  file: dest=/etc/elasticsearch/log4j2.properties state=absent
+
+- name: Delete Default JVM Options File
+  file: dest=/etc/elasticsearch/jvm.options state=absent

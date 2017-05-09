@@ -1,6 +1,7 @@
 ---
 es_major_version: "6.x"
 es_version: "6.1.3"
+es_instance_name: "{{ ansible_hostname }}"
 es_version_lock: false
 es_use_repository: true
 es_templates_fileglob: "files/templates/*.json"
@@ -18,9 +19,10 @@ es_user: elasticsearch
 es_group: elasticsearch
 es_config: {}
 es_config_log4j2: log4j2.properties.j2
+es_use_shared_fs: false
 #Need to provide default directories
 es_pid_dir: "/var/run/elasticsearch"
-es_data_dirs: "/var/lib/elasticsearch"
+es_data_dirs: ['/var/lib/elasticsearch']
 es_log_dir: "/var/log/elasticsearch"
 es_max_open_files: 65536
 es_max_threads: "{{ 2048 if ( es_version | version_compare('6.0.0', '<')) else 8192 }}"
@@ -28,17 +30,17 @@ es_max_map_count: 262144
 es_allow_downgrades: false
 es_enable_xpack: false
 es_xpack_features: ["alerting","monitoring","graph","ml","security"]
+es_xpack_file: "x-pack"
 #These are used for internal operations performed by ansible.
 #They do not affect the current configuration
 es_api_host: "localhost"
 es_api_port: 9200
 es_debian_startup_timeout: 10
 
-# Since ansible 2.2 the following variables need to be defined
-# to allow the role to be conditionally played with a when condition.
-pid_dir: ''
-log_dir: ''
-conf_dir: ''
-data_dirs: ''
+# These values get re-written if you set es_use_shared_fs to true
+pid_dir: "{{ es_pid_dir }}"
+log_dir: "{{ es_log_dir }}"
+conf_dir: "{{ es_conf_dir }}"
+data_dirs: "{{ es_data_dirs }}"
 # JVM custom parameters
 es_jvm_custom_parameters: ''

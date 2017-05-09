@@ -1,0 +1,12 @@
+---
+#Copy the instance specific init file
+- name: Copy Debian Init File for Instance
+  template: src=init/debian/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
+  when: ansible_os_family == 'Debian'
+  notify: restart elasticsearch
+
+#Copy the instance specific init file
+- name: Copy Redhat Init File for Instance
+  template: src=init/redhat/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
+  when: ansible_os_family == 'RedHat'
+  notify: restart elasticsearch

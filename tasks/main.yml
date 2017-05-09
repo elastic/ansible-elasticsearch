@@ -18,6 +18,9 @@
   tags:
       - install
 
+- include: elasticsearch-sharedfs.yml
+  when: es_use_shared_fs
+
 - include: elasticsearch-config.yml
   tags:
       - config

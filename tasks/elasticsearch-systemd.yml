@@ -1,0 +1,7 @@
+---
+#Copy the systemd specific file
+- name: Copy Systemd File for Instance
+  template: src=systemd/elasticsearch.j2 dest={{instance_sysd_script}} mode=0644 force=yes
+  notify:
+  - reload systemd configuration
+  - restart elasticsearch
