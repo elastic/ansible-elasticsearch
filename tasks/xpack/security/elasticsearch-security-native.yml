@@ -19,7 +19,7 @@
 #List current users
 - name: List Native Users
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user
+    url: "{{es_api_uri}}/_xpack/security/user"
     method: GET
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
@@ -39,7 +39,7 @@
 #Delete all non required users
 - name: Delete Native Users
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{item}}
+    url: "{{es_api_uri}}/_xpack/security/user/{{item}}"
     method: DELETE
     status_code: 200
     user: "{{es_api_basic_auth_username}}"
@@ -54,7 +54,7 @@
 #Overwrite all other users
 - name: Update Native Users
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{item.key}}
+    url: "{{es_api_uri}}/_xpack/security/user/{{item.key}}"
     method: POST
     body_format: json
     body: "{{item.value | to_json}}"
@@ -69,7 +69,7 @@
 #List current roles not. inc those reserved
 - name: List Native Roles
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role
+    url: "{{es_api_uri}}/_xpack/security/role"
     method: GET
     body_format: json
     user: "{{es_api_basic_auth_username}}"
@@ -90,7 +90,7 @@
 #Delete all non required roles
 - name: Delete Native Roles
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role/{{item}}
+    url: "{{es_api_uri}}/_xpack/security/role/{{item}}"
     method: DELETE
     status_code: 200
     user: "{{es_api_basic_auth_username}}"
@@ -106,7 +106,7 @@
 #Update other roles
 - name: Update Native Roles
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role/{{item.key}}
+    url: "{{es_api_uri}}/_xpack/security/role/{{item.key}}"
     method: POST
     body_format: json
     body: "{{item.value | to_json}}"

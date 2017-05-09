@@ -3,7 +3,7 @@
 - name: Activate ES license (without security authentication)
   uri:
     method: PUT
-    url: "http://{{es_api_host}}:{{es_api_port}}/_license?acknowledge=true"
+    url: "{{es_api_uri}}/_license?acknowledge=true"
     body_format: json
     body: "{{ es_xpack_license }}"
     return_content: yes
@@ -18,7 +18,7 @@
 - name: Activate ES license (with security authentication)
   uri:
     method: PUT
-    url: "http://{{es_api_host}}:{{es_api_port}}/_license?acknowledge=true"
+    url: "{{es_api_uri}}/_license?acknowledge=true"
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     body_format: json
