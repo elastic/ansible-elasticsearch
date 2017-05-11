@@ -50,7 +50,7 @@ The use of a map ensures the Ansible playbook does not need to be updated to ref
 
 In addition to the es_config map, several other parameters are supported for additional functions e.g. script installation.  These can be found in the role's defaults/main.yml file.
 
-The following illustrates applying configuration parameters to an Elasticsearch instance.  By default, Elasticsearch 5.1.2is installed.
+The following illustrates applying configuration parameters to an Elasticsearch instance.  By default, Elasticsearch 5.2.2 is installed.
 
 ```
 - name: Elasticsearch with custom configuration
