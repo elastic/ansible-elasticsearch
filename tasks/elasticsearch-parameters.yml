@@ -28,7 +28,7 @@
 - set_fact: conf_dir={{ es_conf_dir }}/{{es_instance_name}}
 - set_fact: m_lock_enabled={{ es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True }}
 
-#TODO - if transport.host is not local maybe error on boostrap checks
+#TODO - if transport.host is not local maybe error on bootstrap checks
 
 
 #Use systemd for the following distributions:
