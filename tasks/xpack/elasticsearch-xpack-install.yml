@@ -2,6 +2,7 @@
 
 #Test if feature is installed
 - shell: "{{es_home}}/bin/elasticsearch-plugin list | grep x-pack"
+  become: yes
   register: x_pack_installed
   changed_when: False
   failed_when: "'ERROR' in x_pack_installed.stdout"
@@ -14,6 +15,7 @@
 
 #Remove X-Pack if installed and its not been requested or the ES version has changed
 - name: Remove x-pack plugin
+  become: yes
   command: "{{es_home}}/bin/elasticsearch-plugin remove x-pack"
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
@@ -27,6 +29,7 @@
 
 #Install plugin if not installed, or the es version has changed (so removed above), and its been requested
 - name: Install x-pack plugin
+  become: yes
   command: >
     {{es_home}}/bin/elasticsearch-plugin install --silent --batch x-pack {% if es_proxy_host is defined and es_proxy_host != '' %} -Dhttp.proxyHost={{ es_proxy_host }} -Dhttp.proxyPort={{ es_proxy_port }} {% endif %}
   register: xpack_state

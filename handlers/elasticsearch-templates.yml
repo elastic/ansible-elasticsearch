@@ -1,12 +1,15 @@
 ---
 
 - name: Ensure elasticsearch is started
+  become: yes
   service: name={{instance_init_script | basename}} state=started enabled=yes
 
 - name: Wait for elasticsearch to startup
+  become: yes
   wait_for: host={{es_api_host}} port={{es_api_port}} delay=10
 
 - name: Get template files
+  become: yes
   find: paths="/etc/elasticsearch/templates" patterns="*.json"
   register: templates
 

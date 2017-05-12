@@ -1,5 +1,6 @@
 ---
 - name: Debian - hold elasticsearch version
+  become: yes
   command: apt-mark hold elasticsearch
   register: hold_elasticsearch_result
   changed_when: "hold_elasticsearch_result.stdout != 'elasticsearch was already set on hold.'"

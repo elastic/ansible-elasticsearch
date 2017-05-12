@@ -1,13 +1,16 @@
 ---
 
-- file: path=/etc/elasticsearch/templates state=directory owner={{ es_user }} group={{ es_group }}
+- become: yes
+  file: path=/etc/elasticsearch/templates state=directory owner={{ es_user }} group={{ es_group }}
 
 - name: Copy default templates to elasticsearch
+  become: yes
   copy: src=templates dest=/etc/elasticsearch/ owner={{ es_user }} group={{ es_group }}
   notify: load-templates
   when: es_templates_fileglob is not defined
 
 - name: Copy templates to elasticsearch
+  become: yes
   copy: src={{ item }} dest=/etc/elasticsearch/templates owner={{ es_user }} group={{ es_group }}
   notify: load-templates
   with_fileglob:
