@@ -48,6 +48,10 @@ LimitNOFILE={{es_max_open_files}}
 LimitMEMLOCK=infinity
 {% endif %}
 
+# Specifies the maximum number of threads that can be started.  Elasticsearch requires a
+# minimum of 2048.
+LimitNPROC={{ es_max_threads }}
+
 # Disable timeout logic and wait until process is stopped
 TimeoutStopSec=0
 
