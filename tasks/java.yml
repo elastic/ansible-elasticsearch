@@ -15,7 +15,7 @@
   when: ansible_os_family == 'Debian'
 
 - name: Debian - Ensure Java is installed
-  apt: name={{ java }} state={{java_state}}
+  apt: name={{ java }} state={{java_state}} default_release=jessie-backports
   when: ansible_os_family == 'Debian'
 
 - shell: java -version 2>&1 | grep OpenJDK
