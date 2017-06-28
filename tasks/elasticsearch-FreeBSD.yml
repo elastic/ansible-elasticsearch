@@ -1,0 +1,11 @@
+- name: FreeBSD - Install elasticsearch5 package
+  pkgng:
+    name: "elasticsearch5"
+    state: present
+  when: "{{es_version | version_compare('5.0', '>')}}"
+
+- name: FreeBSD - Install elasticsearch2 package
+  pkgng:
+    name: "elasticsearch2"
+    state: present
+  when: "{{es_version | version_compare('5.0', '<')}}"

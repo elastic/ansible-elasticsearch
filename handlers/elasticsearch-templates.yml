@@ -7,7 +7,7 @@
   wait_for: host={{es_api_host}} port={{es_api_port}} delay=10
 
 - name: Get template files
-  find: paths="/etc/elasticsearch/templates" patterns="*.json"
+  find: paths="{{es_conf_dir}}/templates" patterns="*.json"
   register: templates
 
 - name: Install templates without auth

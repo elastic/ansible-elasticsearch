@@ -24,6 +24,7 @@
 #Copy the instance specific default file
 - name: Copy Default File for Instance
   template: src=elasticsearch.j2 dest={{instance_default_file}} mode=0644 force=yes
+  when: ansible_os_family != 'FreeBSD'
   notify: restart elasticsearch
 
 #Copy the instance specific init file
@@ -36,6 +37,12 @@
 - name: Copy Redhat Init File for Instance
   template: src=init/redhat/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
   when: ansible_os_family == 'RedHat' and not use_system_d
+  notify: restart elasticsearch
+
+#Copy the instance specific rc.d file
+- name: Copy FreeBSD init.d File for Instance
+  template: src=rc.d/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
+  when: ansible_os_family == 'FreeBSD'
   notify: restart elasticsearch
 
 #Copy the systemd specific file if systemd is installed
@@ -71,14 +78,17 @@
 - name: Delete Default Sysconfig File
   file: dest="{{ sysd_script }}" state=absent
 
+- name: Delete Default rc.d File
+  file: dest=/usr/local/etc/rc.d/elasticsearch state=absent
+
 - name: Delete Default Configuration File
-  file: dest=/etc/elasticsearch/elasticsearch.yml state=absent
+  file: dest="{{ es_conf_dir }}/elasticsearch.yml" state=absent
 
 - name: Delete Default Logging File
-  file: dest=/etc/elasticsearch/logging.yml state=absent
+  file: dest="{{ es_conf_dir }}/logging.yml" state=absent
 
 - name: Delete Default Logging File
-  file: dest=/etc/elasticsearch/log4j2.properties state=absent
+  file: dest="{{ es_conf_dir }}/log4j2.properties" state=absent
 
 - name: Delete Default JVM Options File
-  file: dest=/etc/elasticsearch/jvm.options state=absent
+  file: dest="{{ es_conf_dir }}/jvm.options" state=absent

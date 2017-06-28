@@ -1,0 +1,78 @@
+#!/bin/sh
+#
+# $FreeBSD$
+#
+# PROVIDE: elasticsearch-{{ es_instance_name }}
+# REQUIRE: NETWORKING SERVERS
+# BEFORE: DAEMON
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name=elasticsearch_{{ es_instance_name }}
+rcvar=elasticsearch_{{ es_instance_name }}_enable
+
+load_rc_config ${name}
+
+: ${elasticsearch_{{ es_instance_name }}_enable:="NO"}
+: ${elasticsearch_{{ es_instance_name }}_user:={{ es_user }}}
+: ${elasticsearch_{{ es_instance_name }}_group:={{ es_group }}}
+
+pidfile=/var/run/elasticsearch/localhost-{{ es_instance_name }}/elasticsearch.pid
+elasticsearch_{{ es_instance_name }}_env="ES_JVM_OPTIONS=/usr/local/etc/elasticsearch/{{ es_instance_name }}/jvm.options"
+elasticsearch_{{ es_instance_name }}_env="${elasticsearch_{{ es_instance_name }}_env} elasticsearch_config=/usr/local/etc/elasticsearch/{{ es_instance_name }}"
+
+command={{es_home}}/bin/elasticsearch
+command_args="--daemonize --pidfile ${pidfile}"
+command_interpreter_execution="/usr/local/bin/java"
+
+status_cmd="elasticsearch_status"
+stop_cmd="elasticsearch_stop"
+
+elasticsearch_stop()
+{
+	rc_pid=$(elasticsearch_check_pidfile $pidfile)
+
+	if [ -z "$rc_pid" ]; then
+		[ -n "$rc_fast" ] && return 0
+		echo "${name} not running? (check $pidfile)."
+		return 1
+	fi
+
+	echo "Stopping ${name}."
+	kill ${rc_pid} 2> /dev/null
+}
+
+elasticsearch_status()
+{
+	rc_pid=$(elasticsearch_check_pidfile $pidfile)
+
+	if [ -z "$rc_pid" ]; then
+		[ -n "$rc_fast" ] && return 0
+		echo "${name} not running? (check $pidfile)."
+		return 1
+	fi
+	echo "${name} is running as pid ${rc_pid}."
+}
+
+elasticsearch_check_pidfile()
+{
+	_pidfile=$1
+	if [ -z "$_pidfile" ]; then
+		err 3 'USAGE: elasticsearch_check_pidfile pidfile'
+	fi
+	if [ ! -f $_pidfile ]; then
+		debug "pid file ($_pidfile): not readable."
+		return
+	fi
+	read _pid _junk < $_pidfile
+	if [ -z "$_pid" ]; then
+		debug "pid file ($_pidfile): no pid in file."
+		return
+	fi
+	if [ -n "`/usr/bin/su -m ${elasticsearch_{{ es_instance_name }}_user} -c '/usr/local/bin/jps -l' | grep -e "^$_pid"`" ]; then
+		echo -n $_pid
+	fi
+}
+
+run_rc_command "$1"

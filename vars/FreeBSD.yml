@@ -1,0 +1,6 @@
+---
+java: "{% if es_java is defined %}{{es_java}}{% else %}openjdk8-jre{% endif %}"
+es_conf_dir: "/usr/local/etc/elasticsearch"
+es_home: /usr/local/lib/elasticsearch
+init_script: /usr/local/etc/rc.d/elasticsearch
+default_file: "{{ es_conf_dir }}/elasticsearch.yml"
