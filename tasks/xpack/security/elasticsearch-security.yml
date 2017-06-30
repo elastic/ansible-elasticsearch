@@ -28,3 +28,6 @@
   file: path={{ conf_dir }}/security state=directory owner={{ es_user }} group={{ es_group }}
   changed_when: False
   when: es_enable_xpack and '"security" in es_xpack_features'
+
+- include: elasticsearch-security-certificates.yml
+  when: (es_enable_xpack and '"security" in es_xpack_features')

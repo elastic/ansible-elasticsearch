@@ -1,0 +1,33 @@
+---
+- set_fact: es_xpack_enable_tls=true
+  when: ((es_xpack_ssl_key_src != '') and (es_xpack_ssl_certificate_src != '') and (es_xpack_ssl_certificate_authorities_src != ''))
+
+- set_fact: es_xpack_enable_tls=false
+  when: ((es_xpack_ssl_key_src == '') and (es_xpack_ssl_certificate_src == '') and (es_xpack_ssl_certificate_authorities_src == ''))
+
+- fail:
+    msg: "es_xpack_ssl_key_src, es_xpack_ssl_certificate_src and es_xpack_ssl_certificate_authorities_src must all be provided to enable TLS"
+  when: es_xpack_enable_tls is not defined
+
+- file: path={{ conf_dir }}/security/certs state=directory owner={{ es_user }} group={{ es_group }}
+  changed_when: False
+  when: es_enable_xpack and '"security" in es_xpack_features' and es_xpack_enable_tls
+
+- set_fact: 
+    es_xpack_ssl_key_path: "{{ conf_dir }}/security/certs/{{ es_xpack_ssl_key_src | basename }}"
+    es_xpack_ssl_certificate_path: "{{ conf_dir }}/security/certs/{{ es_xpack_ssl_certificate_src | basename }}"
+    es_xpack_ssl_certificate_authorities_path: "{{ conf_dir }}/security/certs/{{ es_xpack_ssl_certificate_authorities_src | basename }}"
+  when: es_xpack_enable_tls
+
+- copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
+    mode: 0400
+    remote_src: "{{ es_xpack_certificates_on_host }}"
+  with_items:
+    - { src: "{{ es_xpack_ssl_key_src }}", dest: "{{ es_xpack_ssl_key_path }}" }
+    - { src: "{{ es_xpack_ssl_certificate_src }}", dest: "{{ es_xpack_ssl_certificate_path }}" }
+    - { src: "{{ es_xpack_ssl_certificate_authorities_src }}", dest: "{{ es_xpack_ssl_certificate_authorities_path }}" }
+  when: es_xpack_enable_tls

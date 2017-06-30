@@ -24,6 +24,14 @@ path.logs: {{ log_dir }}
 xpack.security.enabled: false
 {% endif %}
 
+{% if ("security" in es_xpack_features) and (es_xpack_ssl_key_src != '') %}
+xpack.ssl.key: {{ es_xpack_ssl_key_path }}
+xpack.ssl.certificate: {{ es_xpack_ssl_certificate_path }}
+xpack.ssl.certificate_authorities: [ {{ es_xpack_ssl_certificate_authorities_path }} ]
+xpack.security.transport.ssl.enabled: true
+xpack.security.http.ssl.enabled: true
+{% endif %}
+
 {% if not "monitoring" in es_xpack_features %}
 xpack.monitoring.enabled: false
 {% endif %}

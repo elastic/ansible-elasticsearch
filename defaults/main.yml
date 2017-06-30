@@ -25,6 +25,10 @@ es_max_map_count: 262144
 es_allow_downgrades: false
 es_enable_xpack: false
 es_xpack_features: ["alerting","monitoring","graph","security"]
+es_xpack_ssl_key_src: ''
+es_xpack_ssl_certificate_src: ''
+es_xpack_ssl_certificate_authorities_src: ''
+es_xpack_certificates_on_host: 'no'
 #These are used for internal operations performed by ansible.
 #They do not effect the current configuration
 es_api_host: "localhost"
