@@ -30,11 +30,6 @@ es_xpack_ssl_certificate_src: ''
 es_xpack_ssl_certificate_authorities_src: ''
 es_xpack_certificates_on_host: 'no'
 
-es_xpack_monitoring_datastore_host: ""
-es_xpack_monitoring_metrics_datastore_port: ""
-es_xpack_monitoring_metrics_datastore_protocol: ""
-es_xpack_monitoring_metrics_datastore_user: ""
-es_xpack_monitoring_metrics_datastore_password: ""
 #These are used for internal operations performed by ansible.
 #They do not effect the current configuration
 es_api_host: "localhost"

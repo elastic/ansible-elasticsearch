@@ -36,15 +36,6 @@ xpack.security.http.ssl.enabled: true
 xpack.monitoring.enabled: false
 {% endif %}
 
-{% if ("monitoring" in es_xpack_features) and (es_xpack_monitoring_metrics_datastore_host != '') %}
-xpack.monitoring.exporters.id1.type: {{ es_xpack_monitoring_metrics_datastore_protocol }}
-xpack.monitoring.exporters.id1.host: ['{{ es_xpack_monitoring_metrics_datastore_protocol }]://{{ es_xpack_monitoring_metrics_datastore_host }}:{{ es_xpack_monitoring_metrics_datastore_port }}'] 
-{% endif %}
-{% if ("monitoring" in es_xpack_features) and (es_xpack_monitoring_metrics_datastore_user != '') %}
-xpack.monitoring.exporters.id1.auth.username: {{ es_xpack_monitoring_metrics_datastore_user }}
-xpack.monitoring.exporters.id1.auth.password: {{ es_xpack_monitoring_metrics_datastore_password }}
-{% endif %}
-
 {% if not "alerting" in es_xpack_features %}
 xpack.watcher.enabled: false
 {% endif %}
