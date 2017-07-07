@@ -25,6 +25,10 @@ es_max_map_count: 262144
 es_allow_downgrades: false
 es_enable_xpack: false
 es_xpack_features: ["alerting","monitoring","graph","security"]
+
+# These are used for specifying the location of certificat and
+# key files to be deployed when setting up X-Pack security.
+# Leave as empty strings in order to skip installation.
 es_xpack_ssl_key_src: ''
 es_xpack_ssl_certificate_src: ''
 es_xpack_ssl_certificate_authorities_src: ''
