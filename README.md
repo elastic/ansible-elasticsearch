@@ -19,7 +19,7 @@ e.g.
 
 ```
 cd /my/repos/
-git clone git@github.com:elastic/ansible-elasticsearch.git
+git clone https://github.com/elastic/ansible-elasticsearch.git
 cd /my/ansible/playbook
 mkdir -p roles
 ln -s /my/repos/ansible-elasticsearch ./roles/elasticsearch
