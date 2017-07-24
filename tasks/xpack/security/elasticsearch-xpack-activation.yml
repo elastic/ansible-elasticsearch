@@ -34,4 +34,4 @@
     license_activated.json.license_status != 'valid'
 
 - debug:
-    msg: "License: {{ license_activated.content }}"
+    msg: "License: {{ license_activated }}"
