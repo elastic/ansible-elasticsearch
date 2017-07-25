@@ -38,3 +38,8 @@ conf_dir: ''
 data_dirs: ''
 # JVM custom parameters
 es_jvm_custom_parameters: ''
+
+#Log4j2 parameters
+es_log4j2_logfile_size_control: false
+#es_log4j2_logfile_size: "512 MB"
+#es_log4j2_logfile_max_count: 10
