@@ -406,7 +406,7 @@ Elasticsearch restarted where required.
 
 * If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 5.x.
 * If no plugins are listed in the playbook for a node, all currently installed plugins will be removed.
-* The role does not currently support automatic detection of differences between installed and listed plugins (other than if none are listed).   Should users wish to change installed plugins should set es_plugins_reinstall to true.  This will cause all currently installed plugins to be removed and those listed to be installed.  Change detection will be implemented in future releases.
+* The role supports automatic detection of differences between installed and listed plugins - installing those listed but not installed, and removing those installed but not listed.   Should users wish to re-install plugins they should set es_plugins_reinstall to true.  This will cause all currently installed plugins to be removed and those listed to be installed.
 
 ## Questions on Usage
 
