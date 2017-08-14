@@ -6,29 +6,29 @@
 - name: Wait for elasticsearch to startup
   wait_for: host={{es_api_host}} port={{es_api_port}} delay=10
 
-- name: Get template files
-  find: paths="/etc/elasticsearch/templates" patterns="*.json"
-  register: templates
-
 - name: Install templates without auth
   uri:
-    url: "http://{{es_api_host}}:{{es_api_port}}/_template/{{item.path | filename}}"
+    url: "http://{{es_api_host}}:{{es_api_port}}/_template/{{item | filename}}"
     method: PUT
     status_code: 200
     body_format: json
-    body: "{{ lookup('file', item.path) }}"
+    body: "{{ lookup('file', item) }}"
   when: not es_enable_xpack or not es_xpack_features is defined or "security" not in es_xpack_features
-  with_items: "{{ templates.files }}"
+  with_fileglob:
+    - "{{ es_templates_fileglob | default('') }}"
+  run_once: True
 
 - name: Install templates with auth
   uri:
-    url: "http://{{es_api_host}}:{{es_api_port}}/_template/{{item.path | filename}}"
+    url: "http://{{es_api_host}}:{{es_api_port}}/_template/{{item | filename}}"
     method: PUT
     status_code: 200
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
     body_format: json
-    body: "{{ lookup('file', item.path) }}"
+    body: "{{ lookup('file', item) }}"
   when: es_enable_xpack and es_xpack_features is defined and "security" in es_xpack_features
-  with_items: "{{ templates.files }}"
+  with_fileglob:
+    - "{{ es_templates_fileglob | default('') }}"
+  run_once: True
