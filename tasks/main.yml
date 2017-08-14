@@ -46,6 +46,7 @@
 
 - name: Wait for elasticsearch to startup
   wait_for: host={{es_api_host}} port={{es_api_port}} delay=5 connect_timeout=1
+  when: es_restarted is defined and es_restarted.changed
 
 - name: activate-license
   include: ./xpack/security/elasticsearch-xpack-activation.yml
