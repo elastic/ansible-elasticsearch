@@ -26,6 +26,8 @@ ExecStart={{es_home}}/bin/elasticsearch \
                                     -Edefault.path.data=${DATA_DIR} \
                                     -Edefault.path.conf=${CONF_DIR}
 
+Restart=always
+RestartSec=5
 
 # StandardOutput is configured to redirect to journalctl since
 # some error messages may be logged in standard output before
