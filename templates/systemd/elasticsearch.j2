@@ -1,5 +1,5 @@
 [Unit]
-Description=Elasticsearch-{{es_instance_name}}
+Description=Elasticsearch Server{{' - ' + es_instance_name if es_instance_name else ''}}
 Documentation=http://www.elastic.co
 Wants=network-online.target
 After=network-online.target
