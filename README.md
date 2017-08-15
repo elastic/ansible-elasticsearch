@@ -385,7 +385,7 @@ To define proxy only for a particular plugin during its installation:
       proxy_port: 8080
 ```
 
-> For plugins installation, proxy_host and proxy_port are used first if they are defined and fallback to the global proxy settings if not.
+> For plugins installation, proxy_host and proxy_port are used first if they are defined and fallback to the global proxy settings if not. The same values are currently used for both the http and https proxy settings.
 
 ## Notes
 
