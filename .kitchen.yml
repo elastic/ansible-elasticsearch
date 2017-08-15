@@ -14,8 +14,8 @@ provisioner:
   http_proxy: <%= ENV['HTTP_PROXY'] %>
   https_proxy: <%= ENV['HTTPS_PROXY'] %>
   no_proxy: localhost,127.0.0.1
-  ignore_extensions_from_root: [".git"]
-  ignore_paths_from_root: [".git"]
+  ignore_extensions_from_root: [".git",".idea",".kitchen.yml"]
+  ignore_paths_from_root: [".git",".idea",".kitchen"]
 
 platforms:
   - name: ubuntu-14.04
