@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-shared_examples 'standard::init' do |es_version|
+shared_examples 'standard::init' do |es_version,plugins|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -74,6 +74,18 @@ shared_examples 'standard::init' do |es_version|
   describe file('/etc/elasticsearch/logging.yml') do
     it { should_not exist }
   end
+
+  for plugin in plugins
+    describe file('/usr/share/elasticsearch/plugins/'+plugin) do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
+    #confirm plugins are installed and the correct version
+    describe command('curl -s localhost:9200/_nodes/plugins | grep \'"name":"'+plugin+'","version":"'+es_version+'"\'') do
+      its(:exit_status) { should eq 0 }
+    end
+  end
+
 
 end
 
