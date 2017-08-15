@@ -14,11 +14,17 @@ appender.rolling.name = rolling
 appender.rolling.fileName = ${sys:es.logs}.log
 appender.rolling.layout.type = PatternLayout
 appender.rolling.layout.pattern = [%d{ISO8601}][%-5p][%-25c{1.}] %marker%.-10000m%n
-appender.rolling.filePattern = ${sys:es.logs}-%d{yyyy-MM-dd}.log
+appender.rolling.filePattern = ${sys:es.logs}-%d{yyyy-MM-dd}-%i.log
 appender.rolling.policies.type = Policies
 appender.rolling.policies.time.type = TimeBasedTriggeringPolicy
 appender.rolling.policies.time.interval = 1
 appender.rolling.policies.time.modulate = true
+{% if es_log4j2_logfile_size_control == true %}
+appender.deprecation_rolling.policies.size.type = SizeBasedTriggeringPolicy
+appender.deprecation_rolling.policies.size.size = {{ es_log4j2_logfile_size }}
+appender.deprecation_rolling.strategy.type = DefaultRolloverStrategy
+appender.deprecation_rolling.strategy.max = {{ es_log4j2_logfile_max_count }}
+{% endif %}
 
 rootLogger.level = info
 rootLogger.appenderRef.console.ref = console
