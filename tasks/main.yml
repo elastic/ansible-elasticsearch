@@ -44,6 +44,9 @@
 
 - meta: flush_handlers
 
+- name: Make sure elasticsearch is started
+  service: name={{instance_init_script | basename}} state=started enabled=yes
+
 - name: Wait for elasticsearch to startup
   wait_for: host={{es_api_host}} port={{es_api_port}} delay=5 connect_timeout=1
   when: es_restarted is defined and es_restarted.changed
