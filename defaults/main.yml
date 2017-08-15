@@ -20,6 +20,7 @@ es_config: {}
 es_pid_dir: "/var/run/elasticsearch"
 es_data_dirs: "/var/lib/elasticsearch"
 es_log_dir: "/var/log/elasticsearch"
+es_repo_dirs: {}
 es_max_open_files: 65536
 es_max_map_count: 262144
 es_allow_downgrades: false
