@@ -302,10 +302,10 @@ es_roles:
             - create_index
 ```                
                 
-* ```es_xpack_license``` - X-Pack license.  The license should be declared as a json blob.  Alternative use Ansible vault or copy the license to the target machine as part of a playbook and access via a lookup e.g.
+* ```es_xpack_license``` - X-Pack license. The license is a json blob. Set the variable directly (possibly protected by Ansible vault) or from a file in the Ansible project on the control machine via a lookup:
 
 ```
-es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
+es_xpack_license: "{{ lookup('file', playbook_dir + '/files/' + es_cluster_name + '/license.json') }}"
 ``` 
 
 X-Pack configuration parameters can be added to the elasticsearch.yml file using the normal `es_config` parameter.
