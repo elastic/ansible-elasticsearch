@@ -16,4 +16,5 @@
 
 - name: load-templates
   include: ./handlers/elasticsearch-templates.yml
-  when: es_templates
+  #only do templates if we're starting
+  when: es_templates and es_start_service
