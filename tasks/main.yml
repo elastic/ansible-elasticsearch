@@ -42,6 +42,18 @@
   tags:
       - templates
 
+- name: reload systemd configuration
+  command: systemctl daemon-reload
+
+# Restart service and ensure it is enabled
+- name: restart elasticsearch
+  service: name={{instance_init_script | basename}} state=restarted enabled=yes
+  when:
+    - es_restart_on_change
+    - es_start_service
+    - ((plugin_installed is defined and plugin_installed.changed) or (config_updated is defined and config_updated.changed) or (xpack_state.changed) or (debian_elasticsearch_install_from_repo.changed or redhat_elasticsearch_install_from_repo.changed or elasticsearch_install_from_package.changed))
+  register: es_restarted
+
 - meta: flush_handlers
 
 - name: Make sure elasticsearch is started
