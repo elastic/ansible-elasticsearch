@@ -66,10 +66,9 @@ platforms:
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
         - rm /etc/yum.repos.d/epel*repo /etc/yum.repos.d/puppetlabs-pc1.repo
         - yum -y install initscripts
-        - yum clean all
-        - pip install --upgrade pip
-        - pip install jmespath
         - yum -y remove ansible
+        - yum clean all
+        - pip install jmespath
       volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
       run_command: "/usr/sbin/init"
       privileged: true
