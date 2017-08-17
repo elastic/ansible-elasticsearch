@@ -11,6 +11,9 @@ Ansible role for 5.x Elasticsearch.  Currently this works on Debian and RedHat b
 
 The latest Elasticsearch versions of 5.x are actively tested.  **Only Ansible versions > 2.3.2 are supported, as this is currently the only version tested.**
 
+##### Dependency
+This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
+
 ## Usage
 
 Create your Ansible playbook with your own tasks, and include the role elasticsearch.  You will have to have this repository accessible within the context of playbook, e.g.
