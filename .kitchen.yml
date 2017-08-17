@@ -17,6 +17,9 @@ provisioner:
   ignore_extensions_from_root: [".git",".idea",".kitchen.yml"]
   ignore_paths_from_root: [".git",".idea",".kitchen"]
 
+transport:
+  max_ssh_sessions: 6
+
 platforms:
   - name: ubuntu-14.04
     driver_config:
