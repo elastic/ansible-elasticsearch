@@ -5,6 +5,9 @@
 # Elasticsearch home directory
 ES_HOME={{es_home}}
 
+# Elasticsearch Java path
+#JAVA_HOME=
+
 # Elasticsearch configuration directory
 CONF_DIR={{conf_dir}}
 
@@ -56,7 +59,7 @@ MAX_OPEN_FILES={{es_max_open_files}}
 
 # The maximum number of bytes of memory that may be locked into RAM
 # Set to "unlimited" if you use the 'bootstrap.memory_lock: true' option
-# in elasticsearch.yml (ES_HEAP_SIZE  must also be set).
+# in elasticsearch.yml
 # When using Systemd, the LimitMEMLOCK property must be set
 # in /usr/lib/systemd/system/elasticsearch.service
 #MAX_LOCKED_MEMORY=
