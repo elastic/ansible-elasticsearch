@@ -17,6 +17,7 @@ es_templates: false
 es_user: elasticsearch
 es_group: elasticsearch
 es_config: {}
+es_config_log4j2: log4j2.properties.j2
 #Need to provide default directories
 es_pid_dir: "/var/run/elasticsearch"
 es_data_dirs: "/var/lib/elasticsearch"

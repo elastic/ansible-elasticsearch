@@ -48,7 +48,7 @@
 
 #Copy the logging.yml
 - name: Copy log4j2.properties File for Instance
-  template: src=log4j2.properties.j2 dest={{conf_dir}}/log4j2.properties owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src={{es_config_log4j2}} dest={{conf_dir}}/log4j2.properties owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   notify: restart elasticsearch
 
 - name: Copy jvm.options File for Instance
