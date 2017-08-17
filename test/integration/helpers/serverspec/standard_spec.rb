@@ -22,6 +22,7 @@ shared_examples 'standard::init' do |es_version,plugins|
   describe file('/etc/elasticsearch/node1/log4j2.properties') do
     it { should be_file }
     it { should be_owned_by 'elasticsearch' }
+    it { should_not contain 'CUSTOM LOG4J FILE' }
   end
 
   describe file('/etc/elasticsearch/node1/jvm.options') do

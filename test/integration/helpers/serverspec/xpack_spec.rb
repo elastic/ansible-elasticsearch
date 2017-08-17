@@ -137,11 +137,11 @@ shared_examples 'xpack::init' do |es_version,plugins|
 
 
   #Test native roles and users are loaded
-  describe command('curl -s localhost:9200/_xpack/security/user -u es_admin:changeMeAgain | md5sum | grep 74bcc9f9534b253c1204e264df21496c') do
+  describe command('curl -s localhost:9200/_xpack/security/user -u es_admin:changeMeAgain | md5sum | grep b6a1293c343e745a508c74778c9be8bb') do
     its(:exit_status) { should eq 0 }
   end
 
-  describe command('curl -s localhost:9200/_xpack/security/role -u es_admin:changeMeAgain | md5sum | grep 2bf3ffbb9cabf26bb25de6334c4da323') do
+  describe command('curl -s localhost:9200/_xpack/security/role -u es_admin:changeMeAgain | md5sum | grep 44b97844bd8b31d5573493a99ef62106') do
     its(:exit_status) { should eq 0 }
   end
 

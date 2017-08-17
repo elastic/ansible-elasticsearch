@@ -8,7 +8,7 @@
   vars:
     es_heap_size: "1g"
     es_templates: true
-    es_version: "5.1.2"
+    es_version: "5.4.0"
     es_enable_xpack: true
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
     es_plugins:
@@ -90,7 +90,7 @@
   vars:
     es_heap_size: "1g"
     es_templates: true
-    es_version: "5.2.2"
+    es_version: "5.5.1"
     es_enable_xpack: true
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
     es_plugins:
