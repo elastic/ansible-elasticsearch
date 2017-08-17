@@ -145,5 +145,13 @@ shared_examples 'config::init' do |es_version,plugins|
       it { should be_file }
     end
   end
+
+  describe file('/etc/elasticsearch/node1/log4j2.properties') do
+    it { should be_file }
+    it { should be_owned_by 'elasticsearch' }
+    it { should contain 'CUSTOM LOG4J FILE' }
+  end
+
+
 end
 
