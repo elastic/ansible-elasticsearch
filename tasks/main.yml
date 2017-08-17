@@ -37,15 +37,11 @@
   tags:
       - xpack
 
-- include: elasticsearch-template-copy.yml
-  when: es_templates
-  tags:
-      - templates
-
 - meta: flush_handlers
 
-- include: elasticsearch-template-insert.yml
-  when: load_templates
+#Templates done after restart - handled by flushing the handlers. e.g. suppose user removes security on a running node and doesn't specify es_api_basic_auth_username and es_api_basic_auth_password.  The templates will subsequently not be removed if we don't wait for the node to restart.
+- include: elasticsearch-template.yml
+  when: es_templates
   tags:
       - templates
 

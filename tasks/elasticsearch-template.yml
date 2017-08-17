@@ -1,12 +1,21 @@
-#Templates done after restart therefore. e.g. suppose user removes security on a running node and doesn't specify es_api_basic_auth_username and es_api_basic_auth_password.  The templates will subsequently not be removed if we don't wait for the node to restart.
+---
+
+- file: path=/etc/elasticsearch/templates state=directory owner={{ es_user }} group={{ es_group }}
+
+- name: Copy templates to elasticsearch
+  copy: src={{ item }} dest=/etc/elasticsearch/templates owner={{ es_user }} group={{ es_group }}
+  register: load_templates
+  with_fileglob:
+    - "{{ es_templates_fileglob | default('') }}"
+
 
 - name: Ensure elasticsearch is started
   service: name={{instance_init_script | basename}} state=started enabled=yes
-  when: es_start_service
+  when: es_start_service and load_templates.changed
 
 - name: Wait for elasticsearch to startup
   wait_for: host={{es_api_host}} port={{es_api_port}} delay=10
-  when: es_start_service
+  when: es_start_service and load_templates.changed
 
 - name: Install templates without auth
   uri:
@@ -15,7 +24,7 @@
     status_code: 200
     body_format: json
     body: "{{ lookup('file', item) }}"
-  when: es_start_service and not es_enable_xpack or not es_xpack_features is defined or "security" not in es_xpack_features
+  when: load_templates.changed and es_start_service and not es_enable_xpack or not es_xpack_features is defined or "security" not in es_xpack_features
   with_fileglob:
     - "{{ es_templates_fileglob | default('') }}"
   run_once: True
@@ -30,7 +39,7 @@
     force_basic_auth: yes
     body_format: json
     body: "{{ lookup('file', item) }}"
-  when: es_start_service and es_enable_xpack and es_xpack_features is defined and "security" in es_xpack_features
+  when: load_templates.changed and es_start_service and es_enable_xpack and es_xpack_features is defined and "security" in es_xpack_features
   with_fileglob:
     - "{{ es_templates_fileglob | default('') }}"
   run_once: True

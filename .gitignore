@@ -7,3 +7,4 @@ Converging
 TODO
 .idea/
 elasticsearch.iml
+!/vars/RedHat.yml
