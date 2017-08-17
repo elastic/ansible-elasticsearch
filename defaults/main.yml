@@ -3,7 +3,7 @@ es_major_version: "5.x"
 es_version: "5.5.1"
 es_version_lock: false
 es_use_repository: true
-es_templates_fileglob: "./files/templates/*"
+es_templates_fileglob: "files/templates/*.json"
 es_apt_key: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
 es_apt_url: "deb https://artifacts.elastic.co/packages/{{ es_major_version }}/apt stable main"
 es_apt_url_old: "deb http://packages.elastic.co/elasticsearch/{{ es_major_version }}/debian stable main"
