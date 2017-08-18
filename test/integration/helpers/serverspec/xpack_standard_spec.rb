@@ -30,6 +30,9 @@ shared_examples 'xpack_standard::init' do |es_version,plugins|
     it { should contain 'path.conf: /etc/elasticsearch/security_node' }
     it { should contain 'path.data: /var/lib/elasticsearch/localhost-security_node' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-security_node' }
+    it { should contain 'xpack.security.enabled: false' }
+    it { should contain 'xpack.watcher.enabled: false' }
+
   end
 
   describe 'Node listening' do
@@ -124,9 +127,12 @@ shared_examples 'xpack_standard::init' do |es_version,plugins|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  #This in effect tests the right features are enabled
-  describe command('curl -s localhost:9200/_xpack | md5sum | grep 72349eaf0273b32f3b33a6e9ea193bbe') do
-    its(:exit_status) { should eq 0 }
+  describe command('curl -s localhost:9200/_xpack') do
+    its(:stdout_as_json) { should include('features' => include('security' => include('enabled' => false))) }
+    its(:stdout_as_json) { should include('features' => include('watcher' => include('enabled' => false))) }
+    its(:stdout_as_json) { should include('features' => include('graph' => include('enabled' => true))) }
+    its(:stdout_as_json) { should include('features' => include('monitoring' => include('enabled' => true))) }
+    its(:stdout_as_json) { should include('features' => include('ml' => include('enabled' => true))) }
   end
 
 end
