@@ -327,9 +327,9 @@ These can either be set to a user declared in the file based realm, with admin p
 
 ### Additional Configuration
 
-Additional parameters to es_config allow the customization of the Java and Elasticsearch versions, in addition to role behaviour. Options include:
+In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
-* ```es_major_version``` (e.g. "5.1" ). Should be consistent with es_version. For versions >= 5.0 this must be "5.x".
+* ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 this must be "5.x".
 * ```es_version``` (e.g. "5.1.2").  
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
