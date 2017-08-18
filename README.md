@@ -34,7 +34,6 @@ The application of the elasticsearch role results in the installation of a node 
 The simplest configuration therefore consists of: 
 
 ```
----
 - name: Simple Example
   hosts: localhost
   roles:
@@ -79,7 +78,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
     es_heap_size: 1g
     es_api_port: 9201
 ```
-`
+
 The role utilises Elasticsearch version defaults.  The following should be set to ensure a successful cluster forms.
 
 * ```es_config['http.port']``` - the http port for the node
@@ -95,7 +94,6 @@ The role makes no attempt to enforce the setting of these are requires users to 
 A more complex example:
 
 ```
----
 - name: Elasticsearch with custom configuration
   hosts: localhost
   roles:
@@ -224,12 +222,14 @@ ansible-playbook -i hosts ./your-playbook.yml
 
 X-Pack features, such as Security, are supported. This feature is currently experimental.  To enable X-Pack set the parameter `es_enable_xpack` to true and list the required features in the parameter `es_xpack_features`.  
 
-The parameter `es_xpack_features` by default enables all features i.e. it defaults to ["alerting","monitoring","graph","security"]
+The parameter `es_xpack_features` by default enables all features i.e. it defaults to ["alerting","monitoring","graph","security","ml"]
 
 The following additional parameters allow X-Pack to be configured:
 
 * ```es_message_auth_file``` System Key field to allow message authentication. This file should be placed in the 'files' directory.
+* ```es_xpack_custom_url``` Url from which X-Pack can be downloaded. This can be used for installations in isolated environments where the elastic.co repo is not accessible. e.g. ```es_xpack_custom_url: "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-5.5.1.zip"```
 * ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/x-pack/current/mapping-roles.html)
+
 
 ```
 es_role_mapping:
@@ -327,9 +327,9 @@ These can either be set to a user declared in the file based realm, with admin p
 
 ### Additional Configuration
 
-Additional parameters to es_config allow the customization of the Java and Elasticsearch versions, in addition to role behaviour. Options include:
+In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
-* ```es_major_version``` (e.g. "5.1" ). Should be consistent with es_version. For versions >= 5.0 this must be "5.x".
+* ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 this must be "5.x".
 * ```es_version``` (e.g. "5.1.2").  
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
