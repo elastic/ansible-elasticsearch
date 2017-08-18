@@ -48,5 +48,3 @@ class FilterModule(object):
         'extract_role_users':extract_role_users,
         'filter_reserved':filter_reserved,
         'filename':filename}
-
-print(append_to_list(values="/var/lib/elasticsearch",suffix="/test"))
