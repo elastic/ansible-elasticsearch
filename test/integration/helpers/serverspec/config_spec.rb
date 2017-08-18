@@ -139,6 +139,7 @@ shared_examples 'config::init' do |es_version,plugins|
     describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
       it { should be_file }
       it { should contain 'LimitMEMLOCK=infinity' }
+      it { should contain 'LimitNPROC=3000' }
     end
   else
     describe file('/etc/init.d/node1_elasticsearch') do
