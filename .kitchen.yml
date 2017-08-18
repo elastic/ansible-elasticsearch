@@ -110,3 +110,4 @@ suites:
     attributes:
     provisioner:
       playbook: test/integration/xpack-standard.yml
+      idempotency_test: true

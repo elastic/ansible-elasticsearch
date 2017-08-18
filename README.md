@@ -34,7 +34,6 @@ The application of the elasticsearch role results in the installation of a node 
 The simplest configuration therefore consists of: 
 
 ```
----
 - name: Simple Example
   hosts: localhost
   roles:
@@ -79,7 +78,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
     es_heap_size: 1g
     es_api_port: 9201
 ```
-`
+
 The role utilises Elasticsearch version defaults.  The following should be set to ensure a successful cluster forms.
 
 * ```es_config['http.port']``` - the http port for the node
@@ -95,7 +94,6 @@ The role makes no attempt to enforce the setting of these are requires users to 
 A more complex example:
 
 ```
----
 - name: Elasticsearch with custom configuration
   hosts: localhost
   roles:
@@ -229,7 +227,9 @@ The parameter `es_xpack_features` by default enables all features i.e. it defaul
 The following additional parameters allow X-Pack to be configured:
 
 * ```es_message_auth_file``` System Key field to allow message authentication. This file should be placed in the 'files' directory.
+* ```es_xpack_custom_url``` Url from which X-Pack can be downloaded. This can be used for installations in isolated environments where the elastic.co repo is not accessible. e.g. ```es_xpack_custom_url: "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-5.5.1.zip"```
 * ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/x-pack/current/mapping-roles.html)
+
 
 ```
 es_role_mapping:
