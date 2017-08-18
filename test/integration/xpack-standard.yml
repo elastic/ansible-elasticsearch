@@ -1,0 +1,15 @@
+#Tests x-pack is idempotent and works when security is not enabled
+---
+- name: Elasticsearch Xpack tests - no security and manual download
+  hosts: localhost
+  roles:
+    - { role: elasticsearch, es_api_port: 9200, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300" }, es_instance_name: "security_node" }
+  vars:
+    es_version: "5.5.1"
+    es_heap_size: 2g
+    es_enable_xpack: true
+    es_xpack_custom_url: "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-5.5.1.zip"
+    es_xpack_features:
+      - monitoring
+      - graph
+      - ml

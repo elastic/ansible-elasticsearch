@@ -31,3 +31,11 @@ xpack.monitoring.enabled: false
 {% if not "alerting" in es_xpack_features %}
 xpack.watcher.enabled: false
 {% endif %}
+
+{% if not "ml" in es_xpack_features %}
+xpack.ml.enabled: false
+{% endif %}
+
+{% if not "graph" in es_xpack_features %}
+xpack.graph.enabled: false
+{% endif %}

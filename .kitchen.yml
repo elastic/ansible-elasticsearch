@@ -105,3 +105,9 @@ suites:
     attributes:
     provisioner:
       playbook: test/integration/xpack.yml
+  - name: xpack-standard-5x
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/xpack-standard.yml
+      idempotency_test: true
