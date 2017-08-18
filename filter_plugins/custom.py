@@ -13,7 +13,7 @@ def modify_list(values=[], pattern='', replacement='', ignorecase=False):
     return [_re.sub(replacement, value) for value in values]
 
 def append_to_list(values=[], suffix=''):
-    if isinstance(values, basestring):
+    if isinstance(values, str):
         values = values.split(',')
     return [str(value+suffix) for value in values]
 
