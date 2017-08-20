@@ -111,3 +111,9 @@ suites:
     provisioner:
       playbook: test/integration/xpack-standard.yml
       idempotency_test: true
+  - name: issue-test
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/issue-test.yml
+      idempotency_test: true
