@@ -18,7 +18,7 @@
 #Copy the config template
 - name: Copy Configuration File
   template: src=elasticsearch.yml.j2 dest={{conf_dir}}/elasticsearch.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
-  register: config_updated
+  register: system_change
   notify: restart elasticsearch
 
 #Copy the instance specific default file

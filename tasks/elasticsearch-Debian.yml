@@ -28,6 +28,7 @@
   apt: name=elasticsearch{% if es_version is defined and es_version != "" %}={{ es_version }}{% endif %} state=present force={{force_install}} allow_unauthenticated={{ 'no' if es_apt_key else 'yes' }} cache_valid_time=86400
   when: es_use_repository
   register: debian_elasticsearch_install_from_repo
+  notify: restart elasticsearch
 
 - name: Debian - Download elasticsearch from url
   get_url: url={% if es_custom_package_url is defined %}{{ es_custom_package_url }}{% else %}{{ es_package_url }}-{{ es_version }}.deb{% endif %} dest=/tmp/elasticsearch-{{ es_version }}.deb validate_certs=no
@@ -37,3 +38,4 @@
   apt: deb=/tmp/elasticsearch-{{ es_version }}.deb
   when: not es_use_repository
   register: elasticsearch_install_from_package
+  notify: restart elasticsearch

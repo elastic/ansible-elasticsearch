@@ -1,0 +1,12 @@
+#This file is for users to test issues and reproduce them using the test framework.
+#Modify the playbook  below and test with kitchen i.e. `kitchen test issue-test`
+#To add custom tests modify the serverspec file ./helpers/serverspec/issue_test_spec.rb
+#Idempot test is enabled for this test
+- name: Simple Example
+  hosts: localhost
+  remote_user: root
+  become: yes
+  become_method: sudo
+  roles:
+    - { role: elasticsearch, es_instance_name: "node1" }
+  vars:
