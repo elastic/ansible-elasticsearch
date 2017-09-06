@@ -7,7 +7,7 @@
 
 - set_fact: list_command=""
 #If we are reinstalling all plugins, e.g. to a version change, we need to remove all plugins (inc. x-pack) to install any plugins. Otherwise we don't consider x-pack so the role stays idempotent.
-- set_fact: list_command="| grep -vE 'x-pack'"
+- set_fact: list_command="| grep -vE 'x-pack' || :"
   when: not es_plugins_reinstall
 
 #List currently installed plugins. We have to list the directories as the list commmand fails if the ES version is different than the plugin version.
