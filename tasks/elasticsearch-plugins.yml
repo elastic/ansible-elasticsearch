@@ -49,7 +49,7 @@
     ES_ENV_FILE: "{{ instance_default_file }}"
 
 - name: Install elasticsearch plugins
-  command: "{{es_home}}/bin/elasticsearch-plugin install {{ item.plugin }} --batch --silent"
+  command: "{{es_home}}/bin/elasticsearch-plugin install {{ item.url | default(item.plugin) }} --batch --silent"
   register: plugin_installed
   failed_when: "'ERROR' in plugin_installed.stdout"
   changed_when: plugin_installed.rc == 0
