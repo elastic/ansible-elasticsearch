@@ -22,13 +22,13 @@ e.g.
 
 ```
 cd /my/repos/
-git https://github.com/elastic/ansible-elasticsearch.git
+git clone https://github.com/elastic/ansible-elasticsearch.git
 cd /my/ansible/playbook
 mkdir -p roles
 ln -s /my/repos/ansible-elasticsearch ./roles/elasticsearch
 ```
 
-Then create your playbook yaml adding the role elasticsearch.  By default, the user is only required to specify a unique es_instance_name per role application.  This should be unique per node. 
+Then create your playbook yaml adding the role elasticsearch. By default, the user is only required to specify a unique es_instance_name per role application.  This should be unique per node. 
 The application of the elasticsearch role results in the installation of a node on a host.
 
 The simplest configuration therefore consists of: 
@@ -79,7 +79,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
     es_api_port: 9201
 ```
 
-The role utilises Elasticsearch version defaults.  The following should be set to ensure a successful cluster forms.
+The role uses default Elasticsearch version.  The following should be set to ensure a successful cluster forms.
 
 * ```es_config['http.port']``` - the http port for the node
 * ```es_config['transport.tcp.port']``` - the transport port for the node
