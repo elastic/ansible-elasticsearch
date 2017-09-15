@@ -15,6 +15,7 @@
   shell: "ls {{es_home}}/plugins {{list_command}}"
   register: installed_plugins
   changed_when: False
+  check_mode: no
   ignore_errors: yes
   environment:
     CONF_DIR: "{{ conf_dir }}"
