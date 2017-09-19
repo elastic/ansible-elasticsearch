@@ -81,11 +81,12 @@
 
 - set_fact: current_roles={{ role_list_response.json | filter_reserved }}
   when: manage_native_roles
+
 - debug: msg="{{current_roles}}"
+  when: manage_native_roles
 
 - set_fact: roles_to_remove={{ current_roles | difference ( es_roles.native.keys()  ) }}
   when: manage_native_roles
-
 
 #Delete all non required roles
 - name: Delete Native Roles

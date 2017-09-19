@@ -4,9 +4,21 @@
 #Idempot test is enabled for this test
 - name: Simple Example
   hosts: localhost
-  remote_user: root
-  become: yes
-  become_method: sudo
   roles:
-    - { role: elasticsearch, es_instance_name: "node1" }
+    - { role: elasticsearch, es_config:  {  "xpack.security.authc.realms.file1.type": "file", "xpack.security.authc.realms.file1.order": 1, "xpack.security.authc.realms.native1.type": "native", "xpack.security.authc.realms.native1.order": 0 }, es_instance_name: "security_node" }
   vars:
+    es_heap_size: "1g"
+    es_enable_xpack: true
+    es_plugins:
+      - plugin: ingest-geoip
+    es_xpack_features:
+      - security
+      - alerting
+    es_api_basic_auth_username: elastic
+    es_api_basic_auth_password: changeme
+    es_users:
+      native:
+        testUser:
+          password: changeme
+          roles:
+            - kibana_user
