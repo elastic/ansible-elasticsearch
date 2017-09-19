@@ -5,42 +5,55 @@
 - set_fact: es_plugins_reinstall=true
   when: (((debian_elasticsearch_install_from_repo is defined and debian_elasticsearch_install_from_repo.changed) or (redhat_elasticsearch_install_from_repo is defined and redhat_elasticsearch_install_from_repo.changed)) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) or es_plugins is not defined or es_plugins is none
 
-- set_fact: list_command="list"
+- set_fact: list_command=""
+#If we are reinstalling all plugins, e.g. to a version change, we need to remove all plugins (inc. x-pack) to install any plugins. Otherwise we don't consider x-pack so the role stays idempotent.
+- set_fact: list_command="| grep -vE 'x-pack'"
+  when: not es_plugins_reinstall
 
-- set_fact: list_command="--list"
-  when: es_version | version_compare('2.0', '<')
-
-#List currently installed plugins - ignore xpack if > v 2.0
-- shell: "{{es_home}}/bin/plugin {{list_command}} | sed -n '1!p' | cut -d '-' -f2-{% if es_version | version_compare('2.0', '>') %} | grep -vE '{{supported_xpack_features | join('|')}}|license'{% endif %}"
+#List currently installed plugins. We have to list the directories as the list commmand fails if the ES version is different than the plugin version.
+- name: Check installed elasticsearch plugins
+  shell: "ls {{es_home}}/plugins {{list_command}}"
   register: installed_plugins
-  failed_when: "'ERROR' in installed_plugins.stdout"
   changed_when: False
   ignore_errors: yes
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
-#This needs to removes any currently installed plugins
+#if es_plugins_reinstall is set to true we remove ALL plugins
+- set_fact: plugins_to_remove="{{ installed_plugins.stdout_lines | default([]) }}"
+  when: es_plugins_reinstall
+
+#if the plugins listed are different than those requested, we remove those installed but not listed in the config
+- set_fact: plugins_to_remove="{{ installed_plugins.stdout_lines | difference(es_plugins | json_query('[*].plugin')) | default([]) }}"
+  when: not es_plugins_reinstall
+
+#if es_plugins_reinstall is set to true we (re)install ALL plugins
+- set_fact: plugins_to_install="{{ es_plugins | json_query('[*].plugin') | default([]) }}"
+  when: es_plugins_reinstall
+
+#if the plugins listed are different than those requested, we install those not installed but listed in the config
+- set_fact: plugins_to_install="{{ es_plugins | json_query('[*].plugin') | difference(installed_plugins.stdout_lines) | default([]) }}"
+  when: not es_plugins_reinstall
+
+# This removes any currently installed plugins (to prevent errors when reinstalling)
 - name: Remove elasticsearch plugins
   command: "{{es_home}}/bin/plugin remove {{item}} --silent"
   ignore_errors: yes
-  with_items: "{{ installed_plugins.stdout_lines | default([]) }}"
-  when: es_plugins_reinstall and installed_plugins.stdout_lines | length > 0 and not 'No plugin detected' in installed_plugins.stdout_lines[0]
+  with_items: "{{ plugins_to_remove | default([]) }}"
   notify: restart elasticsearch
-  register: plugin_installed
+  register: plugin_removed
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
 - name: Install elasticsearch plugins
-  #debug: var=item
-  command: >
-    {{es_home}}/bin/plugin install {{ item.plugin }}{% if item.version is defined and item.version != '' %}/{{ item.version }}{% endif %} {% if item.proxy_host is defined and item.proxy_host != '' and item.proxy_port is defined and item.proxy_port != ''%} -DproxyHost={{ item.proxy_host }} -DproxyPort={{ item.proxy_port }} {% elif es_proxy_host is defined and es_proxy_host != '' %} -DproxyHost={{ es_proxy_host }} -DproxyPort={{ es_proxy_port }} {% endif %} --silent
+  command: "{{es_home}}/bin/plugin install {{ item.plugin }} --batch --silent {% if item.proxy_host is defined and item.proxy_host != '' and item.proxy_port is defined and item.proxy_port != ''%} -DproxyHost={{ item.proxy_host }} -DproxyPort={{ item.proxy_port }} {% elif es_proxy_host is defined and es_proxy_host != '' %} -DproxyHost={{ es_proxy_host }} -DproxyPort={{ es_proxy_port }} {% endif %}"
   register: plugin_installed
   failed_when: "'ERROR' in plugin_installed.stdout"
   changed_when: plugin_installed.rc == 0
-  with_items: "{{ es_plugins | default([]) }}"
-  when: not es_plugins is none and es_plugins_reinstall
+  with_items: "{{ es_plugins }}"
+  when: "{{ item.plugin in plugins_to_install }}"
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
