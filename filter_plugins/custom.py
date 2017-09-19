@@ -2,6 +2,7 @@ __author__ = 'dale mcdiarmid'
 
 import re
 import os.path
+from six import string_types
 
 def modify_list(values=[], pattern='', replacement='', ignorecase=False):
     ''' Perform a `re.sub` on every item in the list'''
@@ -13,7 +14,7 @@ def modify_list(values=[], pattern='', replacement='', ignorecase=False):
     return [_re.sub(replacement, value) for value in values]
 
 def append_to_list(values=[], suffix=''):
-    if isinstance(values, basestring):
+    if isinstance(values, string_types):
         values = values.split(',')
     return [str(value+suffix) for value in values]
 
@@ -47,4 +48,3 @@ class FilterModule(object):
         'extract_role_users':extract_role_users,
         'filter_reserved':filter_reserved,
         'filename':filename}
-

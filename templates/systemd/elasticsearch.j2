@@ -41,6 +41,9 @@ StandardError=inherit
 LimitNOFILE={{es_max_open_files}}
 {% endif %}
 
+# Specifies the maximum number of processes
+LimitNPROC=2048
+
 # Specifies the maximum number of bytes of memory that may be locked into RAM
 # Set to "infinity" if you use the 'bootstrap.memory_lock: true' option
 # in elasticsearch.yml and 'MAX_LOCKED_MEMORY=unlimited' in {{instance_default_file}}
@@ -48,11 +51,18 @@ LimitNOFILE={{es_max_open_files}}
 LimitMEMLOCK=infinity
 {% endif %}
 
+# Specifies the maximum number of threads that can be started.  Elasticsearch requires a
+# minimum of 2048.
+LimitNPROC={{ es_max_threads }}
+
 # Disable timeout logic and wait until process is stopped
 TimeoutStopSec=0
 
 # SIGTERM signal is used to stop the Java process
 KillSignal=SIGTERM
+
+# Send the signal only to the JVM rather than its control group
+KillMode=process
 
 # Java process is never killed
 SendSIGKILL=no

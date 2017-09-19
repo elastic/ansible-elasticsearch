@@ -29,13 +29,20 @@
 - set_fact: plugins_to_remove="{{ installed_plugins.stdout_lines | difference(es_plugins | json_query('[*].plugin')) | default([]) }}"
   when: not es_plugins_reinstall
 
+#if es_plugins_reinstall is set to true we (re)install ALL plugins
+- set_fact: plugins_to_install="{{ es_plugins | json_query('[*].plugin') | default([]) }}"
+  when: es_plugins_reinstall
+
+#if the plugins listed are different than those requested, we install those not installed but listed in the config
+- set_fact: plugins_to_install="{{ es_plugins | json_query('[*].plugin') | difference(installed_plugins.stdout_lines) | default([]) }}"
+  when: not es_plugins_reinstall
+
 # This removes any currently installed plugins (to prevent errors when reinstalling)
 - name: Remove elasticsearch plugins
   become: yes
   command: "{{es_home}}/bin/elasticsearch-plugin remove {{item}} --silent"
   ignore_errors: yes
   with_items: "{{ plugins_to_remove | default([]) }}"
-  when: es_plugins_reinstall and plugins_to_remove | length > 0
   notify: restart elasticsearch
   register: plugin_removed
   environment:
@@ -44,16 +51,17 @@
 
 - name: Install elasticsearch plugins
   become: yes
-  command: "{{es_home}}/bin/elasticsearch-plugin install {{ item.plugin }} --batch --silent {% if item.proxy_host is defined and item.proxy_host != '' and item.proxy_port is defined and item.proxy_port != ''%} -DproxyHost={{ item.proxy_host }} -DproxyPort={{ item.proxy_port }} {% elif es_proxy_host is defined and es_proxy_host != '' %} -DproxyHost={{ es_proxy_host }} -DproxyPort={{ es_proxy_port }} {% endif %}"
+  command: "{{es_home}}/bin/elasticsearch-plugin install {{ item.plugin }} --batch --silent"
   register: plugin_installed
   failed_when: "'ERROR' in plugin_installed.stdout"
   changed_when: plugin_installed.rc == 0
-  with_items: "{{ es_plugins | default([]) }}"
-  when: not es_plugins is none and es_plugins_reinstall
+  with_items: "{{ es_plugins }}"
+  when: item.plugin in plugins_to_install
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
+    ES_JAVA_OPTS: "{% if item.proxy_host is defined and item.proxy_host != '' and item.proxy_port is defined and item.proxy_port != ''%} -Dhttp.proxyHost={{ item.proxy_host }} -Dhttp.proxyPort={{ item.proxy_port }} -Dhttps.proxyHost={{ item.proxy_host }} -Dhttps.proxyPort={{ item.proxy_port }}  {% elif es_proxy_host is defined and es_proxy_host != '' %} -Dhttp.proxyHost={{ es_proxy_host }} -Dhttp.proxyPort={{ es_proxy_port }} -Dhttps.proxyHost={{ es_proxy_host }} -Dhttps.proxyPort={{ es_proxy_port }} {% endif %}"
   until: plugin_installed.rc == 0
   retries: 5
   delay: 5

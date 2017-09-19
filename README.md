@@ -9,7 +9,10 @@ Ansible role for 5.x Elasticsearch.  Currently this works on Debian and RedHat b
 * Debian 8
 * Centos 7
 
-The latest Elasticsearch versions of 5.x are actively tested.  **Only Ansible versions > 2.2.0 are supported.**
+The latest Elasticsearch versions of 5.x are actively tested.  **Only Ansible versions > 2.3.2 are supported, as this is currently the only version tested.**
+
+##### Dependency
+This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
 
 ## Usage
 
@@ -19,19 +22,18 @@ e.g.
 
 ```
 cd /my/repos/
-git clone git@github.com:elastic/ansible-elasticsearch.git
+git clone https://github.com/elastic/ansible-elasticsearch.git
 cd /my/ansible/playbook
 mkdir -p roles
 ln -s /my/repos/ansible-elasticsearch ./roles/elasticsearch
 ```
 
-Then create your playbook yaml adding the role elasticsearch.  By default, the user is only required to specify a unique es_instance_name per role application.  This should be unique per node. 
+Then create your playbook yaml adding the role elasticsearch. By default, the user is only required to specify a unique es_instance_name per role application.  This should be unique per node. 
 The application of the elasticsearch role results in the installation of a node on a host.
 
 The simplest configuration therefore consists of: 
 
 ```
----
 - name: Simple Example
   hosts: localhost
   roles:
@@ -74,10 +76,10 @@ The following illustrates applying configuration parameters to an Elasticsearch 
     es_templates: false
     es_version_lock: false
     es_heap_size: 1g
-    es_api_port:9201
+    es_api_port: 9201
 ```
-`
-The role utilises Elasticsearch version defaults.  The following should be set to ensure a successful cluster forms.
+
+Whilst the role installs Elasticsearch with the default configuration parameters, the following should be configured to ensure a cluster successfully forms:
 
 * ```es_config['http.port']``` - the http port for the node
 * ```es_config['transport.tcp.port']``` - the transport port for the node
@@ -92,7 +94,6 @@ The role makes no attempt to enforce the setting of these are requires users to 
 A more complex example:
 
 ```
----
 - name: Elasticsearch with custom configuration
   hosts: localhost
   roles:
@@ -114,12 +115,9 @@ A more complex example:
     es_templates: false
     es_version_lock: false
     es_heap_size: 1g
-    es_scripts: false
-    es_templates: false
-    es_version_lock: false
     es_start_service: false
     es_plugins_reinstall: false
-    es_api_port:9201
+    es_api_port: 9201
     es_plugins:
         - plugin: ingest-geoip
           proxy_host: proxy.example.com
@@ -224,12 +222,14 @@ ansible-playbook -i hosts ./your-playbook.yml
 
 X-Pack features, such as Security, are supported. This feature is currently experimental.  To enable X-Pack set the parameter `es_enable_xpack` to true and list the required features in the parameter `es_xpack_features`.  
 
-The parameter `es_xpack_features` by default enables all features i.e. it defaults to ["alerting","monitoring","graph","security"]
+The parameter `es_xpack_features` by default enables all features i.e. it defaults to ["alerting","monitoring","graph","security","ml"]
 
 The following additional parameters allow X-Pack to be configured:
 
 * ```es_message_auth_file``` System Key field to allow message authentication. This file should be placed in the 'files' directory.
+* ```es_xpack_custom_url``` Url from which X-Pack can be downloaded. This can be used for installations in isolated environments where the elastic.co repo is not accessible. e.g. ```es_xpack_custom_url: "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-5.5.1.zip"```
 * ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/x-pack/current/mapping-roles.html)
+
 
 ```
 es_role_mapping:
@@ -305,17 +305,17 @@ es_roles:
             - create_index
 ```                
                 
-* ```es_xpack_license``` - X-Pack license.  The license should be declared as a json blob.  Alternative use Ansible vault or copy the license to the target machine as part of a playbook and access via a lookup e.g.
+* ```es_xpack_license``` - X-Pack license. The license is a json blob. Set the variable directly (possibly protected by Ansible vault) or from a file in the Ansible project on the control machine via a lookup:
 
 ```
-es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
+es_xpack_license: "{{ lookup('file', playbook_dir + '/files/' + es_cluster_name + '/license.json') }}"
 ``` 
 
 X-Pack configuration parameters can be added to the elasticsearch.yml file using the normal `es_config` parameter.
 
 For a full example see [here](https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack.yml)
 
-####Important Note for Native Realm Configuration
+#### Important Note for Native Realm Configuration
 
 In order for native users and roles to be configured, the role calls the Elasticsearch API.  Given security is installed this requires definition of two parameters:
 
@@ -327,9 +327,9 @@ These can either be set to a user declared in the file based realm, with admin p
 
 ### Additional Configuration
 
-Additional parameters to es_config allow the customization of the Java and Elasticsearch versions, in addition to role behaviour. Options include:
+In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
-* ```es_major_version``` (e.g. "5.1" ). Should be consistent with es_version. For versions >= 5.0 this must be "5.x".
+* ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 this must be "5.x".
 * ```es_version``` (e.g. "5.1.2").  
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
@@ -340,13 +340,14 @@ Additional parameters to es_config allow the customization of the Java and Elast
 * ```es_plugins``` an array of plugin definitions e.g.:
 ```yml
   es_plugins:
-    - plugin: elasticsearch-cloud-aws
+    - plugin: ingest-geoip 
 ```
 * ```es_allow_downgrades``` For development purposes only. (true or false (default) )
 * ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
 * ```update_java``` Updates Java to the latest version. (true or false (default))
 * ```es_max_map_count``` maximum number of VMA (Virtual Memory Areas) a process can own. Defaults to 262144.
 * ```es_max_open_files``` the maximum file descriptor number that can be opened by this process. Defaults to 65536.
+* ```es_max_threads``` the maximum number of threads the process can start. Defaults to 2048 (the minimum required by elasticsearch).
 
 Earlier examples illustrate the installation of plugins using `es_plugins`.  For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  For community based plugins include the full url.  This approach should NOT be used for the X-Pack plugin.  See X-Pack below for details here.
  
@@ -383,12 +384,12 @@ To define proxy only for a particular plugin during its installation:
 
 ```
   es_plugins:
-    - plugin: elasticsearch-cloud-aws
+    - plugin: ingest-geoip 
       proxy_host: proxy.example.com
       proxy_port: 8080
 ```
 
-> For plugins installation, proxy_host and proxy_port are used first if they are defined and fallback to the global proxy settings if not.
+> For plugins installation, proxy_host and proxy_port are used first if they are defined and fallback to the global proxy settings if not. The same values are currently used for both the http and https proxy settings.
 
 ## Notes
 
@@ -406,7 +407,7 @@ Elasticsearch restarted where required.
 
 * If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 5.x.
 * If no plugins are listed in the playbook for a node, all currently installed plugins will be removed.
-* The role does not currently support automatic detection of differences between installed and listed plugins (other than if none are listed).   Should users wish to change installed plugins should set es_plugins_reinstall to true.  This will cause all currently installed plugins to be removed and those listed to be installed.  Change detection will be implemented in future releases.
+* The role supports automatic detection of differences between installed and listed plugins - installing those listed but not installed, and removing those installed but not listed.   Should users wish to re-install plugins they should set es_plugins_reinstall to true.  This will cause all currently installed plugins to be removed and those listed to be installed.
 
 ## Questions on Usage
 

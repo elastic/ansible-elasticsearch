@@ -18,6 +18,7 @@
   yum: name=elasticsearch{% if es_version is defined and es_version != ""  %}-{{ es_version }}{% endif %} state=present update_cache=yes
   when: es_use_repository
   register: redhat_elasticsearch_install_from_repo
+  notify: restart elasticsearch
   until: '"failed" not in redhat_elasticsearch_install_from_repo'
   retries: 5
   delay: 10
@@ -27,3 +28,4 @@
   yum: name={% if es_custom_package_url is defined %}{{ es_custom_package_url }}{% else %}{{ es_package_url }}-{{ es_version }}.noarch.rpm{% endif %} state=present
   when: not es_use_repository
   register: elasticsearch_install_from_package
+  notify: restart elasticsearch

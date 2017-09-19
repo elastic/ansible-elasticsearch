@@ -20,14 +20,10 @@
 # Xmx represents the maximum size of total heap space
 {% if es_heap_size is defined %}
 -Xms{{ es_heap_size }}
-{% else %}
--Xms2g
-{% endif %}
-
-{% if es_heap_size is defined %}
 -Xmx{{ es_heap_size }}
 {% else %}
 -Xms2g
+-Xmx2g
 {% endif %}
 
 ################################################################
@@ -47,9 +43,6 @@
 
 ## optimizations
 
-# disable calls to System#gc
--XX:+DisableExplicitGC
-
 # pre-touch memory pages used by the JVM during initialization
 -XX:+AlwaysPreTouch
 
@@ -67,7 +60,10 @@
 # use our provided JNA always versus the system one
 -Djna.nosys=true
 
-# flags to keep Netty from being unsafe
+# use old-style file permissions on JDK9
+-Djdk.io.permissionsUseCanonicalPath=true
+
+# flags to configure Netty
 -Dio.netty.noUnsafe=true
 -Dio.netty.noKeySetOptimization=true
 -Dio.netty.recycler.maxCapacityPerThread=0
@@ -99,6 +95,14 @@
 # log GC status to a file with time stamps
 # ensure the directory exists
 #-Xloggc:${loggc}
+
+
+# By default, the GC log file will not rotate.
+# By uncommenting the lines below, the GC log file
+# will be rotated every 128MB at most 32 times.
+#-XX:+UseGCLogFileRotation
+#-XX:NumberOfGCLogFiles=32
+#-XX:GCLogFileSize=128M
 
 # Elasticsearch 5.0.0 will throw an exception on unquoted field names in JSON.
 # If documents were already indexed with unquoted fields in a previous version

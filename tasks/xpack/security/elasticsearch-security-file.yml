@@ -1,13 +1,6 @@
 ---
 - set_fact: manage_file_users=es_users is defined and es_users.file is defined
 
-#Ensure x-pack conf directory is created
-- name: Ensure x-pack conf directory exists (file)
-  become: yes
-  file: path={{ conf_dir }}/x-pack state=directory owner={{ es_user }} group={{ es_group }}
-  changed_when: False
-  when: es_enable_xpack and '"security" in es_xpack_features'
-
 #List current users
 - name: List Users
   become: yes

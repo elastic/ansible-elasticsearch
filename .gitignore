@@ -1,4 +1,3 @@
-/vars/Debian.yml
 .kitchen/
 license*.json
 *.pyc
@@ -8,3 +7,4 @@ Converging
 TODO
 .idea/
 elasticsearch.iml
+!/vars/RedHat.yml

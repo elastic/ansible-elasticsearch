@@ -139,11 +139,20 @@ shared_examples 'config::init' do |es_version,plugins|
     describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
       it { should be_file }
       it { should contain 'LimitMEMLOCK=infinity' }
+      it { should contain 'LimitNPROC=3000' }
     end
   else
     describe file('/etc/init.d/node1_elasticsearch') do
       it { should be_file }
     end
   end
+
+  describe file('/etc/elasticsearch/node1/log4j2.properties') do
+    it { should be_file }
+    it { should be_owned_by 'elasticsearch' }
+    it { should contain 'CUSTOM LOG4J FILE' }
+  end
+
+
 end
 

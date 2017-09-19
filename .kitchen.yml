@@ -6,12 +6,19 @@ provisioner:
   name: ansible_playbook
   hosts: localhost
   roles_path: ../
-  require_ansible_repo: true
-  ansible_verbose: true
-  ansible_version: 2.2.0
+  require_ansible_repo: false
+  require_ansible_omnibus: false
+  require_ansible_source: false
+  require_pip: true
+  ansible_version: 2.3.2.0
   http_proxy: <%= ENV['HTTP_PROXY'] %>
   https_proxy: <%= ENV['HTTPS_PROXY'] %>
   no_proxy: localhost,127.0.0.1
+  ignore_extensions_from_root: [".git",".idea",".kitchen.yml"]
+  ignore_paths_from_root: [".git",".idea",".kitchen"]
+
+transport:
+  max_ssh_sessions: 6
 
 platforms:
   - name: ubuntu-14.04
@@ -22,6 +29,7 @@ platforms:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
         - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip
         - pip install jmespath
+        - pip uninstall -y ansible
       use_sudo: false
       volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
   - name: ubuntu-16.04
@@ -33,6 +41,7 @@ platforms:
         - apt-get install -y -q net-tools
         - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip
         - pip install jmespath
+        - pip uninstall -y ansible
       use_sudo: false
       volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
       run_command: "/sbin/init"
@@ -43,11 +52,11 @@ platforms:
       provision_command:
         - apt-get update && apt-get -y install python python-dev python-pip build-essential libyaml-dev python-yaml curl wget
         - apt-get install -y -q net-tools
-        - apt-get install -y ansible
         - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
         - pip install jmespath
+        - pip uninstall -y ansible
       volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
       use_sudo: false
       run_command: "/sbin/init"
@@ -60,6 +69,7 @@ platforms:
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
         - rm /etc/yum.repos.d/epel*repo /etc/yum.repos.d/puppetlabs-pc1.repo
         - yum -y install initscripts
+        - yum -y remove ansible
         - yum clean all
         - pip install jmespath
       volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
@@ -95,3 +105,15 @@ suites:
     attributes:
     provisioner:
       playbook: test/integration/xpack.yml
+  - name: xpack-standard-5x
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/xpack-standard.yml
+      idempotency_test: true
+  - name: issue-test
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/issue-test.yml
+      idempotency_test: true

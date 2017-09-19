@@ -2,6 +2,8 @@
 #Add the elasticsearch user before installing from packages.
 - name: Ensure optional elasticsearch group is created with the correct id.
   become: yes
+  #Restart if these change
+  notify: restart elasticsearch
   group:
     state: present
     name: "{{ es_group }}"
@@ -10,6 +12,8 @@
 
 - name: Ensure optional elasticsearch user is created with the correct id.
   become: yes
+  #Restart if these change
+  notify: restart elasticsearch
   user:
     state: present
     name: "{{ es_user }}"
