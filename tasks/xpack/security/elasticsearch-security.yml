@@ -9,12 +9,12 @@
   changed_when: False
   when:
     - es_enable_xpack and '"security" in es_xpack_features'
-    - (es_users is defined and es_users.file) or (es_roles is defined and es_roles.file is defined) or (es_role_mapping is defined)
+    - (es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined) or (es_role_mapping is defined)
 
 #-----------------------------FILE BASED REALM----------------------------------------
 
 - include: elasticsearch-security-file.yml
-  when: (es_enable_xpack and '"security" in es_xpack_features') and ((es_users is defined and es_users.file) or (es_roles is defined and es_roles.file is defined))
+  when: (es_enable_xpack and '"security" in es_xpack_features') and ((es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined))
 
 #-----------------------------ROLE MAPPING ----------------------------------------
 
