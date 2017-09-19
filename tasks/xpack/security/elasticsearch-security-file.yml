@@ -1,5 +1,5 @@
 ---
-- set_fact: manage_file_users=es_users is defined and es_users.file is defined
+- set_fact: manage_file_users=es_users is defined and es_users.file is defined and es_users.file.keys() | length > 0
 
 #List current users
 - name: List Users
@@ -21,27 +21,36 @@
     CONF_DIR: "{{ conf_dir }}"
     ES_HOME: "{{es_home}}"
 
-
-- set_fact: users_to_add={{ es_users.file.keys() | difference (current_file_users.stdout_lines) }}
+- set_fact: users_to_add={{ es_users.file.keys() | difference (current_file_users.stdout_lines) | difference (reserved_xpack_users) | default([]) }}
   when: manage_file_users
+
+- set_fact: users_to_ignore={{ es_users.file.keys() | difference (current_file_users.stdout_lines) | intersect (reserved_xpack_users) }}
+  when: manage_file_users
+
+- debug:
+     msg: "WARNING: YOU CANNOT CHANGE RESERVED USERS THROUGH THE FILE REALM. THE FOLLOWING WILL BE IGNORED: {{users_to_ignore}}"
+  when: manage_file_users and users_to_ignore | length > 0
 
 #Add users
 - name: Add Users
   command: >
     {{es_home}}/bin/x-pack/users useradd {{item}} -p {{es_users.file[item].password}}
-  with_items: "{{users_to_add | default([])}}"
+  with_items: "{{ users_to_add }}"
   when: manage_file_users and users_to_add | length > 0
   no_log: True
   environment:
     CONF_DIR: "{{ conf_dir }}"
     ES_HOME: "{{es_home}}"
 
+- set_fact: users_to_modify={{ es_users.file.keys() | difference (reserved_xpack_users) | default([]) }}
+  when: manage_file_users
+
 #Set passwords for all users declared - Required as the useradd will not change existing user passwords
 - name: Set User Passwords
   command: >
-    {{es_home}}/bin/x-pack/users passwd {{item.key}} -p {{item.value.password}}
-  with_dict: "{{(es_users | default({'file':{}})).file}}"
-  when: manage_file_users and es_users.file.keys() | length > 0
+    {{es_home}}/bin/x-pack/users passwd {{ item }} -p {{es_users.file[item].password}}
+  with_items: "{{ users_to_modify }}"
+  when: manage_file_users and users_to_modify | length > 0
   #Currently no easy way to figure out if the password has changed or to know what it currently is so we can skip.
   changed_when: False
   no_log: True
@@ -49,7 +58,7 @@
     CONF_DIR: "{{ conf_dir }}"
     ES_HOME: "{{es_home}}"
 
-- set_fact: users_roles={{es_users.file | extract_role_users}}
+- set_fact: users_roles={{es_users.file | extract_role_users (reserved_xpack_users) }}
   when: manage_file_users
 
 #Copy Roles files

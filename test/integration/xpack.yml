@@ -31,6 +31,14 @@
           password: changeMe
           roles:
             - kibana4_server
+        logstash_system:
+          #this should be successfully modified
+          password: aNewLogstashPassword
+          #this will be ignored
+          roles:
+            - kibana4_server
+        elastic:
+          password: elasticChanged
       file:
         es_admin:
           password: changeMe
@@ -41,6 +49,11 @@
           roles:
             - power_user
             - user
+        #testing this shouldn't be impacted through the file call
+        kibana:
+          password: this_wont_be_set
+          roles:
+            - kibana_system
     es_roles:
       file:
         admin:
@@ -79,6 +92,16 @@
                 - write
                 - delete
                 - create_index
+        #this will be ignored - its reserved
+        logstash_system:
+          cluster:
+            - manage_index_templates
+          indices:
+            - names: 'logstash-*'
+              privileges:
+                - write
+                - delete
+                - create_index
 
 #modifies the installation. Changes es_admin password and upgrades ES. Tests confirm the correct version is installed.
 - name: Elasticsearch Xpack modify
@@ -99,7 +122,7 @@
       - security
       - alerting
     es_api_basic_auth_username: elastic
-    es_api_basic_auth_password: changeme
+    es_api_basic_auth_password: elasticChanged
     es_role_mapping:
       power_user:
         - "cn=admins,dc=example,dc=com"
@@ -110,6 +133,10 @@
       native:
         kibana4_server:
           password: changeMe
+          roles:
+            - kibana4_server
+        logstash_system:
+          #this will be ignored
           roles:
             - kibana4_server
       file:
