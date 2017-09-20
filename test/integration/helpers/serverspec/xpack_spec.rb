@@ -199,5 +199,45 @@ shared_examples 'xpack::init' do |es_version,plugins|
     #Test contents as expected
     its(:md5sum) { should eq '6ff0e6c4380a6ac0f6e04d871c0ca5e8' }
   end
+
+  #check accounts are correct i.e. we can auth and they have the correct roles
+
+  describe 'kibana4_server access check' do
+    it 'should be reported as version '+es_version do
+      command = command('curl -s localhost:9200/ -u kibana4_server:changeMe | grep number')
+      expect(command.stdout).to match(es_version)
+      expect(command.exit_status).to eq(0)
+    end
+  end
+
+  describe command('curl -s localhost:9200/_xpack/security/user/kibana4_server -u elastic:elasticChanged | md5sum | grep f0548742161d9e50c7c7fbe2e061a1fa') do
+      its(:exit_status) { should eq 0 }
+  end
+
+
+  describe 'logstash_system access check' do
+    it 'should be reported as version '+es_version do
+      command = command('curl -s localhost:9200/ -u logstash_system:aNewLogstashPassword | grep number')
+      expect(command.stdout).to match(es_version)
+      expect(command.exit_status).to eq(0)
+    end
+  end
+
+  describe command('curl -s localhost:9200/_xpack/security/user/logstash_system -u elastic:elasticChanged | md5sum | grep 98d361ddfa5156abd33542a493b4fd85') do
+      its(:exit_status) { should eq 0 }
+  end
+
+  describe 'kibana access check' do
+    it 'should be reported as version '+es_version do
+      command = command('curl -s localhost:9200/ -u kibana:changeme | grep number')
+      expect(command.stdout).to match(es_version)
+      expect(command.exit_status).to eq(0)
+    end
+  end
+
+  describe command('curl -s localhost:9200/_xpack/security/user/kibana -u elastic:elasticChanged | md5sum | grep 34190c64eb3c7cfb002fa789df5fad20') do
+      its(:exit_status) { should eq 0 }
+  end
+
 end
 

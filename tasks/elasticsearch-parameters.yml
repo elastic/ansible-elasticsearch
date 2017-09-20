@@ -23,6 +23,13 @@
 - fail: msg="Enabling security requires an es_api_basic_auth_username and es_api_basic_auth_password to be provided to allow cluster operations"
   when: es_enable_xpack and ("security" in es_xpack_features) and es_api_basic_auth_username is not defined and es_api_basic_auth_password is not defined
 
+- set_fact: file_reserved_users={{ es_users.file.keys() | intersect (reserved_xpack_users) }}
+  when: es_users is defined and es_users.file is defined and (es_users.file.keys() | length > 0) and (es_users.file.keys() | intersect (reserved_xpack_users) | length > 0)
+
+- fail:
+     msg: "ERROR: INVALID CONFIG - YOU CANNOT CHANGE RESERVED USERS THROUGH THE FILE REALM. THE FOLLOWING CANNOT BE CHANGED: {{file_reserved_users}}. USE THE NATIVE REALM."
+  when: file_reserved_users | default([]) | length > 0
+
 - set_fact: instance_default_file={{default_file | dirname}}/{{es_instance_name}}_{{default_file | basename}}
 - set_fact: instance_init_script={{init_script | dirname }}/{{es_instance_name}}_{{init_script | basename}}
 - set_fact: conf_dir={{ es_conf_dir }}/{{es_instance_name}}
