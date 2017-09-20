@@ -28,10 +28,6 @@
     es_api_basic_auth_password: changeme
     es_users:
       file:
-        kibana:
-          password: changeme
-          roles:
-            - kibana_system
         test_user:
           password: changeme
           roles:

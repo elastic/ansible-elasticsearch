@@ -49,11 +49,6 @@
           roles:
             - power_user
             - user
-        #testing this shouldn't be impacted through the file call
-        kibana:
-          password: this_wont_be_set
-          roles:
-            - kibana_system
     es_roles:
       file:
         admin:

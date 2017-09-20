@@ -8,15 +8,6 @@
   with_fileglob:
     - "{{ es_templates_fileglob | default('') }}"
 
-
-- name: Ensure elasticsearch is started
-  service: name={{instance_init_script | basename}} state=started enabled=yes
-  when: es_start_service and load_templates.changed
-
-- name: Wait for elasticsearch to startup
-  wait_for: host={{es_api_host}} port={{es_api_port}} delay=10
-  when: es_start_service and load_templates.changed
-
 - name: Install templates without auth
   uri:
     url: "http://{{es_api_host}}:{{es_api_port}}/_template/{{item | filename}}"
