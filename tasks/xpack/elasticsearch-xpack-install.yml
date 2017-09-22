@@ -2,6 +2,7 @@
 
 #Test if feature is installed
 - shell: "{{es_home}}/bin/elasticsearch-plugin list | grep x-pack"
+  become: yes
   register: x_pack_installed
   changed_when: False
   failed_when: "'ERROR' in x_pack_installed.stdout"
@@ -14,6 +15,7 @@
 
 #Remove X-Pack if installed and its not been requested or the ES version has changed
 - name: Remove x-pack plugin
+  become: yes
   command: "{{es_home}}/bin/elasticsearch-plugin remove x-pack"
   register: xpack_state
   failed_when: "'ERROR' in xpack_state.stdout"
@@ -31,6 +33,7 @@
   when: (x_pack_installed.rc == 1 or es_version_changed) and (es_enable_xpack and es_xpack_custom_url is defined)
 
 - name: Install x-pack plugin from local
+  become: yes
   command: >
     {{es_home}}/bin/elasticsearch-plugin install --silent --batch file:///tmp/x-pack-{{ es_version }}.zip
   register: xpack_state
@@ -46,6 +49,7 @@
   when: es_xpack_custom_url is defined
 
 - name: Install x-pack plugin from elastic.co
+  become: yes
   command: >
     {{es_home}}/bin/elasticsearch-plugin install --silent --batch x-pack
   register: xpack_state

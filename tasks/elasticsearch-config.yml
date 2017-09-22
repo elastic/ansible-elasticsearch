@@ -3,6 +3,7 @@
 
 #Create required directories
 - name: Create Directories
+  become: yes
   file: path={{ item }} state=directory owner={{ es_user }} group={{ es_group }}
   with_items:
     - "{{pid_dir}}"
@@ -10,6 +11,7 @@
     - "{{conf_dir}}"
 
 - name: Create Data Directories
+  become: yes
   file: path={{ item }} state=directory owner={{ es_user }} group={{ es_group }}
   with_items:
     - "{{data_dirs}}"
@@ -17,29 +19,34 @@
 
 #Copy the config template
 - name: Copy Configuration File
+  become: yes
   template: src=elasticsearch.yml.j2 dest={{conf_dir}}/elasticsearch.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   register: system_change
   notify: restart elasticsearch
 
 #Copy the instance specific default file
 - name: Copy Default File for Instance
+  become: yes
   template: src=elasticsearch.j2 dest={{instance_default_file}} mode=0644 force=yes
   notify: restart elasticsearch
 
 #Copy the instance specific init file
 - name: Copy Debian Init File for Instance
+  become: yes
   template: src=init/debian/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
   when: ansible_os_family == 'Debian' and not use_system_d
   notify: restart elasticsearch
 
 #Copy the instance specific init file
 - name: Copy Redhat Init File for Instance
+  become: yes
   template: src=init/redhat/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
   when: ansible_os_family == 'RedHat' and not use_system_d
   notify: restart elasticsearch
 
 #Copy the systemd specific file if systemd is installed
 - name: Copy Systemd File for Instance
+  become: yes
   template: src=systemd/elasticsearch.j2 dest={{instance_sysd_script}} mode=0644 force=yes
   when: use_system_d
   notify:
@@ -48,37 +55,47 @@
 
 #Copy the logging.yml
 - name: Copy log4j2.properties File for Instance
+  become: yes
   template: src={{es_config_log4j2}} dest={{conf_dir}}/log4j2.properties owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   notify: restart elasticsearch
 
 - name: Copy jvm.options File for Instance
+  become: yes
   template: src=jvm.options.j2 dest={{conf_dir}}/jvm.options owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   notify: restart elasticsearch
 
 #Clean up un-wanted package scripts to avoid confusion
 
 - name: Delete Default Init
+  become: yes
   file: dest=/etc/init.d/elasticsearch state=absent
 
 - name: Delete Default Environment File
+  become: yes
   file: dest=/etc/default/elasticsearch state=absent
   when: ansible_os_family == 'Debian'
 
 - name: Delete Default Environment File
+  become: yes
   file: dest=/etc/sysconfig/elasticsearch state=absent
   when: ansible_os_family == 'RedHat'
 
 - name: Delete Default Sysconfig File
+  become: yes
   file: dest="{{ sysd_script }}" state=absent
 
 - name: Delete Default Configuration File
+  become: yes
   file: dest=/etc/elasticsearch/elasticsearch.yml state=absent
 
 - name: Delete Default Logging File
+  become: yes
   file: dest=/etc/elasticsearch/logging.yml state=absent
 
 - name: Delete Default Logging File
+  become: yes
   file: dest=/etc/elasticsearch/log4j2.properties state=absent
 
 - name: Delete Default JVM Options File
+  become: yes
   file: dest=/etc/elasticsearch/jvm.options state=absent

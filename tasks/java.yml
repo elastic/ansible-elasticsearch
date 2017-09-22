@@ -6,15 +6,18 @@
   when: update_java == true
 
 - name: RedHat - Ensure Java is installed
+  become: yes
   yum: name={{ java }} state={{java_state}}
   when: ansible_os_family == 'RedHat'
 
 - name: Refresh java repo
+  become: yes
   apt: update_cache=yes
   changed_when: false
   when: ansible_os_family == 'Debian'
 
 - name: Debian - Ensure Java is installed
+  become: yes
   apt: name={{ java }} state={{java_state}}
   when: ansible_os_family == 'Debian'
 
@@ -25,6 +28,7 @@
 
 #https://github.com/docker-library/openjdk/issues/19 - ensures tests pass due to java 8 broken certs
 - name: refresh the java ca-certificates
+  become: yes
   command: /var/lib/dpkg/info/ca-certificates-java.postinst configure
   when: ansible_distribution == 'Ubuntu' and open_jdk.rc == 0
   changed_when: false

@@ -1,10 +1,12 @@
 
 - name: reload systemd configuration
+  become: yes
   command: systemctl daemon-reload
 
 # Restart service and ensure it is enabled
 
 - name: restart elasticsearch
+  become: yes
   service: name={{instance_init_script | basename}} state=restarted enabled=yes
   when:
     - es_restart_on_change

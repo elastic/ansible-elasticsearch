@@ -9,4 +9,5 @@
 
 #Add any feature specific configuration here
 - name: Set Plugin Directory Permissions
+  become: yes
   file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes

@@ -3,6 +3,7 @@
 
 #List current users
 - name: List Users
+  become: yes
   shell: cat {{conf_dir}}/x-pack/users | awk -F':' '{print $1}'
   register: current_file_users
   when: manage_file_users
@@ -13,6 +14,7 @@
 
 #Remove users
 - name: Remove Users
+  become: yes
   command: >
     {{es_home}}/bin/x-pack/users userdel {{item}}
   with_items: "{{users_to_remove | default([])}}"
@@ -26,6 +28,7 @@
 
 #Add users
 - name: Add Users
+  become: yes
   command: >
     {{es_home}}/bin/x-pack/users useradd {{item}} -p {{es_users.file[item].password}}
   with_items: "{{ users_to_add | default([]) }}"
@@ -37,6 +40,7 @@
 
 #Set passwords for all users declared - Required as the useradd will not change existing user passwords
 - name: Set User Passwords
+  become: yes
   command: >
     {{es_home}}/bin/x-pack/users passwd {{ item }} -p {{es_users.file[item].password}}
   with_items: "{{ es_users.file.keys() | default([]) }}"
@@ -53,14 +57,17 @@
 
 #Copy Roles files
 - name: Copy roles.yml File for Instance
+  become: yes
   template: src=security/roles.yml.j2 dest={{conf_dir}}/x-pack/roles.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   when: es_roles is defined and es_roles.file is defined
 
 #Overwrite users_roles file
 - name: Copy User Roles
+  become: yes
   template: src=security/users_roles.j2 dest={{conf_dir}}/x-pack/users_roles mode=0644 force=yes
   when: manage_file_users and users_roles | length > 0
 
 #Set permission on security directory. E.g. if 2 nodes are installed on the same machine, the second node will not get the users file created at install, causing the files being created at es_users call and then having the wrong Permissions.
 - name: Set Security Directory Permissions Recursive
+  become: yes
   file: state=directory path={{conf_dir}}/x-pack/ owner={{ es_user }} group={{ es_group }} recurse=yes

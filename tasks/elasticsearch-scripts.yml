@@ -10,12 +10,15 @@
       - always
 
 - name: Create script dir
+  become: yes
   file: state=directory path={{ es_script_dir }} owner={{ es_user }} group={{ es_group }} recurse=yes
 
 - name: Copy default scripts to elasticsearch
+  become: yes
   copy: src=scripts dest={{ es_script_dir }} owner={{ es_user }} group={{ es_group }}
   when: es_scripts_fileglob is not defined
 
 - name: Copy scripts to elasticsearch
+  become: yes
   copy: src={{ item }} dest={{ es_script_dir }} owner={{ es_user }} group={{ es_group }}
   with_fileglob: "{{ es_scripts_fileglob | default('') }}"
