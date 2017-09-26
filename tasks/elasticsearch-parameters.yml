@@ -51,6 +51,11 @@
 #For directories we also use the {{inventory_hostname}}-{{ es_instance_name }} - this helps if we have a shared SAN.
 
 - set_fact: instance_suffix={{inventory_hostname}}-{{ es_instance_name }}
+  when: es_unique_dir_names
+
+- set_fact: instance_suffix={{ es_instance_name }}
+  when: not es_unique_dir_names
+
 - set_fact: pid_dir={{ es_pid_dir }}/{{instance_suffix}}
 - set_fact: log_dir={{ es_log_dir }}/{{instance_suffix}}
 - set_fact: data_dirs={{ es_data_dirs | append_to_list('/'+instance_suffix) }}
