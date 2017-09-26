@@ -376,6 +376,12 @@ To define proxy only for a particular plugin during its installation:
 
 > For plugins installation, proxy_host and proxy_port are used first if they are defined and fallback to the global proxy settings if not.
 
+### Unique directory names
+
+If for some reason you do not want the `inventory_hostname` to be used as part of the directory names set `es_unique_dir_names` to `false`.
+
+This might be handy if the storage is frequently attached to a new node, with a different `inventory_hostname`. 
+
 ## Notes
 
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
