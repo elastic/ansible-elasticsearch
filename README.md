@@ -365,6 +365,8 @@ controlled by the following parameters:
 
 * ```es_pid_dir``` - defaults to "/var/run/elasticsearch".
 * ```es_data_dirs``` - defaults to "/var/lib/elasticsearch".  This can be a list or comma separated string e.g. ["/opt/elasticsearch/data-1","/opt/elasticsearch/data-2"] or "/opt/elasticsearch/data-1,/opt/elasticsearch/data-2"
+  * *NOTE:* A directory under the `es_data_dirs` directory(s) will be created for the elasticsearch data and is named after `es_config['cluster.name']` unless `es_shared_storage` is defined and set to `true`.
+* ```es_shared_storage``` - use this if elasticsearch nodes in a cluster are using shared storage for their data (such as a SAN). This will prefix each data directory with the `inventory_hostname` as defined in the ansible inventory.
 * ```es_log_dir``` - defaults to "/var/log/elasticsearch".
 * ```es_restart_on_change``` - defaults to true.  If false, changes will not result in Elasticsearch being restarted.
 * ```es_plugins_reinstall``` - defaults to false.  If true, all currently installed plugins will be removed from a node.  Listed plugins will then be re-installed.  
