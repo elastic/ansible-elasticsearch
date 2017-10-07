@@ -30,6 +30,7 @@
 - set_fact: instance_default_file={{default_file | dirname}}/{{es_instance_name}}_{{default_file | basename}}
 - set_fact: instance_init_script={{init_script | dirname }}/{{es_instance_name}}_{{init_script | basename}}
 - set_fact: conf_dir={{ es_conf_dir }}/{{es_instance_name}}
+  when: es_use_shared_fs
 - set_fact: m_lock_enabled={{ es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True }}
 
 #TODO - if transport.host is not local maybe error on boostrap checks
