@@ -165,7 +165,7 @@ case "$1" in
 	return=$?
 	if [ $return -eq 0 ]; then
 		i=0
-		timeout=10
+		timeout={{es_debian_startup_timeout}}
 		# Wait for the process to be properly started before exiting
 		until { kill -0 `cat "$PID_FILE"`; } >/dev/null 2>&1
 		do
