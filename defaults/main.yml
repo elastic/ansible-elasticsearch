@@ -29,7 +29,7 @@ es_allow_downgrades: false
 es_enable_xpack: false
 es_xpack_features: ["alerting","monitoring","graph","ml","security"]
 #These are used for internal operations performed by ansible.
-#They do not effect the current configuration
+#They do not affect the current configuration
 es_api_host: "localhost"
 es_api_port: 9200
 
