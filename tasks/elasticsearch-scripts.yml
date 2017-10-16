@@ -1,6 +1,6 @@
 ---
 
-- set_fact: es_script_dir={{ es_conf_dir }}/{{es_instance_name}}
+- set_fact: es_script_dir={{ es_conf_dir }}{{ es_conf_dir }}{{'/' + es_instance_name if es_use_shared_fs else ''}}
   tags:
       - always
 

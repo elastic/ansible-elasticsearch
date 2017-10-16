@@ -13,11 +13,11 @@
 ### END INIT INFO
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
-NAME={{es_instance_name}}_{{default_file | basename}}
+NAME={{es_instance_name + '_' if es_use_shared_fs else ''}}{{default_file | basename}}
 {% if es_config['node.name'] is defined %}
-DESC="Elasticsearch Server - {{es_config['node.name']}}"
+DESC="Elasticsearch Server{{' - ' + es_config['node.name'] if es_use_shared_fs else ''}}"
 {% else %}
-DESC="Elasticsearch Server - {{es_instance_name}}"
+DESC="Elasticsearch Server{{' - ' + es_instance_name if es_use_shared_fs else ''}}"
 {% endif %}
 
 DEFAULT=/etc/default/$NAME
