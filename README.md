@@ -14,6 +14,9 @@ The latest Elasticsearch versions of 6.x are actively tested.  **Only Ansible ve
 ##### Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
 
+Java needs to be installed on all servers. This can be achieved with e.g. https://galaxy.ansible.com/srsp/oracle-java/ (Oracle Java) 
+or https://galaxy.ansible.com/geerlingguy/java/ (OpenJDK)
+
 ## Usage
 
 Create your Ansible playbook with your own tasks, and include the role elasticsearch.  You will have to have this repository accessible within the context of playbook, e.g.
@@ -44,6 +47,22 @@ The simplest configuration therefore consists of:
 The above installs a single node 'node1' on the hosts 'localhost'.
 
 This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
+
+### Sample install including Java
+
+Example of using an external ansible role to install Java
+
+```
+- name: Example with Java
+  hosts: localhost
+  roles:
+    - srsp.oracle-java
+    - { role: elasticsearch, es_instance_name: "node1" }
+  vars:
+    java_version: 8
+    java_subversion: 141
+```
+
 
 ### Basic Elasticsearch Configuration
 
@@ -327,7 +346,7 @@ These can either be set to a user declared in the file based realm, with admin p
 
 ### Additional Configuration
 
-In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
+In addition to es_config, the following parameters allow the customization of the Elasticsearch version as well as the role behaviour. Options include:
 
 * ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 and < 6.0 this must be "5.x". For versions >= 6.0 this must be "6.x".
 * ```es_version``` (e.g. "6.1.2").
@@ -343,8 +362,6 @@ In addition to es_config, the following parameters allow the customization of th
     - plugin: ingest-geoip 
 ```
 * ```es_allow_downgrades``` For development purposes only. (true or false (default) )
-* ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
-* ```update_java``` Updates Java to the latest version. (true or false (default))
 * ```es_max_map_count``` maximum number of VMA (Virtual Memory Areas) a process can own. Defaults to 262144.
 * ```es_max_open_files``` the maximum file descriptor number that can be opened by this process. Defaults to 65536.
 * ```es_max_threads``` the maximum number of threads the process can start. Defaults to 2048 (the minimum required by elasticsearch).
