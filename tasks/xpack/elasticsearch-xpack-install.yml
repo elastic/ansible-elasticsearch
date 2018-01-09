@@ -10,6 +10,7 @@
   ignore_errors: yes
   environment:
     CONF_DIR: "{{ conf_dir }}"
+    ES_PATH_CONF: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
 
@@ -24,6 +25,7 @@
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
+    ES_PATH_CONF: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
 
@@ -42,6 +44,7 @@
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
+    ES_PATH_CONF: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
 - name: Delete x-pack zip file
@@ -59,5 +62,6 @@
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
+    ES_PATH_CONF: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
     ES_JAVA_OPTS: "{% if es_proxy_host is defined and es_proxy_host != '' %}-Dhttp.proxyHost={{ es_proxy_host }} -Dhttp.proxyPort={{ es_proxy_port }} -Dhttps.proxyHost={{ es_proxy_host }} -Dhttps.proxyPort={{ es_proxy_port }}{% endif %}"
