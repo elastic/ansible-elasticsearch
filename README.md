@@ -1,7 +1,7 @@
 # ansible-elasticsearch
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
-**THIS ROLE IS FOR 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
+**THIS ROLE IS FOR 6.x, 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
 
 Ansible role for 5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
 
@@ -9,7 +9,7 @@ Ansible role for 5.x Elasticsearch.  Currently this works on Debian and RedHat b
 * Debian 8
 * Centos 7
 
-The latest Elasticsearch versions of 5.x are actively tested.  **Only Ansible versions > 2.3.2 are supported, as this is currently the only version tested.**
+The latest Elasticsearch versions of 6.x are actively tested.  **Only Ansible versions > 2.3.2 are supported, as this is currently the only version tested.**
 
 ##### Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
@@ -329,7 +329,7 @@ These can either be set to a user declared in the file based realm, with admin p
 
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
-* ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 this must be "5.x".
+* ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 and < 6.0 this must be "5.x". For versions >= 6.0 this must be "6.x".
 * ```es_version``` (e.g. "5.1.2").  
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
@@ -396,7 +396,7 @@ To define proxy only for a particular plugin during its installation:
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
 * Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
-* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of 5.x on
+* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of 6.x on
 all supported platforms. 
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and 
 Elasticsearch restarted where required.
@@ -405,7 +405,7 @@ Elasticsearch restarted where required.
 
 ## IMPORTANT NOTES RE PLUGIN MANAGEMENT
 
-* If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 5.x.
+* If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 6.x.
 * If no plugins are listed in the playbook for a node, all currently installed plugins will be removed.
 * The role supports automatic detection of differences between installed and listed plugins - installing those listed but not installed, and removing those installed but not listed.   Should users wish to re-install plugins they should set es_plugins_reinstall to true.  This will cause all currently installed plugins to be removed and those listed to be installed.
 
