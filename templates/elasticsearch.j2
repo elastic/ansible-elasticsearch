@@ -10,6 +10,7 @@ ES_HOME={{es_home}}
 
 # Elasticsearch configuration directory
 CONF_DIR={{conf_dir}}
+ES_PATH_CONF={{conf_dir}}
 
 # Elasticsearch data directory
 DATA_DIR={{ data_dirs | array_to_str }}
@@ -73,4 +74,10 @@ MAX_LOCKED_MEMORY=unlimited
 #MAX_MAP_COUNT=262144
 {% if es_max_map_count is defined %}
 MAX_MAP_COUNT={{es_max_map_count}}
+{% endif %}
+
+# Specifies the maximum number of threads that can be started.
+# Elasticsearch requires a minimum of 2048.
+{% if es_max_threads is defined %}
+MAX_THREADS={{ es_max_threads }}
 {% endif %}

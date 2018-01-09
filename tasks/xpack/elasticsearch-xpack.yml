@@ -11,3 +11,8 @@
 - name: Set Plugin Directory Permissions
   become: yes
   file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes
+
+#Make sure elasticsearch.keystore has correct Permissions
+- name: Set elasticsearch.keystore Permissions
+  become: yes
+  file: state=file path={{ conf_dir }}/elasticsearch.keystore owner={{ es_user }} group={{ es_group }}

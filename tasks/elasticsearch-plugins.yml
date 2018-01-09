@@ -19,6 +19,7 @@
   ignore_errors: yes
   environment:
     CONF_DIR: "{{ conf_dir }}"
+    ES_PATH_CONF: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
 #if es_plugins_reinstall is set to true we remove ALL plugins
@@ -47,6 +48,7 @@
   register: plugin_removed
   environment:
     CONF_DIR: "{{ conf_dir }}"
+    ES_PATH_CONF: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
 
 - name: Install elasticsearch plugins
@@ -60,6 +62,7 @@
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
+    ES_PATH_CONF: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
     ES_JAVA_OPTS: "{% if item.proxy_host is defined and item.proxy_host != '' and item.proxy_port is defined and item.proxy_port != ''%} -Dhttp.proxyHost={{ item.proxy_host }} -Dhttp.proxyPort={{ item.proxy_port }} -Dhttps.proxyHost={{ item.proxy_host }} -Dhttps.proxyPort={{ item.proxy_port }}  {% elif es_proxy_host is defined and es_proxy_host != '' %} -Dhttp.proxyHost={{ es_proxy_host }} -Dhttp.proxyPort={{ es_proxy_port }} -Dhttps.proxyHost={{ es_proxy_host }} -Dhttps.proxyPort={{ es_proxy_port }} {% endif %}"
   until: plugin_installed.rc == 0

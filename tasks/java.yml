@@ -10,6 +10,12 @@
   yum: name={{ java }} state={{java_state}}
   when: ansible_os_family == 'RedHat'
 
+- name: correct java version selected
+  alternatives:
+    name: java
+    path: /usr/bin/java8
+    link: /usr/bin/java
+
 - name: Refresh java repo
   become: yes
   apt: update_cache=yes
