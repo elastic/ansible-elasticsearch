@@ -10,11 +10,16 @@
   yum: name={{ java }} state={{java_state}}
   when: ansible_os_family == 'RedHat'
 
+- name: Get the installed java path
+  shell: "update-alternatives --display java | grep '^/' | awk '{print $1}' | grep 1.8.0"
+  register: java_full_path
+
 - name: correct java version selected
   alternatives:
     name: java
-    path: /usr/bin/java8
+    path: "{{ java_full_path.stdout }}"
     link: /usr/bin/java
+  when: ansible_os_family == 'RedHat' and java_full_path is defined
 
 - name: Refresh java repo
   become: yes
