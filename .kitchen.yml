@@ -16,6 +16,14 @@ provisioner:
   no_proxy: localhost,127.0.0.1
   ignore_extensions_from_root: [".git",".idea",".kitchen.yml"]
   ignore_paths_from_root: [".git",".idea",".kitchen"]
+  <% if ENV['VERSION'] %>
+  attributes:
+    extra_vars:
+      es_major_version: "<%= ENV['VERSION'] %>"
+      <% if ENV['VERSION'] == '6.x' %>
+      es_version: '6.1.2'
+      <% end %>
+  <% end %>
 
 transport:
   max_ssh_sessions: 6
@@ -78,34 +86,34 @@ platforms:
       use_sudo: false
 
 suites:
-  - name: standard-5x
+  - name: standard
     provisioner:
       idempotency_test: true
       playbook: test/integration/standard.yml
     run_list:
     attributes:
-  - name: package-5x
+  - name: package
     run_list:
     attributes:
     provisioner:
       playbook: test/integration/package.yml
-  - name: config-5x
+  - name: config
     run_list:
     attributes:
     provisioner:
       playbook: test/integration/config.yml
-  - name: multi-5x
+  - name: multi
     run_list:
     attributes:
     provisioner:
       playbook: test/integration/multi.yml
       idempotency_test: true
-  - name: xpack-5x
+  - name: xpack
     run_list:
     attributes:
     provisioner:
       playbook: test/integration/xpack.yml
-  - name: xpack-standard-5x
+  - name: xpack-standard
     run_list:
     attributes:
     provisioner:
