@@ -37,6 +37,22 @@
 
 #TODO - if transport.host is not local maybe error on boostrap checks
 
+# Fail if wrong java version
+- name: Fetch JAVA_HOME from environment
+  set_fact: java_home="{{ lookup('env','JAVA_HOME') }}"
+
+- name: Fetch Java version from PATH
+  shell: java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
+  register: java_version
+  when: java_home is not defined
+
+- name: Fetch Java version from JAVA_HOME
+  shell: {{ java_home}}/bin/java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
+  register: java_version
+  when: java_home is defined
+
+- fail: msg="You need Java version {{es_java_required_version}} for this role"
+  when: java_version.stdout | version_compare(es_java_required_version, '>=') 
 
 #Use systemd for the following distributions:
 #Ubuntu 15 and up

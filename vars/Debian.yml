@@ -1,4 +1,3 @@
 ---
-java: "{% if es_java is defined %}{{es_java}}{% else %}openjdk-8-jre-headless{% endif %}"
 default_file: "/etc/default/elasticsearch"
 es_home: "/usr/share/elasticsearch"
