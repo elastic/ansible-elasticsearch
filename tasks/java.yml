@@ -13,6 +13,7 @@
 - name: Get the installed java path
   shell: "update-alternatives --display java | grep '^/' | awk '{print $1}' | grep 1.8.0"
   register: java_full_path
+  when: ansible_os_family == 'RedHat'
 
 - name: correct java version selected
   alternatives:
