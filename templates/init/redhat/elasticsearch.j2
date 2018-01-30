@@ -120,6 +120,9 @@ start() {
     if [ -n "$MAX_LOCKED_MEMORY" ]; then
         ulimit -l $MAX_LOCKED_MEMORY
     fi
+    if [ -n "$MAX_THREADS" ]; then
+        ulimit -u $MAX_THREADS
+    fi
     if [ -n "$MAX_MAP_COUNT" -a -f /proc/sys/vm/max_map_count ]; then
         sysctl -q -w vm.max_map_count=$MAX_MAP_COUNT
     fi
@@ -135,7 +138,11 @@ start() {
     cd $ES_HOME
     echo -n $"Starting $prog: "
     # if not running, start it up here, usually something like "daemon $exec"
+{% if (es_version | version_compare('6.0.0', '<')) %}
     daemon --user $ES_USER --pidfile $pidfile $exec -p $pidfile -d -Edefault.path.logs=$LOG_DIR -Edefault.path.data=$DATA_DIR -Edefault.path.conf=$CONF_DIR
+{% else %}
+    daemon --user $ES_USER --pidfile $pidfile $exec -p $pidfile -d
+{% endif %}
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile
