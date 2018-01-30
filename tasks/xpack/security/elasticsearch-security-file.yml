@@ -21,6 +21,7 @@
   when: manage_file_users
   environment:
     CONF_DIR: "{{ conf_dir }}"
+    ES_PATH_CONF: "{{ conf_dir }}"
     ES_HOME: "{{es_home}}"
 
 - set_fact: users_to_add={{ es_users.file.keys() | difference (current_file_users.stdout_lines) }}
@@ -36,6 +37,7 @@
   no_log: True
   environment:
     CONF_DIR: "{{ conf_dir }}"
+    ES_PATH_CONF: "{{ conf_dir }}"
     ES_HOME: "{{es_home}}"
 
 #Set passwords for all users declared - Required as the useradd will not change existing user passwords
@@ -50,6 +52,7 @@
   no_log: True
   environment:
     CONF_DIR: "{{ conf_dir }}"
+    ES_PATH_CONF: "{{ conf_dir }}"
     ES_HOME: "{{es_home}}"
 
 - set_fact: users_roles={{es_users.file | extract_role_users () }}
