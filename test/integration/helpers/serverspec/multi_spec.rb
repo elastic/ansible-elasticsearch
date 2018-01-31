@@ -49,9 +49,9 @@ shared_examples 'multi::init' do |vars|
     it { should contain 'node.name: localhost-master' }
     it { should contain 'bootstrap.memory_lock: true' }
     if vars['es_major_version'] == '6.x'
-      it { should_not contain 'path.conf: /etc/elasticsearch/node1' }
+      it { should_not contain 'path.conf: /etc/elasticsearch/master' }
     else
-      it { should contain 'path.conf: /etc/elasticsearch/node1' }
+      it { should contain 'path.conf: /etc/elasticsearch/master' }
     end
     it { should contain 'path.data: /opt/elasticsearch/master/localhost-master' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-master' }
