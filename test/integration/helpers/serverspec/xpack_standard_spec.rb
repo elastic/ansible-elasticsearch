@@ -111,17 +111,13 @@ shared_examples 'xpack_standard::init' do |vars|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  for plugin in vars['es_plugins']
-    plugin = plugin['plugin']
+  describe file('/usr/share/elasticsearch/plugins/x-pack') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
 
-    describe file('/usr/share/elasticsearch/plugins/'+plugin) do
-      it { should be_directory }
-      it { should be_owned_by 'elasticsearch' }
-    end
-
-    describe command('curl -s localhost:9200/_nodes/plugins | grep \'"name":"'+plugin+'","version":"'+vars['es_version']+'"\'') do
-      its(:exit_status) { should eq 0 }
-    end
+  describe command('curl -s localhost:9200/_nodes/plugins | grep \'"name":"x-pack","version":"'+vars['es_version']+'"\'') do
+    its(:exit_status) { should eq 0 }
   end
 
   #Test users file, users_roles and roles.yml
