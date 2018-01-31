@@ -29,7 +29,11 @@ shared_examples 'xpack::init' do |vars|
   describe file('/etc/elasticsearch/security_node/elasticsearch.yml') do
     it { should contain 'node.name: localhost-security_node' }
     it { should contain 'cluster.name: elasticsearch' }
-    it { should contain 'path.conf: /etc/elasticsearch/security_node' }
+    if vars['es_major_version'] == '6.x'
+      it { should_not contain 'path.conf: /etc/elasticsearch/node1' }
+    else
+      it { should contain 'path.conf: /etc/elasticsearch/node1' }
+    end
     it { should contain 'path.data: /var/lib/elasticsearch/localhost-security_node' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-security_node' }
   end

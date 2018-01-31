@@ -36,7 +36,11 @@ shared_examples 'config::init' do |vars|
     it { should contain 'node.name: node1' }
     it { should contain 'bootstrap.memory_lock: true' }
     it { should contain 'discovery.zen.ping.unicast.hosts: localhost:9501' }
-    it { should contain 'path.conf: /etc/elasticsearch/node1' }
+    if vars['es_major_version'] == '6.x'
+      it { should_not contain 'path.conf: /etc/elasticsearch/node1' }
+    else
+      it { should contain 'path.conf: /etc/elasticsearch/node1' }
+    end
     it { should contain 'path.data: /opt/elasticsearch/data-1/localhost-node1,/opt/elasticsearch/data-2/localhost-node1' }
     it { should contain 'path.logs: /opt/elasticsearch/logs/localhost-node1' }
   end

@@ -29,7 +29,11 @@ shared_examples 'multi::init' do |vars|
     it { should contain 'node.master: false' }
     it { should contain 'node.name: localhost-node1' }
     it { should_not contain 'bootstrap.memory_lock: true' }
-    it { should contain 'path.conf: /etc/elasticsearch/node1' }
+    if vars['es_major_version'] == '6.x'
+      it { should_not contain 'path.conf: /etc/elasticsearch/node1' }
+    else
+      it { should contain 'path.conf: /etc/elasticsearch/node1' }
+    end
     it { should contain 'path.data: /opt/elasticsearch/data-1/localhost-node1,/opt/elasticsearch/data-2/localhost-node1' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-node1' }
   end
@@ -44,7 +48,11 @@ shared_examples 'multi::init' do |vars|
     it { should contain 'node.master: true' }
     it { should contain 'node.name: localhost-master' }
     it { should contain 'bootstrap.memory_lock: true' }
-    it { should contain 'path.conf: /etc/elasticsearch/master' }
+    if vars['es_major_version'] == '6.x'
+      it { should_not contain 'path.conf: /etc/elasticsearch/node1' }
+    else
+      it { should contain 'path.conf: /etc/elasticsearch/node1' }
+    end
     it { should contain 'path.data: /opt/elasticsearch/master/localhost-master' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-master' }
   end
