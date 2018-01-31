@@ -10,7 +10,6 @@
     es_templates: true
     es_heap_size: "1g"
     es_api_port: 9200
-    es_version: "5.5.1"
     es_plugins:
       - plugin: ingest-geoip
 
@@ -25,7 +24,6 @@
   vars:
     es_scripts: true
     es_templates: true
-    es_version: "5.5.1"
     es_heap_size: "1g"
     es_api_port: 9200
     es_plugins:
