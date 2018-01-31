@@ -14,6 +14,7 @@
   shell: "update-alternatives --display java | grep '^/' | awk '{print $1}' | grep 1.8.0"
   register: java_full_path
   failed_when: False
+  changed_when: False
   when: ansible_os_family == 'RedHat'
 
 - name: correct java version selected
