@@ -16,6 +16,7 @@
   command: >
    {{es_home}}/bin/elasticsearch-keystore list
   register: list_keystore
+  changed_when: False
   environment:
     ES_PATH_CONF: "{{ conf_dir }}"
   when:
