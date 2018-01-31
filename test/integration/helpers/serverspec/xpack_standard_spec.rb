@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-shared_examples 'xpack_standard::init' do |es_version,plugins|
+shared_examples 'xpack_standard::init' do |vars|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -42,9 +42,9 @@ shared_examples 'xpack_standard::init' do |es_version,plugins|
   end
 
   describe 'version check' do
-    it 'should be reported as version '+es_version do
+    it 'should be reported as version '+vars['es_version'] do
       command = command('curl -s localhost:9200 | grep number')
-      expect(command.stdout).to match(es_version)
+      expect(command.stdout).to match(vars['es_version'])
       expect(command.exit_status).to eq(0)
     end
   end
@@ -107,13 +107,15 @@ shared_examples 'xpack_standard::init' do |es_version,plugins|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  for plugin in plugins
+  for plugin in vars['es_plugins']
+    plugin = plugin['plugin']
+
     describe file('/usr/share/elasticsearch/plugins/'+plugin) do
       it { should be_directory }
       it { should be_owned_by 'elasticsearch' }
     end
 
-    describe command('curl -s localhost:9200/_nodes/plugins | grep \'"name":"'+plugin+'","version":"'+es_version+'"\'') do
+    describe command('curl -s localhost:9200/_nodes/plugins | grep \'"name":"'+plugin+'","version":"'+vars['es_version']+'"\'') do
       its(:exit_status) { should eq 0 }
     end
   end

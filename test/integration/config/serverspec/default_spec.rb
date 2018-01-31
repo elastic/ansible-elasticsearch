@@ -1,6 +1,8 @@
 require 'config_spec'
+require 'json'
+vars = JSON.parse(File.read('/tmp/vars.json'))
 
-describe 'Config Tests v 5.x' do
-  include_examples 'config::init', "5.5.1", ["ingest-attachment","ingest-user-agent"]
+describe 'Config Tests' do
+  include_examples 'config::init', vars
 end
 

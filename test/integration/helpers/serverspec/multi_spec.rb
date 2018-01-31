@@ -1,6 +1,8 @@
 require 'spec_helper'
+require 'json'
+vars = JSON.parse(File.read('/tmp/vars.json'))
 
-shared_examples 'multi::init' do  |es_version,plugins|
+shared_examples 'multi::init' do |vars|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -154,22 +156,23 @@ shared_examples 'multi::init' do  |es_version,plugins|
   end
 
   describe 'version check on master' do
-    it 'should be reported as version '+es_version do
+    it 'should be reported as version '+vars['es_version'] do
       command = command('curl -s localhost:9200 | grep number')
-      expect(command.stdout).to match(es_version)
+      expect(command.stdout).to match(vars['es_version'])
       expect(command.exit_status).to eq(0)
     end
   end
 
   describe 'version check on data' do
-    it 'should be reported as version '+es_version do
+    it 'should be reported as version '+vars['es_version'] do
       command = command('curl -s localhost:9201 | grep number')
-      expect(command.stdout).to match(es_version)
+      expect(command.stdout).to match(vars['es_version'])
       expect(command.exit_status).to eq(0)
     end
   end
 
-  for plugin in plugins
+  for plugin in vars['es_plugins']
+    plugin = plugin['plugin']
 
     describe command('curl -s localhost:9200/_nodes/plugins?pretty=true | grep '+plugin) do
       its(:exit_status) { should eq 0 }

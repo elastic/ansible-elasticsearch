@@ -1,6 +1,7 @@
 require 'package_spec'
+require 'json'
+vars = JSON.parse(File.read('/tmp/vars.json'))
 
-
-describe 'Package Tests v 5.x' do
-  include_examples 'package::init', "5.5.1", ["ingest-attachment","ingest-geoip"]
+describe 'Package Tests' do
+  include_examples 'package::init', vars
 end

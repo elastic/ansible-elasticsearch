@@ -5,6 +5,8 @@
 
 - name: Simple Example
   hosts: localhost
+  tasks:
+    - include: elasticsearch/test/integration/debug.yml
   roles:
     - {
         role: elasticsearch,

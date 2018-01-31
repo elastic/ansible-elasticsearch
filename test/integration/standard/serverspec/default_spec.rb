@@ -1,8 +1,9 @@
 require 'standard_spec'
+require 'json'
+vars = JSON.parse(File.read('/tmp/vars.json'))
 
-
-describe 'Standard Tests v 5.x' do
-  include_examples 'standard::init', "5.5.1", ["ingest-geoip"]
+describe 'Standard Tests' do
+  include_examples 'standard::init', vars
 end
 
 
