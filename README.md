@@ -3,7 +3,7 @@
 
 **THIS ROLE IS FOR 6.x, 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
 
-Ansible role for 5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
+Ansible role for 6.x/5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
 
 * Ubuntu 14.04/16.04
 * Debian 8
@@ -330,7 +330,7 @@ These can either be set to a user declared in the file based realm, with admin p
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
 * ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 and < 6.0 this must be "5.x". For versions >= 6.0 this must be "6.x".
-* ```es_version``` (e.g. "5.1.2").  
+* ```es_version``` (e.g. "6.1.2").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
