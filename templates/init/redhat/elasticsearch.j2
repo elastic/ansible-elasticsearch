@@ -46,6 +46,7 @@ MAX_MAP_COUNT={{es_max_map_count}}
 LOG_DIR="{{log_dir}}"
 DATA_DIR={{ data_dirs | array_to_str }}
 CONF_DIR="{{conf_dir}}"
+ES_PATH_CONF="{{ conf_dir }}"
 
 PID_DIR="{{pid_dir}}"
 
@@ -74,6 +75,7 @@ export JAVA_HOME
 export ES_INCLUDE
 export ES_JVM_OPTIONS
 export ES_STARTUP_SLEEP_TIME
+export ES_PATH_CONF
 
 # export unsupported variables so bin/elasticsearch can reject them and inform the user these are unsupported
 if test -n "$ES_MIN_MEM"; then export ES_MIN_MEM; fi
@@ -120,6 +122,9 @@ start() {
     if [ -n "$MAX_LOCKED_MEMORY" ]; then
         ulimit -l $MAX_LOCKED_MEMORY
     fi
+    if [ -n "$MAX_THREADS" ]; then
+        ulimit -u $MAX_THREADS
+    fi
     if [ -n "$MAX_MAP_COUNT" -a -f /proc/sys/vm/max_map_count ]; then
         sysctl -q -w vm.max_map_count=$MAX_MAP_COUNT
     fi
@@ -135,7 +140,11 @@ start() {
     cd $ES_HOME
     echo -n $"Starting $prog: "
     # if not running, start it up here, usually something like "daemon $exec"
+{% if (es_version | version_compare('6.0.0', '<')) %}
     daemon --user $ES_USER --pidfile $pidfile $exec -p $pidfile -d -Edefault.path.logs=$LOG_DIR -Edefault.path.data=$DATA_DIR -Edefault.path.conf=$CONF_DIR
+{% else %}
+    daemon --user $ES_USER --pidfile $pidfile $exec -p $pidfile -d
+{% endif %}
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile

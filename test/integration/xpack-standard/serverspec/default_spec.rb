@@ -1,5 +1,7 @@
 require 'xpack_standard_spec'
+require 'json'
+vars = JSON.parse(File.read('/tmp/vars.json'))
 
-describe 'Xpack Standard Tests v 5.x' do
-  include_examples 'xpack_standard::init', "5.5.1", []
+describe 'Xpack Standard Tests' do
+  include_examples 'xpack_standard::init', vars
 end

@@ -1,0 +1,6 @@
+---
+- name: Dump all variables to a file
+  changed_when: False
+  copy:
+    content: '{{ vars | to_nice_json }} '
+    dest: '/tmp/vars.json'

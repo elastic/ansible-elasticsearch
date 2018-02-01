@@ -39,7 +39,9 @@ platforms:
         - pip install jmespath
         - pip uninstall -y ansible
       use_sudo: false
-      volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+      volume: 
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc/elasticsearch
   - name: ubuntu-16.04
     driver_config:
       image: dliappis/ubuntu-devopsci:16.04
@@ -51,7 +53,9 @@ platforms:
         - pip install jmespath
         - pip uninstall -y ansible
       use_sudo: false
-      volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+      volume: 
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc/elasticsearch
       run_command: "/sbin/init"
   - name: debian-8
     driver_config:
@@ -65,7 +69,9 @@ platforms:
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
         - pip install jmespath
         - pip uninstall -y ansible
-      volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+      volume: 
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc/elasticsearch
       use_sudo: false
       run_command: "/sbin/init"
   - name: centos-7
@@ -80,7 +86,9 @@ platforms:
         - yum -y remove ansible
         - yum clean all
         - pip install jmespath
-      volume: <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+      volume: 
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc/elasticsearch
       run_command: "/usr/sbin/init"
       privileged: true
       use_sudo: false

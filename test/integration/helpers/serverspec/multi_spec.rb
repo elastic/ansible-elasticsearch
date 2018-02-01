@@ -1,6 +1,8 @@
 require 'spec_helper'
+require 'json'
+vars = JSON.parse(File.read('/tmp/vars.json'))
 
-shared_examples 'multi::init' do  |es_version,plugins|
+shared_examples 'multi::init' do |vars|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -27,7 +29,11 @@ shared_examples 'multi::init' do  |es_version,plugins|
     it { should contain 'node.master: false' }
     it { should contain 'node.name: localhost-node1' }
     it { should_not contain 'bootstrap.memory_lock: true' }
-    it { should contain 'path.conf: /etc/elasticsearch/node1' }
+    if vars['es_major_version'] == '6.x'
+      it { should_not contain 'path.conf: /etc/elasticsearch/node1' }
+    else
+      it { should contain 'path.conf: /etc/elasticsearch/node1' }
+    end
     it { should contain 'path.data: /opt/elasticsearch/data-1/localhost-node1,/opt/elasticsearch/data-2/localhost-node1' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-node1' }
   end
@@ -42,7 +48,11 @@ shared_examples 'multi::init' do  |es_version,plugins|
     it { should contain 'node.master: true' }
     it { should contain 'node.name: localhost-master' }
     it { should contain 'bootstrap.memory_lock: true' }
-    it { should contain 'path.conf: /etc/elasticsearch/master' }
+    if vars['es_major_version'] == '6.x'
+      it { should_not contain 'path.conf: /etc/elasticsearch/master' }
+    else
+      it { should contain 'path.conf: /etc/elasticsearch/master' }
+    end
     it { should contain 'path.data: /opt/elasticsearch/master/localhost-master' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-master' }
   end
@@ -154,22 +164,23 @@ shared_examples 'multi::init' do  |es_version,plugins|
   end
 
   describe 'version check on master' do
-    it 'should be reported as version '+es_version do
+    it 'should be reported as version '+vars['es_version'] do
       command = command('curl -s localhost:9200 | grep number')
-      expect(command.stdout).to match(es_version)
+      expect(command.stdout).to match(vars['es_version'])
       expect(command.exit_status).to eq(0)
     end
   end
 
   describe 'version check on data' do
-    it 'should be reported as version '+es_version do
+    it 'should be reported as version '+vars['es_version'] do
       command = command('curl -s localhost:9201 | grep number')
-      expect(command.stdout).to match(es_version)
+      expect(command.stdout).to match(vars['es_version'])
       expect(command.exit_status).to eq(0)
     end
   end
 
-  for plugin in plugins
+  for plugin in vars['es_plugins']
+    plugin = plugin['plugin']
 
     describe command('curl -s localhost:9200/_nodes/plugins?pretty=true | grep '+plugin) do
       its(:exit_status) { should eq 0 }
