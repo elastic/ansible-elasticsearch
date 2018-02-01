@@ -1,15 +1,15 @@
 # ansible-elasticsearch
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
-**THIS ROLE IS FOR 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
+**THIS ROLE IS FOR 6.x, 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
 
-Ansible role for 5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
+Ansible role for 6.x/5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
 
 * Ubuntu 14.04/16.04
 * Debian 8
 * Centos 7
 
-The latest Elasticsearch versions of 5.x are actively tested.  **Only Ansible versions > 2.3.2 are supported, as this is currently the only version tested.**
+The latest Elasticsearch versions of 6.x are actively tested.  **Only Ansible versions > 2.3.2 are supported, as this is currently the only version tested.**
 
 ##### Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
@@ -217,6 +217,58 @@ Then run it:
 ```
 ansible-playbook -i hosts ./your-playbook.yml
 ```
+#### Shared configuration across the nodes in a cluster
+
+A typical use of this role is to provision a cluster where a fair bit of configuration is likely to be common across all the nodes. In such cases we can simplify the above playbook by separating out the common pieces of the config into a shared file such as, "groups_vars/all.json" so is available for all hosts. For example, the above configuration can be simplified to:
+
+```
+- hosts: master_nodes
+  roles:
+    - { role: elasticsearch, es_instance_name: "node1", es_heap_size: "1g",
+    es_config: {
+        node.data: false,
+        node.master: true,
+        http.port: 9200,
+        transport.tcp.port: 9300
+        }
+    }
+- hosts: data_nodes
+  roles:
+    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch", 
+    es_config: {
+        node.data: true,
+        node.master: false,
+        http.port: 9200,
+        transport.tcp.port: 9300
+        } 
+    }
+- hosts: data_nodes
+  roles:
+    - { role: elasticsearch, es_instance_name: "node2", es_data_dirs: "/opt/elasticsearch", 
+    es_config: {
+        node.data: true,
+        node.master: false,
+        http.port: 9201,
+        transport.tcp.port: 9301
+        } 
+    }
+```
+with the common configuraion moved to the file: "group_vars/all.json"
+```
+{
+  "es_scripts": "false",
+  "es_templates": "false",
+  "es_version_lock": "false",
+  "es_plugins": [{
+    "plugin": "ingest-geoip"
+  }],
+  "common_es_config": {
+    "cluster.name": "es-cluster",
+    "discovery.zen.ping.unicast.hosts": "elastic02:9300",
+    "bootstrap.memory_lock": false
+  }
+}
+```
 
 ### Installing X-Pack Features
 
@@ -329,8 +381,8 @@ These can either be set to a user declared in the file based realm, with admin p
 
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
-* ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 this must be "5.x".
-* ```es_version``` (e.g. "5.1.2").  
+* ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 and < 6.0 this must be "5.x". For versions >= 6.0 this must be "6.x".
+* ```es_version``` (e.g. "6.1.2").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
@@ -348,6 +400,7 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_max_map_count``` maximum number of VMA (Virtual Memory Areas) a process can own. Defaults to 262144.
 * ```es_max_open_files``` the maximum file descriptor number that can be opened by this process. Defaults to 65536.
 * ```es_max_threads``` the maximum number of threads the process can start. Defaults to 2048 (the minimum required by elasticsearch).
+* ```es_debian_startup_timeout``` how long Debian-family SysV init scripts wait for the service to start, in seconds. Defaults to 10 seconds.
 
 Earlier examples illustrate the installation of plugins using `es_plugins`.  For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  For community based plugins include the full url.  This approach should NOT be used for the X-Pack plugin.  See X-Pack below for details here.
  
@@ -396,7 +449,7 @@ To define proxy only for a particular plugin during its installation:
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
 * Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
-* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of 5.x on
+* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of 6.x on
 all supported platforms. 
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and 
 Elasticsearch restarted where required.
@@ -405,7 +458,7 @@ Elasticsearch restarted where required.
 
 ## IMPORTANT NOTES RE PLUGIN MANAGEMENT
 
-* If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 5.x.
+* If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 6.x.
 * If no plugins are listed in the playbook for a node, all currently installed plugins will be removed.
 * The role supports automatic detection of differences between installed and listed plugins - installing those listed but not installed, and removing those installed but not listed.   Should users wish to re-install plugins they should set es_plugins_reinstall to true.  This will cause all currently installed plugins to be removed and those listed to be installed.
 

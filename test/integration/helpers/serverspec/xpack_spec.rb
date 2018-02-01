@@ -1,6 +1,8 @@
 require 'spec_helper'
+require 'json'
+vars = JSON.parse(File.read('/tmp/vars.json'))
 
-shared_examples 'xpack::init' do |es_version,plugins|
+shared_examples 'xpack::init' do |vars|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -27,7 +29,11 @@ shared_examples 'xpack::init' do |es_version,plugins|
   describe file('/etc/elasticsearch/security_node/elasticsearch.yml') do
     it { should contain 'node.name: localhost-security_node' }
     it { should contain 'cluster.name: elasticsearch' }
-    it { should contain 'path.conf: /etc/elasticsearch/security_node' }
+    if vars['es_major_version'] == '6.x'
+      it { should_not contain 'path.conf: /etc/elasticsearch/security_node' }
+    else
+      it { should contain 'path.conf: /etc/elasticsearch/security_node' }
+    end
     it { should contain 'path.data: /var/lib/elasticsearch/localhost-security_node' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-security_node' }
   end
@@ -39,9 +45,9 @@ shared_examples 'xpack::init' do |es_version,plugins|
   end
 
   describe 'version check' do
-    it 'should be reported as version '+es_version do
+    it 'should be reported as version '+vars['es_version'] do
       command = command('curl -s localhost:9200 -u es_admin:changeMeAgain | grep number')
-      expect(command.stdout).to match(es_version)
+      expect(command.stdout).to match(vars['es_version'])
       expect(command.exit_status).to eq(0)
     end
   end
@@ -104,13 +110,15 @@ shared_examples 'xpack::init' do |es_version,plugins|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  for plugin in plugins
+  for plugin in vars['es_plugins']
+    plugin = plugin['plugin']
+
     describe file('/usr/share/elasticsearch/plugins/'+plugin) do
       it { should be_directory }
       it { should be_owned_by 'elasticsearch' }
     end
 
-    describe command('curl -s localhost:9200/_nodes/plugins -u es_admin:changeMeAgain | grep \'"name":"'+plugin+'","version":"'+es_version+'"\'') do
+    describe command('curl -s localhost:9200/_nodes/plugins -u es_admin:changeMeAgain | grep \'"name":"'+plugin+'","version":"'+vars['es_version']+'"\'') do
       its(:exit_status) { should eq 0 }
     end
   end
@@ -141,8 +149,11 @@ shared_examples 'xpack::init' do |es_version,plugins|
     its(:exit_status) { should eq 0 }
   end
 
-  describe command('curl -s localhost:9200/_xpack/security/role -u es_admin:changeMeAgain | md5sum | grep 44b97844bd8b31d5573493a99ef62106') do
-    its(:exit_status) { should eq 0 }
+  describe 'security roles' do
+    it 'should list the security roles' do
+      roles = curl_json('http://localhost:9200/_xpack/security/role', username='es_admin', password='changeMeAgain')
+      expect(roles.key?('superuser'))
+    end
   end
 
   describe file('/etc/elasticsearch/templates') do
@@ -166,8 +177,10 @@ shared_examples 'xpack::init' do |es_version,plugins|
   #This is possibly subject to format changes in the response across versions so may fail in the future
   describe 'Template Contents Correct' do
     it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
-      command = command('curl -s "localhost:9200/_template/basic" -u es_admin:changeMeAgain | md5sum')
-      expect(command.stdout).to match(/153b1a45daf48ccee80395b85c61e332/)
+      template = curl_json('http://localhost:9200/_template/basic', username='es_admin', password='changeMeAgain')
+      expect(template.key?('basic'))
+      expect(template['basic']['settings']['index']['number_of_shards']).to eq("1")
+      expect(template['basic']['mappings']['type1']['_source']['enabled']).to eq(false)
     end
   end
 
@@ -203,9 +216,9 @@ shared_examples 'xpack::init' do |es_version,plugins|
   #check accounts are correct i.e. we can auth and they have the correct roles
 
   describe 'kibana4_server access check' do
-    it 'should be reported as version '+es_version do
+    it 'should be reported as version '+vars['es_version'] do
       command = command('curl -s localhost:9200/ -u kibana4_server:changeMe | grep number')
-      expect(command.stdout).to match(es_version)
+      expect(command.stdout).to match(vars['es_version'])
       expect(command.exit_status).to eq(0)
     end
   end
@@ -216,9 +229,9 @@ shared_examples 'xpack::init' do |es_version,plugins|
 
 
   describe 'logstash_system access check' do
-    it 'should be reported as version '+es_version do
+    it 'should be reported as version '+vars['es_version'] do
       command = command('curl -s localhost:9200/ -u logstash_system:aNewLogstashPassword | grep number')
-      expect(command.stdout).to match(es_version)
+      expect(command.stdout).to match(vars['es_version'])
       expect(command.exit_status).to eq(0)
     end
   end
@@ -227,11 +240,12 @@ shared_examples 'xpack::init' do |es_version,plugins|
       its(:exit_status) { should eq 0 }
   end
 
-  describe 'kibana access check' do
-    it 'should be reported as version '+es_version do
-      command = command('curl -s localhost:9200/ -u kibana:changeme | grep number')
-      expect(command.stdout).to match(es_version)
-      expect(command.exit_status).to eq(0)
+  if vars['es_major_version'] == '5.x' # kibana default password has been removed in 6.x
+    describe 'kibana access check' do
+      it 'should be reported as version '+vars['es_version'] do
+        result = curl_json('http://localhost:9200/', username='kibana', password='changeme')
+        expect(result['version']['number']).to eq(vars['es_version'])
+      end
     end
   end
 

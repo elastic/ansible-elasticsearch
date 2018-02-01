@@ -3,7 +3,11 @@
 {{ es_config | to_nice_yaml }}
 {% endif %}
 
-{% if es_config['cluster.name'] is not defined %}
+{% if common_es_config %}
+{{ common_es_config | to_nice_yaml }}
+{% endif %}
+
+{% if (es_config['cluster.name'] is not defined) and (common_es_config['cluster.name'] is not defined) %}
 cluster.name: elasticsearch
 {% endif %}
 
@@ -14,7 +18,10 @@ node.name: {{inventory_hostname}}-{{es_instance_name}}
 #################################### Paths ####################################
 
 # Path to directory containing configuration (this file and logging.yml):
+
+{% if (es_version | version_compare('6.0.0', '<')) %}
 path.conf: {{ conf_dir }}
+{% endif %}
 
 path.data: {{ data_dirs | array_to_str }}
 

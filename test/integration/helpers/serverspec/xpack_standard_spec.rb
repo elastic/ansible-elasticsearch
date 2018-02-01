@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-shared_examples 'xpack_standard::init' do |es_version,plugins|
+shared_examples 'xpack_standard::init' do |vars|
 
   describe user('elasticsearch') do
     it { should exist }
@@ -27,7 +27,11 @@ shared_examples 'xpack_standard::init' do |es_version,plugins|
   describe file('/etc/elasticsearch/security_node/elasticsearch.yml') do
     it { should contain 'node.name: localhost-security_node' }
     it { should contain 'cluster.name: elasticsearch' }
-    it { should contain 'path.conf: /etc/elasticsearch/security_node' }
+    if vars['es_major_version'] == '6.x'
+      it { should_not contain 'path.conf: /etc/elasticsearch/security_node' }
+    else
+      it { should contain 'path.conf: /etc/elasticsearch/security_node' }
+    end
     it { should contain 'path.data: /var/lib/elasticsearch/localhost-security_node' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-security_node' }
     it { should contain 'xpack.security.enabled: false' }
@@ -42,9 +46,9 @@ shared_examples 'xpack_standard::init' do |es_version,plugins|
   end
 
   describe 'version check' do
-    it 'should be reported as version '+es_version do
+    it 'should be reported as version '+vars['es_version'] do
       command = command('curl -s localhost:9200 | grep number')
-      expect(command.stdout).to match(es_version)
+      expect(command.stdout).to match(vars['es_version'])
       expect(command.exit_status).to eq(0)
     end
   end
@@ -107,15 +111,13 @@ shared_examples 'xpack_standard::init' do |es_version,plugins|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  for plugin in plugins
-    describe file('/usr/share/elasticsearch/plugins/'+plugin) do
-      it { should be_directory }
-      it { should be_owned_by 'elasticsearch' }
-    end
+  describe file('/usr/share/elasticsearch/plugins/x-pack') do
+    it { should be_directory }
+    it { should be_owned_by 'elasticsearch' }
+  end
 
-    describe command('curl -s localhost:9200/_nodes/plugins | grep \'"name":"'+plugin+'","version":"'+es_version+'"\'') do
-      its(:exit_status) { should eq 0 }
-    end
+  describe command('curl -s localhost:9200/_nodes/plugins | grep \'"name":"x-pack","version":"'+vars['es_version']+'"\'') do
+    its(:exit_status) { should eq 0 }
   end
 
   #Test users file, users_roles and roles.yml
