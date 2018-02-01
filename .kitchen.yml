@@ -10,7 +10,7 @@ provisioner:
   require_ansible_omnibus: false
   require_ansible_source: false
   require_pip: true
-  ansible_version: 2.3.2.0
+  ansible_version: 2.4.3.0
   http_proxy: <%= ENV['HTTP_PROXY'] %>
   https_proxy: <%= ENV['HTTPS_PROXY'] %>
   no_proxy: localhost,127.0.0.1
