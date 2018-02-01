@@ -149,8 +149,11 @@ shared_examples 'xpack::init' do |vars|
     its(:exit_status) { should eq 0 }
   end
 
-  describe command('curl -s localhost:9200/_xpack/security/role -u es_admin:changeMeAgain | md5sum | grep 44b97844bd8b31d5573493a99ef62106') do
-    its(:exit_status) { should eq 0 }
+  describe 'security roles' do
+    it 'should list the security roles' do
+      roles = curl_json('http://localhost:9200/_xpack/security/role', username='es_admin', password='changeMeAgain')
+      expect(roles.key?('superuser'))
+    end
   end
 
   describe file('/etc/elasticsearch/templates') do
@@ -174,8 +177,10 @@ shared_examples 'xpack::init' do |vars|
   #This is possibly subject to format changes in the response across versions so may fail in the future
   describe 'Template Contents Correct' do
     it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
-      command = command('curl -s "localhost:9200/_template/basic" -u es_admin:changeMeAgain | md5sum')
-      expect(command.stdout).to match(/153b1a45daf48ccee80395b85c61e332/)
+      template = curl_json('http://localhost:9200/_template/basic', username='es_admin', password='changeMeAgain')
+      expect(template.key?('basic'))
+      expect(template['basic']['settings']['index']['number_of_shards']).to eq("1")
+      expect(template['basic']['mappings']['type1']['_source']['enabled']).to eq(false)
     end
   end
 
@@ -235,11 +240,12 @@ shared_examples 'xpack::init' do |vars|
       its(:exit_status) { should eq 0 }
   end
 
-  describe 'kibana access check' do
-    it 'should be reported as version '+vars['es_version'] do
-      command = command('curl -s localhost:9200/ -u kibana:changeme | grep number')
-      expect(command.stdout).to match(vars['es_version'])
-      expect(command.exit_status).to eq(0)
+  if vars['es_major_version'] == '5.x' # kibana default password has been removed in 6.x
+    describe 'kibana access check' do
+      it 'should be reported as version '+vars['es_version'] do
+        result = curl_json('http://localhost:9200/', username='kibana', password='changeme')
+        expect(result['version']['number']).to eq(vars['es_version'])
+      end
     end
   end
 
