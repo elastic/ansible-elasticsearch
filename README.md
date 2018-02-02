@@ -217,6 +217,58 @@ Then run it:
 ```
 ansible-playbook -i hosts ./your-playbook.yml
 ```
+#### Shared configuration across the nodes in a cluster
+
+A typical use of this role is to provision a cluster where a fair bit of configuration is likely to be common across all the nodes. In such cases we can simplify the above playbook by separating out the common pieces of the config into a shared file such as, "groups_vars/all.json" so is available for all hosts. For example, the above configuration can be simplified to:
+
+```
+- hosts: master_nodes
+  roles:
+    - { role: elasticsearch, es_instance_name: "node1", es_heap_size: "1g",
+    es_config: {
+        node.data: false,
+        node.master: true,
+        http.port: 9200,
+        transport.tcp.port: 9300
+        }
+    }
+- hosts: data_nodes
+  roles:
+    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch", 
+    es_config: {
+        node.data: true,
+        node.master: false,
+        http.port: 9200,
+        transport.tcp.port: 9300
+        } 
+    }
+- hosts: data_nodes
+  roles:
+    - { role: elasticsearch, es_instance_name: "node2", es_data_dirs: "/opt/elasticsearch", 
+    es_config: {
+        node.data: true,
+        node.master: false,
+        http.port: 9201,
+        transport.tcp.port: 9301
+        } 
+    }
+```
+with the common configuraion moved to the file: "group_vars/all.json"
+```
+{
+  "es_scripts": "false",
+  "es_templates": "false",
+  "es_version_lock": "false",
+  "es_plugins": [{
+    "plugin": "ingest-geoip"
+  }],
+  "common_es_config": {
+    "cluster.name": "es-cluster",
+    "discovery.zen.ping.unicast.hosts": "elastic02:9300",
+    "bootstrap.memory_lock": false
+  }
+}
+```
 
 ### Installing X-Pack Features
 

@@ -3,7 +3,11 @@
 {{ es_config | to_nice_yaml }}
 {% endif %}
 
-{% if es_config['cluster.name'] is not defined %}
+{% if common_es_config %}
+{{ common_es_config | to_nice_yaml }}
+{% endif %}
+
+{% if (es_config['cluster.name'] is not defined) and (common_es_config['cluster.name'] is not defined) %}
 cluster.name: elasticsearch
 {% endif %}
 
