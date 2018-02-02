@@ -42,17 +42,25 @@
   set_fact: java_home="{{ lookup('env','JAVA_HOME') }}"
 
 - name: Fetch Java version from PATH
-  shell: java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
-  register: java_version
-  when: java_home is not defined
+  shell: "java -version 2>&1 | grep version | awk '{print $3}' | sed 's/\"//g'"
+  register: version_cmd
+  when: java_home == ""
+
+- name: Set java_version from path if shell command succeeded
+  set_fact: java_version="{{ version_cmd.stdout }}"
+  when: java_home == "" and version_cmd.rc == 0
 
 - name: Fetch Java version from JAVA_HOME
-  shell: {{ java_home}}/bin/java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
-  register: java_version
-  when: java_home is defined
+  shell: "{{ java_home }}/bin/java -version 2>&1 | grep version | awk '{print $3}' | sed 's/\"//g'"
+  register: version_cmd
+  when: java_home != ""
+
+- name: Set java_version from JAVA_HOME if shell command succeeded
+  set_fact: java_version="{{ version_cmd.stdout }}"
+  when: java_home != "" and version_cmd.rc == 0
 
 - fail: msg="You need Java version {{es_java_required_version}} for this role"
-  when: java_version.stdout | version_compare(es_java_required_version, '>=') 
+  when: java_version | version_compare(es_java_required_version, '>=') 
 
 #Use systemd for the following distributions:
 #Ubuntu 15 and up
