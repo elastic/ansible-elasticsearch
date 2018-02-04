@@ -1,11 +1,14 @@
 ---
 
-- set_fact: es_version_changed={{ ((elasticsearch_install_from_package is defined and (debian_elasticsearch_install_from_repo.changed or redhat_elasticsearch_install_from_repo.changed)) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) }}
+- name: set fact es_version_changed
+  set_fact: es_version_changed={{ ((elasticsearch_install_from_package is defined and (debian_elasticsearch_install_from_repo.changed or redhat_elasticsearch_install_from_repo.changed)) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) }}
 
-- include: elasticsearch-xpack-install.yml
+- name: include elasticsearch-xpack-install.yml
+  include: elasticsearch-xpack-install.yml
 
 #Security configuration
-- include: security/elasticsearch-security.yml
+- name: include security/elasticsearch-security.yml
+  include: security/elasticsearch-security.yml
 
 #Add any feature specific configuration here
 - name: Set Plugin Directory Permissions

@@ -9,35 +9,42 @@
   tags:
       - always
 
-- include: java.yml
+- name: include java.yml
+  include: java.yml
   when: es_java_install
   tags:
       - java
 
-- include: elasticsearch.yml
+- name: include elasticsearch.yml
+  include: elasticsearch.yml
   tags:
       - install
 
-- include: elasticsearch-config.yml
+- name: include elasticsearch-config.yml
+  include: elasticsearch-config.yml
   tags:
       - config
 
-- include: elasticsearch-scripts.yml
+- name: include elasticsearch-scripts.yml
+  include: elasticsearch-scripts.yml
   when: es_scripts
   tags:
       - scripts
 
-- include: elasticsearch-plugins.yml
+- name: include elasticsearch-plugins.yml
+  include: elasticsearch-plugins.yml
   when: es_plugins is defined or es_plugins_reinstall
   tags:
       - plugins
 
   #We always execute xpack as we may need to remove features
-- include: xpack/elasticsearch-xpack.yml
+- name: include xpack/elasticsearch-xpack.yml
+  include: xpack/elasticsearch-xpack.yml
   tags:
       - xpack
 
-- meta: flush_handlers
+- name: flush handlers
+  meta: flush_handlers
 
 - name: Make sure elasticsearch is started
   service: name={{instance_init_script | basename}} state=started enabled=yes
@@ -47,9 +54,11 @@
   wait_for: host={{es_api_host}} port={{es_api_port}} delay=5 connect_timeout=1
   when: es_restarted is defined and es_restarted.changed and es_start_service
 
-- set_fact: manage_native_realm=false
+- name: set fact manage_native_realm to false
+  set_fact: manage_native_realm=false
 
-- set_fact: manage_native_realm=true
+- name: set fact manage_native_realm to true
+  set_fact: manage_native_realm=true
   when: es_start_service and (es_enable_xpack and '"security" in es_xpack_features') and ((es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined))
 
 # If playbook runs too fast, Native commands could fail as the Native Realm is not yet up
@@ -62,12 +71,14 @@
   when: es_start_service and es_enable_xpack and es_xpack_license is defined and es_xpack_license != ''
 
 #perform security actions here now elasticsearch is started
-- include: ./xpack/security/elasticsearch-security-native.yml
+- name: include xpack/security/elasticsearch-security-native.yml
+  include: ./xpack/security/elasticsearch-security-native.yml
   when: manage_native_realm
 
 #Templates done after restart - handled by flushing the handlers. e.g. suppose user removes security on a running node and doesn't specify es_api_basic_auth_username and es_api_basic_auth_password.  The templates will subsequently not be removed if we don't wait for the node to restart.
 #We also do after the native realm to ensure any changes are applied here first and its denf up.
-- include: elasticsearch-template.yml
+- name: include elasticsearch-template.yml
+  include: elasticsearch-template.yml
   when: es_templates
   tags:
       - templates

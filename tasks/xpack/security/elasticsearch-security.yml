@@ -20,12 +20,13 @@
   environment:
     ES_PATH_CONF: "{{ conf_dir }}"
   when:
-    - (es_enable_xpack and '"security" in es_xpack_features') and (es_version | version_compare('6.0.0', '>')) 
+    - (es_enable_xpack and '"security" in es_xpack_features') and (es_version | version_compare('6.0.0', '>'))
 
 - name: Create Bootstrap password for elastic user
   shell: echo "{{es_api_basic_auth_password}}" | {{es_home}}/bin/elasticsearch-keystore add -x 'bootstrap.password'
   when:
-    - (es_enable_xpack and '"security" in es_xpack_features') and (es_version | version_compare('6.0.0', '>')) and es_api_basic_auth_username is defined and list_keystore is defined and es_api_basic_auth_username == 'elastic' and 'bootstrap.password' not in list_keystore.stdout_lines 
+    - (es_enable_xpack and '"security" in es_xpack_features') and (es_version | version_compare('6.0.0', '>')) and es_api_basic_auth_username is defined and list_keystore is defined and es_api_basic_auth_username == 'elastic' and 'bootstrap.password' not in list_keystore.stdout_line
+
   environment:
     ES_PATH_CONF: "{{ conf_dir }}"
   no_log: true
