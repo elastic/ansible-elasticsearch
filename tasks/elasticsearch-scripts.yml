@@ -1,6 +1,6 @@
 ---
 
-- set_fact: es_script_dir={{ es_conf_dir }}/scripts{{'/' + es_instance_name if es_use_shared_fs else ''}}
+- set_fact: es_script_dir={{ conf_dir }}/scripts
   tags:
       - always
 
@@ -15,7 +15,7 @@
 
 - name: Copy default scripts to elasticsearch
   become: yes
-  copy: src=scripts dest={{ es_script_dir }} owner={{ es_user }} group={{ es_group }}
+  copy: src=scripts/ dest={{ es_script_dir }} owner={{ es_user }} group={{ es_group }}
   when: es_scripts_fileglob is not defined
 
 - name: Copy scripts to elasticsearch
