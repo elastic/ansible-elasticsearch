@@ -1,0 +1,171 @@
+---
+- set_fact: change_api_password=false
+
+- set_fact: manage_native_users=false
+
+- set_fact: manage_native_users=true
+  when: es_users is defined and es_users.native is defined and es_users.native.keys() | length > 0
+
+- set_fact: manage_native_roles=false
+
+- set_fact: manage_native_roles=true
+  when: es_roles is defined and es_roles.native is defined and es_roles.native.keys() | length > 0
+
+#If the node has just has security installed it maybe either stopped or started 1. if stopped, we need to start to load native realms 2. if started, we need to restart to load
+
+#List current users
+- name: List Native Users
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user
+    method: GET
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+    status_code: 200
+  register: user_list_response
+  when: manage_native_users
+
+- set_fact: reserved_users={{ user_list_response.json | filter_reserved }}
+  when: manage_native_users
+
+#Current users not inc. those reserved
+- set_fact: current_users={{ user_list_response.json.keys() | difference (reserved_users) }}
+  when: manage_native_users
+
+#We are changing the es_api_basic_auth_username password, so we need to do it first and update the param
+- set_fact: native_users={{ es_users.native }}
+  when: manage_native_users
+
+- set_fact: change_api_password=true
+  when: manage_native_users and es_api_basic_auth_username in native_users and native_users[es_api_basic_auth_username].password is defined
+
+- name: Update API User Password
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{es_api_basic_auth_username}}/_password
+    method: POST
+    body_format: json
+    body: "{ \"password\":\"{{native_users[es_api_basic_auth_username].password}}\" }"
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+  when: change_api_password
+
+- set_fact: es_api_basic_auth_password={{native_users[es_api_basic_auth_username].password}}
+  when: change_api_password
+
+#Identify users that are present in ES but not declared and thus should be removed
+- set_fact: users_to_remove={{ current_users | difference ( native_users.keys() ) }}
+  when: manage_native_users
+
+#Delete all non required users NOT inc. reserved
+- name: Delete Native Users
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{item}}
+    method: DELETE
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+  when: manage_native_users
+  with_items: "{{ users_to_remove | default([]) }}"
+
+- set_fact: users_to_ignore={{ native_users.keys() | intersect (reserved_users) }}
+  when: manage_native_users
+
+- debug:
+    msg: "WARNING: YOU CAN ONLY CHANGE THE PASSWORD FOR RESERVED USERS IN THE NATIVE REALM. ANY ROLE CHANGES WILL BE IGNORED: {{users_to_ignore}}"
+  when: manage_native_users and users_to_ignore | length > 0
+
+#Update password on all reserved users
+- name: Update Reserved User Passwords
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{item}}/_password
+    method: POST
+    body_format: json
+    body: "{ \"password\":\"{{native_users[item].password}}\" }"
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+  when: native_users[item].password is defined
+  no_log: True
+  with_items: "{{ users_to_ignore | default([]) }}"
+
+- set_fact: users_to_modify={{ native_users.keys() | difference (reserved_users) }}
+  when: manage_native_users
+
+#Overwrite all other users NOT inc. those reserved
+- name: Update Non-Reserved Native User Details
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{item}}
+    method: POST
+    body_format: json
+    body: "{{ native_users[item] | to_json }}"
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+  when: manage_native_users
+  no_log: True
+  with_items: "{{ users_to_modify | default([]) }}"
+
+## ROLE CHANGES
+
+#List current roles not. inc those reserved
+- name: List Native Roles
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role
+    method: GET
+    body_format: json
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+    status_code: 200
+  register: role_list_response
+  when: manage_native_roles
+
+- set_fact: reserved_roles={{ role_list_response.json | filter_reserved }}
+  when: manage_native_roles
+
+- set_fact: current_roles={{ role_list_response.json.keys() | difference (reserved_roles) }}
+  when: manage_native_roles
+
+- set_fact: roles_to_ignore={{ es_roles.native.keys() | intersect (reserved_roles) | default([]) }}
+  when: manage_native_roles
+
+- debug:
+    msg: "WARNING: YOU CANNOT CHANGE RESERVED ROLES. THE FOLLOWING WILL BE IGNORED: {{roles_to_ignore}}"
+  when: manage_native_roles and roles_to_ignore | length > 0
+
+- set_fact: roles_to_remove={{ current_roles | difference ( es_roles.native.keys()  ) }}
+  when: manage_native_roles
+
+#Delete all non required roles NOT inc. reserved
+- name: Delete Native Roles
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role/{{item}}
+    method: DELETE
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+  when: manage_native_roles
+  with_items: "{{roles_to_remove | default([]) }}"
+
+- set_fact: roles_to_modify={{ es_roles.native.keys() | difference (reserved_roles) }}
+  when: manage_native_roles
+
+#Update other roles - NOT inc. reserved roles
+- name: Update Native Roles
+  uri:
+    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role/{{item}}
+    method: POST
+    body_format: json
+    body: "{{ es_roles.native[item] | to_json}}"
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+  when: manage_native_roles
+  with_items: "{{ roles_to_modify | default([]) }}"

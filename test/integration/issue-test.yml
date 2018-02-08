@@ -1,0 +1,51 @@
+#This file is for users to test issues and reproduce them using the test framework.
+#Modify the playbook  below and test with kitchen i.e. `kitchen test issue-test`
+#To add custom tests modify the serverspec file ./helpers/serverspec/issue_test_spec.rb
+#Idempot test is enabled for this test
+
+- name: Simple Example
+  hosts: localhost
+  tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - {
+        role: elasticsearch,
+        es_config:
+        {
+          "xpack.security.authc.realms.file1.type": "file",
+          "xpack.security.authc.realms.file1.order": 1,
+          "xpack.security.authc.realms.native1.type": "native",
+          "xpack.security.authc.realms.native1.order": 0
+        },
+    es_instance_name: "security_node" }
+  vars:
+    es_heap_size: "1g"
+    es_enable_xpack: true
+    es_plugins:
+      - plugin: ingest-geoip
+    es_xpack_features:
+      - security
+      - alerting
+    es_api_basic_auth_username: elastic
+    es_api_basic_auth_password: changeme
+    es_users:
+      file:
+        test_user:
+          password: changeme
+          roles:
+            - kibana_system
+      native:
+        kibana:
+          password: changeme
+          roles:
+            - kibana_system
+        elastic:
+          password: aNewPassWord
+    es_roles:
+      native:
+        logstash:
+          cluster:
+            - manage_index_templates
+        logstash_system:
+          cluster:
+            - manage_index_templates
