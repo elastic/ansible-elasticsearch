@@ -70,9 +70,12 @@
   become: yes
   file: dest=/etc/init.d/elasticsearch state=absent
 
-- name: Delete Default Environment File
+- name: Symlink Default Environment File
   become: yes
-  file: dest=/etc/default/elasticsearch state=absent
+  file:
+    src: "{{ instance_default_file }}"
+    dest: "{{ default_file }}"
+    state: link
   when: ansible_os_family == 'Debian'
 
 - name: Delete Default Environment File
