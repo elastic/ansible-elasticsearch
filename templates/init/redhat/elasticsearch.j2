@@ -67,7 +67,7 @@ if [ ! -z "$CONF_FILE" ]; then
 fi
 
 exec="$ES_HOME/bin/elasticsearch"
-prog="{{es_instance_name + '_' if es_use_shared_fs else ''}}{{default_file | basename}}"
+prog="{{instance_default_file | basename}}"
 pidfile="$PID_DIR/${prog}.pid"
 
 export ES_JAVA_OPTS

@@ -8,7 +8,7 @@ cluster.name: elasticsearch
 {% endif %}
 
 {% if es_config['node.name'] is not defined %}
-node.name: {{inventory_hostname}}{{'-' + es_instance_name if es_use_shared_fs else ''}}
+node.name: {{ es_node_name }}
 {% endif %}
 
 #################################### Paths ####################################
