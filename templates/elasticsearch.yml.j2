@@ -23,6 +23,7 @@ path.data: {{ data_dirs | array_to_str }}
 
 path.logs: {{ log_dir }}
 
+{% if es_enable_xpack %}
 {% if not "security" in es_xpack_features %}
 xpack.security.enabled: false
 {% endif %}
@@ -41,4 +42,5 @@ xpack.ml.enabled: false
 
 {% if not "graph" in es_xpack_features %}
 xpack.graph.enabled: false
+{% endif %}
 {% endif %}
