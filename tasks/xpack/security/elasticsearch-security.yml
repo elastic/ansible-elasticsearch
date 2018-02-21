@@ -8,7 +8,7 @@
   file: path={{ conf_dir }}/x-pack state=directory owner={{ es_user }} group={{ es_group }}
   changed_when: False
   when:
-    - es_enable_xpack and '"security" in es_xpack_features'
+    - es_enable_xpack and "security" in es_xpack_features
     - (es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined) or (es_role_mapping is defined)
 
 #-----------------------------Create Bootstrap User-----------------------------------
@@ -20,12 +20,12 @@
   environment:
     ES_PATH_CONF: "{{ conf_dir }}"
   when:
-    - (es_enable_xpack and '"security" in es_xpack_features') and (es_version | version_compare('6.0.0', '>')) 
+    - (es_enable_xpack and "security" in es_xpack_features) and (es_version | version_compare('6.0.0', '>'))
 
 - name: Create Bootstrap password for elastic user
   shell: echo "{{es_api_basic_auth_password}}" | {{es_home}}/bin/elasticsearch-keystore add -x 'bootstrap.password'
   when:
-    - (es_enable_xpack and '"security" in es_xpack_features') and (es_version | version_compare('6.0.0', '>')) and es_api_basic_auth_username is defined and list_keystore is defined and es_api_basic_auth_username == 'elastic' and 'bootstrap.password' not in list_keystore.stdout_lines 
+    - (es_enable_xpack and "security" in es_xpack_features) and (es_version | version_compare('6.0.0', '>')) and es_api_basic_auth_username is defined and list_keystore is defined and es_api_basic_auth_username == 'elastic' and 'bootstrap.password' not in list_keystore.stdout_lines
   environment:
     ES_PATH_CONF: "{{ conf_dir }}"
   no_log: true
@@ -33,7 +33,7 @@
 #-----------------------------FILE BASED REALM----------------------------------------
 
 - include: elasticsearch-security-file.yml
-  when: (es_enable_xpack and '"security" in es_xpack_features') and ((es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined))
+  when: (es_enable_xpack and "security" in es_xpack_features) and ((es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined))
 
 #-----------------------------ROLE MAPPING ----------------------------------------
 
@@ -57,4 +57,4 @@
   become: yes
   file: path={{ conf_dir }}/security state=directory owner={{ es_user }} group={{ es_group }}
   changed_when: False
-  when: es_enable_xpack and '"security" in es_xpack_features'
+  when: es_enable_xpack and "security" in es_xpack_features
