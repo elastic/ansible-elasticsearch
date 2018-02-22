@@ -88,12 +88,16 @@ shared_examples 'package::init' do |vars|
     it { should_not exist }
   end
 
-  describe file('/etc/default/elasticsearch') do
-    it { should_not exist }
+  if ['debian', 'ubuntu'].include?(os[:family])
+    describe file('/etc/default/elasticsearch') do
+      its(:content) { should match '' }
+    end
   end
 
-  describe file('/etc/sysconfig/elasticsearch') do
-    it { should_not exist }
+  if ['centos', 'redhat'].include?(os[:family])
+    describe file('/etc/sysconfig/elasticsearch') do
+      its(:content) { should match '' }
+    end
   end
 
   describe file('/usr/lib/systemd/system/elasticsearch.service') do
