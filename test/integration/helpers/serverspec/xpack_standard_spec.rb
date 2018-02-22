@@ -120,8 +120,18 @@ shared_examples 'xpack_standard::init' do |vars|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  describe command('curl -s localhost:9200/_nodes/plugins | grep \'"name":"x-pack","version":"'+vars['es_version']+'"\'') do
-    its(:exit_status) { should eq 0 }
+  describe 'x-pack-core plugin' do
+    it 'should be installed with the correct version' do
+      plugins = curl_json('http://localhost:9200/_nodes/plugins')
+      node, data = plugins['nodes'].first
+      version = 'plugin not found'
+      data['plugins'].each do |plugin|
+        if plugin['name'] == 'x-pack-core'
+          version = plugin['version']
+        end
+      end
+      expect(version).to eql(vars['es_version'])
+    end
   end
 
   #Test users file, users_roles and roles.yml
