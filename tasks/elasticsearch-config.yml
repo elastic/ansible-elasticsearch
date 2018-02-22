@@ -70,14 +70,20 @@
   become: yes
   file: dest=/etc/init.d/elasticsearch state=absent
 
-- name: Delete Default Environment File
+- name: Create empty default environment file
   become: yes
-  file: dest=/etc/default/elasticsearch state=absent
+  changed_when: False
+  copy:
+    dest: /etc/default/elasticsearch
+    content: ''
   when: ansible_os_family == 'Debian'
 
-- name: Delete Default Environment File
+- name: Create empty default environment file
   become: yes
-  file: dest=/etc/sysconfig/elasticsearch state=absent
+  changed_when: False
+  copy:
+    dest: /etc/sysconfig/elasticsearch
+    content: ''
   when: ansible_os_family == 'RedHat'
 
 - name: Delete Default Sysconfig File

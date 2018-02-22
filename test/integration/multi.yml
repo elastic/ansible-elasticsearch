@@ -2,6 +2,8 @@
 #Test ability to deploy multiple instances to a machine
 - name: Elasticsearch Multi test - master on 9200
   hosts: localhost
+  tasks:
+    - include: elasticsearch/test/integration/debug.yml
   vars:
     es_scripts: true
     es_templates: true
@@ -14,6 +16,8 @@
 
 - name: Elasticsearch Multi test - data on 9201
   hosts: localhost
+  tasks:
+    - include: elasticsearch/test/integration/debug.yml
   vars:
     es_scripts: true
     es_templates: true
