@@ -125,8 +125,15 @@ shared_examples 'xpack_standard::init' do |vars|
       plugins = curl_json('http://localhost:9200/_nodes/plugins')
       node, data = plugins['nodes'].first
       version = 'plugin not found'
+
+      if Gem::Version.new(vars['es_version']) >= Gem::Version.new('6.2')
+        name = 'x-pack-core'
+      else
+        name = 'x-pack'
+      end
+
       data['plugins'].each do |plugin|
-        if plugin['name'] == 'x-pack-core'
+        if plugin['name'] == name
           version = plugin['version']
         end
       end
