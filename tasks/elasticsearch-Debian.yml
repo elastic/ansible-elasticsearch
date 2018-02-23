@@ -1,8 +1,10 @@
 ---
 
-- set_fact: force_install=no
+- name: set fact force_install to no
+  set_fact: force_install=no
 
-- set_fact: force_install=yes
+- name: set fact force_install to yes
+  set_fact: force_install=yes
   when: es_allow_downgrades
 
 - name: Debian - Install apt-transport-https to support https APT downloads
