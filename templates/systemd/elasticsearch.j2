@@ -24,7 +24,7 @@ ExecStartPre=/usr/share/elasticsearch/bin/elasticsearch-systemd-pre-exec
 
 ExecStart={{es_home}}/bin/elasticsearch \
                                     -p ${PID_DIR}/elasticsearch.pid \
-{% if (es_version | version_compare('6.0.0', '<')) %}
+{% if ((not es6_migration_mode) and (es_version | version_compare('6.0.0', '<'))) %}
                                     -Edefault.path.logs=${LOG_DIR} \
                                     -Edefault.path.data=${DATA_DIR} \
                                     -Edefault.path.conf=${CONF_DIR} \
