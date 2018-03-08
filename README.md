@@ -392,6 +392,15 @@ To define proxy only for a particular plugin during its installation:
 
 > For plugins installation, proxy_host and proxy_port are used first if they are defined and fallback to the global proxy settings if not. The same values are currently used for both the http and https proxy settings.
 
+### Migration to ES6
+
+If you want to the configuration files / options compliant with ES6 (for example to check with Kibana cluster checkup), set the parameter es6_migration_mode. It currently manages the following elements : 
+
+* Remove path.conf from elasticsearch.yml
+* Remove default.path.data, default.path.logs, default.path.conf from your launcher (made for debian, redhat and systemd scripts)
+
+It is working at least with ElasticSearch 5.6.x
+
 ## Notes
 
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.

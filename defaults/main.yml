@@ -42,3 +42,5 @@ conf_dir: ''
 data_dirs: ''
 # JVM custom parameters
 es_jvm_custom_parameters: ''
+# Compatibility mode for es6
+es6_migration_mode: false
