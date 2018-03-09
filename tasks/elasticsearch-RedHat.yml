@@ -10,7 +10,7 @@
   when: es_use_repository
 
 - name: RedHat - include versionlock
-  include: elasticsearch-RedHat-version-lock.yml
+  include_tasks: elasticsearch-RedHat-version-lock.yml
   when: es_version_lock
 
 - name: RedHat - Install Elasticsearch
