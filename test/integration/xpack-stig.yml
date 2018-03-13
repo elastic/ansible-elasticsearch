@@ -1,0 +1,189 @@
+---
+# STIG based xpack provision for inspec hardening compliance
+# Make sure to change the variables below in the vars section
+# and in the kitchen.vagrant.yml file
+
+- import_playbook: roles/elasticsearch/test/integration/xpack.yml
+
+- name: Elasticsearch Xpack STIG
+  hosts: localhost
+  vars:
+    es_conf_dir: "/etc/elasticsearch"
+    es_instance_name: "security_node"
+    es_home: "/usr/share/elasticsearch"
+    inventory_hostname: "localhost"
+    log_aggregation_system: "logagg.site.mil"
+    es_logs_dir: "/var/log/elasticsearch/{{inventory_hostname}}-{{es_instance_name}}/"
+
+  environment:
+    ES_PATH_CONF: "{{es_conf_dir}}"
+  tasks:
+
+    - name: Install necessary packages
+      yum: state=present name={{ item }}
+      with_items:
+        - unzip
+        - openssl
+        - rsyslog
+        - audit
+        - chrony
+        - ntp
+        - aide
+
+    - name: Copy instances.yml
+      template:
+        src: /tmp/kitchen/roles/elasticsearch/templates/instances.yml
+        dest: "{{es_home}}/bin/x-pack/instances.yml"
+        owner: elasticsearch
+        group: elasticsearch
+
+    - name: Generate self-signed certificate
+      become: yes
+      shell: "./certgen --in instances.yml --out elastic.zip -s"
+      args:
+        chdir: "{{es_home}}/bin/x-pack/"
+        creates: elastic.zip
+
+    - name: Make cert dir
+      file:
+        path: "{{es_conf_dir}}/{{es_instance_name}}/certs"
+        owner: elasticsearch
+        group: elasticsearch
+        state: directory
+
+    - name: Extract certificates
+      unarchive:
+        src: "{{es_home}}/bin/x-pack/elastic.zip"
+        dest: "{{es_conf_dir}}/{{es_instance_name}}/certs"
+        remote_src: yes
+
+    - name: Add Settings for SSL/Audit/IP/PKI
+      become: yes
+      blockinfile:
+        path: "{{es_conf_dir}}/{{es_instance_name}}/elasticsearch.yml"
+        insertafter: EOF
+        block: |
+          # SSL/HTTPS settings
+
+          xpack.security.transport.ssl.enabled: true
+          xpack.security.transport.ssl.verification_mode: certificate
+          xpack.security.transport.ssl.key: {{es_conf_dir}}/{{es_instance_name}}/certs/{{inventory_hostname}}-{{es_instance_name}}/{{inventory_hostname}}-{{es_instance_name}}.key
+          xpack.security.transport.ssl.certificate: {{es_conf_dir}}/{{es_instance_name}}/certs/{{inventory_hostname}}-{{es_instance_name}}/{{inventory_hostname}}-{{es_instance_name}}.crt
+          xpack.security.transport.ssl.certificate_authorities: [ "{{es_conf_dir}}/{{es_instance_name}}/certs/ca/ca.crt" ]
+
+          xpack.ssl.certificate: {{es_conf_dir}}/{{es_instance_name}}/certs/{{inventory_hostname}}-{{es_instance_name}}/{{inventory_hostname}}-{{es_instance_name}}.crt
+          xpack.ssl.certificate_authorities: [ "{{es_conf_dir}}/{{es_instance_name}}/certs/ca/ca.crt" ]
+          xpack.ssl.key: {{es_conf_dir}}/{{es_instance_name}}/certs/{{inventory_hostname}}-{{es_instance_name}}/{{inventory_hostname}}-{{es_instance_name}}.key
+
+          xpack.security.http.ssl.enabled: true
+          xpack.security.http.ssl.key: {{es_conf_dir}}/{{es_instance_name}}/certs/{{inventory_hostname}}-{{es_instance_name}}/{{inventory_hostname}}-{{es_instance_name}}.key
+          xpack.security.http.ssl.certificate: {{es_conf_dir}}/{{es_instance_name}}/certs/{{inventory_hostname}}-{{es_instance_name}}/{{inventory_hostname}}-{{es_instance_name}}.crt
+          xpack.security.http.ssl.certificate_authorities: [ "{{es_conf_dir}}/{{es_instance_name}}/certs/ca/ca.crt" ]
+
+          # IP filter rules and parameters
+
+          xpack.security.http.filter.enabled: true
+          xpack.security.http.filter.allow: ["10.0.2.15"]
+          xpack.security.http.filter.deny: _all
+
+          # Audit Settings
+
+          xpack.security.audit.enabled: true
+          xpack.security.audit.outputs: [ index, logfile ]
+          xpack.security.audit.logfile.events.include: [ access_denied, anonymous_access_denied, authentication_failed, connection_denied, tampered_request, run_as_denied, run_as_granted ]
+          xpack.security.audit.logfile.events.exclude: [ access_granted ]
+
+          # PKI settings
+
+          xpack.security.authc.realms.pki1.type: pki
+          xpack.security.authc.realms.pki1.order: 0
+          xpack.security.authc.realms.pki1.username_pattern: "EMAILADDRESS=(.*?)(?:,|$)"
+          xpack.security.authc.realms.pki1.certificate_authorities: [ "{{es_conf_dir}}/{{es_instance_name}}/certs/ca/ca.crt" ]
+
+          # Cipher Suite Settings
+
+          xpack.ssl.cipher_suites:
+            - TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
+            - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+            - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+            - TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA
+            - TLS_RSA_WITH_AES_128_CBC_SHA256
+            - TLS_RSA_WITH_AES_128_CBC_SHA
+
+    - name: Add settings in rsyslog
+      become: yes
+      blockinfile:
+        path: "/etc/rsyslog.conf"
+        insertafter: EOF
+        block: |
+
+          *.* @@{{log_aggregation_system}}
+          InputFileName /var/log/elasticsearch/{{inventory_hostname}}-{{es_instance_name}}/elasticsearch_access.log
+          InputFileName /var/log/elasticsearch/elasticsearch_access.log
+
+    - name: Add audit settings
+      become: yes
+      blockinfile:
+        path: "/etc/security/limits.conf"
+        insertafter: EOF
+        block: |
+
+          elasticsearch hard priority 1
+
+    - name: Add audit rules
+      become: yes
+      lineinfile:
+        path: "/etc/audit/rules.d/audit.rules"
+        line: '-w {{es_conf_dir}}/{{es_instance_name}}/elasticsearch.yml -p war -k elasticsearch-config'
+
+    - name: Edit space of audit logs
+      become: yes
+      lineinfile:
+        path: "/etc/audit/auditd.conf"
+        regexp: "^space_left = "
+        line: "space_left = 10740"
+
+    - name: Check Audit rules
+      become: yes
+      shell: "augenrules --check"
+      register: augen_rules
+
+    - name: Load Audit rules
+      become: yes
+      shell: "augenrules --load"
+      when: augen_rules.stdout != "/sbin/augenrules{{:}} No change"
+
+    - name: Change ownership of elastic home, conf, logs directory
+      file:
+        path: "{{item}}"
+        owner: elasticsearch
+        group: elasticsearch
+        recurse: yes
+      with_items:
+        - "{{ es_home }}"
+        - "{{ es_conf_dir }}"
+        - "{{ es_logs_dir }}"
+
+    - name: Set mode for elastic conf file
+      file:
+        path: "{{es_conf_dir}}/{{es_instance_name}}/elasticsearch.yml"
+        mode: 0640
+
+    - name: Set mode for audit Directory
+      file:
+        path: "/var/log/elasticsearch/{{inventory_hostname}}-{{es_instance_name}}/"
+        mode: 0600
+
+    - name: Restart Elastic Service
+      service:
+        name: "{{es_instance_name}}_elasticsearch"
+        state: restarted
+
+    - name: Start services
+      service:
+        name: "{{ item }}"
+        state: started
+      with_items:
+        - "rsyslog"
+        - "ntpd"
+        - "chronyd"

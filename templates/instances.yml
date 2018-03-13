@@ -1,0 +1,4 @@
+instances:
+  - name: "{{inventory_hostname}}-{{es_instance_name}}"
+# TODO add support for ip and dns keys if it exists
+    filename: "{{inventory_hostname}}-{{es_instance_name}}"
