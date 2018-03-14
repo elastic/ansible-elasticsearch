@@ -56,6 +56,7 @@
         src: "{{es_home}}/bin/x-pack/elastic.zip"
         dest: "{{es_conf_dir}}/{{es_instance_name}}/certs"
         remote_src: yes
+        creates: "{{es_conf_dir}}/{{es_instance_name}}/certs/ca/ca.key"
 
     - name: Add Settings for SSL/Audit/IP/PKI
       become: yes
@@ -90,7 +91,15 @@
 
           xpack.security.audit.enabled: true
           xpack.security.audit.outputs: [ index, logfile ]
-          xpack.security.audit.logfile.events.include: [ access_denied, anonymous_access_denied, authentication_failed, connection_denied, tampered_request, run_as_denied, run_as_granted ]
+          xpack.security.audit.logfile.events.include:
+            - access_denied
+            - anonymous_access_denied
+            - authentication_failed
+            - connection_denied
+            - tampered_request
+            - run_as_denied
+            - run_as_granted
+
           xpack.security.audit.logfile.events.exclude: [ access_granted ]
 
           # PKI settings
@@ -151,7 +160,7 @@
     - name: Load Audit rules
       become: yes
       shell: "augenrules --load"
-      when: augen_rules.stdout != "/sbin/augenrules{{:}} No change"
+      when: augen_rules.stdout != "/sbin/augenrules{{":"}} No change"
 
     - name: Change ownership of elastic home, conf, logs directory
       file:
