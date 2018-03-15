@@ -2,12 +2,15 @@
 
 # es_plugins_reinstall will be set to true if elasticsearch_install_from_repo.changed or elasticsearch_install_from_package.changed
 # i.e. we have changed ES version(or we have clean installation of ES), or if no plugins listed. Otherwise it is false and requires explicitly setting.
-- set_fact: es_plugins_reinstall=true
+- name: set fact es_plugins_reinstall to true
+  set_fact: es_plugins_reinstall=true
   when: (((debian_elasticsearch_install_from_repo is defined and debian_elasticsearch_install_from_repo.changed) or (redhat_elasticsearch_install_from_repo is defined and redhat_elasticsearch_install_from_repo.changed)) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) or es_plugins is not defined or es_plugins is none
 
-- set_fact: list_command=""
+- name: set fact list_command
+  set_fact: list_command=""
 #If we are reinstalling all plugins, e.g. to a version change, we need to remove all plugins (inc. x-pack) to install any plugins. Otherwise we don't consider x-pack so the role stays idempotent.
-- set_fact: list_command="| grep -vE 'x-pack'"
+- name: set fact list_command check for x-pack
+  set_fact: list_command="| grep -vE 'x-pack'"
   when: not es_plugins_reinstall
 
 #List currently installed plugins. We have to list the directories as the list commmand fails if the ES version is different than the plugin version.
@@ -23,19 +26,23 @@
     ES_INCLUDE: "{{ instance_default_file }}"
 
 #if es_plugins_reinstall is set to true we remove ALL plugins
-- set_fact: plugins_to_remove="{{ installed_plugins.stdout_lines | default([]) }}"
+- name: set fact plugins_to_remove to install_plugins.stdout_lines
+  set_fact: plugins_to_remove="{{ installed_plugins.stdout_lines | default([]) }}"
   when: es_plugins_reinstall
 
 #if the plugins listed are different than those requested, we remove those installed but not listed in the config
-- set_fact: plugins_to_remove="{{ installed_plugins.stdout_lines | difference(es_plugins | json_query('[*].plugin')) | default([]) }}"
+- name: set fact plugins_to_remove to delete plugins installed but not listed in es_plugins
+  set_fact: plugins_to_remove="{{ installed_plugins.stdout_lines | difference(es_plugins | json_query('[*].plugin')) | default([]) }}"
   when: not es_plugins_reinstall
 
 #if es_plugins_reinstall is set to true we (re)install ALL plugins
-- set_fact: plugins_to_install="{{ es_plugins | json_query('[*].plugin') | default([]) }}"
+- name: set fact plugins_to_install to es_plugins
+  set_fact: plugins_to_install="{{ es_plugins | json_query('[*].plugin') | default([]) }}"
   when: es_plugins_reinstall
 
 #if the plugins listed are different than those requested, we install those not installed but listed in the config
-- set_fact: plugins_to_install="{{ es_plugins | json_query('[*].plugin') | difference(installed_plugins.stdout_lines) | default([]) }}"
+- name: set fact to plugins_to_install to those in es_config but not installed
+  set_fact: plugins_to_install="{{ es_plugins | json_query('[*].plugin') | difference(installed_plugins.stdout_lines) | default([]) }}"
   when: not es_plugins_reinstall
 
 # This removes any currently installed plugins (to prevent errors when reinstalling)

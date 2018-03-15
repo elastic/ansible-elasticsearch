@@ -1,8 +1,10 @@
 ---
 
-- set_fact: java_state="present"
+- name: set fact java_state to present
+  set_fact: java_state="present"
 
-- set_fact: java_state="latest"
+- name: set fact java_state to latest
+  set_fact: java_state="latest"
   when: update_java == true
 
 - name: RedHat - Ensure Java is installed
@@ -35,7 +37,8 @@
   apt: name={{ java }} state={{java_state}}
   when: ansible_os_family == 'Debian'
 
-- shell: java -version 2>&1 | grep OpenJDK
+- name: register open_jdk version
+  shell: java -version 2>&1 | grep OpenJDK
   register: open_jdk
   ignore_errors: yes
   changed_when: false
