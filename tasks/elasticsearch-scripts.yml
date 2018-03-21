@@ -1,10 +1,12 @@
 ---
 
-- set_fact: es_script_dir={{ es_conf_dir }}/{{es_instance_name}}
+- name: set fact es_script_dir
+  set_fact: es_script_dir={{ es_conf_dir }}/{{es_instance_name}}
   tags:
       - always
 
-- set_fact: es_script_dir={{es_config['path.scripts']}}
+- name: set fact es_script_dir when path.scripts
+  set_fact: es_script_dir={{es_config['path.scripts']}}
   when: es_config['path.scripts'] is defined
   tags:
       - always

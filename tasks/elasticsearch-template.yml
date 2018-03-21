@@ -1,6 +1,11 @@
 ---
 
-- file: path=/etc/elasticsearch/templates state=directory owner={{ es_user }} group={{ es_group }}
+- name: ensure templates dir is created
+  file:
+    path: /etc/elasticsearch/templates
+    state: directory
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
 
 - name: Copy templates to elasticsearch
   copy: src={{ item }} dest=/etc/elasticsearch/templates owner={{ es_user }} group={{ es_group }}
