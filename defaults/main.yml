@@ -1,6 +1,6 @@
 ---
 es_major_version: "6.x"
-es_version: "6.2.2"
+es_version: "6.2.3"
 es_version_lock: false
 es_use_repository: true
 es_templates_fileglob: "files/templates/*.json"
