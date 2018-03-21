@@ -8,5 +8,4 @@ TODO
 .idea/
 elasticsearch.iml
 !/vars/RedHat.yml
-.DS_store
 

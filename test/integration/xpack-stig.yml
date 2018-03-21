@@ -3,7 +3,7 @@
 # Make sure to change the variables below in the vars section
 # and in the kitchen.vagrant.yml file
 
-- import_playbook: roles/elasticsearch/test/integration/xpack.yml
+- import_playbook: elasticsearch/test/integration/xpack.yml
 
 - name: Elasticsearch Xpack STIG
   hosts: localhost
@@ -32,7 +32,7 @@
 
     - name: Copy instances.yml
       template:
-        src: /tmp/kitchen/roles/elasticsearch/templates/instances.yml
+        src: /tmp/kitchen/roles/elasticsearch/test/instances.yml
         dest: "{{es_home}}/bin/x-pack/instances.yml"
         owner: elasticsearch
         group: elasticsearch

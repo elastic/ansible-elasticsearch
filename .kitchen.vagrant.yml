@@ -48,7 +48,7 @@ platforms:
 - name: centos-7
   driver:
     vagrantfiles:
-      - VagrantfileA.rb
+      - /test/Vagrantfile_setup.rb
     name: vagrant
     box: bento/centos-7
     provision: true
