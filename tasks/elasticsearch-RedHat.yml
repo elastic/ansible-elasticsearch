@@ -19,7 +19,7 @@
   when: es_use_repository
   register: redhat_elasticsearch_install_from_repo
   notify: restart elasticsearch
-  until: '"failed" not in redhat_elasticsearch_install_from_repo'
+  until: redhat_elasticsearch_install_from_repo.rc == 0
   retries: 5
   delay: 10
 
