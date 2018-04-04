@@ -25,9 +25,6 @@
     - { repo: "{{ es_apt_url }}", state: "present" }
   when: es_use_repository
 
-- name: Debian - Include versionlock
-  include: elasticsearch-Debian-version-lock.yml
-  when: es_version_lock
 
 - name: Debian - Ensure elasticsearch is installed
   become: yes
@@ -46,3 +43,7 @@
   when: not es_use_repository
   register: elasticsearch_install_from_package
   notify: restart elasticsearch
+
+- name: Debian - Include versionlock
+  include: elasticsearch-Debian-version-lock.yml
+  when: es_version_lock
