@@ -56,6 +56,7 @@ LimitMEMLOCK=infinity
 # Specifies the maximum number of threads that can be started.  Elasticsearch requires a
 # minimum of 2048.
 LimitNPROC={{ es_max_threads }}
+LimitCORE={{ es_max_core_size }}
 
 # Disable timeout logic and wait until process is stopped
 TimeoutStopSec=0

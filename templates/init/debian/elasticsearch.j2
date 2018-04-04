@@ -46,6 +46,10 @@ ES_HOME={{es_home}}
 MAX_OPEN_FILES={{es_max_open_files}}
 {% endif %}
 
+{% if es_max_core_size is defined %}
+MAX_CORE_SIZE={{ es_max_core_size }}
+{% endif %}
+
 # Maximum amount of locked memory
 #MAX_LOCKED_MEMORY=
 {% if m_lock_enabled %}
@@ -156,6 +160,10 @@ case "$1" in
 
 	if [ -n "$MAX_OPEN_FILES" ]; then
 		ulimit -n $MAX_OPEN_FILES
+	fi
+
+	if [ -n "$MAX_CORE_SIZE" ]; then
+		ulimit -c $MAX_CORE_SIZE
 	fi
 
 	if [ -n "$MAX_LOCKED_MEMORY" ]; then

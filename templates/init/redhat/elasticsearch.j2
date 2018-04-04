@@ -38,6 +38,9 @@ ES_HOME="{{es_home}}"
 {% if es_max_open_files is defined %}
 MAX_OPEN_FILES={{es_max_open_files}}
 {% endif %}
+{% if es_max_core_size is defined %}
+MAX_CORE_SIZE={{ es_max_core_size }}
+{% endif %}
 # Maximum number of VMA (Virtual Memory Areas) a process can own
 {% if es_max_map_count is defined %}
 MAX_MAP_COUNT={{es_max_map_count}}
@@ -118,6 +121,9 @@ start() {
 
     if [ -n "$MAX_OPEN_FILES" ]; then
         ulimit -n $MAX_OPEN_FILES
+    fi
+    if [ -n "$MAX_CORE_SIZE" ]; then
+        ulimit -c $MAX_CORE_SIZE
     fi
     if [ -n "$MAX_LOCKED_MEMORY" ]; then
         ulimit -l $MAX_LOCKED_MEMORY
