@@ -324,6 +324,8 @@ In order for native users and roles to be configured, the role calls the Elastic
 
 These can either be set to a user declared in the file based realm, with admin permissions, or the default "elastic" superuser (default password is changeme).
 
+If ssl is configured an addition parameter can be set to send to the Elasticsearch API over https
+* ```es_ssl_enabled``` - true
 
 ### Additional Configuration
 
