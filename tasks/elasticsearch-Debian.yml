@@ -26,7 +26,7 @@
   when: es_use_repository
 
 - name: Debian - Include versionlock
-  include: elasticsearch-Debian-version-lock.yml
+  import_tasks: elasticsearch-Debian-version-lock.yml
   when: es_version_lock
 
 - name: Debian - Ensure elasticsearch is installed

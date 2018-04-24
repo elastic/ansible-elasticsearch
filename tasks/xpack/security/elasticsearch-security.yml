@@ -32,7 +32,7 @@
 
 #-----------------------------FILE BASED REALM----------------------------------------
 
-- include: elasticsearch-security-file.yml
+- import_tasks: elasticsearch-security-file.yml
   when: (es_enable_xpack and "security" in es_xpack_features) and ((es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined))
 
 #-----------------------------ROLE MAPPING ----------------------------------------
