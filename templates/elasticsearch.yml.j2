@@ -23,7 +23,9 @@ path.data: {{ data_dirs | array_to_str }}
 
 path.logs: {{ log_dir }}
 
-path.repo: {{ path_repo }}
+{% if es_path_repo %}
+path.repo: {{ es_path_repo }}
+{% endif %}
 
 action.auto_create_index: {{ action_auto_create_index }}
 
@@ -60,6 +62,9 @@ xpack.notification.email:
         auth: {{ es_mail_config['require_auth'] }}
         host: {{ es_mail_config['host'] }}
         port: {{ es_mail_config['port'] }}
+        {% if es_mail_config['require_auth'] == true %}
         user: {{ es_mail_config['user'] }}
         password: {{ es_mail_config['pass'] }}
+        {% endif %}
+        
 {% endif %}

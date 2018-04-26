@@ -338,6 +338,7 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` an array of plugin definitions e.g.:
+* ```es_path_repo``` Sets the whitelist for allowing local back-up repositories
 ```yml
   es_plugins:
     - plugin: ingest-geoip 
@@ -352,7 +353,20 @@ In addition to es_config, the following parameters allow the customization of th
 
 Earlier examples illustrate the installation of plugins using `es_plugins`.  For officially supported plugins no version or source delimiter is required. The plugin script will determine the appropriate plugin version based on the target Elasticsearch version.  For community based plugins include the full url.  This approach should NOT be used for the X-Pack plugin.  See X-Pack below for details here.
  
-If installing Monitoring or Alerting, ensure the license plugin is also specified.  Security configuration is currently not supported but planned for later versions.
+If installing Monitoring or Alerting, ensure the license plugin is also specified.  Security configuration currently has limited support, but more support is planned for later versions.
+
+To configure X-pack to send mail, the following configuration can be added to the role. When require_auth is true, you will also need to provide the user and password. If not these can be removed:
+```
+    es_mail_config:
+        account: <functional name>
+        profile: standard
+        from: <from address>
+        require_auth: <true or false>
+        host: <mail domain>
+        port: <port number>
+        user: <e-mail address> --optional
+        pass: <password> --optional
+```
 
 * ```es_user``` - defaults to elasticsearch.
 * ```es_group``` - defaults to elasticsearch.
