@@ -1,7 +1,8 @@
 ---
 
 #Test if feature is installed
-- shell: "{{es_home}}/bin/elasticsearch-plugin list | grep x-pack"
+- name: Test if x-pack is installed
+  shell: "{{es_home}}/bin/elasticsearch-plugin list | grep x-pack"
   become: yes
   register: x_pack_installed
   changed_when: False
