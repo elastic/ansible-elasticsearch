@@ -23,7 +23,7 @@ path.data: {{ data_dirs | array_to_str }}
 
 path.logs: {{ log_dir }}
 
-{% if es_path_repo %}
+{% if es_path_repo is defined %}
 path.repo: {{ es_path_repo }}
 {% endif %}
 
