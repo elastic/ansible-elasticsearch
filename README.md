@@ -338,13 +338,16 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` an array of plugin definitions e.g.:
-* ```es_path_repo``` Sets the whitelist for allowing local back-up repositories
-* ```es_action_auto_create_index ``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
-     es_action_auto_create_index: '[".watches", ".triggered_watches", ".watcher-history-*"]'
 ```yml
   es_plugins:
     - plugin: ingest-geoip 
 ```
+* ```es_path_repo``` Sets the whitelist for allowing local back-up repositories
+* ```es_action_auto_create_index ``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
+     es_action_auto_create_index: '[".watches", ".triggered_watches", ".watcher-history-*"]'
+* ```es_path_repo``` Sets the whitelist for allowing local back-up repositories
+* ```es_action_auto_create_index ``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
+     es_action_auto_create_index: '[".watches", ".triggered_watches", ".watcher-history-*"]'
 * ```es_allow_downgrades``` For development purposes only. (true or false (default) )
 * ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
 * ```update_java``` Updates Java to the latest version. (true or false (default))
