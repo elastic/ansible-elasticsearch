@@ -339,6 +339,8 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` an array of plugin definitions e.g.:
 * ```es_path_repo``` Sets the whitelist for allowing local back-up repositories
+* ```es_action_auto_create_index ``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
+     es_action_auto_create_index: '[".watches", ".triggered_watches", ".watcher-history-*"]'
 ```yml
   es_plugins:
     - plugin: ingest-geoip 

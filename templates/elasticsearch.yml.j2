@@ -23,11 +23,17 @@ path.data: {{ data_dirs | array_to_str }}
 
 path.logs: {{ log_dir }}
 
-{% if es_path_repo %}
+{% if es_path_repo is defined %}
 path.repo: {{ es_path_repo }}
 {% endif %}
 
-action.auto_create_index: {{ action_auto_create_index }}
+{% if es_action_auto_create_index == true %}
+action.auto_create_index: true
+{% elif not es_action_auto_create_index %}
+action.auto_create_index: false
+{% else %}
+action.auto_create_index: {{ es_action_auto_create_index }}
+{% endif %}
 
 {% if es_enable_xpack %}
 {% if not "security" in es_xpack_features %}
@@ -49,6 +55,18 @@ xpack.ml.enabled: false
 {% if not "graph" in es_xpack_features %}
 xpack.graph.enabled: false
 {% endif %}
+{% endif %}
+
+{% if es_ssl_config['enabled'] is defined %}
+xpack.security.transport.ssl.enabled: true
+xpack.security.http.ssl.enabled: true
+xpack.security.http.ssl.keystore.path: {{conf_dir}}/ssl/{{es_ssl_config['dns']}}.p12
+#Legacy config required for /usr/share/elasticsearch/bin/x-pack/setup-passwords
+xpack.security.http.ssl.keystore.password: "test"
+xpack.security.http.ssl.truststore.path: {{conf_dir}}/ssl/{{es_ssl_config['dns']}}.p12
+#Legacy config required for /usr/share/elasticsearch/bin/x-pack/setup-passwords
+xpack.security.http.ssl.truststore.password: "test"
+xpack.security.http.ssl.client_authentication: none
 {% endif %}
 
 {% if es_mail_config['account'] is defined %}
