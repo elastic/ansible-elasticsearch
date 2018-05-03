@@ -27,7 +27,7 @@ path.logs: {{ log_dir }}
 path.repo: {{ es_path_repo }}
 {% endif %}
 
-action.auto_create_index: {{ action_auto_create_index }}
+action.auto_create_index: {{ es_action_auto_create_index }}
 
 {% if es_enable_xpack %}
 {% if not "security" in es_xpack_features %}
