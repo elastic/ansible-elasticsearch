@@ -22,7 +22,6 @@ es_config_log4j2: log4j2.properties.j2
 es_pid_dir: "/var/run/elasticsearch"
 es_data_dirs: "/var/lib/elasticsearch"
 es_log_dir: "/var/log/elasticsearch"
-es_action_auto_create_index: true
 es_max_open_files: 65536
 es_max_threads: "{{ 2048 if ( es_version | version_compare('6.0.0', '<')) else 8192 }}"
 es_max_map_count: 262144
@@ -34,7 +33,7 @@ es_xpack_features: ["alerting","monitoring","graph","ml","security"]
 es_api_host: "localhost"
 es_api_port: 9200
 es_debian_startup_timeout: 10
-es_http_type: http
+
 # Since ansible 2.2 the following variables need to be defined
 # to allow the role to be conditionally played with a when condition.
 pid_dir: ''

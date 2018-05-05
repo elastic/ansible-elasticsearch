@@ -18,7 +18,7 @@
 - name: Activate ES license (with security authentication)
   uri:
     method: PUT
-    url: "{{es_http_type}}://{{es_api_host}}:{{es_api_port}}/_xpack/license?acknowledge=true"
+    url: "http://{{es_api_host}}:{{es_api_port}}/_xpack/license?acknowledge=true"
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     body_format: json
@@ -26,7 +26,7 @@
     body: "{{ es_xpack_license }}"
     return_content: yes
   register: license_activated
-  no_log: false
+  no_log: True
   when: "'security' in es_xpack_features"
   failed_when: >
     license_activated.status != 200 or

@@ -338,6 +338,10 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` an array of plugin definitions e.g.:
+<<<<<<< HEAD
+=======
+* ```es_path_repo``` Sets the whitelist for allowing local back-up repositories
+>>>>>>> parent of cc28b61... Added more x-pack config options
 ```yml
   es_plugins:
     - plugin: ingest-geoip 
