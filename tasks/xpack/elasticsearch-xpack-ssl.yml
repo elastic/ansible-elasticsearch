@@ -2,9 +2,9 @@
 #ES_PATH_CONF="/etc/elasticsearch/ases1" && export ES_PATH_CONF
 #/usr/share/elasticsearch/bin/x-pack/setup-passwords auto --url https://localhost:9200
 
-- name: Check if /etc/ssl/elasticsearch folder exists
+- name: Check if {{ es_ssl_config['ca_folder'] }} folder exists
   file:
-    path: /etc/ssl/elasticsearch
+    path: "{{ es_ssl_config['ca_folder'] }}"
     state: directory
     owner: elasticsearch
     group: elasticsearch
@@ -13,7 +13,7 @@
 
 - name: Verify if elastic CA keys are present
   stat:
-    path: "/etc/ssl/elasticsearch/elastic-ca.p12"
+    path: "{{ es_ssl_config['ca_folder'] }}/elastic-ca.p12"
   become: true
   become_user: elasticsearch
   register: es_ssl_ca_present
@@ -22,11 +22,11 @@
 - name: Generate SSL/TLS CA Authority (required for platinum license)
   environment: 
     - ES_PATH_CONF: "{{conf_dir}}"
-  command: /usr/share/elasticsearch/bin/x-pack/certutil ca --silent -out /etc/ssl/elasticsearch/elastic-ca.p12 -pass "test"
+  command: /usr/share/elasticsearch/bin/x-pack/certutil ca --silent -out {{ es_ssl_config['ca_folder'] }}/elastic-ca.p12 -pass "{{ es_ssl_config['ca_password'] }}"
   become: true
   become_user: elasticsearch
   register: elastic_ca
-  when: es_platinum_license is defined and es_ssl_config["enabled"] is defined and not es_ssl_ca_present.stat.exists
+  when: es_platinum_license is defined and es_ssl_config is defined and es_ssl_config['ca_password'] is defined and (not es_ssl_ca_present.stat.exists or es_ssl_config['regen_certs'])
 
 - name: Check if /usr/local/share/ca-certificates/local-elastic-ca folder exists
   file:
@@ -38,12 +38,14 @@
   register: es_ca_folder
 
 - name: Extract CA certificate to the trusted CA folder
-  command: openssl pkcs12 -in /etc/ssl/elasticsearch/elastic-ca.p12 -clcerts -nokeys -out /usr/local/share/ca-certificates/local-elastic-ca/elastic-ca.crt -passin pass:test
-  when: es_ca_folder
+  command: openssl pkcs12 -in {{ es_ssl_config['ca_folder'] }}/elastic-ca.p12 -clcerts -nokeys -out /usr/local/share/ca-certificates/local-elastic-ca/elastic-ca.crt -passin pass:{{ es_ssl_config['ca_password'] }}
+  when: es_ca_folder and es_ssl_config['ca_password'] is defined and (not es_ssl_ca_present.stat.exists or elastic_ca.changed)
+  register: es_ca_sytem_import_prep
 
 - name: Add CA certificate to cacerts
   become: true
   command: update-ca-certificates
+  when: es_ca_sytem_import_prep.changed
 
 - name: Verify if elastic Cert keys are present
   stat:
@@ -52,56 +54,58 @@
   become_user: elasticsearch
   register: es_ssl_cert_present
 
-- name: Generate SSL/TLS certificate for ES (required for platinum license)
+- name: Generate SSL/TLS certificate for primary ES (required for platinum license)
   environment: 
     - ES_PATH_CONF: "{{conf_dir}}"
-  command: /usr/share/elasticsearch/bin/x-pack/certutil cert --silent --ca /etc/ssl/elasticsearch/elastic-ca.p12 --ca-pass "test" --ip {{ es_ssl_config['ip'] }} --dns {{ es_ssl_config['dns'] }},localhost --out {{conf_dir}}/ssl/{{ es_ssl_config['dns'] }}.p12 --pass "test"
+  command: /usr/share/elasticsearch/bin/x-pack/certutil cert --silent --ca {{ es_ssl_config['ca_folder'] }}/elastic-ca.p12 --ca-pass "{{ es_ssl_config['ca_password'] }}" --ip {{ es_ssl_config['ip'] }} --dns {{ es_ssl_config['dns'] }},localhost --out {{conf_dir}}/ssl/{{ es_ssl_config['dns'] }}.p12 --pass "{{ es_ssl_config['es_password'] }}"
   become: true
   become_user: elasticsearch
-  when: es_ssl_regen_cert is defined or not es_ssl_cert_present.stat.exists
+  register: es_ssl_cert_generated
+  when: es_ssl_config is defined and es_ssl_config['regen_certs'] or not es_ssl_cert_present.stat.exists
 
 - name: Add SSL/TLS keystore password to ES keystore (required for platinum license)
   environment: 
     - ES_PATH_CONF: "{{conf_dir}}"
-  shell: echo "test" | /usr/share/elasticsearch/bin/elasticsearch-keystore add --silent xpack.security.http.ssl.keystore.secure_password -x --force
+  shell: echo "{{ es_ssl_config['es_password'] }}" | /usr/share/elasticsearch/bin/elasticsearch-keystore add --silent xpack.security.http.ssl.keystore.secure_password -x --force
   become: true
   become_user: elasticsearch
-  when: elastic_ca
+  when: es_ssl_cert_generated
 
 - name: Add SSL/TLS truststore password to ES keystore (required for platinum license)
   environment: 
     - ES_PATH_CONF: "{{conf_dir}}"
-  shell: echo "test" | /usr/share/elasticsearch/bin/elasticsearch-keystore add --silent xpack.security.http.ssl.truststore.secure_password -x --force
+  shell: echo "{{ es_ssl_config['es_password'] }}" | /usr/share/elasticsearch/bin/elasticsearch-keystore add --silent xpack.security.http.ssl.truststore.secure_password -x --force
   become: true
   become_user: elasticsearch
-  when: elastic_ca
+  when: es_ssl_cert_generated
 
 - name: set fact es_http_type to HTTPS
   set_fact: es_http_type=https
-  when: elastic_ca
+  when: es_ssl_cert_generated
 
 ##################################### Kibana certificates #####################################
 
 - name: Verify if kibana Cert keys are present
   stat:
-    path: "/etc/ssl/elasticsearch/kb-{{ item }}.zip"
+    path: "{{ es_ssl_config['ca_folder'] }}/kb-{{ item }}.zip"
   become: true
   become_user: elasticsearch
   register: es_kb_ssl_cert_present
-  loop: "{{ groups['kibana_droplets'] }}"
+  loop: "{{ groups['kibana_machines'] }}"
 
-- name: Generate SSL/TLS certificate for Kibana
+- name: Generate SSL/TLS certificates for Kibana machines
   environment: 
     - ES_PATH_CONF: "{{conf_dir}}"
-  command: /usr/share/elasticsearch/bin/x-pack/certutil cert --silent --ca /etc/ssl/elasticsearch/elastic-ca.p12 --ca-pass "test" --ip "{{ hostvars[item.item].ansible_host }}" --dns {{ item.item }},localhost --out /etc/ssl/elasticsearch/kb-{{ item.item }}.zip --pem --name {{ item.item }}
+  command: /usr/share/elasticsearch/bin/x-pack/certutil cert --silent --ca {{ es_ssl_config['ca_folder'] }}/elastic-ca.p12 --ca-pass "test" --ip "{{ hostvars[item.item].ansible_host }}" --dns {{ item.item }},localhost --out {{ es_ssl_config['ca_folder'] }}/kb-{{ item.item }}.zip --pem --name {{ item.item }}
   become: true
   become_user: elasticsearch
-  when: es_ssl_regen_certs is defined or not item.stat.exists
+  when: es_ssl_config is defined and es_ssl_config['regen_certs'] or not item.stat.exists
+  # with_items: "{{ es_kb_ssl_cert_present.results }}"
   loop: "{{ es_kb_ssl_cert_present.results }}"
 
-- name: Find kibana certificates in /etc/ssl/elasticsearch
+- name: Find kibana certificates in {{ es_ssl_config['ca_folder'] }}
   find:
-    paths: /etc/ssl/elasticsearch
+    paths: "{{ es_ssl_config['ca_folder'] }}"
     patterns: 'kb-.*\.zip'
     use_regex: yes
   register: es_kb_ssl_cert_archives
@@ -109,28 +113,14 @@
 - debug:
     msg: "Found Kibana certificate ZIP files: {{ es_kb_ssl_cert_archives }}"
 
-# - name: Unarchive certificates for Kibana
-  # unarchive:
-  #   src: "{{item.path}}"
-  #   dest: "{{item.path | regex_replace('(.*).zip$', '\\1')}}"
-  #   remote_src: yes
-  # become: true
-  # become_user: elasticsearch
-  # loop: "{{ es_kb_ssl_cert_archives.files }}"
-
-# - name: Unarchive certificates for Kibana
-#   command: unzip {{item.path}}
-#   become: true
-#   become_user: elasticsearch
-#   loop: "{{ es_kb_ssl_cert_archives.files }}"
-
-# - name: Find kibana certificate directories in /etc/ssl/elasticsearch
-#   find:
-#     paths: /etc/ssl/elasticsearch
-#     patterns: 'kb-.*'
-#     use_regex: yes
-#     file_type: directory
-#   register: es_kb_ssl_cert_folder
+# Maybe encrypt certificates first as these are not p12 files?
+# Generate a private/public key pair
+# $ openssl genrsa -out rsa_key.pri 2048; openssl rsa -in rsa_key.pri -out rsa_key.pub -outform PEM -pubout
+# Encrypt the string using public key, and store in a file
+# $ echo "stockexchange.com" | openssl rsautl -encrypt -inkey rsa_key.pub -pubin -out secret.dat
+# Un-encrypt using private key
+# $ string=`openssl rsautl -decrypt -inkey rsa_key.pri -in secret.dat `; echo $string
+# stockexchange.com
 
 - name: Fetch certificates for Kibana
   fetch:

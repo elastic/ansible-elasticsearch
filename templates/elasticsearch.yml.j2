@@ -57,19 +57,25 @@ xpack.graph.enabled: false
 {% endif %}
 {% endif %}
 
-{% if es_ssl_config['enabled'] is defined %}
+{% if es_ssl_config is defined %}
 xpack.security.transport.ssl.enabled: true
 xpack.security.http.ssl.enabled: true
-xpack.security.http.ssl.keystore.path: {{conf_dir}}/ssl/{{es_ssl_config['dns']}}.p12
+xpack.security.http.ssl.keystore.path: "{{ es_ssl_config['keystore'] }}"
+{% if es_ssl_config['keystore_password'] is defined and es_ssl_config['legacy_password_config'] %}
 #Legacy config required for /usr/share/elasticsearch/bin/x-pack/setup-passwords
-xpack.security.http.ssl.keystore.password: "test"
-xpack.security.http.ssl.truststore.path: {{conf_dir}}/ssl/{{es_ssl_config['dns']}}.p12
+xpack.security.http.ssl.keystore.password: "{{ es_ssl_config['keystore_password'] }}"
+{% endif %}
+xpack.security.http.ssl.truststore.path: "{{ es_ssl_config['truststore'] }}"
+{% if es_ssl_config['truststore_password'] is defined and es_ssl_config['legacy_password_config'] %}
 #Legacy config required for /usr/share/elasticsearch/bin/x-pack/setup-passwords
-xpack.security.http.ssl.truststore.password: "test"
-xpack.security.http.ssl.client_authentication: none
+xpack.security.http.ssl.truststore.password: "{{ es_ssl_config['truststore_password'] }}"
+{% endif %}
+{% if es_ssl_config['client_authentication'] is defined %}
+xpack.security.http.ssl.client_authentication: {{ es_ssl_config['client_authentication'] }}
+{% endif %}
 {% endif %}
 
-{% if es_mail_config['account'] is defined %}
+{% if es_mail_config is defined %}
 xpack.notification.email:
   account:
     {{ es_mail_config['account'] }}:
@@ -83,6 +89,5 @@ xpack.notification.email:
         {% if es_mail_config['require_auth'] == true %}
         user: {{ es_mail_config['user'] }}
         password: {{ es_mail_config['pass'] }}
-        {% endif %}
-        
+        {% endif %}  
 {% endif %}
