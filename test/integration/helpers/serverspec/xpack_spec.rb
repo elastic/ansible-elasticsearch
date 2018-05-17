@@ -148,11 +148,6 @@ shared_examples 'xpack::init' do |vars|
   end
 
 
-  #Test native roles and users are loaded
-  describe command('curl -s localhost:9200/_xpack/security/user -u es_admin:changeMeAgain | md5sum | grep b6a1293c343e745a508c74778c9be8bb') do
-    its(:exit_status) { should eq 0 }
-  end
-
   describe 'security roles' do
     it 'should list the security roles' do
       roles = curl_json('http://localhost:9200/_xpack/security/role', username='es_admin', password='changeMeAgain')
@@ -227,10 +222,29 @@ shared_examples 'xpack::init' do |vars|
     end
   end
 
-  describe command('curl -s localhost:9200/_xpack/security/user/kibana4_server -u elastic:elasticChanged | md5sum | grep f0548742161d9e50c7c7fbe2e061a1fa') do
-      its(:exit_status) { should eq 0 }
+  describe 'security users' do
+    result = curl_json('http://localhost:9200/_xpack/security/user', username='elastic', password='elasticChanged')
+    it 'should have the elastic user' do
+      expect(result['elastic']['username']).to eq('elastic')
+      expect(result['elastic']['roles']).to eq(['superuser'])
+      expect(result['elastic']['enabled']).to eq(true)
+    end
+    it 'should have the kibana user' do
+      expect(result['kibana']['username']).to eq('kibana')
+      expect(result['kibana']['roles']).to eq(['kibana_system'])
+      expect(result['kibana']['enabled']).to eq(true)
+    end
+    it 'should have the kibana_server user' do
+      expect(result['kibana4_server']['username']).to eq('kibana4_server')
+      expect(result['kibana4_server']['roles']).to eq(['kibana4_server'])
+      expect(result['kibana4_server']['enabled']).to eq(true)
+    end
+    it 'should have the logstash user' do
+      expect(result['logstash_system']['username']).to eq('logstash_system')
+      expect(result['logstash_system']['roles']).to eq(['logstash_system'])
+      expect(result['logstash_system']['enabled']).to eq(true)
+    end
   end
-
 
   describe 'logstash_system access check' do
     it 'should be reported as version '+vars['es_version'] do
@@ -238,10 +252,6 @@ shared_examples 'xpack::init' do |vars|
       expect(command.stdout).to match(vars['es_version'])
       expect(command.exit_status).to eq(0)
     end
-  end
-
-  describe command('curl -s localhost:9200/_xpack/security/user/logstash_system -u elastic:elasticChanged | md5sum | grep 98d361ddfa5156abd33542a493b4fd85') do
-      its(:exit_status) { should eq 0 }
   end
 
   if vars['es_major_version'] == '5.x' # kibana default password has been removed in 6.x
@@ -252,10 +262,5 @@ shared_examples 'xpack::init' do |vars|
       end
     end
   end
-
-  describe command('curl -s localhost:9200/_xpack/security/user/kibana -u elastic:elasticChanged | md5sum | grep 34190c64eb3c7cfb002fa789df5fad20') do
-      its(:exit_status) { should eq 0 }
-  end
-
 end
 
