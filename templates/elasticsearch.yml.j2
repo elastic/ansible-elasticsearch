@@ -57,7 +57,7 @@ xpack.graph.enabled: false
 {% endif %}
 {% endif %}
 
-{% if es_mail_config['account'] is defined %}
+{% if es_mail_config is defined %}
 xpack.notification.email:
   account:
     {{ es_mail_config['account'] }}:
@@ -71,6 +71,5 @@ xpack.notification.email:
         {% if es_mail_config['require_auth'] == true %}
         user: {{ es_mail_config['user'] }}
         password: {{ es_mail_config['pass'] }}
-        {% endif %}
-        
+        {% endif %}  
 {% endif %}
