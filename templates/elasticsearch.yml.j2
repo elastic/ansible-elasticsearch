@@ -23,6 +23,18 @@ path.data: {{ data_dirs | array_to_str }}
 
 path.logs: {{ log_dir }}
 
+{% if es_path_repo is defined %}
+path.repo: {{ es_path_repo }}
+{% endif %}
+
+{% if es_action_auto_create_index == true %}
+action.auto_create_index: true
+{% elif not es_action_auto_create_index %}
+action.auto_create_index: false
+{% else %}
+action.auto_create_index: {{ es_action_auto_create_index }}
+{% endif %}
+
 {% if es_enable_xpack %}
 {% if not "security" in es_xpack_features %}
 xpack.security.enabled: false
@@ -43,4 +55,21 @@ xpack.ml.enabled: false
 {% if not "graph" in es_xpack_features %}
 xpack.graph.enabled: false
 {% endif %}
+{% endif %}
+
+{% if es_mail_config is defined %}
+xpack.notification.email:
+  account:
+    {{ es_mail_config['account'] }}:
+      profile: {{ es_mail_config['profile'] }}
+      email_defaults:
+        from: {{ es_mail_config['from'] }}
+      smtp:
+        auth: {{ es_mail_config['require_auth'] }}
+        host: {{ es_mail_config['host'] }}
+        port: {{ es_mail_config['port'] }}
+        {% if es_mail_config['require_auth'] == true %}
+        user: {{ es_mail_config['user'] }}
+        password: {{ es_mail_config['pass'] }}
+        {% endif %}  
 {% endif %}
