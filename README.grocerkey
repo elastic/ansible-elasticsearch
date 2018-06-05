@@ -1,0 +1,4 @@
+This role has been created as a clone of git@github.com:elastic/ansible-elasticsearch.git, tag 6.2.4.
+The role has been customized as little as possible. The original role does not support building a golden image and then configuring it, as it always renames all elasticsearch directories to include current Ansible's "inventory_hostname".
+
+Once https://github.com/elastic/ansible-elasticsearch/pull/301 is merged it might be possible to use the vanilla role again.
