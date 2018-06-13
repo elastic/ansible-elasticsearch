@@ -38,7 +38,7 @@ platforms:
       provision_command:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
         - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip python-openssl
-        - pip install jmespath
+        - pip install jmespath pyOpenSSL ndg-httpsclient
         - pip uninstall -y ansible
       use_sudo: false
       volume: 
