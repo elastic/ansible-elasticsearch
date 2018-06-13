@@ -9,3 +9,4 @@ reserved_xpack_users: ["elastic","kibana","logstash_system"]
 
 # X-Pack used to be installed as a plugin. For versions after 6.3 we don't need to install it anymore
 es_install_xpack: "{{ true if ( es_version | version_compare('6.3.0', '<')) else false }}"
+es_repo_name: "{{ 'oss-' + es_major_version if (( es_version | version_compare('6.3.0', '>=')) and not es_enable_xpack ) else es_major_version }}"

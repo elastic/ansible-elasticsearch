@@ -11,7 +11,6 @@
     es_heap_size: "1g"
     es_templates: true
     es_version: "{{ '6.2.4' if es_major_version == '6.x' else '5.6.6' }}" # This is set to an older version than the current default to force an upgrade
-    es_use_snapshot_release: false # TODO remove when 6.3 is released
     es_enable_xpack: true
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
     es_plugins:

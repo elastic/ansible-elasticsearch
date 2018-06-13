@@ -1,15 +1,15 @@
 ---
-es_use_snapshot_release: true # TODO remove when 6.3 is released
 es_major_version: "6.x"
 es_version: "6.3.0"
+es_use_snapshot_release: false
 es_enable_xpack: true
 es_package_name: "elasticsearch"
 es_version_lock: false
 es_use_repository: true
 es_templates_fileglob: "files/templates/*.json"
 es_apt_key: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
-es_apt_url: "deb https://artifacts.elastic.co/packages/{{ es_major_version }}/apt stable main"
-es_apt_url_old: "deb http://packages.elastic.co/elasticsearch/{{ es_major_version }}/debian stable main"
+es_apt_url: "deb https://artifacts.elastic.co/packages/{{ es_repo_name }}/apt stable main"
+es_apt_url_old: "deb http://packages.elastic.co/elasticsearch/{{ es_repo_name }}/debian stable main"
 es_start_service: true
 es_java_install: true
 update_java: false

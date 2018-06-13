@@ -6,7 +6,7 @@
 
 - name: RedHat - add Elasticsearch repo
   become: yes
-  template: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch-{{ es_major_version }}.repo
+  template: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch-{{ es_repo_name }}.repo
   when: es_use_repository
 
 - name: RedHat - include versionlock
