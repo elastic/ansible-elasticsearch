@@ -12,7 +12,7 @@ shared_examples 'xpack::init' do |vars|
     it { should be_running }
   end
 
-  describe package('elasticsearch') do
+  describe package(vars['es_package_name']) do
     it { should be_installed }
   end
 

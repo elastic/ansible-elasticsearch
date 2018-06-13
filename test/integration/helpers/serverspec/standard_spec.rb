@@ -10,7 +10,7 @@ shared_examples 'standard::init' do |vars|
     it { should be_running }
   end
 
-  describe package('elasticsearch') do
+  describe package(vars['es_package_name']) do
     it { should be_installed }
   end
 
@@ -85,15 +85,22 @@ shared_examples 'standard::init' do |vars|
   end
 
   for plugin in vars['es_plugins']
-    plugin = plugin['plugin']
+    name = plugin['plugin']
 
-    describe file('/usr/share/elasticsearch/plugins/'+plugin) do
+    describe file('/usr/share/elasticsearch/plugins/'+name) do
       it { should be_directory }
       it { should be_owned_by 'elasticsearch' }
     end
-    #confirm plugins are installed and the correct version
-    describe command('curl -s localhost:9200/_nodes/plugins | grep \'"name":"'+plugin+'","version":"'+vars['es_version']+'"\'') do
-      its(:exit_status) { should eq 0 }
+    it 'should be installed and the right version' do 
+      plugins = curl_json('http://localhost:9200/_nodes/plugins')
+      version = nil
+      node, data = plugins['nodes'].first
+      data['plugins'].each do |plugin|
+        if plugin['name'] == name
+          version = plugin['version']
+        end
+      end
+      expect(version).to eql(vars['es_version'])
     end
   end
 

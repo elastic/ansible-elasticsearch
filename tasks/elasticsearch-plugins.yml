@@ -60,9 +60,8 @@
 
 - name: Install elasticsearch plugins
   become: yes
-  command: "{{es_home}}/bin/elasticsearch-plugin install {{ item.plugin }} --batch --silent"
+  command: "{{es_home}}/bin/elasticsearch-plugin install {{ item.url | default(item.plugin) }} --batch --silent"
   register: plugin_installed
-  failed_when: "'ERROR' in plugin_installed.stdout"
   changed_when: plugin_installed.rc == 0
   with_items: "{{ es_plugins }}"
   when: item.plugin in plugins_to_install
