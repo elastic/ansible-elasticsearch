@@ -49,7 +49,6 @@
 - name: Remove elasticsearch plugins
   become: yes
   command: "{{es_home}}/bin/elasticsearch-plugin remove {{item}} --silent"
-  ignore_errors: yes
   with_items: "{{ plugins_to_remove | default([]) }}"
   notify: restart elasticsearch
   register: plugin_removed
