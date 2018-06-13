@@ -16,7 +16,7 @@
 - name: RedHat - Install Elasticsearch
   become: yes
   yum:
-    name: {{ es_package_name }}{% if es_version is defined and es_version != ""  %}-{{ es_version }}{% endif %}
+    name: '{{ es_package_name }}{% if es_version is defined and es_version != ""  %}-{{ es_version }}{% endif %}'
     state: present
     update_cache: yes
   when: es_use_repository

@@ -1,24 +1,23 @@
 # ansible-elasticsearch
+[![Build Status](https://img.shields.io/jenkins/s/https/devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master.svg)](https://devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master/)
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
 **THIS ROLE IS FOR 6.x, 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
 
-Ansible role for 6.x/5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems.  Tested platforms are:
+Ansible role for 6.x/5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
 
 * Ubuntu 14.04/16.04
 * Debian 8
 * Centos 7
 
-The latest Elasticsearch versions of 6.x and 5.x are actively tested.  **Only Ansible versions > 2.3.2 are supported, as this is currently the only version tested.**
+The latest Elasticsearch versions of 6.x and 5.x are actively tested.  **Only Ansible versions > 2.4.3.0 are supported, as this is currently the only version tested.**
 
 ##### Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
 
 ## Usage
 
-Create your Ansible playbook with your own tasks, and include the role elasticsearch.  You will have to have this repository accessible within the context of playbook, e.g.
-
-e.g. 
+Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```
 cd /my/repos/
@@ -44,6 +43,59 @@ The simplest configuration therefore consists of:
 The above installs a single node 'node1' on the hosts 'localhost'.
 
 This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
+
+## Testing
+
+This playbook uses [Kitchen](https://kitchen.ci/) for CI and local testing.
+
+### Requirements
+
+* Ruby
+* Bundler
+* Docker
+* Make
+
+### Running the tests
+
+If you want to test X-Pack features with a license you will first need to export the `ES_XPACK_LICENSE_FILE` variable.
+```
+export ES_XPACK_LICENSE_FILE="$(pwd)/license.json"
+```
+
+To converge an Ubuntu 16.04 host running X-Pack
+```
+$ make converge
+```
+
+To run the tests
+```
+$ make verify
+```
+
+To list all of the different test suits
+```
+$ make list
+```
+
+The default test suite is Ubuntu 16.04 with X-Pack. If you want to test another suite you can override this with the `PATTERN` variable
+```
+$ make converge PATTERN=standard-centos-7
+```
+
+The `PATTERN` is a kitchen pattern which can match multiple suites. To run all tests for CentOS
+```
+$ make converge PATTERN=centos-7
+```
+
+The default version is 6.x If you want to test 5.x you can override it with the `VERSION` variable to test 5.x
+```
+$ make converge VERSION=5.x PATTERN=standard-centos-7
+```
+
+When you are finished testing you can clean up everything with
+```
+$ make destroy-all
+```
 
 ### Basic Elasticsearch Configuration
 
@@ -220,7 +272,7 @@ ansible-playbook -i hosts ./your-playbook.yml
 
 ### Installing X-Pack Features
 
-X-Pack features, such as Security, are supported. This feature is currently experimental.  To enable X-Pack set the parameter `es_enable_xpack` to true and list the required features in the parameter `es_xpack_features`.  
+X-Pack features, such as Security, are supported. This feature is currently experimental.
 
 The parameter `es_xpack_features` by default enables all features i.e. it defaults to ["alerting","monitoring","graph","security","ml"]
 
@@ -392,7 +444,7 @@ This role ships with sample scripts and templates located in the [files/scripts/
 
 ### Proxy
 
-To define proxy globaly, set the following variables:
+To define proxy globally, set the following variables:
 
 * ```es_proxy_host``` - global proxy host
 * ```es_proxy_port``` - global proxy port
@@ -413,10 +465,8 @@ To define proxy only for a particular plugin during its installation:
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
 * Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
-* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test only the latest version of 6.x on
-all supported platforms. 
-* The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and 
-Elasticsearch restarted where required.
+* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test the latest version of 6.x and 5.x on all supported platforms. 
+* The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and Elasticsearch restarted where required.
 * Systemd is used for Ubuntu versions >= 15, Debian >=8, Centos >=7.  All other versions use init for service scripts.
 * In order to run x-pack tests a license file with security enabled is required. A trial license is appropriate. Set the environment variable `ES_XPACK_LICENSE_FILE` to the full path of the license file prior to running tests.
 
@@ -428,4 +478,4 @@ Elasticsearch restarted where required.
 
 ## Questions on Usage
 
-We welcome questions on how to use the role.  However, in order to keep the github issues list focused on "issues" we ask the community to raise questions at https://discuss.elastic.co/c/elasticsearch.  This is monitored by the maintainers.
+We welcome questions on how to use the role.  However, in order to keep the GitHub issues list focused on "issues" we ask the community to raise questions at https://discuss.elastic.co/c/elasticsearch.  This is monitored by the maintainers.
