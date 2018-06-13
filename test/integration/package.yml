@@ -6,6 +6,8 @@
   roles:
     - { role: elasticsearch, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300" }, es_instance_name: "node1" }
   vars:
+    es_enable_xpack: false
+    es_package_name: "elasticsearch-oss"
     es_scripts: true
     es_templates: true
     es_heap_size: "1g"
@@ -22,6 +24,8 @@
   roles:
     - { role: elasticsearch, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300" }, es_instance_name: "node1" }
   vars:
+    es_enable_xpack: false
+    es_package_name: "elasticsearch-oss"
     es_scripts: true
     es_templates: true
     es_heap_size: "1g"
