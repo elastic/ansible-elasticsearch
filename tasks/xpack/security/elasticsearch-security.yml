@@ -12,23 +12,33 @@
     - (es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined) or (es_role_mapping is defined)
 
 #-----------------------------Create Bootstrap User-----------------------------------
-- name: Check if bootstrap password is set
-  command: >
-   {{es_home}}/bin/elasticsearch-keystore list
-  register: list_keystore
-  changed_when: False
-  environment:
-    ES_PATH_CONF: "{{ conf_dir }}"
-  when:
-    - (es_enable_xpack and "security" in es_xpack_features) and (es_version | version_compare('6.0.0', '>'))
+### START BLOCK elasticsearch keystore ###
+- name: create the elasticsearch keystore
+  when: (es_enable_xpack and "security" in es_xpack_features) and (es_version | version_compare('6.0.0', '>'))
+  block:
+  - name: create the keystore if it doesn't exist yet
+    command: >
+     {{es_home}}/bin/elasticsearch-keystore create
+    creates: "{{ conf_dir }}/elasticsearch.keystore"
+    environment:
+      ES_PATH_CONF: "{{ conf_dir }}"
+  
+  - name: Check if bootstrap password is set
+    command: >
+     {{es_home}}/bin/elasticsearch-keystore list
+    register: list_keystore
+    changed_when: False
+    environment:
+      ES_PATH_CONF: "{{ conf_dir }}"
 
-- name: Create Bootstrap password for elastic user
-  shell: echo "{{es_api_basic_auth_password}}" | {{es_home}}/bin/elasticsearch-keystore add -x 'bootstrap.password'
-  when:
-    - (es_enable_xpack and "security" in es_xpack_features) and (es_version | version_compare('6.0.0', '>')) and es_api_basic_auth_username is defined and list_keystore is defined and es_api_basic_auth_username == 'elastic' and 'bootstrap.password' not in list_keystore.stdout_lines
-  environment:
-    ES_PATH_CONF: "{{ conf_dir }}"
-  no_log: true
+  - name: Create Bootstrap password for elastic user
+    shell: echo "{{es_api_basic_auth_password}}" | {{es_home}}/bin/elasticsearch-keystore add -x 'bootstrap.password'
+    when:
+      - es_api_basic_auth_username is defined and list_keystore is defined and es_api_basic_auth_username == 'elastic' and 'bootstrap.password' not in list_keystore.stdout_lines
+    environment:
+      ES_PATH_CONF: "{{ conf_dir }}"
+    no_log: true
+### END BLOCK elasticsearch keystore ###
 
 #-----------------------------FILE BASED REALM----------------------------------------
 
