@@ -4,6 +4,11 @@
   tags:
       - always
 
+- name: set compatibility variables
+  include: compatibility-variables.yml
+  tags:
+      - always
+
 - name: check-set-parameters
   include: elasticsearch-parameters.yml
   tags:

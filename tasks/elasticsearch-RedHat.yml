@@ -25,6 +25,8 @@
   until: redhat_elasticsearch_install_from_repo.rc == 0
   retries: 5
   delay: 10
+  environment:
+    ES_PATH_CONF: "/etc/elasticsearch"
 
 - name: RedHat - Install Elasticsearch from url
   become: yes

@@ -36,6 +36,8 @@
   when: es_use_repository
   register: debian_elasticsearch_install_from_repo
   notify: restart elasticsearch
+  environment:
+    ES_PATH_CONF: "/etc/elasticsearch"
 
 - name: Debian - Include versionlock
   include: elasticsearch-Debian-version-lock.yml

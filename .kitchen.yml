@@ -21,9 +21,7 @@ provisioner:
     extra_vars:
       es_major_version: "<%= ENV['VERSION'] %>"
       <% if ENV['VERSION'] == '5.x' %>
-      es_version: '5.6.9'
-      es_package_name: 'elasticsearch'
-      es_use_snapshot_release: false
+      es_version: '5.6.10'
       <% end %>
   <% end %>
 

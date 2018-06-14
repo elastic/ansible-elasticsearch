@@ -19,7 +19,8 @@
   - name: create the keystore if it doesn't exist yet
     command: >
      {{es_home}}/bin/elasticsearch-keystore create
-    creates: "{{ conf_dir }}/elasticsearch.keystore"
+    args:
+      creates: "{{ conf_dir }}/elasticsearch.keystore"
     environment:
       ES_PATH_CONF: "{{ conf_dir }}"
   
