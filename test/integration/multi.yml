@@ -6,7 +6,6 @@
     - include: elasticsearch/test/integration/debug.yml
   vars:
     es_enable_xpack: false
-    es_package_name: "elasticsearch-oss"
     es_scripts: true
     es_templates: true
     es_heap_size: "1g"
@@ -22,7 +21,6 @@
     - include: elasticsearch/test/integration/debug.yml
   vars:
     es_enable_xpack: false
-    es_package_name: "elasticsearch-oss"
     es_scripts: true
     es_templates: true
     es_heap_size: "1g"

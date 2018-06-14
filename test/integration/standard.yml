@@ -7,7 +7,6 @@
     - { role: elasticsearch, es_instance_name: "node1" }
   vars:
     es_enable_xpack: false
-    es_package_name: "elasticsearch-oss"
     es_heap_size: "1g"
     es_plugins:
       - plugin: ingest-geoip
