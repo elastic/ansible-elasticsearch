@@ -146,20 +146,20 @@ shared_examples 'xpack::init' do |vars|
   end
 
   #Test users file, users_roles and roles.yml
-  describe file('/etc/elasticsearch/security_node/x-pack/users_roles') do
+  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/gcusers_roles') do
     it { should be_owned_by 'elasticsearch' }
     it { should contain 'admin:es_admin' }
     it { should contain 'power_user:testUser' }
   end
 
-  describe file('/etc/elasticsearch/security_node/x-pack/users') do
+  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/gcusers') do
     it { should be_owned_by 'elasticsearch' }
     it { should contain 'testUser:' }
     it { should contain 'es_admin:' }
   end
 
 
-  describe file('/etc/elasticsearch/security_node/x-pack/roles.yml') do
+  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/gcroles.yml') do
     it { should be_owned_by 'elasticsearch' }
     #Test contents as expected
     its(:md5sum) { should eq '7800182547287abd480c8b095bf26e9e' }
@@ -210,7 +210,7 @@ shared_examples 'xpack::init' do |vars|
   end
 
   #Test contents of role_mapping.yml
-  describe file('/etc/elasticsearch/security_node/x-pack/role_mapping.yml') do
+  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/gcrole_mapping.yml') do
     it { should be_owned_by 'elasticsearch' }
     it { should contain 'power_user:' }
     it { should contain '- cn=admins,dc=example,dc=com' }
@@ -219,7 +219,7 @@ shared_examples 'xpack::init' do |vars|
   end
 
 
-  describe file('/etc/elasticsearch/security_node/x-pack/system_key') do
+  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/gcsystem_key') do
     it { should be_owned_by 'elasticsearch' }
     it { should be_writable.by('owner') }
     it { should be_writable.by_user('elasticsearch') }

@@ -10,6 +10,8 @@
   set_fact:
     es_open_xpack: true
     es_install_xpack: false
+    es_users_path: "users"
+    es_xpack_conf_subdir: ""
     es_repo_name: "{{ es_major_version }}"
     es_xpack_users_command: "elasticsearch-users"
 
@@ -22,6 +24,7 @@
   set_fact:
     es_install_xpack: true
     es_xpack_users_command: "x-pack/users"
+    es_xpack_conf_subdir: "/x-pack"
   when: 
     - not es_open_xpack
     - es_enable_xpack

@@ -5,7 +5,7 @@
 
 #Ensure x-pack conf directory is created if necessary
 - name: Ensure x-pack conf directory exists (file)
-  file: path={{ conf_dir }}/x-pack state=directory owner={{ es_user }} group={{ es_group }}
+  file: path={{ conf_dir }}{{ es_xpack_conf_subdir }} state=directory owner={{ es_user }} group={{ es_group }}
   changed_when: False
   when:
     - es_enable_xpack and "security" in es_xpack_features
@@ -51,14 +51,14 @@
 #Copy Roles files
 - name: Copy role_mapping.yml File for Instance
   become: yes
-  template: src=security/role_mapping.yml.j2 dest={{conf_dir}}/x-pack/role_mapping.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=security/role_mapping.yml.j2 dest={{conf_dir}}{{es_xpack_conf_subdir}}/role_mapping.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   when: es_role_mapping is defined
 
 #-----------------------------AUTH FILE----------------------------------------
 
 - name: Copy message auth key to elasticsearch
   become: yes
-  copy: src={{ es_message_auth_file }} dest={{conf_dir}}/x-pack/system_key owner={{ es_user }} group={{ es_group }} mode=0600 force=yes
+  copy: src={{ es_message_auth_file }} dest={{conf_dir}}{{es_xpack_conf_subdir}}/system_key owner={{ es_user }} group={{ es_group }} mode=0600 force=yes
   when: es_message_auth_file is defined
 
 #------------------------------------------------------------------------------------

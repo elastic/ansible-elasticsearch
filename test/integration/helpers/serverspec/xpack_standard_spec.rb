@@ -124,14 +124,15 @@ shared_examples 'xpack_standard::init' do |vars|
       it { should be_owned_by 'elasticsearch' }
     end
 
-    #Test users file, users_roles and roles.yml
-    describe file('/etc/elasticsearch/security_node/x-pack/users_roles') do
-      it { should be_owned_by 'elasticsearch' }
-    end
+  end
 
-    describe file('/etc/elasticsearch/security_node/x-pack/users') do
-      it { should be_owned_by 'elasticsearch' }
-    end
+  #Test users file, users_roles and roles.yml
+  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/gcusers_roles') do
+    it { should be_owned_by 'elasticsearch' }
+  end
+
+  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/gcusers') do
+    it { should be_owned_by 'elasticsearch' }
   end
 
   describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMeAgain | grep x-pack') do
