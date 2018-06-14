@@ -80,10 +80,42 @@ shared_examples 'xpack::init' do |vars|
     it { should_not exist }
   end
 
-  #Xpack specific tests
-  describe file('/usr/share/elasticsearch/plugins') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
+  # X-Pack is no longer installed as a plugin in elasticsearch
+  if vars['es_major_version'] == '5.x'
+    describe file('/usr/share/elasticsearch/plugins') do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
+
+    describe file('/usr/share/elasticsearch/plugins/x-pack') do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
+
+    describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMeAgain | grep x-pack') do
+      its(:exit_status) { should eq 0 }
+    end
+
+    describe file('/usr/share/elasticsearch/plugins/x-pack') do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
+
+    describe 'xpack plugin' do
+      it 'should be installed with the correct version' do
+        plugins = curl_json('http://localhost:9200/_nodes/plugins')
+        node, data = plugins['nodes'].first
+        version = 'plugin not found'
+        name = 'x-pack'
+
+        data['plugins'].each do |plugin|
+          if plugin['name'] == name
+            version = plugin['version']
+          end
+        end
+        expect(version).to eql(vars['es_version'])
+      end
+    end
   end
 
   #Test if x-pack is activated
@@ -95,21 +127,7 @@ shared_examples 'xpack::init' do |vars|
     end
   end
 
-  describe file('/usr/share/elasticsearch/plugins/x-pack') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMeAgain | grep x-pack') do
-    its(:exit_status) { should eq 0 }
-  end
-
   describe file('/etc/elasticsearch/security_node/x-pack') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe file('/usr/share/elasticsearch/plugins/x-pack') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
