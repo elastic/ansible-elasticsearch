@@ -158,14 +158,6 @@ shared_examples 'xpack::init' do |vars|
     it { should contain 'es_admin:' }
   end
 
-
-  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/roles.yml') do
-    it { should be_owned_by 'elasticsearch' }
-    #Test contents as expected
-    its(:md5sum) { should eq '7800182547287abd480c8b095bf26e9e' }
-  end
-
-
   describe 'security roles' do
     it 'should list the security roles' do
       roles = curl_json('http://localhost:9200/_xpack/security/role', username='es_admin', password='changeMeAgain')
@@ -216,18 +208,6 @@ shared_examples 'xpack::init' do |vars|
     it { should contain '- cn=admins,dc=example,dc=com' }
     it { should contain 'user:' }
     it { should contain '- cn=admins,dc=example,dc=com' }
-  end
-
-
-  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/system_key') do
-    it { should be_owned_by 'elasticsearch' }
-    it { should be_writable.by('owner') }
-    it { should be_writable.by_user('elasticsearch') }
-    it { should be_readable.by('owner') }
-    it { should be_readable.by_user('elasticsearch') }
-    it { should_not be_executable }
-    #Test contents as expected
-    its(:md5sum) { should eq '6ff0e6c4380a6ac0f6e04d871c0ca5e8' }
   end
 
   #check accounts are correct i.e. we can auth and they have the correct roles
