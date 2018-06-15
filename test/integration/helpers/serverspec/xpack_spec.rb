@@ -12,7 +12,7 @@ shared_examples 'xpack::init' do |vars|
     it { should be_running }
   end
 
-  describe package('elasticsearch') do
+  describe package(vars['es_package_name']) do
     it { should be_installed }
   end
 
@@ -80,10 +80,42 @@ shared_examples 'xpack::init' do |vars|
     it { should_not exist }
   end
 
-  #Xpack specific tests
-  describe file('/usr/share/elasticsearch/plugins') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
+  # X-Pack is no longer installed as a plugin in elasticsearch
+  if vars['es_major_version'] == '5.x'
+    describe file('/usr/share/elasticsearch/plugins') do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
+
+    describe file('/usr/share/elasticsearch/plugins/x-pack') do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
+
+    describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMeAgain | grep x-pack') do
+      its(:exit_status) { should eq 0 }
+    end
+
+    describe file('/usr/share/elasticsearch/plugins/x-pack') do
+      it { should be_directory }
+      it { should be_owned_by 'elasticsearch' }
+    end
+
+    describe 'xpack plugin' do
+      it 'should be installed with the correct version' do
+        plugins = curl_json('http://localhost:9200/_nodes/plugins', username='es_admin', password='changeMeAgain')
+        node, data = plugins['nodes'].first
+        version = 'plugin not found'
+        name = 'x-pack'
+
+        data['plugins'].each do |plugin|
+          if plugin['name'] == name
+            version = plugin['version']
+          end
+        end
+        expect(version).to eql(vars['es_version'])
+      end
+    end
   end
 
   #Test if x-pack is activated
@@ -95,21 +127,7 @@ shared_examples 'xpack::init' do |vars|
     end
   end
 
-  describe file('/usr/share/elasticsearch/plugins/x-pack') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe command('curl -s localhost:9200/_nodes/plugins?pretty=true -u es_admin:changeMeAgain | grep x-pack') do
-    its(:exit_status) { should eq 0 }
-  end
-
   describe file('/etc/elasticsearch/security_node/x-pack') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe file('/usr/share/elasticsearch/plugins/x-pack') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
@@ -128,25 +146,17 @@ shared_examples 'xpack::init' do |vars|
   end
 
   #Test users file, users_roles and roles.yml
-  describe file('/etc/elasticsearch/security_node/x-pack/users_roles') do
+  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/users_roles') do
     it { should be_owned_by 'elasticsearch' }
     it { should contain 'admin:es_admin' }
     it { should contain 'power_user:testUser' }
   end
 
-  describe file('/etc/elasticsearch/security_node/x-pack/users') do
+  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/users') do
     it { should be_owned_by 'elasticsearch' }
     it { should contain 'testUser:' }
     it { should contain 'es_admin:' }
   end
-
-
-  describe file('/etc/elasticsearch/security_node/x-pack/roles.yml') do
-    it { should be_owned_by 'elasticsearch' }
-    #Test contents as expected
-    its(:md5sum) { should eq '7800182547287abd480c8b095bf26e9e' }
-  end
-
 
   describe 'security roles' do
     it 'should list the security roles' do
@@ -192,24 +202,12 @@ shared_examples 'xpack::init' do |vars|
   end
 
   #Test contents of role_mapping.yml
-  describe file('/etc/elasticsearch/security_node/x-pack/role_mapping.yml') do
+  describe file('/etc/elasticsearch/security_node' + vars['es_xpack_conf_subdir'] + '/role_mapping.yml') do
     it { should be_owned_by 'elasticsearch' }
     it { should contain 'power_user:' }
     it { should contain '- cn=admins,dc=example,dc=com' }
     it { should contain 'user:' }
     it { should contain '- cn=admins,dc=example,dc=com' }
-  end
-
-
-  describe file('/etc/elasticsearch/security_node/x-pack/system_key') do
-    it { should be_owned_by 'elasticsearch' }
-    it { should be_writable.by('owner') }
-    it { should be_writable.by_user('elasticsearch') }
-    it { should be_readable.by('owner') }
-    it { should be_readable.by_user('elasticsearch') }
-    it { should_not be_executable }
-    #Test contents as expected
-    its(:md5sum) { should eq '6ff0e6c4380a6ac0f6e04d871c0ca5e8' }
   end
 
   #check accounts are correct i.e. we can auth and they have the correct roles

@@ -10,7 +10,7 @@
   vars:
     es_heap_size: "1g"
     es_templates: true
-    es_version: "{{ '6.1.1' if es_major_version == '6.x' else '5.4.0'}}" # This is set to an older version than the current default to force an upgrade
+    es_version: "{{ '6.2.4' if es_major_version == '6.x' else '5.6.9' }}" # This is set to an older version than the current default to force an upgrade
     es_enable_xpack: true
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
     es_plugins:
@@ -106,9 +106,18 @@
   tasks:
     - include: elasticsearch/test/integration/debug.yml
   roles:
-    - { role: elasticsearch, es_api_port: 9200, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300",
-    "xpack.security.authc.realms.file1.type": "file","xpack.security.authc.realms.file1.order": 0, "xpack.security.authc.realms.native1.type": "native","xpack.security.authc.realms.native1.order": 1 },
-    es_instance_name: "security_node" }
+    - role: elasticsearch
+      es_api_port: 9200
+      es_instance_name: "security_node"
+      es_config: 
+        http.port: 9200
+        transport.tcp.port: 9300
+        discovery.zen.ping.unicast.hosts: "localhost:9300"
+        xpack.security.enabled: True
+        xpack.security.authc.realms.file1.type: "file"
+        xpack.security.authc.realms.file1.order: 0
+        xpack.security.authc.realms.native1.type: "native"
+        xpack.security.authc.realms.native1.order: 1
   vars:
     es_heap_size: "1g"
     es_templates: true

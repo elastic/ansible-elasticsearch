@@ -4,10 +4,19 @@
   tags:
       - always
 
+- name: set compatibility variables
+  include: compatibility-variables.yml
+  tags:
+      - always
+
 - name: check-set-parameters
   include: elasticsearch-parameters.yml
   tags:
       - always
+
+- name: use snapshot release
+  include: snapshot-release.yml
+  when: es_use_snapshot_release
 
 - name: include java.yml
   include: java.yml

@@ -27,10 +27,17 @@
 
 - name: Debian - Ensure elasticsearch is installed
   become: yes
-  apt: name=elasticsearch{% if es_version is defined and es_version != "" %}={{ es_version }}{% endif %} state=present force={{force_install}} allow_unauthenticated={{ 'no' if es_apt_key else 'yes' }} cache_valid_time=86400
+  apt:
+    name: '{{ es_package_name }}{% if es_version is defined and es_version != "" %}={{ es_version }}{% endif %}'
+    state: present
+    force: '{{ force_install }}'
+    allow_unauthenticated: "{{ 'no' if es_apt_key else 'yes' }}"
+    cache_valid_time: 86400
   when: es_use_repository
   register: debian_elasticsearch_install_from_repo
   notify: restart elasticsearch
+  environment:
+    ES_PATH_CONF: "/etc/elasticsearch"
 
 - name: Debian - Include versionlock
   include: elasticsearch-Debian-version-lock.yml
