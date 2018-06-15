@@ -41,7 +41,6 @@ platforms:
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
-        - /etc/elasticsearch
   - name: ubuntu-16.04
     driver_config:
       image: dliappis/ubuntu-devopsci:16.04
@@ -55,7 +54,6 @@ platforms:
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
-        - /etc/elasticsearch
       run_command: "/sbin/init"
   - name: debian-8
     driver_config:
@@ -71,7 +69,6 @@ platforms:
         - pip uninstall -y ansible
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
-        - /etc/elasticsearch
       use_sudo: false
       run_command: "/sbin/init"
   - name: centos-7
@@ -88,7 +85,6 @@ platforms:
         - pip install jmespath
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
-        - /etc/elasticsearch
       run_command: "/usr/sbin/init"
       privileged: true
       use_sudo: false
@@ -132,4 +128,10 @@ suites:
     attributes:
     provisioner:
       playbook: test/integration/issue-test.yml
+      idempotency_test: false
+  - name: oss-upgrade
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/oss-upgrade.yml
       idempotency_test: false
