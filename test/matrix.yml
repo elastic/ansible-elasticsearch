@@ -1,0 +1,16 @@
+VERSION:
+  - 6.x
+  - 5.x
+OS:
+  - ubuntu-1404
+  - ubuntu-1604
+  - debian-8
+  - centos-7
+TEST_TYPE:
+  - standard
+  - package
+  - config
+  - multi
+  - xpack
+  - xpack-standard
+  - issue-test
