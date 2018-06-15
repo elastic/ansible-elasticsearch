@@ -103,7 +103,7 @@ shared_examples 'xpack::init' do |vars|
 
     describe 'xpack plugin' do
       it 'should be installed with the correct version' do
-        plugins = curl_json('http://localhost:9200/_nodes/plugins')
+        plugins = curl_json('http://localhost:9200/_nodes/plugins', username='es_admin', password='changeMeAgain')
         node, data = plugins['nodes'].first
         version = 'plugin not found'
         name = 'x-pack'
