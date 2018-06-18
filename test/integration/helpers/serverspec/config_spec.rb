@@ -125,10 +125,6 @@ shared_examples 'config::init' do |vars|
     end
   end
 
-  describe file('/usr/lib/systemd/system/elasticsearch.service') do
-    it { should_not exist }
-  end
-
   describe file('/etc/elasticsearch/elasticsearch.yml') do
     it { should_not exist }
   end
