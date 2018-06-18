@@ -13,6 +13,13 @@
   include: elasticsearch-RedHat-version-lock.yml
   when: es_version_lock
 
+- name: RedHat - Remove non oss package if the old elasticsearch package is installed
+  become: yes
+  yum:
+    name: 'elasticsearch'
+    state: 'absent'
+  when: es_package_name == 'elasticsearch-oss'
+
 - name: RedHat - Install Elasticsearch
   become: yes
   yum:
