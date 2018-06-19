@@ -212,10 +212,6 @@ shared_examples 'multi::init' do |vars|
     end
   end
 
-  describe file('/usr/lib/systemd/system/elasticsearch.service') do
-    it { should_not exist }
-  end
-
   describe file('/etc/elasticsearch/elasticsearch.yml') do
     it { should_not exist }
   end
@@ -223,18 +219,5 @@ shared_examples 'multi::init' do |vars|
   describe file('/etc/elasticsearch/logging.yml') do
     it { should_not exist }
   end
-
-
-  #Test server spec file has been created and modified - currently not possible as not copied for debian 8
-  #describe file('/usr/lib/systemd/system/master_elasticsearch.service') do
-  #  it { should be_file }
-  #  it { should contain 'LimitMEMLOCK=infinity' }
-  #end
-
-  #describe file('/usr/lib/systemd/system/node1_elasticsearch.service') do
-  #  it { should be_file }
-  #  it { should_not contain 'LimitMEMLOCK=infinity' }
-  #end
-
 end
 
