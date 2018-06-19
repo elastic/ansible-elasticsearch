@@ -39,7 +39,9 @@
   roles:
     - role: elasticsearch
       es_instance_name: "node1"
-      es_data_dirs: "/opt/elasticsearch/data-1,/opt/elasticsearch/data-2"
+      es_data_dirs: 
+        - "/opt/elasticsearch/data-1"
+        - "/opt/elasticsearch/data-2"
       es_config: 
         discovery.zen.ping.unicast.hosts: "localhost:9300"
         http.port: 9201
