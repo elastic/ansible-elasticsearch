@@ -29,7 +29,7 @@
   post_tasks:
     - include: elasticsearch/test/integration/debug.yml
   roles:
-    - role: elasticsearch
+    - elasticsearch
   vars:
     es_enable_xpack: false
     es_scripts: true
