@@ -4,7 +4,18 @@
   hosts: localhost
   post_tasks:
     - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - elasticsearch
   vars:
+    es_instance_name: "master"
+    es_data_dirs: ["/opt/elasticsearch/master"]
+    es_config:
+      discovery.zen.ping.unicast.hosts: "localhost:9300"
+      http.port: 9200
+      transport.tcp.port: 9300
+      node.data: false
+      node.master: true
+      bootstrap.memory_lock: true
     es_enable_xpack: false
     es_scripts: true
     es_templates: true
@@ -12,22 +23,13 @@
     es_api_port: 9200
     es_plugins:
       - plugin: ingest-geoip
-  roles:
-    - role: elasticsearch
-      es_instance_name: "master"
-      es_data_dirs: ["/opt/elasticsearch/master"]
-      es_config:
-        discovery.zen.ping.unicast.hosts: "localhost:9300"
-        http.port: 9200
-        transport.tcp.port: 9300
-        node.data: false
-        node.master: true
-        bootstrap.memory_lock: true
 
 - name: Elasticsearch Multi test - data on 9201
   hosts: localhost
   post_tasks:
     - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - role: elasticsearch
   vars:
     es_enable_xpack: false
     es_scripts: true
@@ -36,15 +38,13 @@
     es_api_port: 9201
     es_plugins:
       - plugin: ingest-geoip
-  roles:
-    - role: elasticsearch
-      es_instance_name: "node1"
-      es_data_dirs: 
-        - "/opt/elasticsearch/data-1"
-        - "/opt/elasticsearch/data-2"
-      es_config: 
-        discovery.zen.ping.unicast.hosts: "localhost:9300"
-        http.port: 9201
-        transport.tcp.port: 9301
-        node.data: true
-        node.master: false
+    es_instance_name: "node1"
+    es_data_dirs: 
+      - "/opt/elasticsearch/data-1"
+      - "/opt/elasticsearch/data-2"
+    es_config: 
+      discovery.zen.ping.unicast.hosts: "localhost:9300"
+      http.port: 9201
+      transport.tcp.port: 9301
+      node.data: true
+      node.master: false

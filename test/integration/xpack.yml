@@ -2,10 +2,16 @@
 ---
 - name: Elasticsearch Xpack tests - no security and manual download
   hosts: localhost
-  tasks:
+  post_tasks:
     - include: elasticsearch/test/integration/debug.yml
   roles:
-    - { role: elasticsearch, es_api_port: 9200, es_config: { "http.port": 9200, "transport.tcp.port":9300, discovery.zen.ping.unicast.hosts: "localhost:9300" }, es_instance_name: "security_node" }
+    - role: elasticsearch
+      es_api_port: 9200
+      es_instance_name: "node1"
+      es_config:
+        http.port: 9200
+        transport.tcp.port: 9300
+        discovery.zen.ping.unicast.hosts: "localhost:9300"
   vars:
     es_xpack_custom_url: "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-{{ es_version }}.zip"
     es_heap_size: 2g

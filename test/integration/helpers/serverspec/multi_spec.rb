@@ -8,21 +8,21 @@ shared_examples 'multi::init' do |vars|
     it { should be_running }
   end
   #test configuration parameters have been set - test all appropriately set in config file
-  describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
+  describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
     it { should be_file }
     it { should contain 'http.port: 9201' }
     it { should contain 'transport.tcp.port: 9301' }
     it { should contain 'node.data: true' }
     it { should contain 'node.master: false' }
-    it { should contain 'node.name: localhost-node1' }
+    it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
     it { should_not contain 'bootstrap.memory_lock: true' }
     if vars['es_major_version'] == '6.x'
-      it { should_not contain 'path.conf: /etc/elasticsearch/node1' }
+      it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
     else
-      it { should contain 'path.conf: /etc/elasticsearch/node1' }
+      it { should contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
     end
-    it { should contain 'path.data: /opt/elasticsearch/data-1/localhost-node1,/opt/elasticsearch/data-2/localhost-node1' }
-    it { should contain 'path.logs: /var/log/elasticsearch/localhost-node1' }
+    it { should contain "path.data: /opt/elasticsearch/data-1/localhost-#{vars['es_instance_name']},/opt/elasticsearch/data-2/localhost-#{vars['es_instance_name']}" }
+    it { should contain "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
   end
 
 
@@ -58,9 +58,9 @@ shared_examples 'multi::init' do |vars|
   end
 
   #test we started on the correct port was used for node 1
-  describe 'node1 started' do
+  describe "#{vars['es_instance_name']} started" do
     it 'node should be running', :retry => 3, :retry_wait => 10 do
-      expect(curl_json('http://localhost:9201')['name']).to eq('localhost-node1')
+      expect(curl_json('http://localhost:9201')['name']).to eq("localhost-#{vars['es_instance_name']}")
     end
   end
 
@@ -81,13 +81,13 @@ shared_examples 'multi::init' do |vars|
     it { should be_owned_by 'elasticsearch' }
   end
 
-  describe file('/opt/elasticsearch/data-1/localhost-node1') do
+  describe file("/opt/elasticsearch/data-1/localhost-#{vars['es_instance_name']}") do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
 
 
-  describe file('/opt/elasticsearch/data-2/localhost-node1') do
+  describe file("/opt/elasticsearch/data-2/localhost-#{vars['es_instance_name']}") do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
   end
@@ -99,7 +99,7 @@ shared_examples 'multi::init' do |vars|
   end
 
   #test to make sure mlock was not applied
-  describe command('curl -s "localhost:9201/_nodes/localhost-node1/process?pretty=true" | grep mlockall') do
+  describe command("curl -s 'localhost:9201/_nodes/localhost-#{vars['es_instance_name']}/process?pretty=true' | grep mlockall") do
     its(:stdout) { should match /false/ }
     its(:exit_status) { should eq 0 }
   end
