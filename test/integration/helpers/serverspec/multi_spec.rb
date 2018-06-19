@@ -53,7 +53,7 @@ shared_examples 'multi::init' do |vars|
   #test we started on the correct port was used for master
   describe 'master started' do
     it 'master node should be running', :retry => 3, :retry_wait => 10 do
-      expect(json_curl('http://localhost:9200')['name']).to eq('localhost-node1')
+      expect(curl_json('http://localhost:9200')['name']).to eq('localhost-node1')
       expect(command.exit_status).to eq(0)
     end
   end
