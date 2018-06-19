@@ -1,0 +1,25 @@
+---
+- name: Standard test for single node setup. Tests idempotence.
+  hosts: localhost
+  tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - { role: elasticsearch, es_instance_name: "node1" }
+  vars:
+    es_version: "{{ '6.2.4' if es_major_version == '6.x' else '5.6.9' }}" # This is set to an older version than the current default to force an upgrade
+    es_enable_xpack: false
+    es_heap_size: "1g"
+
+- name: Standard test for single node setup. Tests idempotence.
+  hosts: localhost
+  tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - { role: elasticsearch, es_instance_name: "node1" }
+  vars:
+    es_enable_xpack: true
+    es_api_basic_auth_username: elastic
+    es_api_basic_auth_password: changeme
+    es_heap_size: "1g"
+    es_xpack_features:
+      - security

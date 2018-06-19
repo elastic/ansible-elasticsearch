@@ -8,10 +8,11 @@ OS:
   - centos-7
 TEST_TYPE:
   - standard
-  - package
-  - config
-  - multi
-  - xpack
-  - xpack-standard
-  - issue-test
-  - oss-upgrade
+  - oss-to-xpack-upgrade
+    #  - package
+    #  - config
+    #  - multi
+    #  - xpack
+    #  - xpack-standard
+    #  - issue-test
+    #  - oss-upgrade

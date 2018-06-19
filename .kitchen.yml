@@ -135,3 +135,9 @@ suites:
     provisioner:
       playbook: test/integration/oss-upgrade.yml
       idempotency_test: false
+  - name: oss-to-xpack-upgrade
+    run_list:
+    attributes:
+    provisioner:
+      playbook: test/integration/oss-to-xpack-upgrade.yml
+      idempotency_test: false
