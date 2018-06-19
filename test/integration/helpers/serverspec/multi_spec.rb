@@ -4,22 +4,9 @@ vars = JSON.parse(File.read('/tmp/vars.json'))
 
 shared_examples 'multi::init' do |vars|
 
-  describe user('elasticsearch') do
-    it { should exist }
-  end
-
-  describe service('node1_elasticsearch') do
-    it { should be_running }
-  end
-
   describe service('master_elasticsearch') do
     it { should be_running }
   end
-
-  describe package(vars['es_package_name']) do
-    it { should be_installed }
-  end
-
   #test configuration parameters have been set - test all appropriately set in config file
   describe file('/etc/elasticsearch/node1/elasticsearch.yml') do
     it { should be_file }
@@ -63,17 +50,10 @@ shared_examples 'multi::init' do |vars|
     end
   end
 
-  describe 'Node listening' do
-    it 'node should be listening in port 9201' do
-      expect(port 9201).to be_listening
-    end
-  end
-
   #test we started on the correct port was used for master
   describe 'master started' do
     it 'master node should be running', :retry => 3, :retry_wait => 10 do
-      command = command('curl "localhost:9200" | grep name')
-      #expect(command.stdout).should match '/*master_localhost*/'
+      expect(json_curl('http://localhost:9200')['name']).to eq('localhost-node1')
       expect(command.exit_status).to eq(0)
     end
   end
@@ -87,43 +67,7 @@ shared_examples 'multi::init' do |vars|
     end
   end
 
-  describe file('/etc/elasticsearch/templates') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe file('/etc/elasticsearch/templates/basic.json') do
-    it { should be_file }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe 'Template Installed' do
-    it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
-      command = command('curl localhost:9200/_template/basic')
-      expect(command.stdout).to match(/basic/)
-      expect(command.exit_status).to eq(0)
-    end
-  end
-
-  describe 'Template Installed' do
-    it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
-      command = command('curl localhost:9201/_template/basic')
-      expect(command.stdout).to match(/basic/)
-      expect(command.exit_status).to eq(0)
-    end
-  end
-
   #Confirm scripts are on both nodes
-  describe file('/etc/elasticsearch/node1/scripts') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe file('/etc/elasticsearch/node1/scripts/calculate-score.groovy') do
-    it { should be_file }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
   describe file('/etc/elasticsearch/master/scripts') do
     it { should be_directory }
     it { should be_owned_by 'elasticsearch' }
@@ -195,29 +139,4 @@ shared_examples 'multi::init' do |vars|
       it { should be_owned_by 'elasticsearch' }
     end
   end
-
-  describe file('/etc/init.d/elasticsearch') do
-    it { should_not exist }
-  end
-
-  if ['debian', 'ubuntu'].include?(os[:family])
-    describe file('/etc/default/elasticsearch') do
-      its(:content) { should match '' }
-    end
-  end
-
-  if ['centos', 'redhat'].include?(os[:family])
-    describe file('/etc/sysconfig/elasticsearch') do
-      its(:content) { should match '' }
-    end
-  end
-
-  describe file('/etc/elasticsearch/elasticsearch.yml') do
-    it { should_not exist }
-  end
-
-  describe file('/etc/elasticsearch/logging.yml') do
-    it { should_not exist }
-  end
 end
-
