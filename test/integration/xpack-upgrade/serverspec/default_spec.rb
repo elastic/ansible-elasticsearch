@@ -1,7 +1,7 @@
-require 'xpack_spec'
+require 'xpack_upgrade_spec'
 require 'json'
 vars = JSON.parse(File.read('/tmp/vars.json'))
 
 describe 'Xpack upgrade Tests' do
-  include_examples 'xpack::init', vars
+  include_examples 'xpack_upgrade::init', vars
 end

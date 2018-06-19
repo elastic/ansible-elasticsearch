@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-shared_examples 'standard::init' do |vars|
+shared_examples 'oss::init' do |vars|
 
   describe user('elasticsearch') do
     it { should exist }

@@ -41,6 +41,7 @@ platforms:
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
   - name: ubuntu-16.04
     driver_config:
       image: dliappis/ubuntu-devopsci:16.04
@@ -54,6 +55,7 @@ platforms:
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
       run_command: "/sbin/init"
   - name: debian-8
     driver_config:
@@ -69,6 +71,7 @@ platforms:
         - pip uninstall -y ansible
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
       use_sudo: false
       run_command: "/sbin/init"
   - name: centos-7
@@ -85,53 +88,33 @@ platforms:
         - pip install jmespath
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
       run_command: "/usr/sbin/init"
       privileged: true
       use_sudo: false
 
 suites:
-  - name: standard
+  - name: oss
     provisioner:
       idempotency_test: true
-      playbook: test/integration/standard.yml
-    run_list:
-    attributes:
-  - name: package
-    run_list:
-    attributes:
-    provisioner:
-      playbook: test/integration/package.yml
-  - name: config
-    run_list:
-    attributes:
-    provisioner:
-      playbook: test/integration/config.yml
-  - name: multi
-    run_list:
-    attributes:
-    provisioner:
-      playbook: test/integration/multi.yml
-      idempotency_test: true
-  - name: xpack
-    run_list:
-    attributes:
-    provisioner:
-      playbook: test/integration/xpack.yml
-  - name: xpack-standard
-    run_list:
-    attributes:
-    provisioner:
-      playbook: test/integration/xpack-standard.yml
-      idempotency_test: true
-  - name: issue-test
-    run_list:
-    attributes:
-    provisioner:
-      playbook: test/integration/issue-test.yml
-      idempotency_test: false
+      playbook: test/integration/oss.yml
   - name: oss-upgrade
-    run_list:
-    attributes:
     provisioner:
       playbook: test/integration/oss-upgrade.yml
       idempotency_test: false
+  - name: oss-to-xpack-upgrade
+    provisioner:
+      playbook: test/integration/oss-to-xpack-upgrade.yml
+      idempotency_test: false
+  - name: xpack
+    provisioner:
+      playbook: test/integration/xpack.yml
+      idempotency_test: true
+  - name: xpack-upgrade
+    provisioner:
+      playbook: test/integration/xpack-upgrade.yml
+      idempotency_test: false
+  - name: multi
+    provisioner:
+      playbook: test/integration/multi.yml
+      idempotency_test: true
