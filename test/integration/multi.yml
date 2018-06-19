@@ -8,7 +8,8 @@
     - elasticsearch
   vars:
     es_instance_name: "master"
-    es_data_dirs: ["/opt/elasticsearch/master"]
+    es_data_dirs:
+      - "/opt/elasticsearch/master"
     es_config:
       discovery.zen.ping.unicast.hosts: "localhost:9300"
       http.port: 9200

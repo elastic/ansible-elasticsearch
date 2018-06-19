@@ -164,7 +164,7 @@ shared_examples 'shared::init' do |vars|
     else
       it { should contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
     end
-    its(:content) { should match "path.data: /var/lib/elasticsearch/localhost-#{vars['es_instance_name']}" }
+    its(:content) { should match "path.data: #{vars['data_dirs'].join(',')}" }
     its(:content) { should match "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
   end
 end
