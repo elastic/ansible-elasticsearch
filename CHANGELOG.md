@@ -5,7 +5,7 @@
 Elasticsearch 6.3 includes several big changes that are reflected in this role.
 When upgrading from module versions prior to 6.3, there are a number of upgrade considerations to take into account:
 
-* This role defaults to the upstream package repositories, which now include X-Pack bundled by default. To preserve previous behavior which does _not_ include X-Pack be sure to explicitly set `es_enable_xpack: true` which will install the `elasticsearch-oss` package.
+* This role defaults to the upstream package repositories, which now include X-Pack bundled by default. To preserve previous behavior which does _not_ include X-Pack be sure to explicitly set `es_enable_xpack: false` which will install the `elasticsearch-oss` package.
 * Great care has been taken in making sure that all upgrade paths work, however as always please take extra caution when upgrading and test in a non-production environment. New automated tests have been added to make sure that the following upgrade paths work:
   * oss to oss
   * oss to xpack
