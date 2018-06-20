@@ -7,11 +7,9 @@ OS:
   - debian-8
   - centos-7
 TEST_TYPE:
-  - standard
-  - package
-  - config
-  - multi
-  - xpack
-  - xpack-standard
-  - issue-test
+  - oss
   - oss-upgrade
+  - oss-to-xpack-upgrade
+  - xpack
+  - xpack-upgrade
+  - multi

@@ -1,0 +1,166 @@
+---
+- name: Elasticsearch Xpack tests initial
+  hosts: localhost
+  post_tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - elasticsearch
+  vars:
+    es_instance_name: "node1"
+    es_api_port: 9200
+    es_config:
+      http.port: 9200
+      transport.tcp.port: 9300
+      discovery.zen.ping.unicast.hosts: "localhost:9300"
+      xpack.security.authc.realms.file1.type: "file"
+      xpack.security.authc.realms.file1.order: 0
+      xpack.security.authc.realms.native1.type: "native"
+      xpack.security.authc.realms.native1.order: 1
+    es_heap_size: "1g"
+    es_templates: true
+    es_version: "{{ '6.2.4' if es_major_version == '6.x' else '5.6.9' }}" # This is set to an older version than the current default to force an upgrade
+    es_enable_xpack: true
+    es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
+    es_plugins:
+      - plugin: ingest-geoip
+    es_xpack_features:
+      - security
+      - alerting
+    es_api_basic_auth_username: elastic
+    es_api_basic_auth_password: changeme
+    es_message_auth_file: system_key
+    es_role_mapping:
+      power_user:
+        - "cn=admins,dc=example,dc=com"
+      user:
+        - "cn=users,dc=example,dc=com"
+        - "cn=admins,dc=example,dc=com"
+    es_users:
+      native:
+        kibana4_server:
+          password: changeMe
+          roles:
+            - kibana4_server
+        logstash_system:
+          #this should be successfully modified
+          password: aNewLogstashPassword
+          #this will be ignored
+          roles:
+            - kibana4_server
+        elastic:
+          password: elasticChanged
+      file:
+        es_admin:
+          password: changeMe
+          roles:
+            - admin
+        testUser:
+          password: changeMeAlso!
+          roles:
+            - power_user
+            - user
+    es_roles:
+      file:
+        admin:
+          cluster:
+            - all
+          indices:
+            - names: '*'
+              privileges:
+                - all
+        power_user:
+          cluster:
+            - monitor
+          indices:
+            - names: '*'
+              privileges:
+                - all
+        user:
+          indices:
+            - names: '*'
+              privileges:
+                - read
+        kibana4_server:
+          cluster:
+              - monitor
+          indices:
+            - names: '.kibana'
+              privileges:
+                - all
+      native:
+        logstash:
+          cluster:
+            - manage_index_templates
+          indices:
+            - names: 'logstash-*'
+              privileges:
+                - write
+                - delete
+                - create_index
+        #this will be ignored - its reserved
+        logstash_system:
+          cluster:
+            - manage_index_templates
+          indices:
+            - names: 'logstash-*'
+              privileges:
+                - write
+                - delete
+                - create_index
+
+#modifies the installation. Changes es_admin password and upgrades ES. Tests confirm the correct version is installed.
+- name: Elasticsearch Xpack modify
+  hosts: localhost
+  post_tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - elasticsearch
+  vars:
+    es_api_port: 9200
+    es_instance_name: "node1"
+    es_config: 
+      http.port: 9200
+      transport.tcp.port: 9300
+      discovery.zen.ping.unicast.hosts: "localhost:9300"
+      xpack.security.enabled: True
+      xpack.security.authc.realms.file1.type: "file"
+      xpack.security.authc.realms.file1.order: 0
+      xpack.security.authc.realms.native1.type: "native"
+      xpack.security.authc.realms.native1.order: 1
+    es_heap_size: "1g"
+    es_templates: true
+    es_enable_xpack: true
+    es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
+    es_plugins:
+      - plugin: ingest-attachment
+    es_xpack_features:
+      - security
+      - alerting
+    es_api_basic_auth_username: elastic
+    es_api_basic_auth_password: elasticChanged
+    es_role_mapping:
+      power_user:
+        - "cn=admins,dc=example,dc=com"
+      user:
+        - "cn=users,dc=example,dc=com"
+        - "cn=admins,dc=example,dc=com"
+    es_users:
+      native:
+        kibana4_server:
+          password: changeMe
+          roles:
+            - kibana4_server
+        logstash_system:
+          #this will be ignored
+          roles:
+            - kibana4_server
+      file:
+        es_admin:
+          password: changeMeAgain
+          roles:
+            - admin
+        testUser:
+          password: changeMeAlso!
+          roles:
+            - power_user
+            - user

@@ -1,11 +1,12 @@
 ---
 - name: Standard test for single node setup. Tests idempotence.
   hosts: localhost
-  tasks:
+  post_tasks:
     - include: elasticsearch/test/integration/debug.yml
   roles:
-    - { role: elasticsearch, es_instance_name: "node1" }
+    - elasticsearch
   vars:
+    es_instance_name: "node1"
     es_enable_xpack: false
     es_heap_size: "1g"
     es_plugins:
