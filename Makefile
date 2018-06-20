@@ -2,7 +2,7 @@ default: build
 
 SHELL:=/bin/bash -eux
 VERSION := 6.x
-PATTERN := xpack-standard-ubuntu-1604
+PATTERN := xpack-ubuntu-1604
 
 .PHONY: converge cerify test login destroy list
 

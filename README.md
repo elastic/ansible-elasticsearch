@@ -6,9 +6,10 @@
 
 Ansible role for 6.x/5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
 
-* Ubuntu 14.04/16.04
+* Ubuntu 14.04
+* Ubuntu 16.04
 * Debian 8
-* Centos 7
+* CentOS 7
 
 The latest Elasticsearch versions of 6.x and 5.x are actively tested.  **Only Ansible versions > 2.4.3.0 are supported, as this is currently the only version tested.**
 
@@ -19,12 +20,8 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
-```
-cd /my/repos/
-git clone https://github.com/elastic/ansible-elasticsearch.git
-cd /my/ansible/playbook
-mkdir -p roles
-ln -s /my/repos/ansible-elasticsearch ./roles/elasticsearch
+```sh
+ansible-galaxy install elastic.elasticsearch
 ```
 
 Then create your playbook yaml adding the role elasticsearch. By default, the user is only required to specify a unique es_instance_name per role application.  This should be unique per node. 
@@ -32,12 +29,12 @@ The application of the elasticsearch role results in the installation of a node 
 
 The simplest configuration therefore consists of: 
 
-```
+```yaml
 - name: Simple Example
   hosts: localhost
   roles:
-    - { role: elasticsearch, es_instance_name: "node1" }
-  vars:
+    - role: elasticsearch
+      es_instance_name: "node1"
 ```
 
 The above installs a single node 'node1' on the hosts 'localhost'.
@@ -58,42 +55,42 @@ This playbook uses [Kitchen](https://kitchen.ci/) for CI and local testing.
 ### Running the tests
 
 If you want to test X-Pack features with a license you will first need to export the `ES_XPACK_LICENSE_FILE` variable.
-```
+```sh
 export ES_XPACK_LICENSE_FILE="$(pwd)/license.json"
 ```
 
 To converge an Ubuntu 16.04 host running X-Pack
-```
+```sh
 $ make converge
 ```
 
 To run the tests
-```
+```sh
 $ make verify
 ```
 
 To list all of the different test suits
-```
+```sh
 $ make list
 ```
 
 The default test suite is Ubuntu 16.04 with X-Pack. If you want to test another suite you can override this with the `PATTERN` variable
-```
-$ make converge PATTERN=standard-centos-7
+```sh
+$ make converge PATTERN=oss-centos-7
 ```
 
 The `PATTERN` is a kitchen pattern which can match multiple suites. To run all tests for CentOS
-```
+```sh
 $ make converge PATTERN=centos-7
 ```
 
 The default version is 6.x If you want to test 5.x you can override it with the `VERSION` variable to test 5.x
-```
-$ make converge VERSION=5.x PATTERN=standard-centos-7
+```sh
+$ make converge VERSION=5.x PATTERN=oss-centos-7
 ```
 
 When you are finished testing you can clean up everything with
-```
+```sh
 $ make destroy-all
 ```
 
@@ -104,26 +101,27 @@ The use of a map ensures the Ansible playbook does not need to be updated to ref
 
 In addition to the es_config map, several other parameters are supported for additional functions e.g. script installation.  These can be found in the role's defaults/main.yml file.
 
-The following illustrates applying configuration parameters to an Elasticsearch instance.  By default, Elasticsearch 5.1.2is installed.
+The following illustrates applying configuration parameters to an Elasticsearch instance.
 
-```
+```yaml
 - name: Elasticsearch with custom configuration
   hosts: localhost
   roles:
-    #expand to all available parameters
-    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", 
-    es_config: {
-        node.name: "node1", 
-        cluster.name: "custom-cluster",
-        discovery.zen.ping.unicast.hosts: "localhost:9301",
-        http.port: 9201,
-        transport.tcp.port: 9301,
-        node.data: false,
-        node.master: true,
-        bootstrap.memory_lock: true,
-        } 
-    }
+    - role: elasticsearch
   vars:
+    es_instance_name: "node1"
+    es_data_dirs:
+      - "/opt/elasticsearch/data"
+    es_log_dir: "/opt/elasticsearch/logs"
+    es_config:
+      node.name: "node1"
+      cluster.name: "custom-cluster"
+      discovery.zen.ping.unicast.hosts: "localhost:9301"
+      http.port: 9201
+      transport.tcp.port: 9301
+      node.data: false
+      node.master: true
+      bootstrap.memory_lock: true
     es_scripts: false
     es_templates: false
     es_version_lock: false
@@ -145,24 +143,25 @@ The role makes no attempt to enforce the setting of these are requires users to 
 
 A more complex example:
 
-```
+```yaml
 - name: Elasticsearch with custom configuration
   hosts: localhost
   roles:
-    #expand to all available parameters
-    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch/data", es_log_dir: "/opt/elasticsearch/logs", 
-    es_config: {
-        node.name: "node1", 
-        cluster.name: "custom-cluster", 
-        discovery.zen.ping.unicast.hosts: "localhost:9301", 
-        http.port: 9201, 
-        transport.tcp.port: 9301, 
-        node.data: false, 
-        node.master: true, 
-        bootstrap.memory_lock: true, 
-        } 
-    }
+    - role: elasticsearch
   vars:
+    es_instance_name: "node1"
+    es_data_dirs:
+      - "/opt/elasticsearch/data"
+    es_log_dir: "/opt/elasticsearch/logs"
+    es_config:
+      node.name: "node1"
+      cluster.name: "custom-cluster"
+      discovery.zen.ping.unicast.hosts: "localhost:9301"
+      http.port: 9201
+      transport.tcp.port: 9301
+      node.data: false
+      node.master: true
+      bootstrap.memory_lock: true
     es_scripts: false
     es_templates: false
     es_version_lock: false
@@ -171,9 +170,9 @@ A more complex example:
     es_plugins_reinstall: false
     es_api_port: 9201
     es_plugins:
-        - plugin: ingest-geoip
-          proxy_host: proxy.example.com
-          proxy_port: 8080
+      - plugin: ingest-geoip
+        proxy_host: proxy.example.com
+        proxy_port: 8080
 ```
 
 #### Important Note
@@ -189,21 +188,21 @@ An example of a two server deployment is shown below.  The first server holds th
 
 **Note the structure of the below playbook for the data nodes.  Whilst a more succinct structures are possible which allow the same role to be applied to a host multiple times, we have found the below structure to be the most reliable with respect to var behaviour.  This is the tested approach.**
 
-```
+```yaml
 - hosts: master_nodes
   roles:
-    - { role: elasticsearch, es_instance_name: "node1", es_heap_size: "1g",
-    es_config: {
-        cluster.name: "test-cluster",
-        discovery.zen.ping.unicast.hosts: "elastic02:9300",
-        http.port: 9200,
-        transport.tcp.port: 9300,
-        node.data: false,
-        node.master: true,
-        bootstrap.memory_lock: false,
-        }
-    }
+    - role: elasticsearch
   vars:
+    es_instance_name: "node1"
+    es_heap_size: "1g"
+    es_config:
+      cluster.name: "test-cluster"
+      discovery.zen.ping.unicast.hosts: "elastic02:9300"
+      http.port: 9200
+      transport.tcp.port: 9300
+      node.data: false
+      node.master: true
+      bootstrap.memory_lock: false
     es_scripts: false
     es_templates: false
     es_version_lock: false
@@ -211,53 +210,50 @@ An example of a two server deployment is shown below.  The first server holds th
     es_plugins:
      - plugin: ingest-geoip
 
-
-
 - hosts: data_nodes
   roles:
-    - { role: elasticsearch, es_instance_name: "node1", es_data_dirs: "/opt/elasticsearch", 
-    es_config: {
-        discovery.zen.ping.unicast.hosts: "elastic02:9300",
-        http.port: 9200,
-        transport.tcp.port: 9300,
-        node.data: true,
-        node.master: false,
-        bootstrap.memory_lock: false,
-        cluster.name: "test-cluster"
-        } 
-    }
+    - role: elasticsearch
   vars:
+    es_instance_name: "node1"
+    es_data_dirs: 
+      - "/opt/elasticsearch"
+    es_config:
+      discovery.zen.ping.unicast.hosts: "elastic02:9300"
+      http.port: 9200
+      transport.tcp.port: 9300
+      node.data: true
+      node.master: false
+      bootstrap.memory_lock: false
+      cluster.name: "test-cluster"
     es_scripts: false
     es_templates: false
     es_version_lock: false
     ansible_user: ansible
     es_api_port: 9200
     es_plugins:
-    - plugin: ingest-geoip
-    
+      - plugin: ingest-geoip
     
 - hosts: data_nodes
   roles:
-    - { role: elasticsearch, es_instance_name: "node2", es_api_port:9201,
-    es_config: {
-        discovery.zen.ping.unicast.hosts: "elastic02:9300",
-        http.port: 9201,
-        transport.tcp.port: 9301,
-        node.data: true,
-        node.master: false,
-        bootstrap.memory_lock: false,
-        cluster.name: "test-cluster",
-        } 
-    }
+    - role: elasticsearch
   vars:
+    es_instance_name: "node2"
+    es_api_port: 9201
+    es_config:
+      discovery.zen.ping.unicast.hosts: "elastic02:9300"
+      http.port: 9201
+      transport.tcp.port: 9301
+      node.data: true
+      node.master: false
+      bootstrap.memory_lock: false
+      cluster.name: "test-cluster"
     es_scripts: false
     es_templates: false
     es_version_lock: false
     es_api_port: 9201
     ansible_user: ansible
     es_plugins:
-    - plugin: ingest-geoip
-
+      - plugin: ingest-geoip
 ```
 
 Parameters can additionally be assigned to hosts using the inventory file if desired.
@@ -266,7 +262,7 @@ Make sure your hosts are defined in your ```inventory``` file with the appropria
 
 Then run it:
 
-```
+```sh
 ansible-playbook -i hosts ./your-playbook.yml
 ```
 
@@ -283,7 +279,7 @@ The following additional parameters allow X-Pack to be configured:
 * ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/x-pack/current/mapping-roles.html)
 
 
-```
+```yaml
 es_role_mapping:
   power_user:
     - "cn=admins,dc=example,dc=com"
@@ -294,7 +290,7 @@ es_role_mapping:
 
 * ```es_users``` - Users can be declared here as yml. Two sub keys 'native' and 'file' determine the realm under which realm the user is created.  Beneath each of these keys users should be declared as yml entries. e.g.
 
-```
+```yaml
 es_users:
   native:
     kibana4_server:
@@ -316,7 +312,7 @@ es_users:
             
 * ```es_roles``` - Elasticsearch roles can be declared here as yml. Two sub keys 'native' and 'file' determine how the role is created i.e. either through a file or http(native) call.  Beneath each key list the roles with appropriate permissions, using the file based format described [here] (https://www.elastic.co/guide/en/x-pack/current/file-realm.html) e.g.
 
-```
+```yaml
 es_roles:
   file:
     admin:
@@ -359,13 +355,13 @@ es_roles:
                 
 * ```es_xpack_license``` - X-Pack license. The license is a json blob. Set the variable directly (possibly protected by Ansible vault) or from a file in the Ansible project on the control machine via a lookup:
 
-```
+```yaml
 es_xpack_license: "{{ lookup('file', playbook_dir + '/files/' + es_cluster_name + '/license.json') }}"
 ``` 
 
 X-Pack configuration parameters can be added to the elasticsearch.yml file using the normal `es_config` parameter.
 
-For a full example see [here](https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack.yml)
+For a full example see [here](https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack-upgrade.yml)
 
 #### Important Note for Native Realm Configuration
 
@@ -381,8 +377,9 @@ These can either be set to a user declared in the file based realm, with admin p
 
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
+* ```es_enable_xpack```  Default `true`. Setting this to `false` will install the oss release of elasticsearch
 * ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 and < 6.0 this must be "5.x". For versions >= 6.0 this must be "6.x".
-* ```es_version``` (e.g. "6.1.2").
+* ```es_version``` (e.g. "6.3.0").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
@@ -390,10 +387,10 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` an array of plugin definitions e.g.:
-```yml
-  es_plugins:
-    - plugin: ingest-geoip 
-```
+  ```yaml
+    es_plugins:
+      - plugin: ingest-geoip 
+  ```
 * ```es_path_repo``` Sets the whitelist for allowing local back-up repositories
 * ```es_action_auto_create_index ``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
      es_action_auto_create_index: '[".watches", ".triggered_watches", ".watcher-history-*"]'
@@ -410,7 +407,7 @@ Earlier examples illustrate the installation of plugins using `es_plugins`.  For
 If installing Monitoring or Alerting, ensure the license plugin is also specified.  Security configuration currently has limited support, but more support is planned for later versions.
 
 To configure X-pack to send mail, the following configuration can be added to the role. When require_auth is true, you will also need to provide the user and password. If not these can be removed:
-```
+```yaml
     es_mail_config:
         account: <functional name>
         profile: standard
@@ -451,7 +448,7 @@ To define proxy globally, set the following variables:
 
 To define proxy only for a particular plugin during its installation:
 
-```
+```yaml
   es_plugins:
     - plugin: ingest-geoip 
       proxy_host: proxy.example.com
