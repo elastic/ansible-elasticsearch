@@ -86,29 +86,18 @@
     content: ''
   when: ansible_os_family == 'RedHat'
 
+  # We need the force parameter to be able to overwrite the default non-link file
 - name: Symlink default systemd service to first instance of elasticsearch
   when: use_system_d
-  block:
-  - name: Check if default systemd file exists
-    stat:
-      path: "{{ sysd_script }}"
-    register: sysd_stat_result
-
-  - name: Remove if it is a normal file
-    file:
-      path: "{{ sysd_script }}"
-      state: absent
-    when: sysd_stat_result.stat.exists and not sysd_stat_result.stat.islnk
-
-  - name: Create a symbolic link to the default systemd location to the first instance running on this host
-    become: yes
-    file:
-      state: link
-      src: "{{ instance_sysd_script }}"
-      path: "{{ sysd_script }}"
-    notify:
-    - reload systemd configuration
-    - restart elasticsearch
+  become: yes
+  file:
+    state: link
+    force: yes
+    src: "{{ instance_sysd_script }}"
+    path: "{{ sysd_script }}"
+  notify:
+  - reload systemd configuration
+  - restart elasticsearch
 
 - name: Delete Default Configuration File
   become: yes
