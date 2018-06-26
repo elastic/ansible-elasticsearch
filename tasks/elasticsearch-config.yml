@@ -93,13 +93,14 @@
     stat:
       path: "{{ sysd_script }}"
     register: sysd_stat_result
-  
+
   - name: Remove if it is a normal file
+    become: yes
     file:
       path: "{{ sysd_script }}"
       state: absent
     when: not sysd_stat_result.stat.islnk
-  
+
   - name: Create a symbolic link to the default systemd location to the first instance running on this host
     become: yes
     file:
