@@ -99,7 +99,7 @@
     file:
       path: "{{ sysd_script }}"
       state: absent
-    when: not sysd_stat_result.stat.islnk
+    when: sysd_stat_result.stat.exists and not sysd_stat_result.stat.islnk
 
   - name: Create a symbolic link to the default systemd location to the first instance running on this host
     become: yes
@@ -107,7 +107,7 @@
       state: link
       src: "{{ instance_sysd_script }}"
       path: "{{ sysd_script }}"
-    when: not sysd_stat_result.stat.islnk
+    when: sysd_stat_result.stat.exists and not sysd_stat_result.stat.islnk
     notify:
     - reload systemd configuration
     - restart elasticsearch
