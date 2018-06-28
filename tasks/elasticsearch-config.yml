@@ -95,6 +95,7 @@
     register: sysd_stat_result
 
   - name: Remove if it is a normal file
+    become: yes
     file:
       path: "{{ sysd_script }}"
       state: absent
