@@ -1,3 +1,10 @@
+
+## 6.3.1 - 2018/07/05
+
+## Features
+
+* 6.3.1 as default elasticsearch version
+
 ## 6.3.0.1 - 2018/06/28
 
 ### Fixes
