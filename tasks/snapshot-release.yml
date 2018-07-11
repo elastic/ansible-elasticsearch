@@ -30,7 +30,7 @@
 
 - name: use the custom package url instead of the repository
   set_fact:
-    es_custom_package_url: "{{ snapshots.json[package_name]['url'] }}"
+    es_custom_package_url: "{{ snapshots.json['packages'][package_name]['url'] }}"
     es_use_repository: false
 
 - name: set snapshot urls for es_plugins when it is defined
