@@ -118,3 +118,7 @@ suites:
     provisioner:
       playbook: test/integration/multi.yml
       idempotency_test: true
+  - name: issue-test
+    provisioner:
+      playbook: test/integration/issue-test.yml
+      idempotency_test: false
