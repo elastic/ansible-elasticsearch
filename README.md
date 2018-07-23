@@ -33,7 +33,7 @@ The simplest configuration therefore consists of:
 - name: Simple Example
   hosts: localhost
   roles:
-    - role: elasticsearch
+    - role: elastic.elasticsearch
       es_instance_name: "node1"
 ```
 
@@ -107,7 +107,7 @@ The following illustrates applying configuration parameters to an Elasticsearch 
 - name: Elasticsearch with custom configuration
   hosts: localhost
   roles:
-    - role: elasticsearch
+    - role: elastic.elasticsearch
   vars:
     es_instance_name: "node1"
     es_data_dirs:
@@ -147,7 +147,7 @@ A more complex example:
 - name: Elasticsearch with custom configuration
   hosts: localhost
   roles:
-    - role: elasticsearch
+    - role: elastic.elasticsearch
   vars:
     es_instance_name: "node1"
     es_data_dirs:
@@ -191,7 +191,7 @@ An example of a two server deployment is shown below.  The first server holds th
 ```yaml
 - hosts: master_nodes
   roles:
-    - role: elasticsearch
+    - role: elastic.elasticsearch
   vars:
     es_instance_name: "node1"
     es_heap_size: "1g"
@@ -212,7 +212,7 @@ An example of a two server deployment is shown below.  The first server holds th
 
 - hosts: data_nodes
   roles:
-    - role: elasticsearch
+    - role: elastic.elasticsearch
   vars:
     es_instance_name: "node1"
     es_data_dirs: 
@@ -235,7 +235,7 @@ An example of a two server deployment is shown below.  The first server holds th
     
 - hosts: data_nodes
   roles:
-    - role: elasticsearch
+    - role: elastic.elasticsearch
   vars:
     es_instance_name: "node2"
     es_api_port: 9201
