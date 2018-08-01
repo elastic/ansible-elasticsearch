@@ -133,6 +133,7 @@
       - alerting
     es_api_basic_auth_username: elastic
     es_api_basic_auth_password: elasticChanged
+    es_api_scheme: "https"
     es_role_mapping:
       power_user:
         - "cn=admins,dc=example,dc=com"

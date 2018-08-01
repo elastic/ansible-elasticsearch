@@ -183,8 +183,8 @@ A more complex example:
 
 #### Important Note
 
-**The role uses es_api_host and es_api_port to communicate with the node for actions only achievable via http e.g. to install templates and to check the NODE IS ACTIVE.  These default to "localhost" and 9200 respectively.
-If the node is deployed to bind on either a different host or port, these must be changed.**
+**The role uses es_api_scheme, es_api_host, and es_api_port to communicate with the node for actions only achievable via http e.g. to install templates and to check the NODE IS ACTIVE.  These def
+ault to "http", "localhost", and 9200 respectively. If the node is deployed to bind on either a different host or port, these must be changed.**
 
 ### Multi Node Server Installations
 
@@ -223,6 +223,12 @@ An example of a three server deployment is shown below.  The first server holds 
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
+    es_scripts: false
+    es_templates: false
+    es_version_lock: false
+    ansible_user: ansible
+    es_api_scheme: "http"
+    es_api_port: 9200
     es_plugins:
       - plugin: ingest-attachment
 

@@ -17,7 +17,7 @@ families = {
 
 family = families[vars['ansible_os_family']]
 
-es_api_url = "http://localhost:#{vars['es_api_port']}"
+es_api_url = "#{vars['es_api_scheme']}://localhost:#{vars['es_api_port']}"
 username = vars['es_api_basic_auth_username']
 password = vars['es_api_basic_auth_password']
 

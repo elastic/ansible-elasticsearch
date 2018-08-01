@@ -1,4 +1,5 @@
 ---
+
 - name: Activate ES license (with security authentication)
   uri:
     method: PUT
