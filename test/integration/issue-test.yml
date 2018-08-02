@@ -8,7 +8,7 @@
   post_tasks:
     - include: elasticsearch/test/integration/debug.yml
   roles:
-    - elasticsearch
+    - elastic.elasticsearch
   vars:
     es_instance_name: "security_node"
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"

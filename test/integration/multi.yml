@@ -5,7 +5,7 @@
   post_tasks:
     - include: elasticsearch/test/integration/debug.yml
   roles:
-    - elasticsearch
+    - elastic.elasticsearch
   vars:
     es_instance_name: "master"
     es_data_dirs:
@@ -30,7 +30,7 @@
   post_tasks:
     - include: elasticsearch/test/integration/debug.yml
   roles:
-    - elasticsearch
+    - elastic.elasticsearch
   vars:
     es_enable_xpack: false
     es_scripts: true

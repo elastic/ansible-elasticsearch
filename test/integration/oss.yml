@@ -4,7 +4,7 @@
   post_tasks:
     - include: elasticsearch/test/integration/debug.yml
   roles:
-    - elasticsearch
+    - elastic.elasticsearch
   vars:
     es_instance_name: "node1"
     es_enable_xpack: false

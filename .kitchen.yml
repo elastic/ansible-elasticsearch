@@ -5,7 +5,7 @@ driver:
 provisioner:
   name: ansible_playbook
   hosts: localhost
-  roles_path: ../
+  role_name: elastic.elasticsearch
   require_ansible_repo: false
   require_ansible_omnibus: false
   require_ansible_source: false
