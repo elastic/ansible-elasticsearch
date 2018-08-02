@@ -6,7 +6,7 @@
 - name: Simple Example
   hosts: localhost
   post_tasks:
-    - include: elasticsearch/test/integration/debug.yml
+    - include: roles/elastic.elasticsearch/test/integration/debug.yml
   roles:
     - elastic.elasticsearch
   vars:

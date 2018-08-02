@@ -3,7 +3,7 @@
 - name: Elasticsearch Multi test - master on 9200
   hosts: localhost
   post_tasks:
-    - include: elasticsearch/test/integration/debug.yml
+    - include: roles/elastic.elasticsearch/test/integration/debug.yml
   roles:
     - elastic.elasticsearch
   vars:
@@ -28,7 +28,7 @@
 - name: Elasticsearch Multi test - data on 9201
   hosts: localhost
   post_tasks:
-    - include: elasticsearch/test/integration/debug.yml
+    - include: roles/elastic.elasticsearch/test/integration/debug.yml
   roles:
     - elastic.elasticsearch
   vars:
