@@ -3,7 +3,7 @@
 - name: Elasticsearch Xpack tests - no security and manual download
   hosts: localhost
   post_tasks:
-    - include: elasticsearch/test/integration/debug.yml
+    - import_tasks: elasticsearch/test/integration/debug.yml
   roles:
     - elasticsearch
   vars:

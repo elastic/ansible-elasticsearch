@@ -2,7 +2,7 @@
 - name: Standard test for single node setup. Tests idempotence.
   hosts: localhost
   post_tasks:
-    - include: elasticsearch/test/integration/debug.yml
+    - import_tasks: elasticsearch/test/integration/debug.yml
   roles:
     - elasticsearch
   vars:
