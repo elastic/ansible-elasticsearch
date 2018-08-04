@@ -1,8 +1,8 @@
 ---
 
 - name: Include optional user and group creation.
-  when: (es_user_id is defined) and (es_group_id is defined)
   include_tasks: elasticsearch-optional-user.yml
+  when: (es_user_id is defined) and (es_group_id is defined)
 
 - name: Include specific Elasticsearch
   include_tasks: elasticsearch-Debian.yml
