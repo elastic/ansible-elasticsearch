@@ -21,12 +21,12 @@
       - java
 
 - name: include elasticsearch.yml
-  include: elasticsearch.yml
+  import_tasks: elasticsearch.yml
   tags:
       - install
 
 - name: include elasticsearch-config.yml
-  include: elasticsearch-config.yml
+  import_tasks: elasticsearch-config.yml
   tags:
       - config
 
@@ -44,7 +44,7 @@
 
   #We always execute xpack as we may need to remove features
 - name: include xpack/elasticsearch-xpack.yml
-  include: xpack/elasticsearch-xpack.yml
+  import_tasks: xpack/elasticsearch-xpack.yml
   tags:
       - xpack
 
