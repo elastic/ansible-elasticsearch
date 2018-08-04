@@ -65,7 +65,7 @@
     ES_PATH_CONF: "/etc/elasticsearch"
 
 - name: Debian - Include versionlock
-  include: elasticsearch-Debian-version-lock.yml
+  include_tasks: elasticsearch-Debian-version-lock.yml
   when: es_version_lock
 
 - name: Debian - Download elasticsearch from url
