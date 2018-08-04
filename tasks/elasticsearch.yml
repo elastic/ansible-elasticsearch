@@ -2,12 +2,12 @@
 
 - name: Include optional user and group creation.
   when: (es_user_id is defined) and (es_group_id is defined)
-  include: elasticsearch-optional-user.yml
+  include_tasks: elasticsearch-optional-user.yml
 
 - name: Include specific Elasticsearch
-  include: elasticsearch-Debian.yml
+  include_tasks: elasticsearch-Debian.yml
   when: ansible_os_family == 'Debian'
 
 - name: Include specific Elasticsearch
-  include: elasticsearch-RedHat.yml
+  include_tasks: elasticsearch-RedHat.yml
   when: ansible_os_family == 'RedHat'
