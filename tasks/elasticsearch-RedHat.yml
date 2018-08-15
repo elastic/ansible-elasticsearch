@@ -1,4 +1,11 @@
 ---
+- name: set fact allow_downgrade to no
+  set_fact: allow_downgrade=no
+
+- name: set fact allow_downgrade to yes
+  set_fact: allow_downgrade=yes
+  when: es_allow_downgrades
+
 - name: Ensure libselinux-python on CentOS 6.x
   become: yes
   yum: name=libselinux-python state=present update_cache=yes
@@ -26,6 +33,7 @@
     name: '{{ es_package_name }}{% if es_version is defined and es_version != ""  %}-{{ es_version }}{% endif %}'
     state: present
     update_cache: yes
+    allow_downgrade: '{{ allow_downgrade }}'
   when: es_use_repository
   register: redhat_elasticsearch_install_from_repo
   notify: restart elasticsearch
