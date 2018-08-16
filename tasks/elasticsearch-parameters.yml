@@ -39,12 +39,33 @@
      msg: "ERROR: INVALID CONFIG - YOU CANNOT CHANGE RESERVED USERS THROUGH THE FILE REALM. THE FOLLOWING CANNOT BE CHANGED: {{file_reserved_users}}. USE THE NATIVE REALM."
   when: file_reserved_users | default([]) | length > 0
 
+# Prefexed version
 - name: set fact instance_default_file
   set_fact: instance_default_file={{default_file | dirname}}/{{es_instance_name}}_{{default_file | basename}}
+  when: not es_disable_suffix
+
 - name: set fact instance_init_script
   set_fact: instance_init_script={{init_script | dirname }}/{{es_instance_name}}_{{init_script | basename}}
+  when: not es_disable_suffix
+
 - name: set fact conf_dir
   set_fact: conf_dir={{ es_conf_dir }}/{{es_instance_name}}
+  when: not es_disable_suffix
+
+# Nonprefexed version
+
+- name: set fact instance_default_file
+  set_fact: instance_default_file={{default_file | dirname}}/{{default_file | basename}}
+  when: es_disable_suffix
+
+- name: set fact instance_init_script
+  set_fact: instance_init_script={{init_script | dirname }}/{{init_script | basename}}
+  when: es_disable_suffix
+
+- name: set fact conf_dir
+  set_fact: conf_dir={{ es_conf_dir }}
+  when: es_disable_suffix
+
 - name: set fact m_lock_enabled
   set_fact: m_lock_enabled={{ es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True }}
 
@@ -67,9 +88,30 @@
 
 - name: set fact instance_suffix
   set_fact: instance_suffix={{inventory_hostname}}-{{ es_instance_name }}
+  when: not es_disable_suffix
+
 - name: set fact pid_dir
   set_fact: pid_dir={{ es_pid_dir }}/{{instance_suffix}}
+  when: not es_disable_suffix
+
 - name: set fact log_dir
   set_fact: log_dir={{ es_log_dir }}/{{instance_suffix}}
+  when: not es_disable_suffix
+
 - name: set fact log_dir
   set_fact: data_dirs={{ es_data_dirs | append_to_list('/'+instance_suffix) }}
+  when: not es_disable_suffix
+
+# Nonprefexed version
+
+- name: set fact pid_dir
+  set_fact: pid_dir={{ es_pid_dir }}
+  when: es_disable_suffix
+
+- name: set fact log_dir
+  set_fact: log_dir={{ es_log_dir }}
+  when: es_disable_suffix
+
+- name: set fact log_dir
+  set_fact: data_dirs={{ es_data_dirs | append_to_list('/') }}
+  when: es_disable_suffix

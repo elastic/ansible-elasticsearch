@@ -115,15 +115,19 @@
 - name: Delete Default Configuration File
   become: yes
   file: dest=/etc/elasticsearch/elasticsearch.yml state=absent
+  when: not es_disable_suffix
 
 - name: Delete Default Logging File
   become: yes
   file: dest=/etc/elasticsearch/logging.yml state=absent
+  when: not es_disable_suffix
 
 - name: Delete Default Logging File
   become: yes
   file: dest=/etc/elasticsearch/log4j2.properties state=absent
+  when: not es_disable_suffix
 
 - name: Delete Default JVM Options File
   become: yes
   file: dest=/etc/elasticsearch/jvm.options state=absent
+  when: not es_disable_suffix
