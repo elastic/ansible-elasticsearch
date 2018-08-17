@@ -30,6 +30,7 @@
     CONF_DIR: "{{ conf_dir }}"
     ES_PATH_CONF: "{{ conf_dir }}"
     ES_INCLUDE: "{{ instance_default_file }}"
+  check_mode: no
 
 #if es_plugins_reinstall is set to true we remove ALL plugins
 - name: set fact plugins_to_remove to install_plugins.stdout_lines
