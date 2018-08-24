@@ -1,6 +1,6 @@
 ---
 es_major_version: "6.x"
-es_version: "6.3.1"
+es_version: "6.4.0"
 es_use_snapshot_release: false
 es_enable_xpack: true
 es_package_name: "elasticsearch"
