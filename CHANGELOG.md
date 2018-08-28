@@ -1,9 +1,20 @@
+## 6.4.0 - 2018/08/24
+
+### Features
+
+* 6.4.0 as default Elasticsearch version
+
+### Fixes
+
+* [#484](https://github.com/elastic/ansible-elasticsearch/pull/484) - @kimoto - Fix downgrading Elasticsearch on RedHat hosts
+* [#476](https://github.com/elastic/ansible-elasticsearch/pull/476) - @Crazybus - Fix version locking for the elasticsearch-oss package
+
 
 ## 6.3.1 - 2018/07/05
 
-## Features
+### Features
 
-* 6.3.1 as default elasticsearch version
+* 6.3.1 as default Elasticsearch version
 
 ## 6.3.0.1 - 2018/06/28
 

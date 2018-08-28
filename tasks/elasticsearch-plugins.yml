@@ -13,6 +13,12 @@
   set_fact: list_command="| grep -vE 'x-pack'"
   when: not es_plugins_reinstall
 
+- name: remove x-pack plugin directory when it isn't a plugin
+  file:
+    dest: "{{ es_home }}/plugins/x-pack"
+    state: "absent"
+  when: es_open_xpack
+
 #List currently installed plugins. We have to list the directories as the list commmand fails if the ES version is different than the plugin version.
 - name: Check installed elasticsearch plugins
   become: yes
