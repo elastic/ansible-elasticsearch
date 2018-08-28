@@ -5,9 +5,9 @@ shared_examples 'xpack::init' do |vars|
     it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
     it { should contain 'cluster.name: elasticsearch' }
     if vars['es_major_version'] == '6.x'
-      it { should_not contain 'path.conf: /etc/elasticsearch/security_node' }
+      it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
     else
-      it { should contain 'path.conf: /etc/elasticsearch/security_node' }
+      it { should contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
     end
     it { should contain "path.data: /var/lib/elasticsearch/localhost-#{vars['es_instance_name']}" }
     it { should contain "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
