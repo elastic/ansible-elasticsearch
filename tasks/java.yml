@@ -13,7 +13,7 @@
   when: ansible_os_family == 'RedHat'
 
 - name: Get the installed java path
-  shell: "update-alternatives --display java | grep '^/' | awk '{print $1}' | grep 1.8.0"
+  shell: "update-alternatives --display java | grep '^/' | awk '{print $1}' | grep 1.8.0 | head -1"
   become: yes
   register: java_full_path
   failed_when: False
