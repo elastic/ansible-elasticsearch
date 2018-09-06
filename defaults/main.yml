@@ -7,6 +7,7 @@ es_package_name: "elasticsearch"
 es_version_lock: false
 es_use_repository: true
 es_templates_fileglob: "files/templates/*.json"
+es_pipelines_fileglob: "files/pipelines/*.json"
 es_apt_key: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
 es_apt_url: "deb https://artifacts.elastic.co/packages/{{ es_repo_name }}/apt stable main"
 es_apt_url_old: "deb http://packages.elastic.co/elasticsearch/{{ es_repo_name }}/debian stable main"
@@ -17,6 +18,7 @@ es_restart_on_change: true
 es_plugins_reinstall: false
 es_scripts: false
 es_templates: false
+es_pipelines: false
 es_user: elasticsearch
 es_group: elasticsearch
 es_config: {}

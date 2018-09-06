@@ -1,0 +1,41 @@
+---
+
+- name: ensure pipelines dir is created
+  file:
+    path: /etc/elasticsearch/pipelines
+    state: directory
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
+
+- name: Copy pipelines to elasticsearch
+  copy: src={{ item }} dest=/etc/elasticsearch/pipelines owner={{ es_user }} group={{ es_group }}
+  register: load_pipelines
+  with_fileglob:
+    - "{{ es_pipelines_fileglob | default('') }}"
+
+- name: Install pipelines without auth
+  uri:
+    url: "http://{{es_api_host}}:{{es_api_port}}/_ingest/pipeline/{{item | filename}}"
+    method: PUT
+    status_code: 200
+    body_format: json
+    body: "{{ lookup('file', item) }}"
+  when: load_pipelines.changed and es_start_service and not es_enable_xpack or not es_xpack_features is defined or "security" not in es_xpack_features
+  with_fileglob:
+    - "{{ es_pipelines_fileglob | default('') }}"
+  run_once: True
+
+- name: Install pipelines with auth
+  uri:
+    url: "http://{{es_api_host}}:{{es_api_port}}/_ingest/pipeline/{{item | filename}}"
+    method: PUT
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+    body_format: json
+    body: "{{ lookup('file', item) }}"
+  when: load_pipelines.changed and es_start_service and es_enable_xpack and es_xpack_features is defined and "security" in es_xpack_features
+  with_fileglob:
+    - "{{ es_pipelines_fileglob | default('') }}"
+  run_once: True

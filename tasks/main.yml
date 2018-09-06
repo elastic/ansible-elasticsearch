@@ -92,3 +92,9 @@
   when: es_templates
   tags:
       - templates
+
+- name: include elasticsearch-pipeline.yml
+  include: elasticsearch-pipeline.yml
+  when: es_pipelines
+  tags:
+      - pipelines
