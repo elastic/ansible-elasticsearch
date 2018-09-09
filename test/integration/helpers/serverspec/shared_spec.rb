@@ -112,6 +112,27 @@ shared_examples 'shared::init' do |vars|
       end
     end
   end
+  if vars['es_pipelines']
+    describe file('/etc/elasticsearch/pipelines') do
+      it { should be_directory }
+      it { should be_owned_by vars['es_user'] }
+    end
+    describe file('/etc/elasticsearch/pipelines/basic.json') do
+      it { should be_file }
+      it { should be_owned_by vars['es_user'] }
+    end
+    #This is possibly subject to format changes in the response across versions so may fail in the future
+    describe 'Pipeline Contents Correct' do
+      it 'should be reported as being installed', :retry => 3, :retry_wait => 10 do
+        pipeline = curl_json("#{es_api_url}/_ingest/pipeline/basic", username=username, password=password)
+        expect(pipeline.key?('basic'))
+        expect(pipeline['basic']['description']).to eq("Basic test pipeline")
+        expect(pipeline['basic']['processors'][0]['kv']['field']).to eq("message")
+        expect(pipeline['basic']['processors'][0]['kv']['split_field']).to eq(" ")
+        expect(pipeline['basic']['processors'][0]['kv']['value_split']).to eq("=")
+      end
+    end
+  end
   if vars['es_scripts']
     describe file("/etc/elasticsearch/#{vars['es_instance_name']}/scripts") do
       it { should be_directory }

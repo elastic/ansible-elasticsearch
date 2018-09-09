@@ -1,0 +1,10 @@
+{
+    "description": "Basic test pipeline",
+    "processors": [{
+        "kv": {
+            "field": "message",
+            "field_split": " ",
+            "value_split": "="
+        }
+    }]
+}
