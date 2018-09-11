@@ -15,11 +15,11 @@
 
 - name: RedHat - Install Elasticsearch
   become: yes
-  yum: name=elasticsearch{% if es_version is defined and es_version != ""  %}-{{ es_version }}{% endif %} state=present update_cache=yes
+  dnf: name=elasticsearch{% if es_version is defined and es_version != ""  %}-{{ es_version }}{% endif %} state=present
   when: es_use_repository
   register: redhat_elasticsearch_install_from_repo
   notify: restart elasticsearch
-  until: redhat_elasticsearch_install_from_repo.rc == 0
+  until: redhat_elasticsearch_install_from_repo is succeeded
   retries: 5
   delay: 10
 
