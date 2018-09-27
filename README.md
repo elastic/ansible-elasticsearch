@@ -218,13 +218,13 @@ An example of a two server deployment is shown below.  The first server holds th
     es_data_dirs: 
       - "/opt/elasticsearch"
     es_config:
+      cluster.name: "test-cluster"
       discovery.zen.ping.unicast.hosts: "elastic02:9300"
       http.port: 9200
       transport.tcp.port: 9300
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
-      cluster.name: "test-cluster"
     es_scripts: false
     es_templates: false
     es_version_lock: false
