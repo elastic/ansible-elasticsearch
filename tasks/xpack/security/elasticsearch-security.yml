@@ -17,13 +17,7 @@
   when: (es_enable_xpack and "security" in es_xpack_features) and (es_version | version_compare('6.0.0', '>'))
   block:
   - name: create the keystore if it doesn't exist yet
-    become: yes
-    command: >
-     {{es_home}}/bin/elasticsearch-keystore create
-    args:
-      creates: "{{ conf_dir }}/elasticsearch.keystore"
-    environment:
-      ES_PATH_CONF: "{{ conf_dir }}"
+    include: elasticsearch-create-keystore.yml
 
   - name: Check if bootstrap password is set
     become: yes
