@@ -58,7 +58,7 @@
 #Relies on elasticsearch distribution installing a serviced script to determine whether one should be copied.
 
 - name: set fact use_system_d
-  set_fact: use_system_d={{(ansible_distribution == 'Debian' and ansible_distribution_version | version_compare('8', '>=')) or (ansible_distribution in ['RedHat','CentOS'] and ansible_distribution_version | version_compare('7', '>=')) or (ansible_distribution == 'Ubuntu' and ansible_distribution_version | version_compare('15', '>=')) }}
+  set_fact: use_system_d={{(ansible_distribution == 'Debian' and ansible_distribution_version is version_compare('8', '>=')) or (ansible_distribution in ['RedHat','CentOS'] and ansible_distribution_version is version_compare('7', '>=')) or (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version_compare('15', '>=')) }}
 
 - name: set fact instance_sysd_script
   set_fact: instance_sysd_script={{sysd_script | dirname }}/{{es_instance_name}}_{{sysd_script | basename}}
