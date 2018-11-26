@@ -34,10 +34,10 @@ platforms:
       image: ubuntu:14.04
       privileged: true
       provision_command:
-        - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
-        - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip python-openssl locales
+        - apt-get update && apt-get install -y software-properties-common && add-apt-repository -y ppa:ansible/ansible && add-apt-repository -y ppa:openjdk-r/ppa
+        - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip python-openssl build-essential libssl-dev libffi-dev python-dev locales openjdk-8-jre
         - locale-gen en_US.UTF-8 && localedef -i en_US -c -f UTF-8 en_US.UTF-8
-        - pip install jmespath pyOpenSSL ndg-httpsclient
+        - pip install jmespath pyOpenSSL ndg-httpsclient cryptography==1.8.1
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
@@ -63,8 +63,7 @@ platforms:
       privileged: true
       provision_command:
         - apt-get update && apt-get install -y software-properties-common && add-apt-repository -y ppa:ansible/ansible
-        - apt-get install -y -q net-tools
-        - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip
+        - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip net-tools iproute2
         - pip install jmespath
       use_sudo: false
       volume: 
