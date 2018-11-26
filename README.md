@@ -54,6 +54,12 @@ This playbook uses [Kitchen](https://kitchen.ci/) for CI and local testing.
 
 ### Running the tests
 
+Install the ruby dependencies with bundler
+
+```sh
+make setup
+```
+
 If you want to test X-Pack features with a license you will first need to export the `ES_XPACK_LICENSE_FILE` variable.
 ```sh
 export ES_XPACK_LICENSE_FILE="$(pwd)/license.json"
