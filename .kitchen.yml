@@ -31,27 +31,41 @@ transport:
 platforms:
   - name: ubuntu-14.04
     driver_config:
-      image: dliappis/ubuntu-devopsci:14.04
+      image: ubuntu:14.04
       privileged: true
       provision_command:
         - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
-        - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip python-openssl
+        - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip python-openssl locales
+        - locale-gen en_US.UTF-8 && localedef -i en_US -c -f UTF-8 en_US.UTF-8
         - pip install jmespath pyOpenSSL ndg-httpsclient
-        - pip uninstall -y ansible
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
         - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
   - name: ubuntu-16.04
     driver_config:
-      image: dliappis/ubuntu-devopsci:16.04
+      image: ubuntu:16.04
       privileged: true
       provision_command:
-        - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
+        - apt-get update && apt-get install -y software-properties-common && add-apt-repository -y ppa:ansible/ansible
+        - apt-get install -y -q net-tools
+        - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip locales
+        - locale-gen en_US.UTF-8 && localedef -i en_US -c -f UTF-8 en_US.UTF-8
+        - pip install jmespath
+      use_sudo: false
+      volume: 
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
+      run_command: "/sbin/init"
+  - name: ubuntu-18.04
+    driver_config:
+      image: ubuntu:18.04
+      privileged: true
+      provision_command:
+        - apt-get update && apt-get install -y software-properties-common && add-apt-repository -y ppa:ansible/ansible
         - apt-get install -y -q net-tools
         - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip
         - pip install jmespath
-        - pip uninstall -y ansible
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
@@ -59,16 +73,32 @@ platforms:
       run_command: "/sbin/init"
   - name: debian-8
     driver_config:
-      image: dliappis/debian-devopsci:8
+      image: debian:8
       privileged: true
       provision_command:
-        - apt-get update && apt-get -y install python python-dev python-pip build-essential libyaml-dev python-yaml curl wget
+        - echo "deb http://http.debian.net/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+        - apt-get update && apt-get -y install -t jessie-backports openjdk-8-jre-headless
+        - apt-get update && apt-get -y install python python-dev python-pip build-essential libyaml-dev python-yaml curl wget net-tools
+        - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
+        - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+        - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
+        - pip install jmespath setuptools --upgrade
+      volume: 
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
+      use_sudo: false
+      run_command: "/sbin/init"
+  - name: debian-9
+    driver_config:
+      image: debian:9
+      privileged: true
+      provision_command:
+        - apt-get update && apt-get -y install python python-dev python-pip build-essential libyaml-dev python-yaml curl wget systemd-sysv
         - apt-get install -y -q net-tools
         - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
         - pip install jmespath
-        - pip uninstall -y ansible
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
         - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
@@ -76,14 +106,13 @@ platforms:
       run_command: "/sbin/init"
   - name: centos-7
     driver_config:
-      image: dliappis/centos-devopsci:7
+      image: centos:7
       provision_command:
         - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
         - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
-        - rm /etc/yum.repos.d/epel*repo /etc/yum.repos.d/puppetlabs-pc1.repo
-        - yum -y install initscripts
-        - yum -y remove ansible
+        - yum -y install epel-release
+        - yum -y install initscripts python-pip
         - yum clean all
         - pip install jmespath
       volume: 
