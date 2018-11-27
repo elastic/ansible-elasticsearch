@@ -1,3 +1,9 @@
+## 6.5.1.1 - 2018/11/27
+
+### Fixes
+
+* [#516](https://github.com/elastic/ansible-elasticsearch/pull/516) - @Crazybus - Only attempt to copy the old users file if it actually exists
+
 ## 6.5.1 - 2018/11/26
 
 ### Features
