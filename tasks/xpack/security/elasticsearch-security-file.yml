@@ -2,12 +2,18 @@
 - name: set fact manage_file_users
   set_fact: manage_file_users=es_users is defined and es_users.file is defined and es_users.file.keys() | length > 0
 
+- name: Check if old users file exists
+  stat:
+    path: '{{ conf_dir }}/x-pack/users'
+  register: old_users_file
+
 - name: Copy the old users file from the old depreacted location
   copy:
     remote_src: yes
     force: no # only copy it if the new path doesn't exist yet
     src: "{{ conf_dir }}/x-pack/users"
     dest: "{{ conf_dir }}{{ es_xpack_conf_subdir }}/users"
+  when: old_users_file.stat.exists
 
 - name: Create the users file if it doesn't exist
   copy:
