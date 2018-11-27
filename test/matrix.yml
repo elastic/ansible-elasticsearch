@@ -4,7 +4,9 @@ VERSION:
 OS:
   - ubuntu-1404
   - ubuntu-1604
+  - ubuntu-1804
   - debian-8
+  - debian-9
   - centos-7
 TEST_TYPE:
   - oss
