@@ -53,7 +53,7 @@
   failed_when: "'ERROR' in plugin_installed.stdout"
   changed_when: plugin_installed.rc == 0
   with_items: "{{ es_plugins }}"
-  when: "{{ item.plugin in plugins_to_install }}"
+  when: item.plugin in plugins_to_install
   notify: restart elasticsearch
   environment:
     CONF_DIR: "{{ conf_dir }}"
