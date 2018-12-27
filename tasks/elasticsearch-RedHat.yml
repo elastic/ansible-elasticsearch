@@ -23,7 +23,7 @@
 - name: RedHat - Remove the other elasticsearch package if switching between OSS and standard
   become: yes
   yum:
-    name: es_other_package_name
+    name: '{{ es_other_package_name }}'
     state: 'absent'
 
 - name: RedHat - Install Elasticsearch
