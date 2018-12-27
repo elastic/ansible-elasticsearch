@@ -18,7 +18,7 @@
 - name: Detect if es_version is before X-Pack was open and included
   set_fact:
     es_open_xpack: false
-  when: "es_version | version_compare('6.3.0', '<')"
+  when: "es_version is version_compare('6.3.0', '<')"
 
 - name: If this is an older version we need to install X-Pack as a plugin and use a differet users command
   set_fact:

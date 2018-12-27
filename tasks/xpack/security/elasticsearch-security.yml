@@ -14,7 +14,7 @@
 #-----------------------------Create Bootstrap User-----------------------------------
 ### START BLOCK elasticsearch keystore ###
 - name: create the elasticsearch keystore
-  when: (es_enable_xpack and "security" in es_xpack_features) and (es_version | version_compare('6.0.0', '>'))
+  when: (es_enable_xpack and "security" in es_xpack_features) and (es_version is version_compare('6.0.0', '>'))
   block:
   - name: create the keystore if it doesn't exist yet
     become: yes
