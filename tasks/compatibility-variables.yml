@@ -15,6 +15,7 @@
     es_repo_name: "{{ es_major_version }}"
     es_xpack_users_command: "elasticsearch-users"
     es_other_package_name: "elasticsearch-oss"
+    es_other_repo_name: "{{ 'oss-' + es_major_version }}"
 
 - name: Detect if es_version is before X-Pack was open and included
   set_fact:
@@ -33,6 +34,7 @@
 - name: Use the oss repo and package if xpack is not being used
   set_fact:
     es_repo_name: "{{ 'oss-' + es_major_version }}"
+    es_other_repo_name: "{{ es_major_version }}"
     es_package_name: "elasticsearch-oss"
     es_other_package_name: "elasticsearch"
   when:
