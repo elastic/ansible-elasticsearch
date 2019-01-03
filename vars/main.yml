@@ -1,5 +1,5 @@
 ---
-es_package_url: "https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch"
+es_package_url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch"
 es_conf_dir: "/etc/elasticsearch"
 sysd_script: "/usr/lib/systemd/system/elasticsearch.service"
 init_script: "/etc/init.d/elasticsearch"
