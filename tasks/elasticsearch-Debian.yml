@@ -78,3 +78,5 @@
   when: not es_use_repository
   register: elasticsearch_install_from_package
   notify: restart elasticsearch
+  environment:
+    ES_PATH_CONF: "/etc/elasticsearch"
