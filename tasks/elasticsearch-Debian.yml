@@ -53,7 +53,7 @@
 - name: Debian - Ensure elasticsearch is installed
   become: yes
   apt:
-    name: '{{ es_package_name }}{% if es_version is defined and es_version != "" %}={{ es_version }}{% endif %}'
+    name: '{{ es_package_name }}{% if es_version_lock and es_version %}={{ es_version }}{% endif %}'
     state: present
     force: '{{ force_install }}'
     allow_unauthenticated: "{{ 'no' if es_apt_key else 'yes' }}"
