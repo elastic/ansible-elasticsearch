@@ -71,5 +71,5 @@
   set_fact: pid_dir={{ es_pid_dir }}/{{instance_suffix}}
 - name: set fact log_dir
   set_fact: log_dir={{ es_log_dir }}/{{instance_suffix}}
-- name: set fact log_dir
+- name: set fact data_dirs
   set_fact: data_dirs={{ es_data_dirs | append_to_list('/'+instance_suffix) }}
