@@ -167,4 +167,29 @@ shared_examples 'shared::init' do |vars|
     its(:content) { should match "path.data: #{vars['data_dirs'].join(',')}" }
     its(:content) { should match "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
   end
+
+  if vars['es_use_repository']
+    if vars['ansible_os_family'] == 'RedHat'
+      describe file("/etc/yum.repos.d/elasticsearch-#{vars['es_repo_name']}.repo") do
+        it { should exist }
+      end
+      describe yumrepo("elasticsearch-#{vars['es_repo_name']}") do
+        it { should exist }
+        it { should be_enabled }
+      end
+      describe file("/etc/yum.repos.d/elasticsearch-#{vars['es_other_repo_name']}.repo") do
+        it { should_not exist }
+      end
+      describe yumrepo("elasticsearch-#{vars['es_other_repo_name']}") do
+        it { should_not exist }
+        it { should_not be_enabled }
+      end
+    end
+    if vars['ansible_os_family'] == 'Debian'
+      describe command('apt-cache policy') do
+        its(:stdout) { should match /elastic.co.*\/#{Regexp.quote(vars['es_repo_name'])}\//}
+        its(:stdout) { should_not match /elastic.co.*\/#{Regexp.quote(vars['es_other_repo_name'])}\//}
+      end
+    end
+  end
 end

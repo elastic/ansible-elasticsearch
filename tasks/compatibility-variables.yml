@@ -14,6 +14,9 @@
     es_xpack_conf_subdir: ""
     es_repo_name: "{{ es_major_version }}"
     es_xpack_users_command: "elasticsearch-users"
+    es_other_package_name: "elasticsearch-oss"
+    es_other_repo_name: "{{ 'oss-' + es_major_version }}"
+    es_other_apt_url: "deb https://artifacts.elastic.co/packages/{{ 'oss-' + es_major_version }}/apt stable main"
 
 - name: Detect if es_version is before X-Pack was open and included
   set_fact:
@@ -32,7 +35,10 @@
 - name: Use the oss repo and package if xpack is not being used
   set_fact:
     es_repo_name: "{{ 'oss-' + es_major_version }}"
+    es_other_repo_name: "{{ es_major_version }}"
+    es_other_apt_url: "deb https://artifacts.elastic.co/packages/{{ es_major_version }}/apt stable main"
     es_package_name: "elasticsearch-oss"
+    es_other_package_name: "elasticsearch"
   when:
     - es_open_xpack
     - not es_enable_xpack
