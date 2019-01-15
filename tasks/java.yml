@@ -18,6 +18,7 @@
   register: java_full_path
   failed_when: False
   changed_when: False
+  check_mode: no
   when: ansible_os_family == 'RedHat'
 
 - name: correct java version selected
