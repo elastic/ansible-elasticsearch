@@ -1,8 +1,8 @@
 [elasticsearch-{{ es_repo_name }}]
 name=Elasticsearch repository for {{ es_repo_name }} packages
-baseurl=https://artifacts.elastic.co/packages/{{ es_repo_name }}/yum
+baseurl={{ es_repo_base }}/packages/{{ es_repo_name }}/yum
 gpgcheck=1
-gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+gpgkey={{ es_repo_base }}/GPG-KEY-elasticsearch
 enabled=1
 autorefresh=1
 type=rpm-md
