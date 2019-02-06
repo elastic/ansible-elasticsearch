@@ -11,6 +11,10 @@ cluster.name: elasticsearch
 node.name: {{inventory_hostname}}-{{es_instance_name}}
 {% endif %}
 
+{% if graylog_version > 2.3 %}
+http.port: 9200
+{% endif %}
+
 #################################### Paths ####################################
 
 # Path to directory containing configuration (this file and logging.yml):
