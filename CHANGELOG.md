@@ -1,3 +1,19 @@
+## 6.6.0 - 2019/01/29
+
+### Features
+
+* 6.6.0  as default Elasticsearch version
+* [#521](https://github.com/elastic/ansible-elasticsearch/pull/521) - @Crazybus - Allow switching between oss and standard packages
+* [#528](https://github.com/elastic/ansible-elasticsearch/pull/528) - @Fra-nk - Use systemd's RequiresMountsFor
+* [#530](https://github.com/elastic/ansible-elasticsearch/pull/530) - @lde - Use dpkg_selections to lock elasticsearch version
+
+### Fixes
+
+* [#513](https://github.com/elastic/ansible-elasticsearch/pull/513) - @kakoni - Fix typo in elasticsearch-parameters.yml
+* [#522](https://github.com/elastic/ansible-elasticsearch/pull/522) - @SlothOfAnarchy - Fix package download URL
+* [#526](https://github.com/elastic/ansible-elasticsearch/pull/527) - @Fra-nk - Allow not installing Elasticsearch deb repository key
+* [#527](https://github.com/elastic/ansible-elasticsearch/pull/527) - @katsukamaru - Execute java version check in check mode
+
 ## 6.5.1.1 - 2018/11/27
 
 ### Fixes
