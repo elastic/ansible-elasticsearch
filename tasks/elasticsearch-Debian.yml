@@ -15,6 +15,7 @@
     register: elasticsearch_package
     failed_when: False
     changed_when: False
+    check_mode: no
 
   - name: stop elasticsearch
     service:
