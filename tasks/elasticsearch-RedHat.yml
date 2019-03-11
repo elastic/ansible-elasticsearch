@@ -13,19 +13,27 @@
 
 - name: RedHat - add Elasticsearch repo
   become: yes
-  template: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch-{{ es_repo_name }}.repo
+  template:
+    src: 'elasticsearch.repo'
+    dest: '/etc/yum.repos.d/elasticsearch-{{ es_repo_name }}.repo'
+  when: es_use_repository
+
+- name: RedHat - remove unused Elasticsearch repo
+  become: yes
+  file:
+    path: '/etc/yum.repos.d/elasticsearch-{{ es_other_repo_name }}.repo'
+    state: absent
   when: es_use_repository
 
 - name: RedHat - include versionlock
   include: elasticsearch-RedHat-version-lock.yml
   when: es_version_lock
 
-- name: RedHat - Remove non oss package if the old elasticsearch package is installed
+- name: RedHat - Remove the other elasticsearch package if switching between OSS and standard
   become: yes
   yum:
-    name: 'elasticsearch'
+    name: '{{ es_other_package_name }}'
     state: 'absent'
-  when: es_package_name == 'elasticsearch-oss'
 
 - name: RedHat - Install Elasticsearch
   become: yes

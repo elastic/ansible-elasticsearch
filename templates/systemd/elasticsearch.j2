@@ -3,6 +3,8 @@ Description=Elasticsearch-{{es_instance_name}}
 Documentation=http://www.elastic.co
 Wants=network-online.target
 After=network-online.target
+{# Directive 'WorkingDirectory' creates an implicit dependecy for {{es_home}}, so it can be omitted here #}
+RequiresMountsFor={{ data_dirs | array_to_str(separator=' ') }} {{log_dir}} {{pid_dir}} {{conf_dir}}
 
 [Service]
 Environment=ES_HOME={{es_home}}
