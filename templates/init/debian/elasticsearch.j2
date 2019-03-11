@@ -92,7 +92,7 @@ fi
 # Define other required variables
 PID_FILE="$PID_DIR/$NAME.pid"
 DAEMON=$ES_HOME/bin/elasticsearch
-{% if (es_version | version_compare('6.0.0', '<')) %}
+{% if (es_version is version_compare('6.0.0', '<')) %}
 DAEMON_OPTS="-d -p $PID_FILE -Edefault.path.logs=$LOG_DIR -Edefault.path.data=$DATA_DIR -Edefault.path.conf=$CONF_DIR"
 {% else %}
 DAEMON_OPTS="-d -p $PID_FILE"
