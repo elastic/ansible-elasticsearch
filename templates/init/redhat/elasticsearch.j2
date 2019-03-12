@@ -140,7 +140,7 @@ start() {
     cd $ES_HOME
     echo -n $"Starting $prog: "
     # if not running, start it up here, usually something like "daemon $exec"
-{% if (es_version | version_compare('6.0.0', '<')) %}
+{% if (es_version is version_compare('6.0.0', '<')) %}
     daemon --user $ES_USER --pidfile $pidfile $exec -p $pidfile -d -Edefault.path.logs=$LOG_DIR -Edefault.path.data=$DATA_DIR -Edefault.path.conf=$CONF_DIR
 {% else %}
     daemon --user $ES_USER --pidfile $pidfile $exec -p $pidfile -d

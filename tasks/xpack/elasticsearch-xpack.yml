@@ -20,4 +20,4 @@
 - name: Set elasticsearch.keystore Permissions
   become: yes
   file: state=file path={{ conf_dir }}/elasticsearch.keystore owner={{ es_user }} group={{ es_group }}
-  when: es_enable_xpack and "security" in es_xpack_features and (es_version | version_compare('6.0.0', '>'))
+  when: es_enable_xpack and "security" in es_xpack_features and (es_version is version_compare('6.0.0', '>'))

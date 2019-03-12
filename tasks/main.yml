@@ -73,7 +73,7 @@
 
 # If playbook runs too fast, Native commands could fail as the Native Realm is not yet up
 - name: Wait 15 seconds for the Native Relm to come up
-  pause: seconds=15
+  command: sleep 15
   when: manage_native_realm
 
 - name: activate-license

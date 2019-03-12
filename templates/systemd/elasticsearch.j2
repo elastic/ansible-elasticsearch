@@ -20,13 +20,13 @@ WorkingDirectory={{es_home}}
 User={{es_user}}
 Group={{es_group}}
 
-{% if (es_version | version_compare('6.0.0', '<')) %}
+{% if (es_version is version_compare('6.0.0', '<')) %}
 ExecStartPre=/usr/share/elasticsearch/bin/elasticsearch-systemd-pre-exec
 {% endif %}
 
 ExecStart={{es_home}}/bin/elasticsearch \
                                     -p ${PID_DIR}/elasticsearch.pid \
-{% if (es_version | version_compare('6.0.0', '<')) %}
+{% if (es_version is version_compare('6.0.0', '<')) %}
                                     -Edefault.path.logs=${LOG_DIR} \
                                     -Edefault.path.data=${DATA_DIR} \
                                     -Edefault.path.conf=${CONF_DIR} \
