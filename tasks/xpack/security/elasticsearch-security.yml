@@ -33,6 +33,7 @@
     changed_when: False
     environment:
       ES_PATH_CONF: "{{ conf_dir }}"
+    check_mode: no
 
   - name: Create Bootstrap password for elastic user
     become: yes

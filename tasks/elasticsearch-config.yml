@@ -16,7 +16,6 @@
   with_items:
     - "{{data_dirs}}"
 
-
 #Copy the config template
 - name: Copy Configuration File
   become: yes
@@ -93,6 +92,7 @@
     stat:
       path: "{{ sysd_script }}"
     register: sysd_stat_result
+    check_mode: no
 
   - name: Remove if it is a normal file
     become: yes
