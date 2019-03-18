@@ -1,0 +1,26 @@
+---
+- job:
+    name: elastic+ansible-elasticsearch+master
+    display-name: elastic / ansible-elasticsearch - master
+    description: Master branch testing with test kitchen
+    triggers:
+    - timed: H H(02-04) * * *
+    builders:
+    - shell: |-
+        #!/usr/local/bin/runbld
+        set -euo pipefail
+
+        export RBENV_VERSION='2.3.0'
+        export PATH="$HOME/.rbenv/bin:$PATH"
+        eval "$(rbenv init -)"
+        rbenv local $RBENV_VERSION
+
+        export ES_XPACK_LICENSE_FILE="$(pwd)/license.json"
+        echo "Getting xpack_license from secrets service"
+        set +x
+        VAULT_TOKEN=$( curl -s -X POST -H "Content-Type: application/json" -L -d "{\"role_id\":\"$VAULT_ROLE_ID\",\"secret_id\":\"$VAULT_SECRET_ID\"}" $VAULT_ADDR/v1/auth/approle/login | jq -r '.auth.client_token' )
+        curl -s -L -H "X-Vault-Token:$VAULT_TOKEN" $VAULT_ADDR/v1/secret/devops-ci/ansible-elasticsearch/xpack_license | jq -r '.data.value' > ${ES_XPACK_LICENSE_FILE}
+        set -x
+        echo "Finished getting xpack_license from secrets service"
+        make setup
+        make verify VERSION=$VERSION PATTERN=$TEST_TYPE-$OS
