@@ -27,6 +27,7 @@
   delay: 1
   ignore_errors: true
   until: "'status' in snapshots and snapshots.status == 200"
+  check_mode: no
 
 - name: use the custom package url instead of the repository
   set_fact:
