@@ -399,6 +399,7 @@ In addition to es_config, the following parameters allow the customization of th
       - plugin: ingest-geoip 
   ```
 * ```es_path_repo``` Sets the whitelist for allowing local back-up repositories
+* ```es_processors``` (e.g. `16`) Sets the number of processors (cores). Used in sizing thread pools. Useful for multitenancy or when the value is not correctly detected.
 * ```es_action_auto_create_index ``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
      es_action_auto_create_index: '[".watches", ".triggered_watches", ".watcher-history-*"]'
 * ```es_allow_downgrades``` For development purposes only. (true or false (default) )

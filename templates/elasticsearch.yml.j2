@@ -35,6 +35,10 @@ action.auto_create_index: false
 action.auto_create_index: {{ es_action_auto_create_index }}
 {% endif %}
 
+{% if es_processors is defined %}
+processors: {{ es_processors }}
+{% endif %}
+
 {% if es_enable_xpack %}
 {% if not "security" in es_xpack_features %}
 xpack.security.enabled: false
