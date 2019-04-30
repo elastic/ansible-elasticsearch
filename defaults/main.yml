@@ -7,8 +7,9 @@ es_package_name: "elasticsearch"
 es_version_lock: false
 es_use_repository: true
 es_templates_fileglob: "files/templates/*.json"
-es_apt_key: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
-es_apt_url: "deb https://artifacts.elastic.co/packages/{{ es_repo_name }}/apt stable main"
+es_repo_base: "https://artifacts.elastic.co"
+es_apt_key: "{{ es_repo_base }}/GPG-KEY-elasticsearch"
+es_apt_url: "deb {{ es_repo_base }}/packages/{{ es_repo_name }}/apt stable main"
 es_apt_url_old: "deb http://packages.elastic.co/elasticsearch/{{ es_repo_name }}/debian stable main"
 es_start_service: true
 es_java_install: true

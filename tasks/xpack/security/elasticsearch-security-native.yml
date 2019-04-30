@@ -29,6 +29,7 @@
     status_code: 200
   register: user_list_response
   when: manage_native_users
+  check_mode: no
 
 - name: set fact reserved_users equals user_list_response.json
   set_fact: reserved_users={{ user_list_response.json | filter_reserved }}
@@ -138,6 +139,7 @@
     status_code: 200
   register: role_list_response
   when: manage_native_roles
+  check_mode: no
 
 - name: set fact reserved roles
   set_fact: reserved_roles={{ role_list_response.json | filter_reserved }}

@@ -34,7 +34,8 @@ The simplest configuration therefore consists of:
   hosts: localhost
   roles:
     - role: elastic.elasticsearch
-      es_instance_name: "node1"
+      vars:
+        es_instance_name: "node1"
 ```
 
 The above installs a single node 'node1' on the hosts 'localhost'.

@@ -6,6 +6,7 @@
   stat:
     path: '{{ conf_dir }}/x-pack/users'
   register: old_users_file
+  check_mode: no
 
 - name: Copy the old users file from the old depreacted location
   copy:
@@ -31,6 +32,7 @@
   register: current_file_users
   when: manage_file_users
   changed_when: False
+  check_mode: no
 
 - name: set fact users_to_remove
   set_fact: users_to_remove={{ current_file_users.stdout_lines | difference (es_users.file.keys()) }}
