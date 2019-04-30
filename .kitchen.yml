@@ -75,7 +75,8 @@ platforms:
       image: debian:8
       privileged: true
       provision_command:
-        - echo "deb http://http.debian.net/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+        - echo "deb http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+        - echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf
         - apt-get update && apt-get -y install -t jessie-backports openjdk-8-jre-headless
         - apt-get update && apt-get -y install python python-dev python-pip build-essential libyaml-dev python-yaml curl wget net-tools
         - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
