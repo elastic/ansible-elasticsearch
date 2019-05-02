@@ -2,9 +2,9 @@
 [![Build Status](https://img.shields.io/jenkins/s/https/devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master.svg)](https://devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master/)
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
-**THIS ROLE IS FOR 6.x, 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
+**THIS ROLE IS FOR 7.x, 6.x, 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
 
-Ansible role for 6.x/5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
+Ansible role for 7.x/6.x/5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
 
 * Ubuntu 14.04
 * Ubuntu 16.04
@@ -13,7 +13,7 @@ Ansible role for 6.x/5.x Elasticsearch.  Currently this works on Debian and RedH
 * Debian 9
 * CentOS 7
 
-The latest Elasticsearch versions of 6.x and 5.x are actively tested.  **Only Ansible versions > 2.4.3.0 are supported, as this is currently the only version tested.**
+The latest Elasticsearch versions of 7.x, 6.x and 5.x are actively tested.  **Only Ansible versions > 2.4.3.0 are supported, as this is currently the only version tested.**
 
 ##### Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
@@ -23,7 +23,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install elastic.elasticsearch,6.6.0
+ansible-galaxy install elastic.elasticsearch,7.0.0
 ```
 
 Then create your playbook yaml adding the role elasticsearch. By default, the user is only required to specify a unique es_instance_name per role application.  This should be unique per node. 
@@ -93,9 +93,9 @@ The `PATTERN` is a kitchen pattern which can match multiple suites. To run all t
 $ make converge PATTERN=centos-7
 ```
 
-The default version is 6.x If you want to test 5.x you can override it with the `VERSION` variable to test 5.x
+The default version is 7.x. If you want to test 6.x or 5.x you can override it with the `VERSION` variable, for example: 
 ```sh
-$ make converge VERSION=5.x PATTERN=oss-centos-7
+$ make converge VERSION=6.x PATTERN=oss-centos-7
 ```
 
 When you are finished testing you can clean up everything with

@@ -16,7 +16,7 @@ shared_examples 'multi::init' do |vars|
     it { should contain 'node.master: false' }
     it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
     it { should_not contain 'bootstrap.memory_lock: true' }
-    if vars['es_major_version'] == '6.x'
+    if vars['es_major_version'] == '6.x' or '7.x'
       it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
     else
       it { should contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
@@ -35,7 +35,7 @@ shared_examples 'multi::init' do |vars|
     it { should contain 'node.master: true' }
     it { should contain 'node.name: localhost-master' }
     it { should contain 'bootstrap.memory_lock: true' }
-    if vars['es_major_version'] == '6.x'
+    if vars['es_major_version'] == '6.x' or '7.x'
       it { should_not contain 'path.conf: /etc/elasticsearch/master' }
     else
       it { should contain 'path.conf: /etc/elasticsearch/master' }
