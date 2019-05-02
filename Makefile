@@ -4,7 +4,7 @@ SHELL:=/bin/bash -eux
 VERSION := 6.x
 PATTERN := xpack-ubuntu-1604
 
-.PHONY: converge cerify test login destroy list
+.PHONY: converge verify test login destroy list
 
 setup:
 	bundle install
