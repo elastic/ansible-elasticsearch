@@ -3,9 +3,9 @@
 - name: Elasticsearch Multi test - master on 9200
   hosts: localhost
   post_tasks:
-    - include: ansible-elasticsearch/test/integration/debug.yml
+    - include: elasticsearch/test/integration/debug.yml
   roles:
-    - ansible-elasticsearch
+    - elasticsearch
   vars:
     es_instance_name: "master"
     es_data_dirs:
@@ -28,9 +28,9 @@
 - name: Elasticsearch Multi test - data on 9201
   hosts: localhost
   post_tasks:
-    - include: ansible-elasticsearch/test/integration/debug.yml
+    - include: elasticsearch/test/integration/debug.yml
   roles:
-    - ansible-elasticsearch
+    - elasticsearch
   vars:
     es_enable_xpack: false
     es_scripts: true

@@ -2,9 +2,9 @@
 - name: Standard test for single node setup. Tests idempotence.
   hosts: localhost
   post_tasks:
-    - include: ansible-elasticsearch/test/integration/debug.yml
+    - include: elasticsearch/test/integration/debug.yml
   roles:
-    - ansible-elasticsearch
+    - elasticsearch
   vars:
     es_instance_name: "node1"
     es_version: "{{ '6.2.4' if es_major_version == '6.x' else '5.6.9' }}" # This is set to an older version than the current default to force an upgrade
@@ -14,9 +14,9 @@
 - name: Standard test for single node setup. Tests idempotence.
   hosts: localhost
   post_tasks:
-    - include: ansible-elasticsearch/test/integration/debug.yml
+    - include: elasticsearch/test/integration/debug.yml
   roles:
-    - ansible-elasticsearch
+    - elasticsearch
   vars:
     es_instance_name: "node1"
     es_enable_xpack: true

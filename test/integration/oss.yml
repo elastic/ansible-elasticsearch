@@ -2,9 +2,9 @@
 - name: Standard test for single node setup. Tests idempotence.
   hosts: localhost
   post_tasks:
-    - include: ansible-elasticsearch/test/integration/debug.yml
+    - include: elasticsearch/test/integration/debug.yml
   roles:
-    - ansible-elasticsearch
+    - elasticsearch
   vars:
     es_instance_name: "node1"
     es_enable_xpack: false
