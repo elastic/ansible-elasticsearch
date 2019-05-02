@@ -8,7 +8,9 @@ Ansible role for 6.x/5.x Elasticsearch.  Currently this works on Debian and RedH
 
 * Ubuntu 14.04
 * Ubuntu 16.04
+* Ubuntu 18.04
 * Debian 8
+* Debian 9
 * CentOS 7
 
 The latest Elasticsearch versions of 6.x and 5.x are actively tested.  **Only Ansible versions > 2.4.3.0 are supported, as this is currently the only version tested.**
