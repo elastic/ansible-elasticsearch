@@ -23,7 +23,7 @@
     es_open_xpack: false
   when: "es_version is version_compare('6.3.0', '<')"
 
-- name: If this is an older version we need to install X-Pack as a plugin and use a differet users command
+- name: If this is an older version we need to install X-Pack as a plugin and use a different users command
   set_fact:
     es_install_xpack: true
     es_xpack_users_command: "x-pack/users"
