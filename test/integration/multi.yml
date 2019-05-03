@@ -23,7 +23,7 @@
     es_heap_size: "1g"
     es_api_port: 9200
     es_plugins:
-      - plugin: ingest-geoip
+      - plugin: ingest-attachment
 
 - name: Elasticsearch Multi test - data on 9201
   hosts: localhost
@@ -38,7 +38,7 @@
     es_heap_size: "1g"
     es_api_port: 9201
     es_plugins:
-      - plugin: ingest-geoip
+      - plugin: ingest-attachment
     es_instance_name: "node1"
     es_data_dirs: 
       - "/opt/elasticsearch/data-1"

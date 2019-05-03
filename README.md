@@ -179,7 +179,7 @@ A more complex example:
     es_plugins_reinstall: false
     es_api_port: 9201
     es_plugins:
-      - plugin: ingest-geoip
+      - plugin: ingest-attachment
         proxy_host: proxy.example.com
         proxy_port: 8080
 ```
@@ -217,7 +217,7 @@ An example of a two server deployment is shown below.  The first server holds th
     es_version_lock: false
     ansible_user: ansible
     es_plugins:
-     - plugin: ingest-geoip
+     - plugin: ingest-attachment
 
 - hosts: data_nodes
   roles:
@@ -240,7 +240,7 @@ An example of a two server deployment is shown below.  The first server holds th
     ansible_user: ansible
     es_api_port: 9200
     es_plugins:
-      - plugin: ingest-geoip
+      - plugin: ingest-attachment
     
 - hosts: data_nodes
   roles:
@@ -262,7 +262,7 @@ An example of a two server deployment is shown below.  The first server holds th
     es_api_port: 9201
     ansible_user: ansible
     es_plugins:
-      - plugin: ingest-geoip
+      - plugin: ingest-attachment
 ```
 
 Parameters can additionally be assigned to hosts using the inventory file if desired.
@@ -398,7 +398,7 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_plugins``` an array of plugin definitions e.g.:
   ```yaml
     es_plugins:
-      - plugin: ingest-geoip 
+      - plugin: ingest-attachment 
   ```
 * ```es_path_repo``` Sets the whitelist for allowing local back-up repositories
 * ```es_action_auto_create_index ``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
@@ -461,7 +461,7 @@ To define proxy only for a particular plugin during its installation:
 
 ```yaml
   es_plugins:
-    - plugin: ingest-geoip 
+    - plugin: ingest-attachment 
       proxy_host: proxy.example.com
       proxy_port: 8080
 ```
