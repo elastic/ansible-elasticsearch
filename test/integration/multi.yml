@@ -11,9 +11,7 @@
     es_data_dirs:
       - "/opt/elasticsearch/master"
     es_config:
-      discovery.zen.ping.unicast.hosts: "localhost:9300"
       http.port: 9200
-      transport.tcp.port: 9300
       node.data: false
       node.master: true
       bootstrap.memory_lock: true
@@ -44,8 +42,6 @@
       - "/opt/elasticsearch/data-1"
       - "/opt/elasticsearch/data-2"
     es_config: 
-      discovery.zen.ping.unicast.hosts: "localhost:9300"
       http.port: 9201
-      transport.tcp.port: 9301
       node.data: true
       node.master: false
