@@ -33,8 +33,8 @@ platforms:
       privileged: true
       provision_command:
         - locale-gen en_US.UTF-8 && localedef -i en_US -c -f UTF-8 en_US.UTF-8
-        - apt-get update && apt-get install -y software-properties-common && add-apt-repository -y ppa:ansible/ansible
-        - apt-get -y -q install ansible python-jmespath
+        - apt-get update -q && apt-get install -y -q software-properties-common && add-apt-repository -y ppa:ansible/ansible
+        - apt-get update -q && apt-get -y -q install ansible python-jmespath
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
@@ -45,6 +45,8 @@ platforms:
       privileged: true
       provision_command:
         - locale-gen en_US.UTF-8 && localedef -i en_US -c -f UTF-8 en_US.UTF-8
+        - apt-get update -q && apt-get install -y -q software-properties-common && add-apt-repository -y ppa:ansible/ansible
+        - apt-get update -q && apt-get install -y -q ansible python-jmespath 
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
@@ -55,7 +57,7 @@ platforms:
       image: ubuntu:18.04
       privileged: true
       provision_command:
-        - apt-get -y -q install ansible python-jmespath 
+        - apt-get install -y -q ansible python-jmespath 
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
@@ -66,10 +68,10 @@ platforms:
       image: debian:8
       privileged: true
       provision_command:
-        - apt-get update && apt-get install gnupg2
+        - apt-get update -q && apt-get install -y -q gnupg2
         - echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" > /etc/apt/sources.list.d/ansible.list
         - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
-        - apt-get update && apt-get -y install ansible python-jmespath
+        - apt-get update -q && apt-get install -y -q ansible python-jmespath
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
         - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
@@ -80,10 +82,10 @@ platforms:
       image: debian:9
       privileged: true
       provision_command:
-        - apt-get update && apt-get install gnupg2
+        - apt-get update -q && apt-get install -y -q gnupg2
         - echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" > /etc/apt/sources.list.d/ansible.list
         - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
-        - apt-get update && apt-get -y install ansible python-jmespath
+        - apt-get update -q && apt-get install -y -q ansible python-jmespath
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
         - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
