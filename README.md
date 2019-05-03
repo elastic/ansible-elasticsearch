@@ -125,9 +125,9 @@ The following illustrates applying configuration parameters to an Elasticsearch 
     es_config:
       node.name: "node1"
       cluster.name: "custom-cluster"
-      discovery.zen.ping.unicast.hosts: "localhost:9301"
+      discovery.seed_hosts: "localhost:9301"
       http.port: 9201
-      transport.tcp.port: 9301
+      transport.port: 9301
       node.data: false
       node.master: true
       bootstrap.memory_lock: true
@@ -141,8 +141,8 @@ The following illustrates applying configuration parameters to an Elasticsearch 
 Whilst the role installs Elasticsearch with the default configuration parameters, the following should be configured to ensure a cluster successfully forms:
 
 * ```es_config['http.port']``` - the http port for the node
-* ```es_config['transport.tcp.port']``` - the transport port for the node
-* ```es_config['discovery.zen.ping.unicast.hosts']``` - the unicast discovery list, in the comma separated format ```"<host>:<port>,<host>:<port>"``` (typically the clusters dedicated masters)
+* ```es_config['transport.port']``` - the transport port for the node
+* ```es_config['discovery.seed_hosts']``` - the unicast discovery list, in the comma separated format ```"<host>:<port>,<host>:<port>"``` (typically the clusters dedicated masters)
 * ```es_config['network.host']``` - sets both network.bind_host and network.publish_host to the same host value. The network.bind_host setting allows to control the host different network components will bind on.  
 
 The network.publish_host setting allows to control the host the node will publish itself within the cluster so other nodes will be able to connect to it. 
@@ -165,9 +165,9 @@ A more complex example:
     es_config:
       node.name: "node1"
       cluster.name: "custom-cluster"
-      discovery.zen.ping.unicast.hosts: "localhost:9301"
+      discovery.seed_hosts: "localhost:9301"
       http.port: 9201
-      transport.tcp.port: 9301
+      transport.port: 9301
       node.data: false
       node.master: true
       bootstrap.memory_lock: true
@@ -206,9 +206,9 @@ An example of a two server deployment is shown below.  The first server holds th
     es_heap_size: "1g"
     es_config:
       cluster.name: "test-cluster"
-      discovery.zen.ping.unicast.hosts: "elastic02:9300"
+      discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      transport.tcp.port: 9300
+      transport.port: 9300
       node.data: false
       node.master: true
       bootstrap.memory_lock: false
@@ -228,9 +228,9 @@ An example of a two server deployment is shown below.  The first server holds th
       - "/opt/elasticsearch"
     es_config:
       cluster.name: "test-cluster"
-      discovery.zen.ping.unicast.hosts: "elastic02:9300"
+      discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      transport.tcp.port: 9300
+      transport.port: 9300
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
@@ -249,9 +249,9 @@ An example of a two server deployment is shown below.  The first server holds th
     es_instance_name: "node2"
     es_api_port: 9201
     es_config:
-      discovery.zen.ping.unicast.hosts: "elastic02:9300"
+      discovery.seed_hosts: "elastic02:9300"
       http.port: 9201
-      transport.tcp.port: 9301
+      transport.port: 9301
       node.data: true
       node.master: false
       bootstrap.memory_lock: false

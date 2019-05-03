@@ -11,7 +11,6 @@ shared_examples 'multi::init' do |vars|
   describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
     it { should be_file }
     it { should contain 'http.port: 9201' }
-    it { should contain 'transport.tcp.port: 9301' }
     it { should contain 'node.data: true' }
     it { should contain 'node.master: false' }
     it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
@@ -26,7 +25,6 @@ shared_examples 'multi::init' do |vars|
   describe file('/etc/elasticsearch/master/elasticsearch.yml') do
     it { should be_file }
     it { should contain 'http.port: 9200' }
-    it { should contain 'transport.tcp.port: 9300' }
     it { should contain 'node.data: false' }
     it { should contain 'node.master: true' }
     it { should contain 'node.name: localhost-master' }
