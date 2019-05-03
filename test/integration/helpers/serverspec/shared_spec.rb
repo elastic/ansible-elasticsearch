@@ -82,7 +82,11 @@ shared_examples 'shared::init' do |vars|
         template = curl_json("#{es_api_url}/_template/basic", username=username, password=password)
         expect(template.key?('basic'))
         expect(template['basic']['settings']['index']['number_of_shards']).to eq("1")
-        expect(template['basic']['mappings']['type1']['_source']['enabled']).to eq(false)
+        if vars['es_major_version'] == '7.x'
+          expect(template['basic']['mappings']['_source']['enabled']).to eq(false)
+        else
+          expect(template['basic']['mappings']['type1']['_source']['enabled']).to eq(false)
+        end
       end
     end
   end
