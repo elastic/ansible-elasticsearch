@@ -32,9 +32,9 @@ platforms:
       image: ubuntu:14.04
       privileged: true
       provision_command:
+        - apt-get update -q && apt-get install -y -q software-properties-common && add-apt-repository -y ppa:ansible/ansible && add-apt-repository -y ppa:openjdk-r/ppa
+        - apt-get update -q && apt-get -y -q install ansible openjdk-8-jre python-jmespath
         - locale-gen en_US.UTF-8 && localedef -i en_US -c -f UTF-8 en_US.UTF-8
-        - apt-get update -q && apt-get install -y -q software-properties-common && add-apt-repository -y ppa:ansible/ansible
-        - apt-get update -q && apt-get -y -q install ansible python-jmespath
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
@@ -44,9 +44,9 @@ platforms:
       image: ubuntu:16.04
       privileged: true
       provision_command:
-        - locale-gen en_US.UTF-8 && localedef -i en_US -c -f UTF-8 en_US.UTF-8
-        - apt-get update -q && apt-get install -y -q software-properties-common && add-apt-repository -y ppa:ansible/ansible
+        - apt-get update -q && apt-get install -y -q iproute locales software-properties-common && add-apt-repository -y ppa:ansible/ansible
         - apt-get update -q && apt-get install -y -q ansible python-jmespath 
+        - locale-gen en_US.UTF-8 && localedef -i en_US -c -f UTF-8 en_US.UTF-8
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
@@ -57,7 +57,7 @@ platforms:
       image: ubuntu:18.04
       privileged: true
       provision_command:
-        - apt-get install -y -q ansible python-jmespath 
+        - apt-get install -y -q ansible iproute2 python-jmespath 
       use_sudo: false
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
@@ -68,10 +68,13 @@ platforms:
       image: debian:8
       privileged: true
       provision_command:
-        - apt-get update -q && apt-get install -y -q gnupg2
+        - apt-get update -q && apt-get install -y -q gnupg2 python-jmespath
+        - echo "deb http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+        - echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf
+        - apt-get update && apt-get -y install -t jessie-backports openjdk-8-jre-headless
         - echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" > /etc/apt/sources.list.d/ansible.list
         - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
-        - apt-get update -q && apt-get install -y -q ansible python-jmespath
+        - apt-get update -q && apt-get install -y -q ansible
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
         - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
@@ -82,10 +85,10 @@ platforms:
       image: debian:9
       privileged: true
       provision_command:
-        - apt-get update -q && apt-get install -y -q gnupg2
+        - apt-get update -q && apt-get install -y -q gnupg2 python-jmespath systemd-sysv
         - echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" > /etc/apt/sources.list.d/ansible.list
         - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
-        - apt-get update -q && apt-get install -y -q ansible python-jmespath
+        - apt-get update -q && apt-get install -y -q ansible
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
         - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
@@ -96,7 +99,7 @@ platforms:
       image: centos:7
       provision_command:
         - yum -y install epel-release
-        - yum -y install ansible python2-jmespath
+        - yum -y install ansible iproute python2-jmespath
       volume: 
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
         - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
