@@ -91,13 +91,4 @@ shared_examples 'xpack_upgrade::init' do |vars|
       expect(command.exit_status).to eq(0)
     end
   end
-
-  if vars['es_major_version'] == '5.x' # kibana default password has been removed in 6.x
-    describe 'kibana access check' do
-      it 'should be reported as version '+vars['es_version'] do
-        result = curl_json('http://localhost:9200/', username='kibana', password='changeme')
-        expect(result['version']['number']).to eq(vars['es_version'])
-      end
-    end
-  end
 end

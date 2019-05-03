@@ -18,8 +18,8 @@ provisioner:
   attributes:
     extra_vars:
       es_major_version: "<%= ENV['VERSION'] %>"
-      <% if ENV['VERSION'] == '5.x' %>
-      es_version: '5.6.11'
+      <% if ENV['VERSION'] == '6.x' %>
+      es_version: '6.7.1'
       <% end %>
   <% end %>
 

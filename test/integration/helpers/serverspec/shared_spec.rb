@@ -43,32 +43,6 @@ shared_examples 'shared::init' do |vars|
           expect(values['enabled'] = enabled)
         end
       end
-      # X-Pack is no longer installed as a plugin in elasticsearch
-      if vars['es_major_version'] == '5.x'
-        describe file('/usr/share/elasticsearch/plugins/x-pack') do
-          it { should be_directory }
-          it { should be_owned_by vars['es_user'] }
-        end
-        describe file("/etc/elasticsearch/#{vars['es_instance_name']}/x-pack") do
-          it { should be_directory }
-          it { should be_owned_by vars['es_user'] }
-        end
-        describe 'x-pack-core plugin' do
-          it 'should be installed with the correct version' do
-            plugins = curl_json("#{es_api_url}/_nodes/plugins", username=username, password=password)
-            node, data = plugins['nodes'].first
-            version = 'plugin not found'
-            name = 'x-pack'
-
-            data['plugins'].each do |plugin|
-              if plugin['name'] == name
-                version = plugin['version']
-              end
-            end
-            expect(version).to eql(vars['es_version'])
-          end
-        end
-      end
     end
   end
   describe user(vars['es_user']) do

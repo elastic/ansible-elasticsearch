@@ -2,9 +2,9 @@
 [![Build Status](https://img.shields.io/jenkins/s/https/devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master.svg)](https://devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master/)
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
-**THIS ROLE IS FOR 7.x, 6.x, 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
+**THIS ROLE IS FOR 7.x & 6.x**
 
-Ansible role for 7.x/6.x/5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
+Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
 
 * Ubuntu 14.04
 * Ubuntu 16.04
@@ -13,7 +13,7 @@ Ansible role for 7.x/6.x/5.x Elasticsearch.  Currently this works on Debian and 
 * Debian 9
 * CentOS 7
 
-The latest Elasticsearch versions of 7.x, 6.x and 5.x are actively tested.  **Only Ansible versions > 2.4.3.0 are supported, as this is currently the only version tested.**
+The latest Elasticsearch versions of 7.x & 6.x are actively tested.  **Only Ansible versions > 2.4.3.0 are supported, as this is currently the only version tested.**
 
 ##### Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
@@ -93,7 +93,7 @@ The `PATTERN` is a kitchen pattern which can match multiple suites. To run all t
 $ make converge PATTERN=centos-7
 ```
 
-The default version is 7.x. If you want to test 6.x or 5.x you can override it with the `VERSION` variable, for example: 
+The default version is 7.x. If you want to test 6.x you can override it with the `VERSION` variable, for example: 
 ```sh
 $ make converge VERSION=6.x PATTERN=oss-centos-7
 ```
@@ -387,7 +387,6 @@ These can either be set to a user declared in the file based realm, with admin p
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
 * ```es_enable_xpack```  Default `true`. Setting this to `false` will install the oss release of elasticsearch
-* ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 and < 6.0 this must be "5.x". For versions >= 6.0 this must be "6.x".
 * ```es_version``` (e.g. "6.3.0").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
@@ -473,7 +472,7 @@ To define proxy only for a particular plugin during its installation:
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
 * Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
-* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test the latest version of 6.x and 5.x on all supported platforms. 
+* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test the latest version of 7.x and 6.x on all supported platforms. 
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and Elasticsearch restarted where required.
 * Systemd is used for Ubuntu versions >= 15, Debian >=8, Centos >=7.  All other versions use init for service scripts.
 * In order to run x-pack tests a license file with security enabled is required. A trial license is appropriate. Set the environment variable `ES_XPACK_LICENSE_FILE` to the full path of the license file prior to running tests.
