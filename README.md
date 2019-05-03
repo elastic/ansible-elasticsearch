@@ -23,7 +23,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install elastic.elasticsearch,7.0.0
+ansible-galaxy install elastic.elasticsearch,7.0.1
 ```
 
 Then create your playbook yaml adding the role elasticsearch. By default, the user is only required to specify a unique es_instance_name per role application.  This should be unique per node. 
@@ -387,7 +387,7 @@ These can either be set to a user declared in the file based realm, with admin p
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
 * ```es_enable_xpack```  Default `true`. Setting this to `false` will install the oss release of elasticsearch
-* ```es_version``` (e.g. "6.3.0").
+* ```es_version``` (e.g. "7.0.0").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
