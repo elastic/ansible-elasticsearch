@@ -32,14 +32,15 @@ shared_examples 'xpack_upgrade::init' do |vars|
   end
 
   describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
-  if vars['es_major_version'] == '7.x'
-    it { should contain 'security.authc.realms.file.file1.order: 0' }
-    it { should contain 'security.authc.realms.native.native1.order: 1' }
-  else
-    it { should contain 'security.authc.realms.file1.order: 0' }
-    it { should contain 'security.authc.realms.file1.type: file' }
-    it { should contain 'security.authc.realms.native1.order: 1' }
-    it { should contain 'security.authc.realms.native1.type: native' } 
+    if vars['es_major_version'] == '7.x'
+      it { should contain 'security.authc.realms.file.file1.order: 0' }
+      it { should contain 'security.authc.realms.native.native1.order: 1' }
+    else
+      it { should contain 'security.authc.realms.file1.order: 0' }
+      it { should contain 'security.authc.realms.file1.type: file' }
+      it { should contain 'security.authc.realms.native1.order: 1' }
+      it { should contain 'security.authc.realms.native1.type: native' } 
+    end
   end
 
   #Test contents of role_mapping.yml
