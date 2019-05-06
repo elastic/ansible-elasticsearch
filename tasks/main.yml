@@ -1,5 +1,10 @@
 ---
+
 - set_fact: "es_major_version={{ es_version[0] }}.x"
+  when:
+      - not es_major_version
+  tags:
+      - always
 
 - name: os-specific vars
   include_vars: "{{ansible_os_family}}.yml"
