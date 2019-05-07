@@ -10,11 +10,19 @@
     es_instance_name: "master"
     es_data_dirs:
       - "/opt/elasticsearch/master"
-    es_config:
+    es_config_6x:
       http.port: 9200
+      transport.tcp.port: 9300
       node.data: false
       node.master: true
-      bootstrap.memory_lock: true
+      bootstrap.memory_lock: tru
+    es_config_7x:
+      http.port: 9200
+      transport.port: 9300
+      node.data: false
+      node.master: true
+      bootstrap.memory_lock: tru
+    es_config: "{{ es_config_7x if es_major_version == '7.x' else es_config_6x }}"
     es_enable_xpack: false
     es_scripts: true
     es_templates: true
