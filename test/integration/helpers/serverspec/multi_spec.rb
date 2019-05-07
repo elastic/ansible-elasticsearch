@@ -11,6 +11,11 @@ shared_examples 'multi::init' do |vars|
   describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
     it { should be_file }
     it { should contain 'http.port: 9201' }
+    if vars['es_major_version'] == '7.x'
+      it { should contain 'transport.port: 9301' }
+    else
+      it { should contain 'transport.tcp.port: 9301' }
+    end
     it { should contain 'node.data: true' }
     it { should contain 'node.master: false' }
     it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
