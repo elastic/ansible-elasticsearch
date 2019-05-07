@@ -20,7 +20,7 @@
     status_code: 200
     body_format: json
     body: "{{ lookup('file', item) }}"
-  when: load_templates.changed and es_start_service and not es_enable_xpack or not es_xpack_features is defined or "security" not in es_xpack_features
+  when: load_templates.changed and es_start_service and (not es_enable_xpack or not es_xpack_features is defined or "security" not in es_xpack_features)
   with_fileglob:
     - "{{ es_templates_fileglob | default('') }}"
   run_once: True
