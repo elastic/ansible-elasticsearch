@@ -30,6 +30,11 @@ shared_examples 'multi::init' do |vars|
   describe file('/etc/elasticsearch/master/elasticsearch.yml') do
     it { should be_file }
     it { should contain 'http.port: 9200' }
+    if vars['es_major_version'] == '7.x'
+      it { should contain 'transport.port: 9300' }
+    else
+      it { should contain 'transport.tcp.port: 9300' }
+    end
     it { should contain 'node.data: false' }
     it { should contain 'node.master: true' }
     it { should contain 'node.name: localhost-master' }
