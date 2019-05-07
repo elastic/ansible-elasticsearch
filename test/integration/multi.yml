@@ -18,7 +18,6 @@
       node.master: true
       bootstrap.memory_lock: true
     es_config_7x:
-      discovery.seed_hosts: "localhost:9300"
       http.port: 9200
       transport.port: 9300
       node.data: false
