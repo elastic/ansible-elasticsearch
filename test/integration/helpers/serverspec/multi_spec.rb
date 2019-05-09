@@ -11,16 +11,16 @@ shared_examples 'multi::init' do |vars|
   describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
     it { should be_file }
     it { should contain 'http.port: 9201' }
-    it { should contain 'transport.tcp.port: 9301' }
+    if vars['es_major_version'] == '7.x'
+      it { should contain 'transport.port: 9301' }
+    else
+      it { should contain 'transport.tcp.port: 9301' }
+    end
     it { should contain 'node.data: true' }
     it { should contain 'node.master: false' }
     it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
     it { should_not contain 'bootstrap.memory_lock: true' }
-    if vars['es_major_version'] == '6.x'
-      it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
-    else
-      it { should contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
-    end
+    it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
     it { should contain "path.data: /opt/elasticsearch/data-1/localhost-#{vars['es_instance_name']},/opt/elasticsearch/data-2/localhost-#{vars['es_instance_name']}" }
     it { should contain "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
   end
@@ -30,16 +30,16 @@ shared_examples 'multi::init' do |vars|
   describe file('/etc/elasticsearch/master/elasticsearch.yml') do
     it { should be_file }
     it { should contain 'http.port: 9200' }
-    it { should contain 'transport.tcp.port: 9300' }
+    if vars['es_major_version'] == '7.x'
+      it { should contain 'transport.port: 9300' }
+    else
+      it { should contain 'transport.tcp.port: 9300' }
+    end
     it { should contain 'node.data: false' }
     it { should contain 'node.master: true' }
     it { should contain 'node.name: localhost-master' }
     it { should contain 'bootstrap.memory_lock: true' }
-    if vars['es_major_version'] == '6.x'
-      it { should_not contain 'path.conf: /etc/elasticsearch/master' }
-    else
-      it { should contain 'path.conf: /etc/elasticsearch/master' }
-    end
+    it { should_not contain 'path.conf: /etc/elasticsearch/master' }
     it { should contain 'path.data: /opt/elasticsearch/master/localhost-master' }
     it { should contain 'path.logs: /var/log/elasticsearch/localhost-master' }
   end

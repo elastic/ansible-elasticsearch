@@ -2,16 +2,18 @@
 [![Build Status](https://img.shields.io/jenkins/s/https/devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master.svg)](https://devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master/)
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
-**THIS ROLE IS FOR 6.x, 5.x. FOR 2.x SUPPORT PLEASE USE THE 2.x BRANCH.**
+**THIS ROLE IS FOR 7.x & 6.x**
 
-Ansible role for 6.x/5.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
+Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
 
 * Ubuntu 14.04
 * Ubuntu 16.04
+* Ubuntu 18.04
 * Debian 8
+* Debian 9
 * CentOS 7
 
-The latest Elasticsearch versions of 6.x and 5.x are actively tested.  **Only Ansible versions > 2.4.3.0 are supported, as this is currently the only version tested.**
+The latest Elasticsearch versions of 7.x & 6.x are actively tested.  **Only Ansible versions > 2.4.3.0 are supported, as this is currently the only version tested.**
 
 ##### Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
@@ -21,7 +23,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install elastic.elasticsearch,6.6.0
+ansible-galaxy install elastic.elasticsearch,7.0.1
 ```
 
 Then create your playbook yaml adding the role elasticsearch. By default, the user is only required to specify a unique es_instance_name per role application.  This should be unique per node. 
@@ -91,9 +93,9 @@ The `PATTERN` is a kitchen pattern which can match multiple suites. To run all t
 $ make converge PATTERN=centos-7
 ```
 
-The default version is 6.x If you want to test 5.x you can override it with the `VERSION` variable to test 5.x
+The default version is 7.x. If you want to test 6.x you can override it with the `VERSION` variable, for example: 
 ```sh
-$ make converge VERSION=5.x PATTERN=oss-centos-7
+$ make converge VERSION=6.x PATTERN=oss-centos-7
 ```
 
 When you are finished testing you can clean up everything with
@@ -123,9 +125,9 @@ The following illustrates applying configuration parameters to an Elasticsearch 
     es_config:
       node.name: "node1"
       cluster.name: "custom-cluster"
-      discovery.zen.ping.unicast.hosts: "localhost:9301"
+      discovery.seed_hosts: "localhost:9301"
       http.port: 9201
-      transport.tcp.port: 9301
+      transport.port: 9301
       node.data: false
       node.master: true
       bootstrap.memory_lock: true
@@ -139,8 +141,8 @@ The following illustrates applying configuration parameters to an Elasticsearch 
 Whilst the role installs Elasticsearch with the default configuration parameters, the following should be configured to ensure a cluster successfully forms:
 
 * ```es_config['http.port']``` - the http port for the node
-* ```es_config['transport.tcp.port']``` - the transport port for the node
-* ```es_config['discovery.zen.ping.unicast.hosts']``` - the unicast discovery list, in the comma separated format ```"<host>:<port>,<host>:<port>"``` (typically the clusters dedicated masters)
+* ```es_config['transport.port']``` - the transport port for the node
+* ```es_config['discovery.seed_hosts']``` - the unicast discovery list, in the comma separated format ```"<host>:<port>,<host>:<port>"``` (typically the clusters dedicated masters)
 * ```es_config['network.host']``` - sets both network.bind_host and network.publish_host to the same host value. The network.bind_host setting allows to control the host different network components will bind on.  
 
 The network.publish_host setting allows to control the host the node will publish itself within the cluster so other nodes will be able to connect to it. 
@@ -163,9 +165,9 @@ A more complex example:
     es_config:
       node.name: "node1"
       cluster.name: "custom-cluster"
-      discovery.zen.ping.unicast.hosts: "localhost:9301"
+      discovery.seed_hosts: "localhost:9301"
       http.port: 9201
-      transport.tcp.port: 9301
+      transport.port: 9301
       node.data: false
       node.master: true
       bootstrap.memory_lock: true
@@ -177,7 +179,7 @@ A more complex example:
     es_plugins_reinstall: false
     es_api_port: 9201
     es_plugins:
-      - plugin: ingest-geoip
+      - plugin: ingest-attachment
         proxy_host: proxy.example.com
         proxy_port: 8080
 ```
@@ -204,9 +206,9 @@ An example of a two server deployment is shown below.  The first server holds th
     es_heap_size: "1g"
     es_config:
       cluster.name: "test-cluster"
-      discovery.zen.ping.unicast.hosts: "elastic02:9300"
+      discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      transport.tcp.port: 9300
+      transport.port: 9300
       node.data: false
       node.master: true
       bootstrap.memory_lock: false
@@ -215,7 +217,7 @@ An example of a two server deployment is shown below.  The first server holds th
     es_version_lock: false
     ansible_user: ansible
     es_plugins:
-     - plugin: ingest-geoip
+     - plugin: ingest-attachment
 
 - hosts: data_nodes
   roles:
@@ -226,9 +228,9 @@ An example of a two server deployment is shown below.  The first server holds th
       - "/opt/elasticsearch"
     es_config:
       cluster.name: "test-cluster"
-      discovery.zen.ping.unicast.hosts: "elastic02:9300"
+      discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      transport.tcp.port: 9300
+      transport.port: 9300
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
@@ -238,7 +240,7 @@ An example of a two server deployment is shown below.  The first server holds th
     ansible_user: ansible
     es_api_port: 9200
     es_plugins:
-      - plugin: ingest-geoip
+      - plugin: ingest-attachment
     
 - hosts: data_nodes
   roles:
@@ -247,9 +249,9 @@ An example of a two server deployment is shown below.  The first server holds th
     es_instance_name: "node2"
     es_api_port: 9201
     es_config:
-      discovery.zen.ping.unicast.hosts: "elastic02:9300"
+      discovery.seed_hosts: "elastic02:9300"
       http.port: 9201
-      transport.tcp.port: 9301
+      transport.port: 9301
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
@@ -260,7 +262,7 @@ An example of a two server deployment is shown below.  The first server holds th
     es_api_port: 9201
     ansible_user: ansible
     es_plugins:
-      - plugin: ingest-geoip
+      - plugin: ingest-attachment
 ```
 
 Parameters can additionally be assigned to hosts using the inventory file if desired.
@@ -385,8 +387,7 @@ These can either be set to a user declared in the file based realm, with admin p
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
 * ```es_enable_xpack```  Default `true`. Setting this to `false` will install the oss release of elasticsearch
-* ```es_major_version```  Should be consistent with es_version. For versions >= 5.0 and < 6.0 this must be "5.x". For versions >= 6.0 this must be "6.x".
-* ```es_version``` (e.g. "6.3.0").
+* ```es_version``` (e.g. "7.0.0").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
@@ -396,7 +397,7 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_plugins``` an array of plugin definitions e.g.:
   ```yaml
     es_plugins:
-      - plugin: ingest-geoip 
+      - plugin: ingest-attachment 
   ```
 * ```es_path_repo``` Sets the whitelist for allowing local back-up repositories
 * ```es_action_auto_create_index ``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
@@ -459,7 +460,7 @@ To define proxy only for a particular plugin during its installation:
 
 ```yaml
   es_plugins:
-    - plugin: ingest-geoip 
+    - plugin: ingest-attachment 
       proxy_host: proxy.example.com
       proxy_port: 8080
 ```
@@ -471,7 +472,7 @@ To define proxy only for a particular plugin during its installation:
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
 * Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
-* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test the latest version of 6.x and 5.x on all supported platforms. 
+* KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test the latest version of 7.x and 6.x on all supported platforms. 
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and Elasticsearch restarted where required.
 * Systemd is used for Ubuntu versions >= 15, Debian >=8, Centos >=7.  All other versions use init for service scripts.
 * In order to run x-pack tests a license file with security enabled is required. A trial license is appropriate. Set the environment variable `ES_XPACK_LICENSE_FILE` to the full path of the license file prior to running tests.

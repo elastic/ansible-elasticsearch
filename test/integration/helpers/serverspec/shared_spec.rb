@@ -43,32 +43,6 @@ shared_examples 'shared::init' do |vars|
           expect(values['enabled'] = enabled)
         end
       end
-      # X-Pack is no longer installed as a plugin in elasticsearch
-      if vars['es_major_version'] == '5.x'
-        describe file('/usr/share/elasticsearch/plugins/x-pack') do
-          it { should be_directory }
-          it { should be_owned_by vars['es_user'] }
-        end
-        describe file("/etc/elasticsearch/#{vars['es_instance_name']}/x-pack") do
-          it { should be_directory }
-          it { should be_owned_by vars['es_user'] }
-        end
-        describe 'x-pack-core plugin' do
-          it 'should be installed with the correct version' do
-            plugins = curl_json("#{es_api_url}/_nodes/plugins", username=username, password=password)
-            node, data = plugins['nodes'].first
-            version = 'plugin not found'
-            name = 'x-pack'
-
-            data['plugins'].each do |plugin|
-              if plugin['name'] == name
-                version = plugin['version']
-              end
-            end
-            expect(version).to eql(vars['es_version'])
-          end
-        end
-      end
     end
   end
   describe user(vars['es_user']) do
@@ -108,7 +82,11 @@ shared_examples 'shared::init' do |vars|
         template = curl_json("#{es_api_url}/_template/basic", username=username, password=password)
         expect(template.key?('basic'))
         expect(template['basic']['settings']['index']['number_of_shards']).to eq("1")
-        expect(template['basic']['mappings']['type1']['_source']['enabled']).to eq(false)
+        if vars['es_major_version'] == '7.x'
+          expect(template['basic']['mappings']['_source']['enabled']).to eq(false)
+        else
+          expect(template['basic']['mappings']['type1']['_source']['enabled']).to eq(false)
+        end
       end
     end
   end
@@ -159,11 +137,7 @@ shared_examples 'shared::init' do |vars|
   describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
     it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
     it { should contain 'cluster.name: elasticsearch' }
-    if vars['es_major_version'] == '6.x'
-      it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
-    else
-      it { should contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
-    end
+    it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
     its(:content) { should match "path.data: #{vars['data_dirs'].join(',')}" }
     its(:content) { should match "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
   end

@@ -14,6 +14,7 @@
     es_xpack_conf_subdir: ""
     es_repo_name: "{{ es_major_version }}"
     es_xpack_users_command: "elasticsearch-users"
+    es_package_name: "elasticsearch"
     es_other_package_name: "elasticsearch-oss"
     es_other_repo_name: "{{ 'oss-' + es_major_version }}"
     es_other_apt_url: "deb {{ es_repo_base }}/packages/{{ 'oss-' + es_major_version }}/apt stable main"

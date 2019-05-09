@@ -1,6 +1,6 @@
 VERSION:
+  - 7.x
   - 6.x
-  - 5.x
 OS:
   - ubuntu-1404
   - ubuntu-1604

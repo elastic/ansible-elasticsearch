@@ -11,8 +11,6 @@
     es_instance_name: "node1"
     es_config:
       http.port: 9200
-      transport.tcp.port: 9300
-      discovery.zen.ping.unicast.hosts: "localhost:9300"
     es_xpack_custom_url: "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-{{ es_version }}.zip"
     es_heap_size: 2g
     es_enable_xpack: true
