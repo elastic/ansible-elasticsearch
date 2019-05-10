@@ -35,7 +35,7 @@ action.auto_create_index: false
 action.auto_create_index: {{ es_action_auto_create_index }}
 {% endif %}
 
-{% if es_enable_xpack %}
+{% if es_enable_xpack and es_xpack_features is defined %}
 {% if not "security" in es_xpack_features %}
 xpack.security.enabled: false
 {% endif %}
@@ -71,5 +71,5 @@ xpack.notification.email:
         {% if es_mail_config['require_auth'] == true %}
         user: {{ es_mail_config['user'] }}
         password: {{ es_mail_config['pass'] }}
-        {% endif %}  
+        {% endif %}
 {% endif %}

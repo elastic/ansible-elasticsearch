@@ -35,12 +35,14 @@ shared_examples 'shared::init' do |vars|
       it 'xpack should be activated' do
         expect(curl_json("#{es_api_url}/_license", username=username, password=password)['license']['status']).to eq('active')
       end
-      features = curl_json("#{es_api_url}/_xpack", username=username, password=password)
-      curl_json("#{es_api_url}/_xpack", username=username, password=password)['features'].each do |feature,values|
-        enabled = vars['es_xpack_features'].include? feature
-		status = if enabled then 'enabled' else 'disabled' end
-		it "the xpack feature '#{feature}' to be #{status}" do
-          expect(values['enabled'] = enabled)
+      if vars.key?('es_xpack_features')
+        features = curl_json("#{es_api_url}/_xpack", username=username, password=password)
+        curl_json("#{es_api_url}/_xpack", username=username, password=password)['features'].each do |feature,values|
+          enabled = vars['es_xpack_features'].include? feature
+        		status = if enabled then 'enabled' else 'disabled' end
+        		it "the xpack feature '#{feature}' to be #{status}" do
+              expect(values['enabled'] = enabled)
+            end
         end
       end
     end
