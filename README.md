@@ -136,7 +136,6 @@ The following illustrates applying configuration parameters to an Elasticsearch 
       node.data: false
       node.master: true
       bootstrap.memory_lock: true
-    es_scripts: false
     es_templates: false
     es_version_lock: false
     es_heap_size: 1g
@@ -176,7 +175,6 @@ A more complex example:
       node.data: false
       node.master: true
       bootstrap.memory_lock: true
-    es_scripts: false
     es_templates: false
     es_version_lock: false
     es_heap_size: 1g
@@ -196,7 +194,7 @@ If the node is deployed to bind on either a different host or port, these must b
 
 ### Multi Node Server Installations
 
-The application of the elasticsearch role results in the installation of a node on a host.
+The application of the elasticsearch role results in the installation of a node on a host. Specifying the role multiple times for a host therefore results in the installation of multiple nodes for the host.
 
 An example of a three server deployment is shown below.  The first server holds the master and is thus declared first.  Whilst not mandatory, this is recommended in any multi node cluster configuration.  The two others servers hosts data nodes.
 
@@ -218,7 +216,6 @@ An example of a three server deployment is shown below.  The first server holds 
       node.data: false
       node.master: true
       bootstrap.memory_lock: false
-    es_scripts: false
     es_templates: false
     es_version_lock: false
     es_plugins:
@@ -240,7 +237,6 @@ An example of a three server deployment is shown below.  The first server holds 
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
-    es_scripts: false
     es_templates: false
     es_version_lock: false
     es_api_port: 9200
@@ -260,7 +256,6 @@ An example of a three server deployment is shown below.  The first server holds 
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
-    es_scripts: false
     es_templates: false
     es_version_lock: false
     es_api_port: 9200
@@ -448,9 +443,7 @@ controlled by the following parameters:
 * ```es_restart_on_change``` - defaults to true.  If false, changes will not result in Elasticsearch being restarted.
 * ```es_plugins_reinstall``` - defaults to false.  If true, all currently installed plugins will be removed from a node.  Listed plugins will then be re-installed.
 
-This role ships with sample scripts and templates located in the [files/scripts/](files/scripts) and [files/templates/](files/templates) directories, respectively. These variables are used with the Ansible [with_fileglob](http://docs.ansible.com/ansible/playbooks_loops.html#id4) loop. When setting the globs, be sure to use an absolute path.
-* ```es_scripts_fileglob``` - defaults to `<role>/files/scripts/`.
-* ```es_templates_fileglob``` - defaults to `<role>/files/templates/`.
+This role ships with sample templates located in the [files/templates/](files/templates) directory. `es_templates_fileglob` variable (defaults to `<role>/files/templates/`) is used with the Ansible [with_fileglob](http://docs.ansible.com/ansible/playbooks_loops.html#id4) loop. When setting the globs, be sure to use an absolute path.
 
 ### Proxy
 
