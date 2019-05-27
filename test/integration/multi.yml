@@ -25,7 +25,6 @@
       bootstrap.memory_lock: true
     es_config: "{{ es_config_7x if es_major_version == '7.x' else es_config_6x }}"
     es_enable_xpack: false
-    es_scripts: true
     es_templates: true
     es_heap_size: "1g"
     es_api_port: 9200
@@ -40,7 +39,6 @@
     - elasticsearch
   vars:
     es_enable_xpack: false
-    es_scripts: true
     es_templates: true
     es_heap_size: "1g"
     es_api_port: 9201

@@ -39,12 +39,6 @@
   tags:
       - config
 
-- name: include elasticsearch-scripts.yml
-  include: elasticsearch-scripts.yml
-  when: es_scripts
-  tags:
-      - scripts
-
 - name: include elasticsearch-plugins.yml
   include: elasticsearch-plugins.yml
   when: es_plugins is defined or es_plugins_reinstall
