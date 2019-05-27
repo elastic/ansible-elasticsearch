@@ -95,14 +95,6 @@ shared_examples 'shared::init' do |vars|
     its(:content) { should match '' }
   end
 
-  describe file('/etc/elasticsearch/elasticsearch.yml') do
-    it { should_not exist }
-  end
-
-  describe file('/etc/elasticsearch/logging.yml') do
-    it { should_not exist }
-  end
-
   if vars.key?('es_plugins')
     vars['es_plugins'].each do |plugin|
       name = plugin['plugin']
@@ -125,8 +117,8 @@ shared_examples 'shared::init' do |vars|
     it { should contain "node.name: localhost" }
     it { should contain 'cluster.name: elasticsearch' }
     it { should_not contain "path.conf: /etc/elasticsearch" }
-    its(:content) { should match "path.data: #{vars['data_dir_'].join(',')}" }
-    its(:content) { should match "path.logs: /var/log/elasticsearch/localhost" }
+    its(:content) { should match "path.data: #{vars['data_dirs_'].join(',')}" }
+    its(:content) { should match "path.logs: /var/log/elasticsearch" }
   end
 
   if vars['es_use_repository']
