@@ -7,8 +7,8 @@ shared_examples 'xpack_upgrade::init' do |vars|
     it { should contain "node.name: localhost" }
     it { should contain 'cluster.name: elasticsearch' }
     it { should_not contain "path.conf: /etc/elasticsearch" }
-    it { should contain "path.data: /var/lib/elasticsearch/localhost" }
-    it { should contain "path.logs: /var/log/elasticsearch/localhost" }
+    it { should contain "path.data: /var/lib/elasticsearch" }
+    it { should contain "path.logs: /var/log/elasticsearch" }
   end
 
   #Test users file, users_roles and roles.yml
