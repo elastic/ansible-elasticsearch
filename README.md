@@ -31,7 +31,7 @@ Create your Ansible playbook with your own tasks, and include the role elasticse
 ansible-galaxy install elastic.elasticsearch,7.0.1
 ```
 
-Then create your playbook yaml adding the role elasticsearch. By default, the user is only required to specify a unique `es_instance_name` per role application.  This should be unique per node.
+Then create your playbook yaml adding the role elasticsearch.
 The application of the elasticsearch role results in the installation of a node on a host.
 
 The simplest configuration therefore consists of:
@@ -41,8 +41,6 @@ The simplest configuration therefore consists of:
   hosts: localhost
   roles:
     - role: elastic.elasticsearch
-      vars:
-        es_instance_name: "node1"
 ```
 
 The above installs a single node 'node1' on the hosts 'localhost'.
@@ -123,7 +121,6 @@ The following illustrates applying configuration parameters to an Elasticsearch 
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_instance_name: "node1"
     es_data_dirs:
       - "/opt/elasticsearch/data"
     es_log_dir: "/opt/elasticsearch/logs"
@@ -162,7 +159,6 @@ A more complex example:
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_instance_name: "node1"
     es_data_dirs:
       - "/opt/elasticsearch/data"
     es_log_dir: "/opt/elasticsearch/logs"
@@ -206,7 +202,6 @@ An example of a three server deployment is shown below.  The first server holds 
     - role: elastic.elasticsearch
   vars:
     ansible_user: ansible
-    es_instance_name: "node1"
     es_heap_size: "1g"
     es_config:
       cluster.name: "test-cluster"
@@ -226,7 +221,6 @@ An example of a three server deployment is shown below.  The first server holds 
     - role: elastic.elasticsearch
   vars:
     ansible_user: ansible
-    es_instance_name: "node2"
     es_data_dirs:
       - "/opt/elasticsearch"
     es_config:
@@ -248,7 +242,6 @@ An example of a three server deployment is shown below.  The first server holds 
     - role: elastic.elasticsearch
   vars:
     ansible_user: ansible
-    es_instance_name: "node3"
     es_config:
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
@@ -434,12 +427,6 @@ To configure X-pack to send mail, the following configuration can be added to th
 
 Both ```es_user_id``` and ```es_group_id``` must be set for the user and group ids to be set.
 
-By default, each node on a host will be installed to use unique pid, plugin, work, data and log directories.  These directories are created, using the instance and host name, beneath default locations ]
-controlled by the following parameters:
-
-* ```es_pid_dir``` - defaults to "/var/run/elasticsearch".
-* ```es_data_dirs``` - defaults to "/var/lib/elasticsearch".  This can be a list or comma separated string e.g. ["/opt/elasticsearch/data-1","/opt/elasticsearch/data-2"] or "/opt/elasticsearch/data-1,/opt/elasticsearch/data-2"
-* ```es_log_dir``` - defaults to "/var/log/elasticsearch".
 * ```es_restart_on_change``` - defaults to true.  If false, changes will not result in Elasticsearch being restarted.
 * ```es_plugins_reinstall``` - defaults to false.  If true, all currently installed plugins will be removed from a node.  Listed plugins will then be re-installed.
 
@@ -467,7 +454,6 @@ To define proxy only for a particular plugin during its installation:
 
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
-* Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
 * KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test the latest version of 7.x and 6.x on all supported platforms.
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and Elasticsearch restarted where required.
 * In order to run x-pack tests a license file with security enabled is required. A trial license is appropriate. Set the environment variable `ES_XPACK_LICENSE_FILE` to the full path of the license file prior to running tests.

@@ -4,7 +4,7 @@
 
 - name: Check if old users file exists
   stat:
-    path: '{{ conf_dir }}/x-pack/users'
+    path: '{{ es_conf_dir }}/x-pack/users'
   register: old_users_file
   check_mode: no
 
@@ -12,14 +12,14 @@
   copy:
     remote_src: yes
     force: no # only copy it if the new path doesn't exist yet
-    src: "{{ conf_dir }}/x-pack/users"
-    dest: "{{ conf_dir }}{{ es_xpack_conf_subdir }}/users"
+    src: "{{ es_conf_dir }}/x-pack/users"
+    dest: "{{ es_conf_dir }}{{ es_xpack_conf_subdir }}/users"
   when: old_users_file.stat.exists
 
 - name: Create the users file if it doesn't exist
   copy:
     content: ""
-    dest: "{{ conf_dir }}{{ es_xpack_conf_subdir }}/users"
+    dest: "{{ es_conf_dir }}{{ es_xpack_conf_subdir }}/users"
     force: no # this ensures it only creates it if it does not exist
     group: "{{ es_group }}"
     owner: "{{ es_user }}"
@@ -28,7 +28,7 @@
 #List current users
 - name: List Users
   become: yes
-  shell: cat {{conf_dir}}{{es_xpack_conf_subdir}}/users | awk -F':' '{print $1}'
+  shell: cat {{ es_conf_dir }}{{es_xpack_conf_subdir}}/users | awk -F':' '{print $1}'
   register: current_file_users
   when: manage_file_users
   changed_when: False
@@ -46,8 +46,8 @@
   with_items: "{{users_to_remove | default([])}}"
   when: manage_file_users
   environment:
-    CONF_DIR: "{{ conf_dir }}"
-    ES_PATH_CONF: "{{ conf_dir }}"
+    CONF_DIR: "{{ es_conf_dir }}"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
     ES_HOME: "{{es_home}}"
 
 - name: set fact users_to_add
@@ -63,8 +63,8 @@
   when: manage_file_users
   no_log: True
   environment:
-    CONF_DIR: "{{ conf_dir }}"
-    ES_PATH_CONF: "{{ conf_dir }}"
+    CONF_DIR: "{{ es_conf_dir }}"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
     ES_HOME: "{{es_home}}"
 
 #Set passwords for all users declared - Required as the useradd will not change existing user passwords
@@ -78,8 +78,8 @@
   changed_when: False
   no_log: True
   environment:
-    CONF_DIR: "{{ conf_dir }}"
-    ES_PATH_CONF: "{{ conf_dir }}"
+    CONF_DIR: "{{ es_conf_dir }}"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
     ES_HOME: "{{es_home}}"
 
 - name: set fact users_roles
@@ -89,16 +89,16 @@
 #Copy Roles files
 - name: Copy roles.yml File for Instance
   become: yes
-  template: src=security/roles.yml.j2 dest={{conf_dir}}{{es_xpack_conf_subdir}}/roles.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=security/roles.yml.j2 dest={{ es_conf_dir }}{{es_xpack_conf_subdir}}/roles.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   when: es_roles is defined and es_roles.file is defined
 
 #Overwrite users_roles file
 - name: Copy User Roles
   become: yes
-  template: src=security/users_roles.j2 dest={{conf_dir}}{{es_xpack_conf_subdir}}/users_roles mode=0644 force=yes
+  template: src=security/users_roles.j2 dest={{ es_conf_dir }}{{es_xpack_conf_subdir}}/users_roles mode=0644 force=yes
   when: manage_file_users and users_roles | length > 0
 
 #Set permission on security directory. E.g. if 2 nodes are installed on the same machine, the second node will not get the users file created at install, causing the files being created at es_users call and then having the wrong Permissions.
 - name: Set Security Directory Permissions Recursive
   become: yes
-  file: state=directory path={{conf_dir}}{{es_xpack_conf_subdir}}/ owner={{ es_user }} group={{ es_group }} recurse=yes
+  file: state=directory path={{ es_conf_dir }}{{es_xpack_conf_subdir}}/ owner={{ es_user }} group={{ es_group }} recurse=yes

@@ -6,7 +6,6 @@
   roles:
     - elasticsearch
   vars:
-    es_instance_name: "node1"
     es_api_port: 9200
     es_config_6x:
       http.port: 9200
@@ -122,7 +121,6 @@
     - elasticsearch
   vars:
     es_api_port: 9200
-    es_instance_name: "node1"
     es_config_6x:
       http.port: 9200
       xpack.security.authc.realms.file1.order: 0

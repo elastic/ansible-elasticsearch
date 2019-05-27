@@ -6,70 +6,31 @@
   become: yes
   file: path={{ item }} state=directory owner={{ es_user }} group={{ es_group }}
   with_items:
-    - "{{pid_dir}}"
-    - "{{log_dir}}"
-    - "{{conf_dir}}"
-
-- name: Create Data Directories
-  become: yes
-  file: path={{ item }} state=directory owner={{ es_user }} group={{ es_group }}
-  with_items:
-    - "{{data_dirs}}"
+    - "{{ es_pid_dir }}"
+    - "{{ es_log_dir }}"
+    - "{{ es_conf_dir }}"
+    - "{{ es_data_dirs }}"
 
 #Copy the config template
 - name: Copy Configuration File
   become: yes
-  template: src=elasticsearch.yml.j2 dest={{conf_dir}}/elasticsearch.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=elasticsearch.yml.j2 dest={{ es_conf_dir }}/elasticsearch.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   register: system_change
   notify: restart elasticsearch
 
-#Copy the instance specific default file
-- name: Copy Default File for Instance
+#Copy the default file
+- name: Copy Default File
   become: yes
-  template: src=elasticsearch.j2 dest={{instance_default_file}} mode=0644 force=yes
+  template: src=elasticsearch.j2 dest={{ default_file }} mode=0644 force=yes
   notify: restart elasticsearch
 
 #Copy the logging.yml
-- name: Copy log4j2.properties File for Instance
+- name: Copy log4j2.properties File
   become: yes
-  template: src={{es_config_log4j2}} dest={{conf_dir}}/log4j2.properties owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src={{es_config_log4j2}} dest={{ es_conf_dir }}/log4j2.properties owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   notify: restart elasticsearch
 
-- name: Copy jvm.options File for Instance
+- name: Copy jvm.options File
   become: yes
-  template: src=jvm.options.j2 dest={{conf_dir}}/jvm.options owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=jvm.options.j2 dest={{ es_conf_dir }}/jvm.options owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   notify: restart elasticsearch
-
-#Clean up un-wanted package scripts to avoid confusion
-
-- name: Create empty default environment file
-  become: yes
-  changed_when: False
-  copy:
-    dest: /etc/default/elasticsearch
-    content: ''
-  when: ansible_os_family == 'Debian'
-
-- name: Create empty default environment file
-  become: yes
-  changed_when: False
-  copy:
-    dest: /etc/sysconfig/elasticsearch
-    content: ''
-  when: ansible_os_family == 'RedHat'
-
-- name: Delete Default Configuration File
-  become: yes
-  file: dest=/etc/elasticsearch/elasticsearch.yml state=absent
-
-- name: Delete Default Logging File
-  become: yes
-  file: dest=/etc/elasticsearch/logging.yml state=absent
-
-- name: Delete Default Logging File
-  become: yes
-  file: dest=/etc/elasticsearch/log4j2.properties state=absent
-
-- name: Delete Default JVM Options File
-  become: yes
-  file: dest=/etc/elasticsearch/jvm.options state=absent

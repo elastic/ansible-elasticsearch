@@ -10,9 +10,9 @@
   check_mode: no
   ignore_errors: yes
   environment:
-    CONF_DIR: "{{ conf_dir }}"
-    ES_PATH_CONF: "{{ conf_dir }}"
-    ES_INCLUDE: "{{ instance_default_file }}"
+    CONF_DIR: "{{ es_conf_dir }}"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
+    ES_INCLUDE: "{{ default_file }}"
 
 
 #Remove X-Pack if installed and its not been requested or the ES version has changed
@@ -25,9 +25,9 @@
   when: x_pack_installed.rc == 0 and (not es_enable_xpack or es_version_changed)
   notify: restart elasticsearch
   environment:
-    CONF_DIR: "{{ conf_dir }}"
-    ES_PATH_CONF: "{{ conf_dir }}"
-    ES_INCLUDE: "{{ instance_default_file }}"
+    CONF_DIR: "{{ es_conf_dir }}"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
+    ES_INCLUDE: "{{ default_file }}"
 
 
 #Install plugin if not installed, or the es version has changed (so removed above), and its been requested
@@ -44,9 +44,9 @@
   when: (x_pack_installed.rc == 1 or es_version_changed) and (es_enable_xpack and es_xpack_custom_url is defined)
   notify: restart elasticsearch
   environment:
-    CONF_DIR: "{{ conf_dir }}"
-    ES_PATH_CONF: "{{ conf_dir }}"
-    ES_INCLUDE: "{{ instance_default_file }}"
+    CONF_DIR: "{{ es_conf_dir }}"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
+    ES_INCLUDE: "{{ default_file }}"
 
 - name: Delete x-pack zip file
   file: dest=/tmp/x-pack-{{ es_version }}.zip state=absent
@@ -62,7 +62,7 @@
   when: (x_pack_installed.rc == 1 or es_version_changed) and (es_enable_xpack and es_xpack_custom_url is not defined)
   notify: restart elasticsearch
   environment:
-    CONF_DIR: "{{ conf_dir }}"
-    ES_PATH_CONF: "{{ conf_dir }}"
-    ES_INCLUDE: "{{ instance_default_file }}"
+    CONF_DIR: "{{ es_conf_dir }}"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
+    ES_INCLUDE: "{{ default_file }}"
     ES_JAVA_OPTS: "{% if es_proxy_host is defined and es_proxy_host != '' %}-Dhttp.proxyHost={{ es_proxy_host }} -Dhttp.proxyPort={{ es_proxy_port }} -Dhttps.proxyHost={{ es_proxy_host }} -Dhttps.proxyPort={{ es_proxy_port }}{% endif %}"

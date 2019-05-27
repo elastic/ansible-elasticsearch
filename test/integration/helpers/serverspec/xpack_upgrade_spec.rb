@@ -3,22 +3,22 @@ require 'json'
 vars = JSON.parse(File.read('/tmp/vars.json'))
 
 shared_examples 'xpack_upgrade::init' do |vars|
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
-    it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
+  describe file("/etc/elasticsearch/elasticsearch.yml") do
+    it { should contain "node.name: localhost" }
     it { should contain 'cluster.name: elasticsearch' }
-    it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
-    it { should contain "path.data: /var/lib/elasticsearch/localhost-#{vars['es_instance_name']}" }
-    it { should contain "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
+    it { should_not contain "path.conf: /etc/elasticsearch" }
+    it { should contain "path.data: /var/lib/elasticsearch/localhost" }
+    it { should contain "path.logs: /var/log/elasticsearch/localhost" }
   end
 
   #Test users file, users_roles and roles.yml
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}#{vars['es_xpack_conf_subdir']}/users_roles") do
+  describe file("/etc/elasticsearch/#{vars['es_xpack_conf_subdir']}/users_roles") do
     it { should be_owned_by 'elasticsearch' }
     it { should contain 'admin:es_admin' }
     it { should contain 'power_user:testUser' }
   end
 
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}#{vars['es_xpack_conf_subdir']}/users") do
+  describe file("/etc/elasticsearch/#{vars['es_xpack_conf_subdir']}/users") do
     it { should be_owned_by 'elasticsearch' }
     it { should contain 'testUser:' }
     it { should contain 'es_admin:' }
@@ -31,7 +31,7 @@ shared_examples 'xpack_upgrade::init' do |vars|
     end
   end
 
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
+  describe file("/etc/elasticsearch/elasticsearch.yml") do
     if vars['es_major_version'] == '7.x'
       it { should contain 'security.authc.realms.file.file1.order: 0' }
       it { should contain 'security.authc.realms.native.native1.order: 1' }
@@ -39,12 +39,12 @@ shared_examples 'xpack_upgrade::init' do |vars|
       it { should contain 'security.authc.realms.file1.order: 0' }
       it { should contain 'security.authc.realms.file1.type: file' }
       it { should contain 'security.authc.realms.native1.order: 1' }
-      it { should contain 'security.authc.realms.native1.type: native' } 
+      it { should contain 'security.authc.realms.native1.type: native' }
     end
   end
 
   #Test contents of role_mapping.yml
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}#{vars['es_xpack_conf_subdir']}/role_mapping.yml") do
+  describe file("/etc/elasticsearch/#{vars['es_xpack_conf_subdir']}/role_mapping.yml") do
     it { should be_owned_by 'elasticsearch' }
     it { should contain 'power_user:' }
     it { should contain '- cn=admins,dc=example,dc=com' }
