@@ -19,7 +19,7 @@
 
   - name: stop elasticsearch
     service:
-      name: '{{ instance_init_script | basename }}'
+      name: 'elasticsearch'
       state: stopped
     when: elasticsearch_package.stdout == 'install ok installed'
 

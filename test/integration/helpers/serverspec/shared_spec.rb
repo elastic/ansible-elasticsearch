@@ -100,9 +100,6 @@ shared_examples 'shared::init' do |vars|
       it { should be_owned_by 'elasticsearch' }
     end
   end
-  describe file('/etc/init.d/elasticsearch') do
-    it { should_not exist }
-  end
 
   describe file(family['defaults_path']) do
     its(:content) { should match '' }
