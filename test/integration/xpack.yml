@@ -14,7 +14,3 @@
     es_xpack_custom_url: "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-{{ es_version }}.zip"
     es_heap_size: 2g
     es_enable_xpack: true
-    es_xpack_features:
-      - monitoring
-      - graph
-      - ml
