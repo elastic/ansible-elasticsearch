@@ -3,14 +3,6 @@ require 'json'
 vars = JSON.parse(File.read('/tmp/vars.json'))
 
 shared_examples 'xpack_upgrade::init' do |vars|
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
-    it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
-    it { should contain 'cluster.name: elasticsearch' }
-    it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
-    it { should contain "path.data: /var/lib/elasticsearch/localhost-#{vars['es_instance_name']}" }
-    it { should contain "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
-  end
-
   #Test users file, users_roles and roles.yml
   describe file("/etc/elasticsearch/#{vars['es_instance_name']}#{vars['es_xpack_conf_subdir']}/users_roles") do
     it { should be_owned_by 'elasticsearch' }
@@ -39,7 +31,7 @@ shared_examples 'xpack_upgrade::init' do |vars|
       it { should contain 'security.authc.realms.file1.order: 0' }
       it { should contain 'security.authc.realms.file1.type: file' }
       it { should contain 'security.authc.realms.native1.order: 1' }
-      it { should contain 'security.authc.realms.native1.type: native' } 
+      it { should contain 'security.authc.realms.native1.type: native' }
     end
   end
 

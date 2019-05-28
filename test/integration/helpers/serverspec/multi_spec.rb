@@ -16,13 +16,7 @@ shared_examples 'multi::init' do |vars|
     else
       it { should contain 'transport.tcp.port: 9301' }
     end
-    it { should contain 'node.data: true' }
-    it { should contain 'node.master: false' }
-    it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
     it { should_not contain 'bootstrap.memory_lock: true' }
-    it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
-    it { should contain "path.data: /opt/elasticsearch/data-1/localhost-#{vars['es_instance_name']},/opt/elasticsearch/data-2/localhost-#{vars['es_instance_name']}" }
-    it { should contain "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
   end
 
 
