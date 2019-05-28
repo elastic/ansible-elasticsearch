@@ -64,17 +64,6 @@ shared_examples 'multi::init' do |vars|
     end
   end
 
-  #Confirm scripts are on both nodes
-  describe file('/etc/elasticsearch/master/scripts') do
-    it { should be_directory }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
-  describe file('/etc/elasticsearch/master/scripts/calculate-score.groovy') do
-    it { should be_file }
-    it { should be_owned_by 'elasticsearch' }
-  end
-
   #Confirm that the data directory has only been set for the first node
   describe file('/opt/elasticsearch/master/localhost-master') do
     it { should be_directory }
