@@ -90,16 +90,6 @@ shared_examples 'shared::init' do |vars|
       end
     end
   end
-  if vars['es_scripts']
-    describe file("/etc/elasticsearch/#{vars['es_instance_name']}/scripts") do
-      it { should be_directory }
-      it { should be_owned_by 'elasticsearch' }
-    end
-    describe file("/etc/elasticsearch/#{vars['es_instance_name']}/scripts/calculate-score.groovy") do
-      it { should be_file }
-      it { should be_owned_by 'elasticsearch' }
-    end
-  end
   describe file('/etc/init.d/elasticsearch') do
     it { should_not exist }
   end

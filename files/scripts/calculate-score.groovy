@@ -1,1 +1,0 @@
-log(_score * 2) + my_modifier
