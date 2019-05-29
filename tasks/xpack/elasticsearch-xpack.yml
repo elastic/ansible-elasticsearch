@@ -10,6 +10,7 @@
 #Security configuration
 - name: include security/elasticsearch-security.yml
   include: security/elasticsearch-security.yml
+  when: es_enable_xpack
 
 #Add any feature specific configuration here
 - name: Set Plugin Directory Permissions

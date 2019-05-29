@@ -7,14 +7,11 @@
 - name: Ensure x-pack conf directory exists (file)
   file: path={{ conf_dir }}{{ es_xpack_conf_subdir }} state=directory owner={{ es_user }} group={{ es_group }}
   changed_when: False
-  when:
-    - es_enable_xpack
-    - (es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined) or (es_role_mapping is defined)
+  when: (es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined) or (es_role_mapping is defined)
 
 #-----------------------------Create Bootstrap User-----------------------------------
 ### START BLOCK elasticsearch keystore ###
 - name: create the elasticsearch keystore
-  when: es_enable_xpack
   block:
   - name: create the keystore if it doesn't exist yet
     become: yes
@@ -48,9 +45,7 @@
 #-----------------------------FILE BASED REALM----------------------------------------
 
 - include: elasticsearch-security-file.yml
-  when:
-    - es_enable_xpack
-    - (es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined)
+  when: (es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined)
 
 #-----------------------------ROLE MAPPING ----------------------------------------
 
@@ -67,4 +62,3 @@
   become: yes
   file: path={{ conf_dir }}/security state=directory owner={{ es_user }} group={{ es_group }}
   changed_when: False
-  when: es_enable_xpack
