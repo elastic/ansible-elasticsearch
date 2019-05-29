@@ -272,14 +272,15 @@ ansible-playbook -i hosts ./your-playbook.yml
 
 ### Installing X-Pack Features
 
-X-Pack features, such as Security, are supported. This feature is currently experimental.
+X-Pack features, such as Security, are supported.
 
-The parameter `es_xpack_features` by default enables all features i.e. it defaults to ["alerting","monitoring","graph","security","ml"]
+The parameter `es_xpack_features` allows to list xpack features to install (example: `["alerting","monitoring","graph","security","ml"]`).
+When the list is empty, it install all features available with the current licence.
 
 The following additional parameters allow X-Pack to be configured:
 
-* ```es_message_auth_file``` System Key field to allow message authentication. This file should be placed in the 'files' directory.
 * ```es_xpack_custom_url``` Url from which X-Pack can be downloaded. This can be used for installations in isolated environments where the elastic.co repo is not accessible. e.g. ```es_xpack_custom_url: "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-5.5.1.zip"```
+
 * ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/x-pack/current/mapping-roles.html)
 
 
