@@ -399,7 +399,7 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_action_auto_create_index ``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
      es_action_auto_create_index: '[".watches", ".triggered_watches", ".watcher-history-*"]'
 * ```es_allow_downgrades``` For development purposes only. (true or false (default) )
-* ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
+* ```es_java_install``` If set to true, Java will be installed. (false (default for 7.x) or true (default for 6.x))
 * ```update_java``` Updates Java to the latest version. (true or false (default))
 * ```es_max_map_count``` maximum number of VMA (Virtual Memory Areas) a process can own. Defaults to 262144.
 * ```es_max_open_files``` the maximum file descriptor number that can be opened by this process. Defaults to 65536.
