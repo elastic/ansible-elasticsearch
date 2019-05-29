@@ -13,7 +13,7 @@ Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedH
 * Debian 9
 * CentOS 7
 
-The latest Elasticsearch versions of 7.x & 6.x are actively tested.  **Only Ansible versions > 2.4.3.0 are supported, as this is currently the only version tested.**
+The latest Elasticsearch versions of 7.x & 6.x are actively tested.
 
 ##### Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
