@@ -16,7 +16,6 @@
       xpack.security.authc.realms.native1.type: native
     es_config_7x:
       http.port: 9200
-      xpack.security.enabled: True
       xpack.security.authc.realms.file.file1.order: 0
       xpack.security.authc.realms.native.native1.order: 1
     es_config: "{{ es_config_7x if es_major_version == '7.x' else es_config_6x }}"
@@ -33,7 +32,6 @@
       - alerting
     es_api_basic_auth_username: elastic
     es_api_basic_auth_password: changeme
-    es_message_auth_file: system_key
     es_role_mapping:
       power_user:
         - "cn=admins,dc=example,dc=com"
@@ -131,7 +129,6 @@
       xpack.security.authc.realms.native1.type: native
     es_config_7x:
       http.port: 9200
-      xpack.security.enabled: True
       xpack.security.authc.realms.file.file1.order: 0
       xpack.security.authc.realms.native.native1.order: 1
     es_config: "{{ es_config_7x if es_major_version == '7.x' else es_config_6x }}"

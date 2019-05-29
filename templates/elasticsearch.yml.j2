@@ -35,26 +35,8 @@ action.auto_create_index: false
 action.auto_create_index: {{ es_action_auto_create_index }}
 {% endif %}
 
-{% if es_enable_xpack %}
-{% if not "security" in es_xpack_features %}
-xpack.security.enabled: false
-{% endif %}
-
-{% if not "monitoring" in es_xpack_features %}
-xpack.monitoring.enabled: false
-{% endif %}
-
-{% if not "alerting" in es_xpack_features %}
-xpack.watcher.enabled: false
-{% endif %}
-
-{% if not "ml" in es_xpack_features %}
-xpack.ml.enabled: false
-{% endif %}
-
-{% if not "graph" in es_xpack_features %}
-xpack.graph.enabled: false
-{% endif %}
+{% if es_enable_xpack and es_api_basic_auth_username is defined and es_api_basic_auth_password is defined %}
+xpack.security.enabled: true
 {% endif %}
 
 {% if es_mail_config is defined %}
@@ -71,5 +53,5 @@ xpack.notification.email:
         {% if es_mail_config['require_auth'] == true %}
         user: {{ es_mail_config['user'] }}
         password: {{ es_mail_config['pass'] }}
-        {% endif %}  
+        {% endif %}
 {% endif %}

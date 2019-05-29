@@ -20,8 +20,8 @@
   vars:
     es_instance_name: "node1"
     es_enable_xpack: true
-    es_api_basic_auth_username: elastic
-    es_api_basic_auth_password: changeme
     es_heap_size: "1g"
     es_xpack_features:
-      - security
+      - monitoring
+      - graph
+      - ml

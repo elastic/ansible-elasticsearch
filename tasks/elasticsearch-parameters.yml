@@ -20,7 +20,10 @@
 #Check if working with security we have an es_api_basic_auth_username and es_api_basic_auth_username - otherwise any http calls wont work
 - name: fail when api credentials are not declared when using security
   fail: msg="Enabling security requires an es_api_basic_auth_username and es_api_basic_auth_password to be provided to allow cluster operations"
-  when: es_enable_xpack and ("security" in es_xpack_features) and es_api_basic_auth_username is not defined and es_api_basic_auth_password is not defined
+  when:
+    - es_enable_xpack and "security" in es_xpack_features
+    - es_api_basic_auth_username is not defined
+    - es_api_basic_auth_password is not defined
 
 - name: set fact file_reserved_users
   set_fact: file_reserved_users={{ es_users.file.keys() | intersect (reserved_xpack_users) }}

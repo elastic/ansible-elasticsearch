@@ -7,14 +7,11 @@
 - name: Ensure x-pack conf directory exists (file)
   file: path={{ conf_dir }}{{ es_xpack_conf_subdir }} state=directory owner={{ es_user }} group={{ es_group }}
   changed_when: False
-  when:
-    - es_enable_xpack and "security" in es_xpack_features
-    - (es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined) or (es_role_mapping is defined)
+  when: (es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined) or (es_role_mapping is defined)
 
 #-----------------------------Create Bootstrap User-----------------------------------
 ### START BLOCK elasticsearch keystore ###
 - name: create the elasticsearch keystore
-  when: (es_enable_xpack and "security" in es_xpack_features) and (es_version is version_compare('6.0.0', '>'))
   block:
   - name: create the keystore if it doesn't exist yet
     become: yes
@@ -48,7 +45,7 @@
 #-----------------------------FILE BASED REALM----------------------------------------
 
 - include: elasticsearch-security-file.yml
-  when: (es_enable_xpack and "security" in es_xpack_features) and ((es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined))
+  when: (es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined)
 
 #-----------------------------ROLE MAPPING ----------------------------------------
 
@@ -58,13 +55,6 @@
   template: src=security/role_mapping.yml.j2 dest={{conf_dir}}{{es_xpack_conf_subdir}}/role_mapping.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   when: es_role_mapping is defined
 
-#-----------------------------AUTH FILE----------------------------------------
-
-- name: Copy message auth key to elasticsearch
-  become: yes
-  copy: src={{ es_message_auth_file }} dest={{conf_dir}}{{es_xpack_conf_subdir}}/system_key owner={{ es_user }} group={{ es_group }} mode=0600 force=yes
-  when: es_message_auth_file is defined
-
 #------------------------------------------------------------------------------------
 
 #Ensure security conf directory is created
@@ -72,4 +62,3 @@
   become: yes
   file: path={{ conf_dir }}/security state=directory owner={{ es_user }} group={{ es_group }}
   changed_when: False
-  when: es_enable_xpack and "security" in es_xpack_features
