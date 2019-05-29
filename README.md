@@ -15,6 +15,15 @@ Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedH
 
 The latest Elasticsearch versions of 7.x & 6.x are actively tested.
 
+## Notice about multi-instance support
+
+`7.0.0-multi` is the last release to support installation of multiple elasticsearch instances in the same hosts.
+See https://github.com/elastic/ansible-elasticsearch/issues/554#issuecomment-496804929 for more details about why we remove it.
+This release with multi-instance won't receive any other evolution.
+Future evolution will be based on the future `7.0.0` release without multi-instance support (coming soon).
+
+For multi-instances use cases, we are now recommending using Docker containers using our official images (https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html)
+
 ##### Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
 
@@ -23,7 +32,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install elastic.elasticsearch,7.0.1
+ansible-galaxy install elastic.elasticsearch,7.0-multi
 ```
 
 Then create your playbook yaml adding the role elasticsearch. By default, the user is only required to specify a unique es_instance_name per role application.  This should be unique per node.
