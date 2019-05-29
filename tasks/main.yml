@@ -4,6 +4,20 @@
   when:
       - es_major_version is undefined
 
+- name: set es_java_install fact for 7.x
+  set_fact:
+    es_java_install: false
+  when:
+    - es_java_install is undefined
+    - es_major_version == "7.x"
+
+- name: set es_java_install fact for 6.x
+  set_fact:
+    es_java_install: true
+  when:
+    - es_java_install is undefined
+    - es_major_version == "6.x"
+
 - name: os-specific vars
   include_vars: "{{ansible_os_family}}.yml"
   tags:
