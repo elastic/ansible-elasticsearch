@@ -16,7 +16,6 @@
       xpack.security.authc.realms.native1.type: native
     es_config_7x:
       http.port: 9200
-      xpack.security.enabled: True
       xpack.security.authc.realms.file.file1.order: 0
       xpack.security.authc.realms.native.native1.order: 1
     es_config: "{{ es_config_7x if es_major_version == '7.x' else es_config_6x }}"
@@ -131,7 +130,6 @@
       xpack.security.authc.realms.native1.type: native
     es_config_7x:
       http.port: 9200
-      xpack.security.enabled: True
       xpack.security.authc.realms.file.file1.order: 0
       xpack.security.authc.realms.native.native1.order: 1
     es_config: "{{ es_config_7x if es_major_version == '7.x' else es_config_6x }}"
