@@ -133,8 +133,6 @@ The following illustrates applying configuration parameters to an Elasticsearch 
       node.data: false
       node.master: true
       bootstrap.memory_lock: true
-    es_templates: false
-    es_version_lock: false
     es_heap_size: 1g
     es_api_port: 9201
 ```
@@ -171,11 +169,8 @@ A more complex example:
       node.data: false
       node.master: true
       bootstrap.memory_lock: true
-    es_templates: false
-    es_version_lock: false
     es_heap_size: 1g
     es_start_service: false
-    es_plugins_reinstall: false
     es_api_port: 9201
     es_plugins:
       - plugin: ingest-attachment
@@ -206,12 +201,9 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.name: "test-cluster"
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      transport.port: 9300
       node.data: false
       node.master: true
       bootstrap.memory_lock: false
-    es_templates: false
-    es_version_lock: false
     es_plugins:
      - plugin: ingest-attachment
 
@@ -225,13 +217,9 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.name: "test-cluster"
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      transport.port: 9300
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
-    es_templates: false
-    es_version_lock: false
-    es_api_port: 9200
     es_plugins:
       - plugin: ingest-attachment
 
@@ -243,13 +231,9 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.name: "test-cluster"
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      transport.port: 9300
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
-    es_templates: false
-    es_version_lock: false
-    es_api_port: 9200
     es_plugins:
       - plugin: ingest-attachment
 ```
