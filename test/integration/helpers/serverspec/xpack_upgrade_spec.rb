@@ -3,14 +3,6 @@ require 'json'
 vars = JSON.parse(File.read('/tmp/vars.json'))
 
 shared_examples 'xpack_upgrade::init' do |vars|
-  describe file("/etc/elasticsearch/elasticsearch.yml") do
-    it { should contain "node.name: localhost" }
-    it { should contain 'cluster.name: elasticsearch' }
-    it { should_not contain "path.conf: /etc/elasticsearch" }
-    it { should contain "path.data: /var/lib/elasticsearch" }
-    it { should contain "path.logs: /var/log/elasticsearch" }
-  end
-
   #Test users file, users_roles and roles.yml
   describe file("/etc/elasticsearch/#{vars['es_xpack_conf_subdir']}/users_roles") do
     it { should be_owned_by 'elasticsearch' }

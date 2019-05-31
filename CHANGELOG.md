@@ -11,7 +11,7 @@
 
 * [#513](https://github.com/elastic/ansible-elasticsearch/pull/513) - @kakoni - Fix typo in elasticsearch-parameters.yml
 * [#522](https://github.com/elastic/ansible-elasticsearch/pull/522) - @SlothOfAnarchy - Fix package download URL
-* [#526](https://github.com/elastic/ansible-elasticsearch/pull/527) - @Fra-nk - Allow not installing Elasticsearch deb repository key
+* [#526](https://github.com/elastic/ansible-elasticsearch/pull/526) - @Fra-nk - Allow not installing Elasticsearch deb repository key
 * [#527](https://github.com/elastic/ansible-elasticsearch/pull/527) - @katsukamaru - Execute java version check in check mode
 
 ## 6.5.1.1 - 2018/11/27
@@ -30,7 +30,7 @@
 
 * [#487](https://github.com/elastic/ansible-elasticsearch/pull/487) - @lazouz - Disable check mode to make install plugins idempotent
 * [#501](https://github.com/elastic/ansible-elasticsearch/pull/501) - @kaxil - Make the order of configs consistent for comparing
-* [#497](https://github.com/elastic/ansible-elasticsearch/pull/497) - @Crazybus - Document es_use_repository and es_custom_package_url 
+* [#497](https://github.com/elastic/ansible-elasticsearch/pull/497) - @Crazybus - Document es_use_repository and es_custom_package_url
 * [#504](https://github.com/elastic/ansible-elasticsearch/pull/504) - @victorgs - Using tests as filters is deprecated
 * [#493](https://github.com/elastic/ansible-elasticsearch/pull/493) - @Crazybus - Only use the first found java version if there are multiple installed
 
@@ -72,7 +72,7 @@ When upgrading from module versions prior to 6.3, there are a number of upgrade 
   * oss to oss
   * oss to xpack
   * xpack to xpack
-* X-Pack configuration files which used to be in `${ES_PATH_CONF}/x-pack` are now in `${ES_PATH_CONF}/`. If you have any configuration files in this directory not managed by ansible you will need to move them manually. 
+* X-Pack configuration files which used to be in `${ES_PATH_CONF}/x-pack` are now in `${ES_PATH_CONF}/`. If you have any configuration files in this directory not managed by ansible you will need to move them manually.
 
 #### Features
 
@@ -92,14 +92,14 @@ When upgrading from module versions prior to 6.3, there are a number of upgrade 
 
 ## 6.2.4.1 - 2018/06/14
 
-Patch release requested by @average-joe in #453 
+Patch release requested by @average-joe in #453
 
 #### Pull requests
 
-* [#445](https://github.com/elastic/ansible-elasticsearch/pull/445) - @gekkeharry13 - Added configuration options for configuring x-pack notifications via email with some other nice fixes. 
+* [#445](https://github.com/elastic/ansible-elasticsearch/pull/445) - @gekkeharry13 - Added configuration options for configuring x-pack notifications via email with some other nice fixes.
 * [#450](https://github.com/elastic/ansible-elasticsearch/pull/450) - @Crazybus - improving some flakey tests which were randomly failing.
 * [#447](https://github.com/elastic/ansible-elasticsearch/pull/447) - @chaintng - Fix to make sure sudo is used when running `update-alternatives` for java.
-* [#423](https://github.com/elastic/ansible-elasticsearch/pull/423) - @eRadical - Fixing the until condition being used when installing rpms from a custom repository. 
+* [#423](https://github.com/elastic/ansible-elasticsearch/pull/423) - @eRadical - Fixing the until condition being used when installing rpms from a custom repository.
 
 
 ## 6.2.4 - 2018/04/24
@@ -120,9 +120,9 @@ Patch release requested by @average-joe in #453
 ## 6.1.3 - 2018/02/01
 
 * `6.x` is now the default `es_major_version` with `6.1.3` as the default `es_version`
-* Special thanks to @shribigb, @toddlers and @remil1000 for their efforts in getting `6.x` support working! 
+* Special thanks to @shribigb, @toddlers and @remil1000 for their efforts in getting `6.x` support working!
 * `.kitchen.yml` has been updated to allow testing both `6.x` and `5.x` versions
-* A new [Jenkins job](https://devops-ci.elastic.co/job/elastic+ansible-elasticsearch+pull-request/) has been added for pull requests to automatically test all combinations of `6.x` and `5.x` on ubuntu-1404, ubuntu-1604, debian-8 and centos-7 with the various test suites. 
+* A new [Jenkins job](https://devops-ci.elastic.co/job/elastic+ansible-elasticsearch+pull-request/) has been added for pull requests to automatically test all combinations of `6.x` and `5.x` on ubuntu-1404, ubuntu-1604, debian-8 and centos-7 with the various test suites.
 
 ## 5.5.1 - 2017/08/20
 

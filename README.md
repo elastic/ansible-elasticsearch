@@ -13,14 +13,14 @@ Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedH
 * Debian 9
 * CentOS 7
 
-The latest Elasticsearch versions of 7.x & 6.x are actively tested.  **Only Ansible versions > 2.4.3.0 are supported, as this is currently the only version tested.**
+The latest Elasticsearch versions of 7.x & 6.x are actively tested.
 
 **BREAKING CHANGE**
 
 Starting with ansible-elasticsearch:7.0.0, installing more than one instance of Elasticsearch **on the same host** in no more supported.
 If you install more than one instance of ElasticSearch on the same host (with different ports, directory and config files), **do not update to ansible-elasticsearch >= 7.0.0**.
 
-##### Dependency
+## Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
 
 ## Usage
@@ -28,7 +28,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install elastic.elasticsearch,7.0.1
+ansible-galaxy install git+https://github.com/elastic/ansible-elasticsearch.git,7f5be969e07173c5697432141e909b6ced5a2e94
 ```
 
 Then create your playbook yaml adding the role elasticsearch.
@@ -201,7 +201,6 @@ An example of a three server deployment is shown below.  The first server holds 
   roles:
     - role: elastic.elasticsearch
   vars:
-    ansible_user: ansible
     es_heap_size: "1g"
     es_config:
       cluster.name: "test-cluster"
@@ -220,7 +219,6 @@ An example of a three server deployment is shown below.  The first server holds 
   roles:
     - role: elastic.elasticsearch
   vars:
-    ansible_user: ansible
     es_data_dirs:
       - "/opt/elasticsearch"
     es_config:
@@ -241,8 +239,8 @@ An example of a three server deployment is shown below.  The first server holds 
   roles:
     - role: elastic.elasticsearch
   vars:
-    ansible_user: ansible
     es_config:
+      cluster.name: "test-cluster"
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
       transport.port: 9300
@@ -268,14 +266,15 @@ ansible-playbook -i hosts ./your-playbook.yml
 
 ### Installing X-Pack Features
 
-X-Pack features, such as Security, are supported. This feature is currently experimental.
+X-Pack features, such as Security, are supported.
 
-The parameter `es_xpack_features` by default enables all features i.e. it defaults to ["alerting","monitoring","graph","security","ml"]
+The parameter `es_xpack_features` allows to list xpack features to install (example: `["alerting","monitoring","graph","security","ml"]`).
+When the list is empty, it install all features available with the current licence.
 
 The following additional parameters allow X-Pack to be configured:
 
-* ```es_message_auth_file``` System Key field to allow message authentication. This file should be placed in the 'files' directory.
 * ```es_xpack_custom_url``` Url from which X-Pack can be downloaded. This can be used for installations in isolated environments where the elastic.co repo is not accessible. e.g. ```es_xpack_custom_url: "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-5.5.1.zip"```
+
 * ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/x-pack/current/mapping-roles.html)
 
 
@@ -394,7 +393,7 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_action_auto_create_index ``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
      es_action_auto_create_index: '[".watches", ".triggered_watches", ".watcher-history-*"]'
 * ```es_allow_downgrades``` For development purposes only. (true or false (default) )
-* ```es_java_install``` If set to false, Java will not be installed. (true (default) or false)
+* ```es_java_install``` If set to true, Java will be installed. (false (default for 7.x) or true (default for 6.x))
 * ```update_java``` Updates Java to the latest version. (true or false (default))
 * ```es_max_map_count``` maximum number of VMA (Virtual Memory Areas) a process can own. Defaults to 262144.
 * ```es_max_open_files``` the maximum file descriptor number that can be opened by this process. Defaults to 65536.
