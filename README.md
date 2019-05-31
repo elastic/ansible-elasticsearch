@@ -15,10 +15,36 @@ Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedH
 
 The latest Elasticsearch versions of 7.x & 6.x are actively tested.
 
-**BREAKING CHANGE**
+**BREAKING CHANGES**
+
+### Notice about multi-instance support
 
 Starting with ansible-elasticsearch:7.0.0, installing more than one instance of Elasticsearch **on the same host** is no more supported.
+See https://github.com/elastic/ansible-elasticsearch/issues/554#issuecomment-496804929 for more details about why we remove it.
+
 If you install more than one instance of ElasticSearch on the same host (with different ports, directory and config files), **do not update to ansible-elasticsearch >= 7.0.0**.
+
+You are still be able to install Elasticsearch 6.x and 7.x in multi-instance mode by using ansible-elasticsearch commit [25bd09f](https://github.com/elastic/ansible-elasticsearch/commit/25bd09f6835b476b6a078676a7d614489a6739c5) (last commit before multi-instance removal) and overriding `es_version` variable:
+
+```sh
+cat << EOF >> requirements.yml
+- src: https://github.com/elastic/ansible-elasticsearch
+  version: 25bd09f
+  name: elasticsearch
+EOF
+ansible-galaxy install -r requirements.yml
+cat << EOF >> playbook.yml
+- hosts: localhost
+  roles:
+    - role: elasticsearch
+      vars:
+        es_instance_name: "node1"
+        es_version: 7.0.1 # or 6.7.2 for example
+EOF
+ansible-playbook playbook.yml
+```
+
+However for multi-instances use cases, we are now recommending using Docker containers using our official images (https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html)
 
 ## Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
