@@ -20,7 +20,7 @@
     es_heap_size: "1g"
     es_templates: true
     es_major_version: "7.x"
-    es_version: "{{ '7.0.0' if es_major_version == '7.x' else '6.7.1' }}" # This is set to an older version than the current default to force an upgrade
+    es_version: "{{ '7.0.1' if es_major_version == '7.x' else '6.7.2' }}" # This is set to an older version than the current default to force an upgrade
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
     es_plugins:
       - plugin: ingest-attachment
