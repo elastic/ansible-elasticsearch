@@ -17,7 +17,7 @@ The latest Elasticsearch versions of 7.x & 6.x are actively tested.
 
 **BREAKING CHANGE**
 
-Starting with ansible-elasticsearch:7.0.0, installing more than one instance of Elasticsearch **on the same host** in no more supported.
+Starting with ansible-elasticsearch:7.0.0, installing more than one instance of Elasticsearch **on the same host** is no more supported.
 If you install more than one instance of ElasticSearch on the same host (with different ports, directory and config files), **do not update to ansible-elasticsearch >= 7.0.0**.
 
 ## Dependency
