@@ -8,7 +8,7 @@ cluster.name: elasticsearch
 {% endif %}
 
 {% if es_config['node.name'] is not defined %}
-node.name: {{inventory_hostname}}-{{es_instance_name}}
+node.name: {{inventory_hostname}}
 {% endif %}
 
 #################################### Paths ####################################
@@ -16,12 +16,12 @@ node.name: {{inventory_hostname}}-{{es_instance_name}}
 # Path to directory containing configuration (this file and logging.yml):
 
 {% if (es_version is version_compare('6.0.0', '<')) %}
-path.conf: {{ conf_dir }}
+path.conf: {{ es_conf_dir }}
 {% endif %}
 
-path.data: {{ data_dirs | array_to_str }}
+path.data: {{ es_data_dirs | array_to_str }}
 
-path.logs: {{ log_dir }}
+path.logs: {{ es_log_dir }}
 
 {% if es_path_repo is defined %}
 path.repo: {{ es_path_repo }}

@@ -6,7 +6,6 @@
   roles:
     - elasticsearch
   vars:
-    es_instance_name: "node1"
     es_enable_xpack: false
     es_heap_size: "1g"
     es_plugins:

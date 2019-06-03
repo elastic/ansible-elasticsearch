@@ -10,13 +10,11 @@
   roles:
     - elasticsearch
   vars:
-    es_instance_name: "security_node"
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
     es_config:
       xpack.security.authc.realms.file.file1.order: 1
       xpack.security.authc.realms.native.native1.type: "native"
     es_heap_size: "1g"
-    es_enable_xpack: true
     es_plugins:
       - plugin: ingest-attachment
     es_xpack_features:

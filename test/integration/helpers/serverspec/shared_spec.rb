@@ -97,7 +97,7 @@ shared_examples 'shared::init' do |vars|
     it { should be_installed }
   end
 
-  describe service("#{vars['es_instance_name']}_elasticsearch") do
+  describe service("elasticsearch") do
     it { should be_running }
   end
 
@@ -128,20 +128,9 @@ shared_examples 'shared::init' do |vars|
       end
     end
   end
-  describe file('/etc/init.d/elasticsearch') do
-    it { should_not exist }
-  end
 
   describe file(family['defaults_path']) do
     its(:content) { should match '' }
-  end
-
-  describe file('/etc/elasticsearch/elasticsearch.yml') do
-    it { should_not exist }
-  end
-
-  describe file('/etc/elasticsearch/logging.yml') do
-    it { should_not exist }
   end
 
   if vars.key?('es_plugins')
@@ -162,12 +151,12 @@ shared_examples 'shared::init' do |vars|
       end
     end
   end
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
-    it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
+  describe file("/etc/elasticsearch/elasticsearch.yml") do
+    it { should contain "node.name: localhost" }
     it { should contain 'cluster.name: elasticsearch' }
-    it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
-    its(:content) { should match "path.data: #{vars['data_dirs'].join(',')}" }
-    its(:content) { should match "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
+    it { should_not contain "path.conf: /etc/elasticsearch" }
+    its(:content) { should match "path.data: #{vars['es_data_dirs'].join(',')}" }
+    its(:content) { should match "path.logs: /var/log/elasticsearch" }
   end
 
   if vars['es_use_repository']

@@ -9,19 +9,19 @@ ES_HOME={{es_home}}
 #JAVA_HOME=
 
 # Elasticsearch configuration directory
-CONF_DIR={{conf_dir}}
-ES_PATH_CONF={{conf_dir}}
+CONF_DIR={{ es_conf_dir }}
+ES_PATH_CONF={{ es_conf_dir }}
 
 # Elasticsearch data directory
-DATA_DIR={{ data_dirs | array_to_str }}
+DATA_DIR={{ es_data_dirs | array_to_str }}
 
 # Elasticsearch logs directory
-LOG_DIR={{log_dir}}
+LOG_DIR={{ es_log_dir }}
 
 # Elasticsearch PID directory
-PID_DIR={{pid_dir}}
+PID_DIR={{ es_pid_dir }}
 
-ES_JVM_OPTIONS={{conf_dir}}/jvm.options
+ES_JVM_OPTIONS={{ es_conf_dir }}/jvm.options
 
 # Configure restart on package upgrade (true, every other setting will lead to not restarting)
 #ES_RESTART_ON_UPGRADE=true
@@ -32,16 +32,6 @@ ES_JVM_OPTIONS={{conf_dir}}/jvm.options
 ################################
 # Elasticsearch service
 ################################
-
-# SysV init.d
-#
-# When executing the init script, this user will be used to run the elasticsearch service.
-# The default value is 'elasticsearch' and is declared in the init.d file.
-# Note that this setting is only used by the init script. If changed, make sure that
-# the configured user can read and write into the data, work, plugins and log directories.
-# For systemd service, the user is usually configured in file /usr/lib/systemd/system/elasticsearch.service
-ES_USER={{es_user}}
-ES_GROUP={{es_group}}
 
 # The number of seconds to wait before checking if Elasticsearch started successfully as a daemon process
 ES_STARTUP_SLEEP_TIME=5

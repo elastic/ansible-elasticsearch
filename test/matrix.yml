@@ -14,4 +14,3 @@ TEST_TYPE:
   - oss-to-xpack-upgrade
   - xpack
   - xpack-upgrade
-  - multi

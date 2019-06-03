@@ -21,8 +21,10 @@ es_group: elasticsearch
 es_config: {}
 es_config_log4j2: log4j2.properties.j2
 #Need to provide default directories
+es_conf_dir: "/etc/elasticsearch"
 es_pid_dir: "/var/run/elasticsearch"
-es_data_dirs: "/var/lib/elasticsearch"
+es_data_dirs:
+  - "/var/lib/elasticsearch"
 es_log_dir: "/var/log/elasticsearch"
 es_action_auto_create_index: true
 es_max_open_files: 65536
@@ -36,11 +38,5 @@ es_api_host: "localhost"
 es_api_port: 9200
 es_debian_startup_timeout: 10
 
-# Since ansible 2.2 the following variables need to be defined
-# to allow the role to be conditionally played with a when condition.
-pid_dir: ''
-log_dir: ''
-conf_dir: ''
-data_dirs: ''
 # JVM custom parameters
 es_jvm_custom_parameters: ''

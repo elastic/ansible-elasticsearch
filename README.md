@@ -15,6 +15,81 @@ Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedH
 
 The latest Elasticsearch versions of 7.x & 6.x are actively tested.
 
+**BREAKING CHANGES**
+
+### Notice about multi-instance support
+
+Starting with ansible-elasticsearch:7.0.0, installing more than one instance of Elasticsearch **on the same host** is no more supported.
+
+See [554#issuecomment-496804929](https://github.com/elastic/ansible-elasticsearch/issues/554#issuecomment-496804929) for more details about why we remove it.
+
+If you install more than one instance of ElasticSearch on the same host (with different ports, directory and config files), **do not update to ansible-elasticsearch >= 7.0.0**.
+
+You are still be able to install Elasticsearch 6.x and 7.x in multi-instance mode by using ansible-elasticsearch commit [25bd09f](https://github.com/elastic/ansible-elasticsearch/commit/25bd09f6835b476b6a078676a7d614489a6739c5) (last commit before multi-instance removal) and overriding `es_version` variable:
+
+```sh
+$ cat << EOF >> requirements.yml # require git
+- src: https://github.com/elastic/ansible-elasticsearch
+  version: 25bd09f
+  name: elasticsearch
+EOF
+$ ansible-galaxy install -r requirements.yml
+$ cat << EOF >> playbook.yml
+- hosts: localhost
+  roles:
+    - role: elasticsearch
+      vars:
+        es_instance_name: "node1"
+        es_version: 7.0.1 # or 6.7.2 for example
+EOF
+$ ansible-playbook playbook.yml
+```
+
+However for multi-instances use cases, we are now recommending using Docker containers using our official images (https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html).
+
+#### Upgrade procedure
+
+If you have single-instances hosts and want to upgrade from previous versions of the role:
+
+1. Override these variables to match previous values:
+```yaml
+
+es_conf_dir: /etc/elasticsearch/{{ instance_name }}
+es_data_dirs:
+  - /var/lib/elasticsearch/{{ node_name }}-{{ instance_name }}
+es_log_dir: /var/log/elasticsearch/{{ node_name }}-{{ instance_name }}
+es_pid_dir: /var/run/elasticsearch/{{ node_name }}-{{ instance_name }}
+```
+
+2. Deploy ansible-role. **Even if these variables are overrided, Elasticsearch config file and default option file will change, which imply an Elasticsearch restart.**
+
+3. After ansible-role new deployment, you can do some cleanup of old Init file and Default file.
+
+Example:
+```bash
+$ ansible-playbook -e '{"es_conf_dir":"/etc/elasticsearch/node1","es_data_dirs":["/var/lib/elasticsearch/localhost-node1"],"es_log_dir":"/var/log/elasticsearch/localhost-node1","es_pid_dir":"/var/run/elasticsearch/localhost-node1"}' playbook.yml
+...
+TASK [elasticsearch : Create Directories] **********************************************************************************************************************************************************************************************************************
+ok: [localhost] => (item=/var/run/elasticsearch/localhost-node1)
+ok: [localhost] => (item=/var/log/elasticsearch/localhost-node1)
+ok: [localhost] => (item=/etc/elasticsearch/node1)
+ok: [localhost] => (item=/var/lib/elasticsearch/localhost-node1)
+
+TASK [elasticsearch : Copy Configuration File] *****************************************************************************************************************************************************************************************************************
+changed: [localhost]
+
+TASK [elasticsearch : Copy Default File] ***********************************************************************************************************************************************************************************************************************
+changed: [localhost]
+...
+PLAY RECAP *****************************************************************************************************************************************************************************************************************************************************
+localhost                  : ok=32   changed=3    unreachable=0    failed=0
+
+$ find /etc -name 'node1_elasticsearch*'
+/etc/default/node1_elasticsearch
+/etc/systemd/system/multi-user.target.wants/node1_elasticsearch.service
+$ rm /etc/default/node1_elasticsearch /etc/systemd/system/multi-user.target.wants/node1_elasticsearch.service
+```
+
 ## Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
 
@@ -26,7 +101,7 @@ Create your Ansible playbook with your own tasks, and include the role elasticse
 ansible-galaxy install git+https://github.com/elastic/ansible-elasticsearch.git,7f5be969e07173c5697432141e909b6ced5a2e94
 ```
 
-Then create your playbook yaml adding the role elasticsearch. By default, the user is only required to specify a unique es_instance_name per role application.  This should be unique per node.
+Then create your playbook yaml adding the role elasticsearch.
 The application of the elasticsearch role results in the installation of a node on a host.
 
 The simplest configuration therefore consists of:
@@ -36,8 +111,6 @@ The simplest configuration therefore consists of:
   hosts: localhost
   roles:
     - role: elastic.elasticsearch
-      vars:
-        es_instance_name: "node1"
 ```
 
 The above installs a single node 'node1' on the hosts 'localhost'.
@@ -118,7 +191,6 @@ The following illustrates applying configuration parameters to an Elasticsearch 
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_instance_name: "node1"
     es_data_dirs:
       - "/opt/elasticsearch/data"
     es_log_dir: "/opt/elasticsearch/logs"
@@ -131,8 +203,6 @@ The following illustrates applying configuration parameters to an Elasticsearch 
       node.data: false
       node.master: true
       bootstrap.memory_lock: true
-    es_templates: false
-    es_version_lock: false
     es_heap_size: 1g
     es_api_port: 9201
 ```
@@ -157,7 +227,6 @@ A more complex example:
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_instance_name: "node1"
     es_data_dirs:
       - "/opt/elasticsearch/data"
     es_log_dir: "/opt/elasticsearch/logs"
@@ -170,11 +239,8 @@ A more complex example:
       node.data: false
       node.master: true
       bootstrap.memory_lock: true
-    es_templates: false
-    es_version_lock: false
     es_heap_size: 1g
     es_start_service: false
-    es_plugins_reinstall: false
     es_api_port: 9201
     es_plugins:
       - plugin: ingest-attachment
@@ -191,71 +257,53 @@ If the node is deployed to bind on either a different host or port, these must b
 
 The application of the elasticsearch role results in the installation of a node on a host. Specifying the role multiple times for a host therefore results in the installation of multiple nodes for the host.
 
-An example of a two server deployment is shown below.  The first server holds the master and is thus declared first.  Whilst not mandatory, this is recommended in any multi node cluster configuration.  The second server hosts two data nodes.
+An example of a three server deployment is shown below.  The first server holds the master and is thus declared first.  Whilst not mandatory, this is recommended in any multi node cluster configuration.  The two others servers hosts data nodes.
 
-**Note the structure of the below playbook for the data nodes.  Whilst a more succinct structures are possible which allow the same role to be applied to a host multiple times, we have found the below structure to be the most reliable with respect to var behaviour.  This is the tested approach.**
+**Note that we do not support anymore installation of more than one node in the same host**
 
 ```yaml
-- hosts: master_nodes
+- hosts: master_node
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_instance_name: "node1"
     es_heap_size: "1g"
     es_config:
       cluster.name: "test-cluster"
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      transport.port: 9300
       node.data: false
       node.master: true
       bootstrap.memory_lock: false
-    es_templates: false
-    es_version_lock: false
-    ansible_user: ansible
     es_plugins:
      - plugin: ingest-attachment
 
-- hosts: data_nodes
+- hosts: data_node_1
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_instance_name: "node1"
     es_data_dirs:
       - "/opt/elasticsearch"
     es_config:
       cluster.name: "test-cluster"
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      transport.port: 9300
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
-    es_templates: false
-    es_version_lock: false
-    ansible_user: ansible
-    es_api_port: 9200
     es_plugins:
       - plugin: ingest-attachment
 
-- hosts: data_nodes
+- hosts: data_node_2
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_instance_name: "node2"
-    es_api_port: 9201
     es_config:
+      cluster.name: "test-cluster"
       discovery.seed_hosts: "elastic02:9300"
-      http.port: 9201
-      transport.port: 9301
+      http.port: 9200
       node.data: true
       node.master: false
       bootstrap.memory_lock: false
-      cluster.name: "test-cluster"
-    es_templates: false
-    es_version_lock: false
-    es_api_port: 9201
-    ansible_user: ansible
     es_plugins:
       - plugin: ingest-attachment
 ```
@@ -432,12 +480,6 @@ To configure X-pack to send mail, the following configuration can be added to th
 
 Both ```es_user_id``` and ```es_group_id``` must be set for the user and group ids to be set.
 
-By default, each node on a host will be installed to use unique pid, plugin, work, data and log directories.  These directories are created, using the instance and host name, beneath default locations ]
-controlled by the following parameters:
-
-* ```es_pid_dir``` - defaults to "/var/run/elasticsearch".
-* ```es_data_dirs``` - defaults to "/var/lib/elasticsearch".  This can be a list or comma separated string e.g. ["/opt/elasticsearch/data-1","/opt/elasticsearch/data-2"] or "/opt/elasticsearch/data-1,/opt/elasticsearch/data-2"
-* ```es_log_dir``` - defaults to "/var/log/elasticsearch".
 * ```es_restart_on_change``` - defaults to true.  If false, changes will not result in Elasticsearch being restarted.
 * ```es_plugins_reinstall``` - defaults to false.  If true, all currently installed plugins will be removed from a node.  Listed plugins will then be re-installed.
 
@@ -465,10 +507,8 @@ To define proxy only for a particular plugin during its installation:
 
 * The role assumes the user/group exists on the server.  The elasticsearch packages create the default elasticsearch user.  If this needs to be changed, ensure the user exists.
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
-* Changing an instance_name for a role application will result in the installation of a new component.  The previous component will remain.
 * KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test the latest version of 7.x and 6.x on all supported platforms.
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and Elasticsearch restarted where required.
-* Systemd is used for Ubuntu versions >= 15, Debian >=8, Centos >=7.  All other versions use init for service scripts.
 * In order to run x-pack tests a license file with security enabled is required. A trial license is appropriate. Set the environment variable `ES_XPACK_LICENSE_FILE` to the full path of the license file prior to running tests.
 
 ## IMPORTANT NOTES RE PLUGIN MANAGEMENT
