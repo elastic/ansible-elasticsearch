@@ -1,3 +1,34 @@
+## 7.0.0 - 2019/06/03
+
+### Breaking changes
+
+* Starting with ansible-elasticsearch:7.0.0, installing more than one instance of Elasticsearch **on the same host** is no more supported.
+* Configuration, datas, logs and PID directories are now using standard paths like in the official elasticsearch packages.
+
+* If you use only one instance but want to upgrade from an older ansible-elasticsearch version, follow [upgrade procedure](./docs/multi-instance.md#upgrade-procedure)
+* If you install more than one instance of ElasticSearch on the same host (with different ports, directory and config files), **do not update to ansible-elasticsearch >= 7.0.0**, please follow this [workaround](./docs/multi-instance.md#workaround) instead.
+* For multi-instances use cases, we are now recommending Docker containers using our official images (https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html).
+
+### Features
+
+* 7.0.1 as default Elasticsearch version
+* [#539](https://github.com/elastic/ansible-elasticsearch/pull/539) and [#542](https://github.com/elastic/ansible-elasticsearch/pull/542) - @grzegorznowak - Make ansible role compatible with ansible [check mode](https://docs.ansible.com/ansible/latest/user_guide/playbooks_checkmode.html)
+* [#558](https://github.com/elastic/ansible-elasticsearch/pull/558) - @jmlrt - Add support for elasticsearch 7.x, remove 5.x support and update tests
+* [#560](https://github.com/elastic/ansible-elasticsearch/pull/560) - @jmlrt - Use default xpack features and remove system_key deprecated feature
+* [#562](https://github.com/elastic/ansible-elasticsearch/pull/562) - @hamishforbes - Allow to customize instance suffix
+* [#566](https://github.com/elastic/ansible-elasticsearch/pull/566) - @jmlrt - Remove multi-instances support
+* [#567](https://github.com/elastic/ansible-elasticsearch/pull/567) - @jmlrt - Remove file scripts deprecated feature
+* [#568](https://github.com/elastic/ansible-elasticsearch/pull/568) - @jmlrt - Skip Java install for elasticsearch 7.x (java is now embeded)
+
+### Fixes
+
+* [#543](https://github.com/elastic/ansible-elasticsearch/pull/543) - @victorgs - Fix typo in Makefile
+* [#546](https://github.com/elastic/ansible-elasticsearch/pull/546) - @thiagonache - Fix README example
+* [#550](https://github.com/elastic/ansible-elasticsearch/pull/550) - @pemontto - Fix template conditional
+* [#556](https://github.com/elastic/ansible-elasticsearch/pull/556) - @jmlrt - Fix debian-8 test
+* [#557](https://github.com/elastic/ansible-elasticsearch/pull/557) - @jmlrt - Bump gem dependencies to fix [CVE-2018-1000544](https://nvd.nist.gov/vuln/detail/CVE-2018-1000544) and [CVE-2018-1000201](https://nvd.nist.gov/vuln/detail/CVE-2018-1000201)
+* [#564](https://github.com/elastic/ansible-elasticsearch/pull/564) - @jmlrt - Bump all gem dependencies to fix kitchen tests
+
 ## 6.6.0 - 2019/01/29
 
 ### Features
