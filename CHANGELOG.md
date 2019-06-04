@@ -46,7 +46,7 @@ You can now using basic authentication by overriding `es_api_basic_auth_username
 
 ### Fixes
 
-* [#513](https://github.com/elastic/ansible-elasticsearch/pull/513) - @kakoni - Fix typo in Elasticsearch-parameters.yml
+* [#513](https://github.com/elastic/ansible-elasticsearch/pull/513) - @kakoni - Fix typo in elasticsearch-parameters.yml
 * [#522](https://github.com/elastic/ansible-elasticsearch/pull/522) - @SlothOfAnarchy - Fix package download URL
 * [#526](https://github.com/elastic/ansible-elasticsearch/pull/526) - @Fra-nk - Allow not installing Elasticsearch deb repository key
 * [#527](https://github.com/elastic/ansible-elasticsearch/pull/527) - @katsukamaru - Execute java version check in check mode
@@ -80,7 +80,7 @@ You can now using basic authentication by overriding `es_api_basic_auth_username
 ### Fixes
 
 * [#484](https://github.com/elastic/ansible-elasticsearch/pull/484) - @kimoto - Fix downgrading Elasticsearch on RedHat hosts
-* [#476](https://github.com/elastic/ansible-elasticsearch/pull/476) - @Crazybus - Fix version locking for the Elasticsearch-oss package
+* [#476](https://github.com/elastic/ansible-elasticsearch/pull/476) - @Crazybus - Fix version locking for the elasticsearch-oss package
 
 
 ## 6.3.1 - 2018/07/05
