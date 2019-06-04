@@ -1,8 +1,8 @@
 # Multi-instance Support
 
-Starting with ansible-elasticsearch:7.0.0, installing more than one instance of Elasticsearch **on the same host** is no more supported.
+Starting with ansible-elasticsearch:7.1.1, installing more than one instance of Elasticsearch **on the same host** is no longer supported.
 
-See [554#issuecomment-496804929](https://github.com/elastic/ansible-elasticsearch/issues/554#issuecomment-496804929) for more details about why we remove it.
+See [554#issuecomment-496804929](https://github.com/elastic/ansible-elasticsearch/issues/554#issuecomment-496804929) for more details about why we removed it.
 
 ## Upgrade procedure
 
@@ -48,7 +48,7 @@ $ rm /etc/default/node1_elasticsearch /etc/systemd/system/multi-user.target.want
 
 ## Workaround
 
-If you use more than one instance of ElasticSearch on the same host (with different ports, directory and config files), you are still be able to install Elasticsearch 6.x and 7.x in multi-instance mode by using ansible-elasticsearch commit [25bd09f](https://github.com/elastic/ansible-elasticsearch/commit/25bd09f6835b476b6a078676a7d614489a6739c5) (last commit before multi-instance removal) and overriding `es_version` variable:
+If you use more than one instance of Elasticsearch on the same host (with different ports, directory and config files), you are still be able to install Elasticsearch 6.x and 7.x in multi-instance mode by using ansible-elasticsearch commit [25bd09f](https://github.com/elastic/ansible-elasticsearch/commit/25bd09f6835b476b6a078676a7d614489a6739c5) (last commit before multi-instance removal) and overriding `es_version` variable:
 
 ```sh
 $ cat << EOF >> requirements.yml # require git
@@ -63,7 +63,7 @@ $ cat << EOF >> playbook.yml
     - role: elasticsearch
       vars:
         es_instance_name: "node1"
-        es_version: 7.0.1 # or 6.7.2 for example
+        es_version: 7.1.1 # or 6.8.0 for example
 EOF
 $ ansible-playbook playbook.yml
 ```
