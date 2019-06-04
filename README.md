@@ -15,80 +15,13 @@ Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedH
 
 The latest Elasticsearch versions of 7.x & 6.x are actively tested.
 
-**BREAKING CHANGES**
+## BREAKING CHANGES
 
 ### Notice about multi-instance support
 
-Starting with ansible-elasticsearch:7.0.0, installing more than one instance of Elasticsearch **on the same host** is no more supported.
-
-See [554#issuecomment-496804929](https://github.com/elastic/ansible-elasticsearch/issues/554#issuecomment-496804929) for more details about why we remove it.
-
-If you install more than one instance of ElasticSearch on the same host (with different ports, directory and config files), **do not update to ansible-elasticsearch >= 7.0.0**.
-
-You are still be able to install Elasticsearch 6.x and 7.x in multi-instance mode by using ansible-elasticsearch commit [25bd09f](https://github.com/elastic/ansible-elasticsearch/commit/25bd09f6835b476b6a078676a7d614489a6739c5) (last commit before multi-instance removal) and overriding `es_version` variable:
-
-```sh
-$ cat << EOF >> requirements.yml # require git
-- src: https://github.com/elastic/ansible-elasticsearch
-  version: 25bd09f
-  name: elasticsearch
-EOF
-$ ansible-galaxy install -r requirements.yml
-$ cat << EOF >> playbook.yml
-- hosts: localhost
-  roles:
-    - role: elasticsearch
-      vars:
-        es_instance_name: "node1"
-        es_version: 7.0.1 # or 6.7.2 for example
-EOF
-$ ansible-playbook playbook.yml
-```
-
-However for multi-instances use cases, we are now recommending using Docker containers using our official images (https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html).
-
-#### Upgrade procedure
-
-If you have single-instances hosts and want to upgrade from previous versions of the role:
-
-1. Override these variables to match previous values:
-```yaml
-
-es_conf_dir: /etc/elasticsearch/{{ instance_name }}
-es_data_dirs:
-  - /var/lib/elasticsearch/{{ node_name }}-{{ instance_name }}
-es_log_dir: /var/log/elasticsearch/{{ node_name }}-{{ instance_name }}
-es_pid_dir: /var/run/elasticsearch/{{ node_name }}-{{ instance_name }}
-```
-
-2. Deploy ansible-role. **Even if these variables are overrided, Elasticsearch config file and default option file will change, which imply an Elasticsearch restart.**
-
-3. After ansible-role new deployment, you can do some cleanup of old Init file and Default file.
-
-Example:
-```bash
-$ ansible-playbook -e '{"es_conf_dir":"/etc/elasticsearch/node1","es_data_dirs":["/var/lib/elasticsearch/localhost-node1"],"es_log_dir":"/var/log/elasticsearch/localhost-node1","es_pid_dir":"/var/run/elasticsearch/localhost-node1"}' playbook.yml
-...
-TASK [elasticsearch : Create Directories] **********************************************************************************************************************************************************************************************************************
-ok: [localhost] => (item=/var/run/elasticsearch/localhost-node1)
-ok: [localhost] => (item=/var/log/elasticsearch/localhost-node1)
-ok: [localhost] => (item=/etc/elasticsearch/node1)
-ok: [localhost] => (item=/var/lib/elasticsearch/localhost-node1)
-
-TASK [elasticsearch : Copy Configuration File] *****************************************************************************************************************************************************************************************************************
-changed: [localhost]
-
-TASK [elasticsearch : Copy Default File] ***********************************************************************************************************************************************************************************************************************
-changed: [localhost]
-...
-PLAY RECAP *****************************************************************************************************************************************************************************************************************************************************
-localhost                  : ok=32   changed=3    unreachable=0    failed=0
-
-$ find /etc -name 'node1_elasticsearch*'
-/etc/default/node1_elasticsearch
-/etc/systemd/system/multi-user.target.wants/node1_elasticsearch.service
-$ rm /etc/default/node1_elasticsearch /etc/systemd/system/multi-user.target.wants/node1_elasticsearch.service
-```
+* If you use only one instance but want to upgrade from an older ansible-elasticsearch version, follow [upgrade procedure](./docs/multi-instance.md#upgrade-procedure)
+* If you install more than one instance of Elasticsearch on the same host (with different ports, directory and config files), **do not update to ansible-elasticsearch >= 7.1.1**, please follow this [workaround](./docs/multi-instance.md#workaround) instead.
+* For multi-instances use cases, we are now recommending Docker containers using our official images (https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html).
 
 ## Dependency
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
@@ -98,7 +31,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install git+https://github.com/elastic/ansible-elasticsearch.git,7f5be969e07173c5697432141e909b6ced5a2e94
+ansible-galaxy install ansible-elasticsearch,7.1.1
 ```
 
 Then create your playbook yaml adding the role elasticsearch.
@@ -431,7 +364,7 @@ These can either be set to a user declared in the file based realm, with admin p
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
 * ```es_enable_xpack```  Default `true`. Setting this to `false` will install the oss release of elasticsearch
-* ```es_version``` (e.g. "7.0.0").
+* ```es_version``` (e.g. "7.1.1").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.

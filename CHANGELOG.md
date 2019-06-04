@@ -1,3 +1,40 @@
+## 7.1.1 - 2019/06/04
+
+### Breaking changes
+
+#### End of multi-instance support
+
+* Starting with ansible-elasticsearch:7.1.1, installing more than one instance of Elasticsearch **on the same host** is no longer supported.
+* Configuration, datas, logs and PID directories are now using standard paths like in the official Elasticsearch packages.
+
+* If you use only one instance but want to upgrade from an older ansible-elasticsearch version, follow [upgrade procedure](./docs/multi-instance.md#upgrade-procedure)
+* If you install more than one instance of Elasticsearch on the same host (with different ports, directory and config files), **do not update to ansible-elasticsearch >= 7.1.1**, please follow this [workaround](./docs/multi-instance.md#workaround) instead.
+* For multi-instances use cases, we are now recommending Docker containers using our official images (https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html).
+
+#### Moved some security features to basic
+
+You can now using basic authentication by overriding `es_api_basic_auth_username` and `es_api_basic_auth_password` variables without providing a license file.
+
+### Features
+
+* 7.1.1 as default Elasticsearch version
+* [#539](https://github.com/elastic/ansible-elasticsearch/pull/539) and [#542](https://github.com/elastic/ansible-elasticsearch/pull/542) - @grzegorznowak - Make ansible role compatible with ansible [check mode](https://docs.ansible.com/ansible/latest/user_guide/playbooks_checkmode.html)
+* [#558](https://github.com/elastic/ansible-elasticsearch/pull/558) - @jmlrt - Add support for Elasticsearch 7.x, remove 5.x support and update tests
+* [#560](https://github.com/elastic/ansible-elasticsearch/pull/560) - @jmlrt - Use default xpack features and remove system_key deprecated feature
+* [#562](https://github.com/elastic/ansible-elasticsearch/pull/562) - @hamishforbes - Allow to customize instance suffix
+* [#566](https://github.com/elastic/ansible-elasticsearch/pull/566) - @jmlrt - Remove multi-instances support
+* [#567](https://github.com/elastic/ansible-elasticsearch/pull/567) - @jmlrt - Remove file scripts deprecated feature
+* [#568](https://github.com/elastic/ansible-elasticsearch/pull/568) - @jmlrt - Skip Java install for Elasticsearch 7.x (java is now embeded)
+
+### Fixes
+
+* [#543](https://github.com/elastic/ansible-elasticsearch/pull/543) - @victorgs - Fix typo in Makefile
+* [#546](https://github.com/elastic/ansible-elasticsearch/pull/546) - @thiagonache - Fix README example
+* [#550](https://github.com/elastic/ansible-elasticsearch/pull/550) - @pemontto - Fix template conditional
+* [#556](https://github.com/elastic/ansible-elasticsearch/pull/556) - @jmlrt - Fix debian-8 test
+* [#557](https://github.com/elastic/ansible-elasticsearch/pull/557) - @jmlrt - Bump gem dependencies to fix [CVE-2018-1000544](https://nvd.nist.gov/vuln/detail/CVE-2018-1000544) and [CVE-2018-1000201](https://nvd.nist.gov/vuln/detail/CVE-2018-1000201)
+* [#564](https://github.com/elastic/ansible-elasticsearch/pull/564) - @jmlrt - Bump all gem dependencies to fix kitchen tests
+
 ## 6.6.0 - 2019/01/29
 
 ### Features
@@ -5,7 +42,7 @@
 * 6.6.0  as default Elasticsearch version
 * [#521](https://github.com/elastic/ansible-elasticsearch/pull/521) - @Crazybus - Allow switching between oss and standard packages
 * [#528](https://github.com/elastic/ansible-elasticsearch/pull/528) - @Fra-nk - Use systemd's RequiresMountsFor
-* [#530](https://github.com/elastic/ansible-elasticsearch/pull/530) - @lde - Use dpkg_selections to lock elasticsearch version
+* [#530](https://github.com/elastic/ansible-elasticsearch/pull/530) - @lde - Use dpkg_selections to lock Elasticsearch version
 
 ### Fixes
 
@@ -77,7 +114,7 @@ When upgrading from module versions prior to 6.3, there are a number of upgrade 
 #### Features
 
 * Integration testing has been refactored in [#457](https://github.com/elastic/ansible-elasticsearch/pull/457). This removed a lot of duplicate tests and added new tests to make sure all upgrade paths work.
-* It is now possible to test elasticsearch snapshot builds by setting `es_use_snapshot_release` to `true`
+* It is now possible to test Elasticsearch snapshot builds by setting `es_use_snapshot_release` to `true`
 
 #### Fixes
 
