@@ -31,7 +31,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install git+https://github.com/elastic/ansible-elasticsearch.git,7.1.1
+ansible-galaxy install ansible-elasticsearch,7.1.1
 ```
 
 Then create your playbook yaml adding the role elasticsearch.
