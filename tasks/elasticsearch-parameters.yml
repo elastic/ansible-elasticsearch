@@ -22,8 +22,8 @@
     - es_api_basic_auth_password is not defined
 
 - name: set fact file_reserved_users
-  set_fact: file_reserved_users={{ es_users.file.keys() | intersect (reserved_xpack_users) }}
-  when: es_users is defined and es_users.file is defined and (es_users.file.keys() | length > 0) and (es_users.file.keys() | intersect (reserved_xpack_users) | length > 0)
+  set_fact: file_reserved_users={{ es_users.file.keys() | list | intersect (reserved_xpack_users) }}
+  when: es_users is defined and es_users.file is defined and (es_users.file.keys() | list | length > 0) and (es_users.file.keys() | list | intersect (reserved_xpack_users) | length > 0)
 
 - name: fail when changing users through file realm
   fail:
