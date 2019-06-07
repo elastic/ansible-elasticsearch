@@ -83,7 +83,7 @@
   with_items: "{{ users_to_remove | default([]) }}"
 
 - name: set fact users_to_ignore
-  set_fact: users_to_ignore={{ native_users | list | intersect (reserved_users) }}
+  set_fact: users_to_ignore={{ native_users.keys() | list | intersect (reserved_users) }}
   when: manage_native_users
 
 - name: debug message
@@ -107,7 +107,7 @@
   with_items: "{{ users_to_ignore | default([]) }}"
 
 - name: set fact users_to_modify
-  set_fact: users_to_modify={{ native_users | list | difference (reserved_users) }}
+  set_fact: users_to_modify={{ native_users.keys() | list | difference (reserved_users) }}
   when: manage_native_users
 
 #Overwrite all other users NOT inc. those reserved
