@@ -243,7 +243,7 @@ An example of a three server deployment is shown below.  The first server holds 
 
 Parameters can additionally be assigned to hosts using the inventory file if desired.
 
-Make sure your hosts are defined in your ```inventory``` file with the appropriate ```ansible_ssh_host```,  ```ansible_ssh_user``` and ```ansible_ssh_private_key_file``` values.
+Make sure your hosts are defined in your ```inventory``` file with the appropriate ```ansible_host```,  ```ansible_user``` and ```ansible_ssh_private_key_file``` values.
 
 Then run it:
 
