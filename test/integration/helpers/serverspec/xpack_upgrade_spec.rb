@@ -17,9 +17,11 @@ shared_examples 'xpack_upgrade::init' do |vars|
   end
 
   describe 'security roles' do
+    vars["es_api_scheme"] = 'https'
     it 'should list the security roles' do
-      roles = curl_json('https://localhost:9200/_xpack/security/role', username='es_admin', password='changeMeAgain')
+      roles = curl_json("#{es_api_scheme}://localhost:9200/_xpack/security/role", username='es_admin', password='changeMeAgain')
       expect(roles.key?('superuser'))
+      assert false
     end
   end
 
@@ -54,7 +56,8 @@ shared_examples 'xpack_upgrade::init' do |vars|
   end
 
   describe 'security users' do
-    result = curl_json('https://localhost:9200/_xpack/security/user', username='elastic', password='elasticChanged')
+    vars["es_api_scheme"] = 'https'
+    result = curl_json("#{es_api_scheme}://localhost:9200/_xpack/security/user", username='elastic', password='elasticChanged')
     it 'should have the elastic user' do
       expect(result['elastic']['username']).to eq('elastic')
       expect(result['elastic']['roles']).to eq(['superuser'])
