@@ -1,0 +1,23 @@
+---
+- name: ensure certificate directory exists
+  file:
+    dest: "{{ es_ssl_certificate_path }}"
+    state: directory
+
+- name: Upload HTTP SSL/TLS certificates
+  copy:
+    src: "{{ item }}"
+    dest: "{{ es_ssl_certificate_path }}/{{ item | basename }}"
+  with_items:
+    - "{{ es_ssl_key }}"
+    - "{{ es_ssl_certificate }}"
+  when: es_enable_http_ssl|bool or es_enable_transport_ssl|bool
+
+- local_action: stat path="{{ role_path }}/files/{{ es_ssl_certificate_authority }}"
+  register: es_cafile
+
+- name: Upload SSL Certificate Authority
+  copy:
+    src: "{{ es_ssl_certificate_authority }}"
+    dest: "{{ es_ssl_certificate_path }}/{{ es_ssl_certificate_authority | basename }}"
+  when: es_cafile.stat.exists|bool and es_cafile.stat.isreg|bool

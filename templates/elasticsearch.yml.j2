@@ -55,3 +55,22 @@ xpack.notification.email:
         password: {{ es_mail_config['pass'] }}
         {% endif %}
 {% endif %}
+
+{% if es_enable_http_ssl | bool %}
+xpack.security.http.ssl.enabled: true
+xpack.security.http.ssl.key: "{{ es_ssl_certificate_path }}/{{ es_ssl_key | basename }}"
+xpack.security.http.ssl.certificate: "{{ es_ssl_certificate_path }}/{{ es_ssl_certificate | basename }}"
+#xpack.security.http.ssl.client_authentication: optional
+{% if es_ssl_certificate_authority %}
+xpack.security.http.ssl.certificate_authorities: "{{ es_ssl_certificate_path }}/{{ es_ssl_certificate_authority | basename }}"
+{% endif %}
+{% else %}
+# xpack.security.http.ssl.enabled: false
+{% endif %}
+
+{% if es_enable_transport_ssl | bool %}
+xpack.security.transport.ssl.enabled: true
+#xpack.security.transport.ssl.verification_mode: certificate
+{% else %}
+# xpack.security.transport.ssl.enabled: false
+{% endif %}

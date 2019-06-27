@@ -51,6 +51,9 @@
   tags:
       - xpack
 
+- name: include ssl.yml
+  include: elasticsearch-ssl.yml
+
 - name: flush handlers
   meta: flush_handlers
 
