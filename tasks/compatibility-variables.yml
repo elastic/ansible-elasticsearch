@@ -1,0 +1,45 @@
+---
+
+# It is possible to set these are defaults with messy jinja templating one liners however:
+# 1. That is really hard to read and debug
+# 2. When running multiple plays with the same role the defaults are not re-evaluated. An example of this
+# can be seen in our the https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack.yml
+# integration test and in the Multi Node server documentation examples https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack.yml
+
+- name: Set the defaults here otherwise they can't be overriden in the same play if the role is called twice
+  set_fact:
+    es_open_xpack: true
+    es_install_xpack: false
+    es_users_path: "users"
+    es_xpack_conf_subdir: ""
+    es_repo_name: "{{ es_major_version }}"
+    es_xpack_users_command: "elasticsearch-users"
+    es_package_name: "elasticsearch"
+    es_other_package_name: "elasticsearch-oss"
+    es_other_repo_name: "{{ 'oss-' + es_major_version }}"
+    es_other_apt_url: "deb {{ es_repo_base }}/packages/{{ 'oss-' + es_major_version }}/apt stable main"
+
+- name: Detect if es_version is before X-Pack was open and included
+  set_fact:
+    es_open_xpack: false
+  when: "es_version is version_compare('6.3.0', '<')"
+
+- name: If this is an older version we need to install X-Pack as a plugin and use a different users command
+  set_fact:
+    es_install_xpack: true
+    es_xpack_users_command: "x-pack/users"
+    es_xpack_conf_subdir: "/x-pack"
+  when: 
+    - not es_open_xpack
+    - es_enable_xpack
+
+- name: Use the oss repo and package if xpack is not being used
+  set_fact:
+    es_repo_name: "{{ 'oss-' + es_major_version }}"
+    es_other_repo_name: "{{ es_major_version }}"
+    es_other_apt_url: "deb {{ es_repo_base }}/packages/{{ es_major_version }}/apt stable main"
+    es_package_name: "elasticsearch-oss"
+    es_other_package_name: "elasticsearch"
+  when:
+    - es_open_xpack
+    - not es_enable_xpack

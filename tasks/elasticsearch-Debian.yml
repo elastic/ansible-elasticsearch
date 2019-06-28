@@ -7,34 +7,71 @@
   set_fact: force_install=yes
   when: es_allow_downgrades
 
-- name: Debian - Install apt-transport-https to support https APT downloads
+- name: Gracefully stop and remove elasticsearch package if switching between OSS and standard
   become: yes
-  apt: name=apt-transport-https state=present
-  when: es_use_repository
+  block:
+  - name: Check if the elasticsearch package is installed
+    shell: "dpkg-query -W -f'${Status}' {{ es_other_package_name }}"
+    register: elasticsearch_package
+    failed_when: False
+    changed_when: False
+    check_mode: no
 
-- name: Debian - Add Elasticsearch repository key
-  become: yes
-  apt_key: url="{{ es_apt_key }}" state=present
-  when: es_use_repository and es_apt_key
+  - name: stop elasticsearch
+    service:
+      name: 'elasticsearch'
+      state: stopped
+    when: elasticsearch_package.stdout == 'install ok installed'
 
-- name: Debian - Add elasticsearch repository
-  become: yes
-  apt_repository: repo={{ item.repo }} state={{ item.state}}
-  with_items:
-    - { repo: "{{ es_apt_url_old }}", state: "absent" }
-    - { repo: "{{ es_apt_url }}", state: "present" }
+  - name: Debian - Remove elasticsearch package if we are switching to a different package type
+    apt:
+      name: '{{ es_other_package_name }}'
+      state: absent
+    when: elasticsearch_package.stdout == 'install ok installed'
+
+
+- name: Install Elasticsearch repository
   when: es_use_repository
+  become: yes
+  block:
+  - name: Debian - Install apt-transport-https to support https APT downloads
+    apt:
+      name: apt-transport-https
+      state: present
+
+  - name: Debian - Add Elasticsearch repository key
+    apt_key:
+      url: '{{ es_apt_key }}'
+      state: present
+    when: es_apt_key | string
+
+  - name: Debian - Add elasticsearch repository
+    apt_repository:
+      repo: '{{ item.repo }}'
+      state: '{{ item.state }}'
+    with_items:
+      - { repo: "{{ es_apt_url_old }}", state: "absent" }
+      - { repo: "{{ es_apt_url }}", state: "present" }
+      - { repo: "{{ es_other_apt_url }}", state: "absent" }
+
+
+- name: Debian - Ensure elasticsearch is installed
+  become: yes
+  apt:
+    name: '{{ es_package_name }}{% if es_version is defined and es_version != "" %}={{ es_version }}{% endif %}'
+    state: present
+    force: '{{ force_install }}'
+    allow_unauthenticated: "{{ 'no' if es_apt_key else 'yes' }}"
+    cache_valid_time: 86400
+  when: es_use_repository
+  register: debian_elasticsearch_install_from_repo
+  notify: restart elasticsearch
+  environment:
+    ES_PATH_CONF: "/etc/elasticsearch"
 
 - name: Debian - Include versionlock
   include: elasticsearch-Debian-version-lock.yml
   when: es_version_lock
-
-- name: Debian - Ensure elasticsearch is installed
-  become: yes
-  apt: name=elasticsearch{% if es_version is defined and es_version != "" %}={{ es_version }}{% endif %} state=present force={{force_install}} allow_unauthenticated={{ 'no' if es_apt_key else 'yes' }} cache_valid_time=86400
-  when: es_use_repository
-  register: debian_elasticsearch_install_from_repo
-  notify: restart elasticsearch
 
 - name: Debian - Download elasticsearch from url
   get_url: url={% if es_custom_package_url is defined %}{{ es_custom_package_url }}{% else %}{{ es_package_url }}-{{ es_version }}.deb{% endif %} dest=/tmp/elasticsearch-{{ es_version }}.deb validate_certs=no
@@ -46,3 +83,5 @@
   when: not es_use_repository
   register: elasticsearch_install_from_package
   notify: restart elasticsearch
+  environment:
+    ES_PATH_CONF: "/etc/elasticsearch"

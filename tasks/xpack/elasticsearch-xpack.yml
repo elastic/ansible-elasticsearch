@@ -1,14 +1,16 @@
 ---
 
 - name: set fact es_version_changed
-  set_fact: es_version_changed={{ ((elasticsearch_install_from_package is defined and ((debian_elasticsearch_install_from_repo is defined and debian_elasticsearch_install_from_repo.changed) or (redhat_elasticsearch_install_from_repo is defined and redhat_elasticsearch_install_from_repo.changed))) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) }}
+  set_fact: es_version_changed={{ ((elasticsearch_install_from_package is defined and (debian_elasticsearch_install_from_repo.changed or redhat_elasticsearch_install_from_repo.changed)) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) }}
 
 - name: include elasticsearch-xpack-install.yml
   include: elasticsearch-xpack-install.yml
+  when: es_install_xpack
 
 #Security configuration
 - name: include security/elasticsearch-security.yml
   include: security/elasticsearch-security.yml
+  when: es_enable_xpack
 
 #Add any feature specific configuration here
 - name: Set Plugin Directory Permissions
@@ -18,5 +20,5 @@
 #Make sure elasticsearch.keystore has correct Permissions
 - name: Set elasticsearch.keystore Permissions
   become: yes
-  file: state=file path={{ conf_dir }}/elasticsearch.keystore owner={{ es_user }} group={{ es_group }}
-  when: es_enable_xpack and "security" in es_xpack_features and (es_version | version_compare('6.0.0', '>'))
+  file: state=file path={{ es_conf_dir }}/elasticsearch.keystore owner={{ es_user }} group={{ es_group }}
+  when: es_enable_xpack

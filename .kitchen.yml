@@ -6,11 +6,9 @@ provisioner:
   name: ansible_playbook
   hosts: localhost
   roles_path: ../
-  require_ansible_repo: false
+  require_ansible_repo: true
   require_ansible_omnibus: false
   require_ansible_source: false
-  require_pip: true
-  ansible_version: 2.4.3.0
   http_proxy: <%= ENV['HTTP_PROXY'] %>
   https_proxy: <%= ENV['HTTPS_PROXY'] %>
   no_proxy: localhost,127.0.0.1
@@ -20,8 +18,8 @@ provisioner:
   attributes:
     extra_vars:
       es_major_version: "<%= ENV['VERSION'] %>"
-      <% if ENV['VERSION'] == '5.x' %>
-      es_version: '5.6.9'
+      <% if ENV['VERSION'] == '6.x' %>
+      es_version: '6.8.0'
       <% end %>
   <% end %>
 
@@ -31,105 +29,106 @@ transport:
 platforms:
   - name: ubuntu-14.04
     driver_config:
-      image: dliappis/ubuntu-devopsci:14.04
+      image: ubuntu:14.04
       privileged: true
       provision_command:
-        - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
-        - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip
-        - pip install jmespath
-        - pip uninstall -y ansible
+        - apt-get update -q && apt-get install -y -q software-properties-common && add-apt-repository -y ppa:ansible/ansible && add-apt-repository -y ppa:openjdk-r/ppa
+        - apt-get update -q && apt-get -y -q install ansible openjdk-8-jre python-jmespath
+        - locale-gen en_US.UTF-8 && localedef -i en_US -c -f UTF-8 en_US.UTF-8
       use_sudo: false
-      volume: 
+      volume:
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
-        - /etc/elasticsearch
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
   - name: ubuntu-16.04
     driver_config:
-      image: dliappis/ubuntu-devopsci:16.04
+      image: ubuntu:16.04
       privileged: true
       provision_command:
-        - apt-get update && apt-get install -y software-properties-common &&  add-apt-repository -y ppa:ansible/ansible
-        - apt-get install -y -q net-tools
-        - apt-get update && apt-get -y -q install python-apt python-pycurl python-pip
-        - pip install jmespath
-        - pip uninstall -y ansible
+        - apt-get update -q && apt-get install -y -q iproute locales software-properties-common && add-apt-repository -y ppa:ansible/ansible
+        - apt-get update -q && apt-get install -y -q ansible python-jmespath
+        - locale-gen en_US.UTF-8 && localedef -i en_US -c -f UTF-8 en_US.UTF-8
       use_sudo: false
-      volume: 
+      volume:
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
-        - /etc/elasticsearch
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
+      run_command: "/sbin/init"
+  - name: ubuntu-18.04
+    driver_config:
+      image: ubuntu:18.04
+      privileged: true
+      provision_command:
+        - apt-get install -y -q ansible iproute2 python-jmespath
+      use_sudo: false
+      volume:
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
       run_command: "/sbin/init"
   - name: debian-8
     driver_config:
-      image: dliappis/debian-devopsci:8
+      image: debian:8
       privileged: true
       provision_command:
-        - apt-get update && apt-get -y install python python-dev python-pip build-essential libyaml-dev python-yaml curl wget
-        - apt-get install -y -q net-tools
-        - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
-        - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
-        - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
-        - pip install jmespath
-        - pip uninstall -y ansible
-      volume: 
+        - apt-get update -q && apt-get install -y -q gnupg2 python-jmespath
+        - echo "deb http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+        - echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf
+        - apt-get update && apt-get -y install -t jessie-backports openjdk-8-jre-headless
+        - echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" > /etc/apt/sources.list.d/ansible.list
+        - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+        - apt-get update -q && apt-get install -y -q ansible
+      volume:
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
-        - /etc/elasticsearch
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
+      use_sudo: false
+      run_command: "/sbin/init"
+  - name: debian-9
+    driver_config:
+      image: debian:9
+      privileged: true
+      provision_command:
+        - apt-get update -q && apt-get install -y -q gnupg2 python-jmespath systemd-sysv
+        - echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" > /etc/apt/sources.list.d/ansible.list
+        - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+        - apt-get update -q && apt-get install -y -q ansible
+      volume:
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
       use_sudo: false
       run_command: "/sbin/init"
   - name: centos-7
     driver_config:
-      image: dliappis/centos-devopsci:7
+      image: centos:7
       provision_command:
-        - sed -ri 's/^#?PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
-        - sed -ri 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config
-        - sed -ri 's/^#?UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
-        - rm /etc/yum.repos.d/epel*repo /etc/yum.repos.d/puppetlabs-pc1.repo
-        - yum -y install initscripts
-        - yum -y remove ansible
-        - yum clean all
-        - pip install jmespath
-      volume: 
+        - yum -y install epel-release
+        - yum -y install ansible iproute python2-jmespath
+      volume:
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
-        - /etc/elasticsearch
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
       run_command: "/usr/sbin/init"
       privileged: true
       use_sudo: false
 
 suites:
-  - name: standard
+  - name: oss
     provisioner:
       idempotency_test: true
-      playbook: test/integration/standard.yml
-    run_list:
-    attributes:
-  - name: package
-    run_list:
-    attributes:
+      playbook: test/integration/oss.yml
+  - name: oss-upgrade
     provisioner:
-      playbook: test/integration/package.yml
-  - name: config
-    run_list:
-    attributes:
+      playbook: test/integration/oss-upgrade.yml
+      idempotency_test: false
+  - name: oss-to-xpack-upgrade
     provisioner:
-      playbook: test/integration/config.yml
-  - name: multi
-    run_list:
-    attributes:
-    provisioner:
-      playbook: test/integration/multi.yml
-      idempotency_test: true
+      playbook: test/integration/oss-to-xpack-upgrade.yml
+      idempotency_test: false
   - name: xpack
-    run_list:
-    attributes:
     provisioner:
       playbook: test/integration/xpack.yml
-  - name: xpack-standard
-    run_list:
-    attributes:
-    provisioner:
-      playbook: test/integration/xpack-standard.yml
       idempotency_test: true
+  - name: xpack-upgrade
+    provisioner:
+      playbook: test/integration/xpack-upgrade.yml
+      idempotency_test: false
   - name: issue-test
-    run_list:
-    attributes:
     provisioner:
       playbook: test/integration/issue-test.yml
       idempotency_test: false

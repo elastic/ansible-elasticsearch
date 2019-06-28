@@ -1,0 +1,16 @@
+VERSION:
+  - 7.x
+  - 6.x
+OS:
+  - ubuntu-1404
+  - ubuntu-1604
+  - ubuntu-1804
+  - debian-8
+  - debian-9
+  - centos-7
+TEST_TYPE:
+  - oss
+  - oss-upgrade
+  - oss-to-xpack-upgrade
+  - xpack
+  - xpack-upgrade

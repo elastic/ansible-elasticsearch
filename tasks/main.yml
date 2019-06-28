@@ -1,6 +1,16 @@
 ---
+
+- set_fact: "es_major_version={{ es_version.split('.')[0] }}.x"
+  when:
+      - es_major_version is undefined
+
 - name: os-specific vars
   include_vars: "{{ansible_os_family}}.yml"
+  tags:
+      - always
+
+- name: set compatibility variables
+  include: compatibility-variables.yml
   tags:
       - always
 
@@ -8,6 +18,10 @@
   include: elasticsearch-parameters.yml
   tags:
       - always
+
+- name: use snapshot release
+  include: snapshot-release.yml
+  when: es_use_snapshot_release
 
 - name: include java.yml
   include: java.yml
@@ -25,12 +39,6 @@
   tags:
       - config
 
-- name: include elasticsearch-scripts.yml
-  include: elasticsearch-scripts.yml
-  when: es_scripts
-  tags:
-      - scripts
-
 - name: include elasticsearch-plugins.yml
   include: elasticsearch-plugins.yml
   when: es_plugins is defined or es_plugins_reinstall
@@ -47,7 +55,8 @@
   meta: flush_handlers
 
 - name: Make sure elasticsearch is started
-  service: name={{instance_init_script | basename}} state=started enabled=yes
+  become: yes
+  service: name=elasticsearch state=started enabled=yes
   when: es_start_service
 
 - name: Wait for elasticsearch to startup
@@ -59,11 +68,14 @@
 
 - name: set fact manage_native_realm to true
   set_fact: manage_native_realm=true
-  when: es_start_service and (es_enable_xpack and "security" in es_xpack_features) and ((es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined))
+  when:
+   - es_start_service
+   - es_enable_xpack
+   - (es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined)
 
 # If playbook runs too fast, Native commands could fail as the Native Realm is not yet up
 - name: Wait 15 seconds for the Native Relm to come up
-  pause: seconds=15
+  command: sleep 15
   when: manage_native_realm
 
 - name: activate-license

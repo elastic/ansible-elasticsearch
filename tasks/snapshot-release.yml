@@ -1,0 +1,55 @@
+# These tasks are to run ansible-elasticsearch using pre-release snapshot builds
+# This should only be used for testing purposes and can be enabled by setting
+# es_use_snapshot_release: true
+
+- name: detect if we need the .deb or .rpm
+  set_fact:
+    package_type: "{{ 'deb' if (ansible_os_family == 'Debian') else 'rpm' }}"
+
+- name: get the minor version
+  set_fact:
+    minor_version: "{{ es_version.split('.')[0:2] | join('.')}}"
+
+- name: set the package_name
+  set_fact:
+    package_name: "{{ es_package_name + '-' + es_version + '-SNAPSHOT.' + package_type }}"
+
+- name: generate the artifacts url
+  set_fact:
+    artifacts_url: "{{ 'https://artifacts-api.elastic.co/v1/search/' + minor_version + '/' + package_name }}"
+
+- name: get latest snapshot build
+  uri:
+    url: "{{ artifacts_url }}"
+    return_contents: true
+  register: snapshots
+  retries: 5
+  delay: 1
+  ignore_errors: true
+  until: "'status' in snapshots and snapshots.status == 200"
+  check_mode: no
+
+- name: use the custom package url instead of the repository
+  set_fact:
+    es_custom_package_url: "{{ snapshots.json['packages'][package_name]['url'] }}"
+    es_use_repository: false
+
+- name: set snapshot urls for es_plugins when it is defined
+  when: es_plugins is defined
+  block:
+  - name: split up the snapshot url so we can create the plugin url
+    set_fact:
+      split_url: "{{ es_custom_package_url.split('/') }}"
+  
+  - name: set base plugin url
+    set_fact:
+      plugin_url: "{{ split_url[0] + '//' + split_url[2:5]|join('/') + '/elasticsearch-plugins/'}}"
+  
+  - name: create es_plugins with the snapshot url
+    set_fact:
+      es_plugins_temp: "{{ es_plugins_temp|default([]) + [{'plugin': item.plugin, 'url': plugin_url + item.plugin + '/' + item.plugin + '-' + es_version + '-SNAPSHOT.zip'}] }}"
+    with_items: "{{ es_plugins }}"
+  
+  - name: override the original es_plugins with the snapshot version
+    set_fact:
+      es_plugins: "{{ es_plugins_temp }}"

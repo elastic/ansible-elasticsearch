@@ -1,0 +1,14 @@
+---
+- name: Standard test for single node setup. Tests idempotence.
+  hosts: localhost
+  post_tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - elasticsearch
+  vars:
+    es_enable_xpack: false
+    es_heap_size: "1g"
+    es_plugins:
+      - plugin: ingest-attachment
+
+#Do not add tests here. This test is run twice and confirms idempotency.

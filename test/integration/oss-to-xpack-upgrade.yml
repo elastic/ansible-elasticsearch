@@ -1,0 +1,25 @@
+---
+- name: Standard test for single node setup. Tests idempotence.
+  hosts: localhost
+  post_tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - elasticsearch
+  vars:
+    es_version: "{{ '7.0.0' if es_major_version == '7.x' else '6.7.1' }}" # This is set to an older version than the current default to force an upgrade
+    es_enable_xpack: false
+    es_heap_size: "1g"
+
+- name: Standard test for single node setup. Tests idempotence.
+  hosts: localhost
+  post_tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - elasticsearch
+  vars:
+    es_enable_xpack: true
+    es_heap_size: "1g"
+    es_xpack_features:
+      - monitoring
+      - graph
+      - ml
