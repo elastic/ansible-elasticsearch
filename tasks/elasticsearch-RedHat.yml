@@ -35,6 +35,10 @@
     name: '{{ es_other_package_name }}'
     state: 'absent'
 
+- name: Include optional user and group creation.
+  when: (es_user_id is defined) and (es_group_id is defined)
+  include: elasticsearch-optional-user.yml
+
 - name: RedHat - Install Elasticsearch
   become: yes
   yum:

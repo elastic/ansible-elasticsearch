@@ -55,6 +55,9 @@
       - { repo: "{{ es_apt_url }}", state: "present" }
       - { repo: "{{ es_other_apt_url }}", state: "absent" }
 
+- name: Include optional user and group creation.
+  when: (es_user_id is defined) and (es_group_id is defined)
+  include: elasticsearch-optional-user.yml
 
 - name: Debian - Ensure elasticsearch is installed
   become: yes
