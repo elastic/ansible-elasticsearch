@@ -10,11 +10,11 @@ If you have single-instances hosts and want to upgrade from previous versions of
 
 1. Override these variables to match previous values:
 ```yaml
-es_conf_dir: /etc/elasticsearch/{{ instance_name }}
+es_conf_dir: /etc/elasticsearch/{{ es_instance_name }}
 es_data_dirs:
-  - /var/lib/elasticsearch/{{ node_name }}-{{ instance_name }}
-es_log_dir: /var/log/elasticsearch/{{ node_name }}-{{ instance_name }}
-es_pid_dir: /var/run/elasticsearch/{{ node_name }}-{{ instance_name }}
+  - /var/lib/elasticsearch/{{ inventory_hostname }}-{{ es_instance_name }}
+es_log_dir: /var/log/elasticsearch/{{ inventory_hostname }}-{{ es_instance_name }}
+es_pid_dir: /var/run/elasticsearch/{{ inventory_hostname }}-{{ es_instance_name }}
 ```
 
 2. Deploy ansible-role. **Even if these variables are overrided, Elasticsearch config file and default option file will change, which imply an Elasticsearch restart.**
