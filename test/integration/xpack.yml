@@ -7,7 +7,5 @@
   roles:
     - elasticsearch
   vars:
-    es_config:
-      http.port: 9200
     es_xpack_custom_url: "https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-{{ es_version }}.zip"
     es_heap_size: 2g

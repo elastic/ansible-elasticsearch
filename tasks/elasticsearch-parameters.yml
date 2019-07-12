@@ -4,10 +4,6 @@
   fail: msg="es_proxy_port must be specified and cannot be blank when es_proxy_host is defined"
   when: (es_proxy_port is not defined or es_proxy_port == '') and (es_proxy_host is defined and es_proxy_host != '')
 
-- name: debug message
-  debug: msg="WARNING - It is recommended you specify the parameter 'http.port'"
-  when: es_config['http.port'] is not defined
-
 #If the user attempts to lock memory they must specify a heap size
 - name: fail when heap size is not specified when using memory lock
   fail: msg="If locking memory with bootstrap.memory_lock a heap size must be specified"
