@@ -16,7 +16,7 @@
   template:
     src: 'elasticsearch.repo'
     dest: '/etc/yum.repos.d/elasticsearch-{{ es_repo_name }}.repo'
-  when: es_use_repository
+  when: es_use_repository and es_add_repository
 
 - name: RedHat - remove unused Elasticsearch repo
   become: yes
