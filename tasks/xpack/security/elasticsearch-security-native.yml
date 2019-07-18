@@ -118,7 +118,7 @@
       password: "{{es_api_basic_auth_password}}"
       force_basic_auth: yes
     when: native_users[item].password is defined
-    no_log: False
+    no_log: True
     with_items: "{{ users_to_ignore | default([]) }}"
 
   - name: set fact users_to_modify
@@ -137,7 +137,7 @@
       password: "{{es_api_basic_auth_password}}"
       force_basic_auth: yes
     when: manage_native_users
-    no_log: False
+    no_log: True
     with_items: "{{ users_to_modify | default([]) }}"
 
   ## ROLE CHANGES
@@ -309,7 +309,7 @@
       password: "{{es_api_basic_auth_password}}"
       force_basic_auth: yes
     when: native_users[item].password is defined
-    no_log: False
+    no_log: True
     with_items: "{{ users_to_ignore | default([]) }}"
 
   - name: set fact users_to_modify
@@ -328,7 +328,7 @@
       password: "{{es_api_basic_auth_password}}"
       force_basic_auth: yes
     when: manage_native_users
-    no_log: False
+    no_log: True
     with_items: "{{ users_to_modify | default([]) }}"
 
   ## ROLE CHANGES
