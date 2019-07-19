@@ -76,7 +76,7 @@
 # If playbook runs too fast, Native commands could fail as the Native Realm is not yet up
 - name: Wait 15 seconds for the Native Relm to come up
   command: sleep 15
-  when: manage_native_realm
+  when: manage_native_realm|bool
 
 - name: activate-license
   include: ./xpack/security/elasticsearch-xpack-activation.yml
