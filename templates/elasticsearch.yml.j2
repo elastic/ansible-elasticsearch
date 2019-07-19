@@ -14,10 +14,6 @@ node.name: {{inventory_hostname}}
 cluster.initial_master_nodes: {{inventory_hostname}}
 {% endif %}
 
-{% if (es_version is version_compare('7.0.0', '>=')) %}
-xpack.security.transport.ssl.enabled: true
-{% endif %}
-
 #################################### Paths ####################################
 
 # Path to directory containing configuration (this file and logging.yml):
@@ -44,6 +40,10 @@ action.auto_create_index: {{ es_action_auto_create_index }}
 
 {% if es_enable_xpack and es_api_basic_auth_username is defined and es_api_basic_auth_password is defined %}
 xpack.security.enabled: true
+{% endif %}
+
+{% if es_enable_xpack and es_api_basic_auth_username is defined and es_api_basic_auth_password is defined %}
+xpack.security.transport.ssl.enabled: true
 {% endif %}
 
 {% if es_mail_config is defined %}
