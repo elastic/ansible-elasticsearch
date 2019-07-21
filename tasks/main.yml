@@ -6,18 +6,12 @@
 
 - name: os-specific vars
   include_vars: "{{ansible_os_family}}.yml"
-  tags:
-      - always
 
 - name: set compatibility variables
   include: compatibility-variables.yml
-  tags:
-      - always
 
 - name: check-set-parameters
   include: elasticsearch-parameters.yml
-  tags:
-      - always
 
 - name: use snapshot release
   include: snapshot-release.yml
