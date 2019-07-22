@@ -20,6 +20,7 @@
     status_code: 200
     user: "{{es_api_basic_auth_username | default(omit)}}"
     password: "{{es_api_basic_auth_password | default(omit)}}"
+    force_basic_auth: yes
     body_format: json
     body: "{{ lookup('file', item) }}"
   when: load_templates.changed and es_start_service

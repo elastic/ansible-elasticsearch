@@ -21,6 +21,22 @@ es_api_url = "http://localhost:#{vars['es_api_port']}"
 username = vars['es_api_basic_auth_username']
 password = vars['es_api_basic_auth_password']
 
+# Sample of default features status
+features = {
+  'monitoring' => {
+    'enabled' => 'true',
+    'available' => 'true'
+  },
+  'ml' => {
+    'enabled' => 'true',
+    'available' => 'false'
+  },
+  'sql' => {
+    'enabled' => 'true',
+    'available' => 'true'
+  }
+}
+
 shared_examples 'shared::init' do |vars|
   describe 'version check' do
     it 'should be reported as version '+vars['es_version'] do
@@ -35,12 +51,34 @@ shared_examples 'shared::init' do |vars|
       it 'xpack should be activated' do
         expect(curl_json("#{es_api_url}/_license", username=username, password=password)['license']['status']).to eq('active')
       end
-      features = curl_json("#{es_api_url}/_xpack", username=username, password=password)
-      curl_json("#{es_api_url}/_xpack", username=username, password=password)['features'].each do |feature,values|
-        enabled = vars['es_xpack_features'].include? feature
-		status = if enabled then 'enabled' else 'disabled' end
-		it "the xpack feature '#{feature}' to be #{status}" do
-          expect(values['enabled'] = enabled)
+      if vars.key?('es_xpack_features')
+        curl_json("#{es_api_url}/_xpack", username=username, password=password)['features'].each do |feature,values|
+          enabled = vars['es_xpack_features'].include? feature
+          status = if enabled then 'enabled' else 'disabled' end
+          it "the xpack feature '#{feature}' to be #{status}" do
+            expect(values['enabled'] = enabled)
+          end
+        end
+      else
+        features.each do |feature, status|
+          feature_available = curl_json("#{es_api_url}/_xpack", username=username, password=password)['features'][feature]['available']
+          if feature_available == "true"
+            status = "available"
+          else
+            status = "unavailable"
+          end
+          it "the xpack feature '#{feature}' to be #{status}" do
+            expect(feature_available = status['available'])
+          end
+          feature_enabled = curl_json("#{es_api_url}/_xpack", username=username, password=password)['features'][feature]['enabled']
+          if feature_enabled == "true"
+            status = "enabled"
+          else
+            status = "disabled"
+          end
+          it "the xpack feature '#{feature}' to be #{status}" do
+            expect(feature_available = status['enabled'])
+          end
         end
       end
     end
@@ -59,7 +97,7 @@ shared_examples 'shared::init' do |vars|
     it { should be_installed }
   end
 
-  describe service("#{vars['es_instance_name']}_elasticsearch") do
+  describe service("elasticsearch") do
     it { should be_running }
   end
 
@@ -90,30 +128,9 @@ shared_examples 'shared::init' do |vars|
       end
     end
   end
-  if vars['es_scripts']
-    describe file("/etc/elasticsearch/#{vars['es_instance_name']}/scripts") do
-      it { should be_directory }
-      it { should be_owned_by 'elasticsearch' }
-    end
-    describe file("/etc/elasticsearch/#{vars['es_instance_name']}/scripts/calculate-score.groovy") do
-      it { should be_file }
-      it { should be_owned_by 'elasticsearch' }
-    end
-  end
-  describe file('/etc/init.d/elasticsearch') do
-    it { should_not exist }
-  end
 
   describe file(family['defaults_path']) do
     its(:content) { should match '' }
-  end
-
-  describe file('/etc/elasticsearch/elasticsearch.yml') do
-    it { should_not exist }
-  end
-
-  describe file('/etc/elasticsearch/logging.yml') do
-    it { should_not exist }
   end
 
   if vars.key?('es_plugins')
@@ -134,12 +151,12 @@ shared_examples 'shared::init' do |vars|
       end
     end
   end
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
-    it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
+  describe file("/etc/elasticsearch/elasticsearch.yml") do
+    it { should contain "node.name: localhost" }
     it { should contain 'cluster.name: elasticsearch' }
-    it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
-    its(:content) { should match "path.data: #{vars['data_dirs'].join(',')}" }
-    its(:content) { should match "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
+    it { should_not contain "path.conf: /etc/elasticsearch" }
+    its(:content) { should match "path.data: #{vars['es_data_dirs'].join(',')}" }
+    its(:content) { should match "path.logs: /var/log/elasticsearch" }
   end
 
   if vars['es_use_repository']
