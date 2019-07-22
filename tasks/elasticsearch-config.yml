@@ -25,16 +25,17 @@
   notify: restart elasticsearch
 
 #Copy the systemd specific file if systemd is installed
-- name: Make sure destination dir exists
-  file: path={{ sysd_config_file | dirname }} state=directory recurse=yes mode=0755
+- when: use_system_d and m_lock_enabled
+  block:
+    - name: Make sure destination dir exists
+      file: path={{ sysd_config_file | dirname }} state=directory recurse=yes mode=0755
   
-- name: Copy Systemd File for Instance
-  become: yes
-  copy: src=systemd/elasticsearch_override.conf dest={{ sysd_config_file }} mode=0644 force=yes
-  when: use_system_d and m_lock_enabled
-  notify:
-  - reload systemd configuration
-  - restart elasticsearch
+    - name: Copy Systemd File for Instance
+      become: yes
+      copy: src=systemd/elasticsearch_override.conf dest={{ sysd_config_file }} mode=0644 force=yes
+      notify:
+       - reload systemd configuration
+       - restart elasticsearch
 
 #Copy the logging.yml
 - name: Copy log4j2.properties File
