@@ -6,16 +6,19 @@
 
 - name: os-specific vars
   include_vars: "{{ansible_os_family}}.yml"
+  when: ansible_os_family is defined
   tags:
       - always
 
 - name: set compatibility variables
   include: compatibility-variables.yml
+  when: ansible_os_family is defined
   tags:
       - always
 
 - name: check-set-parameters
   include: elasticsearch-parameters.yml
+  when: ansible_os_family is defined
   tags:
       - always
 
