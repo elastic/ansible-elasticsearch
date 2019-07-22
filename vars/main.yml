@@ -1,3 +1,4 @@
 ---
 es_package_url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch"
 reserved_xpack_users: ["elastic","kibana","logstash_system"]
+sysd_config_file: "/etc/systemd/system/elasticsearch.service.d/override.conf"
