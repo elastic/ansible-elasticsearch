@@ -20,7 +20,6 @@ shared_examples 'xpack_upgrade::init' do |vars|
     it 'should list the security roles' do
       roles = curl_json("http://localhost:9200/_xpack/security/role", username='es_admin', password='changeMeAgain')
       expect(roles.key?('superuser'))
-      assert false
     end
   end
 
