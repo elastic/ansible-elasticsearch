@@ -43,17 +43,21 @@
     apt_key:
       url: '{{ es_apt_key }}'
       state: present
-    when: es_apt_key | string
+    when: es_add_repository and es_apt_key | string
 
   - name: Debian - Add elasticsearch repository
     apt_repository:
       repo: '{{ item.repo }}'
       state: '{{ item.state }}'
+    when: es_add_repository
     with_items:
       - { repo: "{{ es_apt_url_old }}", state: "absent" }
       - { repo: "{{ es_apt_url }}", state: "present" }
       - { repo: "{{ es_other_apt_url }}", state: "absent" }
 
+- name: Include optional user and group creation.
+  when: (es_user_id is defined) and (es_group_id is defined)
+  include: elasticsearch-optional-user.yml
 
 - name: Debian - Ensure elasticsearch is installed
   become: yes

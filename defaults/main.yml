@@ -5,6 +5,7 @@ es_enable_xpack: true
 es_package_name: "elasticsearch"
 es_version_lock: false
 es_use_repository: true
+es_add_repository: true
 es_templates_fileglob: "files/templates-{{ es_major_version }}/*.json"
 es_repo_base: "https://artifacts.elastic.co"
 es_apt_key: "{{ es_repo_base }}/GPG-KEY-elasticsearch"

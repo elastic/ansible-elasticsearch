@@ -24,10 +24,23 @@
   template: src=elasticsearch.j2 dest={{ default_file }} mode=0644 force=yes
   notify: restart elasticsearch
 
+#Copy the systemd specific file if systemd is installed
+- when: use_system_d and m_lock_enabled
+  become: yes
+  block:
+    - name: Make sure destination dir exists
+      file: path={{ sysd_config_file | dirname }} state=directory mode=0755
+  
+    - name: Copy specific ElasticSearch Systemd config file
+      ini_file: path={{ sysd_config_file }} section=Service option=LimitMEMLOCK value=infinity mode=0644
+      notify:
+       - reload systemd configuration
+       - restart elasticsearch
+
 #Copy the logging.yml
 - name: Copy log4j2.properties File
   become: yes
-  template: src={{es_config_log4j2}} dest={{ es_conf_dir }}/log4j2.properties owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src={{ es_config_log4j2 }} dest={{ es_conf_dir }}/log4j2.properties owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   notify: restart elasticsearch
 
 - name: Copy jvm.options File

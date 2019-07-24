@@ -8,6 +8,7 @@
     body_format: json
     body: "{{ es_xpack_license }}"
     return_content: yes
+    force_basic_auth: yes
   register: license_activated
   no_log: True
   failed_when: >

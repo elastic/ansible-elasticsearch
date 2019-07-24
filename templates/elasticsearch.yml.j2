@@ -50,10 +50,10 @@ xpack.notification.email:
         auth: {{ es_mail_config['require_auth'] }}
         host: {{ es_mail_config['host'] }}
         port: {{ es_mail_config['port'] }}
-        {% if es_mail_config['require_auth'] == true %}
+        {% if es_mail_config['require_auth'] == true -%}
         user: {{ es_mail_config['user'] }}
         password: {{ es_mail_config['pass'] }}
-        {% endif %}
+        {%- endif %}
 {% endif %}
 
 {% if es_enable_http_ssl | bool %}
