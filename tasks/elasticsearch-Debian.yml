@@ -85,3 +85,15 @@
   notify: restart elasticsearch
   environment:
     ES_PATH_CONF: "/etc/elasticsearch"
+
+- name: add LimitMEMLOCK into the default systemd service
+  lineinfile:
+    dest: /usr/lib/systemd/system/elasticsearch.service
+    insertafter: '^\[Service\]'
+    line: "LimitMEMLOCK=infinity"
+    state: present
+  become: yes
+  when: m_lock_enabled
+  notify: 
+    - "reload systemd configuration"
+    - "restart elasticsearch"
