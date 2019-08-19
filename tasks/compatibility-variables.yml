@@ -43,3 +43,4 @@
   when:
     - es_open_xpack
     - not es_enable_xpack
+    - not es_force_non_oss_repo
