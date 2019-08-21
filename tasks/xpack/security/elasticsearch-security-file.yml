@@ -1,6 +1,6 @@
 ---
 - name: set fact manage_file_users
-  set_fact: manage_file_users=es_users is defined and es_users.file is defined and es_users.file.keys() | length > 0
+  set_fact: manage_file_users=es_users is defined and es_users.file is defined and es_users.file.keys() | list | length > 0
 
 - name: Check if old users file exists
   stat:
@@ -35,7 +35,7 @@
   check_mode: no
 
 - name: set fact users_to_remove
-  set_fact: users_to_remove={{ current_file_users.stdout_lines | difference (es_users.file.keys()) }}
+  set_fact: users_to_remove={{ current_file_users.stdout_lines | difference (es_users.file.keys() | list) }}
   when: manage_file_users
 
 #Remove users
@@ -51,7 +51,7 @@
     ES_HOME: "{{es_home}}"
 
 - name: set fact users_to_add
-  set_fact: users_to_add={{ es_users.file.keys() | difference (current_file_users.stdout_lines) }}
+  set_fact: users_to_add={{ es_users.file.keys() | list | difference (current_file_users.stdout_lines) }}
   when: manage_file_users
 
 #Add users
@@ -72,7 +72,7 @@
   become: yes
   command: >
     {{es_home}}/bin/{{es_xpack_users_command}} passwd {{ item }} -p {{es_users.file[item].password}}
-  with_items: "{{ es_users.file.keys() | default([]) }}"
+  with_items: "{{ es_users.file.keys() | list }}"
   when: manage_file_users
   #Currently no easy way to figure out if the password has changed or to know what it currently is so we can skip.
   changed_when: False
