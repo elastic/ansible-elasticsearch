@@ -8,13 +8,13 @@ See [554#issuecomment-496804929](https://github.com/elastic/ansible-elasticsearc
 
 If you have single-instances hosts and want to upgrade from previous versions of the role:
 
-### Procedure with datas move
+### Procedure with data move
 
-This procedure will allow you to move your datas to the new standard paths (see [#581](https://github.com/elastic/ansible-elasticsearch/issues/581)):
+This procedure will allow you to move your data to the new standard paths (see [#581](https://github.com/elastic/ansible-elasticsearch/issues/581)):
 
 1. Stop Elasticsearch before the migration
 
-2. Migrate your datas to the new standard paths:
+2. Migrate your data to the new standard paths:
 ```
 # mv /etc/elasticsearch/${ES_INSTANCE_NAME}/* /etc/elasticsearch/ && rm -fr /etc/elasticsearch/${ES_INSTANCE_NAME}/
 mv: overwrite '/etc/elasticsearch/elasticsearch.keystore'? y
@@ -22,7 +22,7 @@ mv: overwrite '/etc/elasticsearch/elasticsearch.keystore'? y
 # ls /var/lib/elasticsearch/
 nodes
 # mv /var/log/elasticsearch/${INVENTORY_HOSTNAME}-${ES_INSTANCE_NAME}/* /var/log/elasticsearch/ && rm -fr /var/log/elasticsearch/${INVENTORY_HOSTNAME}-${ES_INSTANCE_NAME}/
-# rm -fr /var/log/elasticsearch/${INVENTORY_HOSTNAME}-${ES_INSTANCE_NAME}/
+# rm -fr /var/run/elasticsearch/${INVENTORY_HOSTNAME}-${ES_INSTANCE_NAME}/
 ```
 
 3. Update playbook (remove `es_conf_dir`, `es_data_dirs`, `es_log_dir`, `es_pid_dir` and `es_instance_name` variables)
@@ -80,9 +80,9 @@ $ find /etc -name '${INVENTORY_HOSTNAME}-${ES_INSTANCE_NAME}*'
 /etc/systemd/system/multi-user.target.wants/node1_elasticsearch.service
 ```
 
-### Procedure without datas move
+### Procedure without data move
 
-This procedure will allow you to keep your datas to the old paths:
+This procedure will allow you to keep your data to the old paths:
 
 1. Override these variables to match previous values:
 ```yaml
