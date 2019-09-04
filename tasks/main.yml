@@ -3,6 +3,8 @@
 - set_fact: "es_major_version={{ es_version.split('.')[0] }}.x"
   when:
       - es_major_version is undefined
+  tags:
+      - always
 
 - name: os-specific vars
   include_vars: "{{ansible_os_family}}.yml"
