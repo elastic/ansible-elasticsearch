@@ -27,7 +27,7 @@ nodes
 
 3. Update playbook (remove `es_conf_dir`, `es_data_dirs`, `es_log_dir`, `es_pid_dir` and `es_instance_name` variables)
 
-4. Deploy ansible-role
+4. Update ansible-role to new version ([7.1.1](https://github.com/elastic/ansible-elasticsearch/releases/tag/7.1.1) at the time of writing) and deploy ansible-role
 
 5. After ansible-role new deployment, you can do some cleanup of old Init file and Default file:
 
