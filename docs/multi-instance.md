@@ -40,7 +40,7 @@ $ mv /var/lib/elasticsearch/${INVENTORY_HOSTNAME}-${ES_INSTANCE_NAME}/* /var/lib
 $ ls /var/lib/elasticsearch/
 nodes
 $ mv /var/log/elasticsearch/${INVENTORY_HOSTNAME}-${ES_INSTANCE_NAME}/* /var/log/elasticsearch/ && rm -fr /var/log/elasticsearch/${INVENTORY_HOSTNAME}-${ES_INSTANCE_NAME}/
-$ rm -fr /var/log/elasticsearch/${INVENTORY_HOSTNAME}-${ES_INSTANCE_NAME}/
+$ rm -fr /var/run/elasticsearch/${INVENTORY_HOSTNAME}-${ES_INSTANCE_NAME}/
 $ ansible-galaxy install --force elastic.elasticsearch,7.1.1
 - changing role elastic.elasticsearch from 6.6.0 to 7.1.1
 - downloading role 'elasticsearch', owned by elastic
