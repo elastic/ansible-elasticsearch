@@ -100,7 +100,3 @@
   template: src=security/users_roles.j2 dest={{ es_conf_dir }}/users_roles mode=0644 force=yes
   when: manage_file_users and users_roles | length > 0
 
-#Set permission on security directory. E.g. if 2 nodes are installed on the same machine, the second node will not get the users file created at install, causing the files being created at es_users call and then having the wrong Permissions.
-- name: Set Security Directory Permissions Recursive
-  become: yes
-  file: state=directory path={{ es_conf_dir }}/ owner={{ es_user }} group={{ es_group }} recurse=yes
