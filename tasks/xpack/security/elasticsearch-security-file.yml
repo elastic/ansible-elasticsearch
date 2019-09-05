@@ -1,6 +1,8 @@
 ---
-- name: set fact manage_file_users
-  set_fact: manage_file_users=es_users is defined and es_users.file is defined and es_users.file.keys() | list | length > 0
+- set_fact: manage_file_users=false
+
+- set_fact: manage_file_users=true
+  when: es_users is defined and es_users.file is defined and es_users.file.keys() | list | length > 0
 
 - name: Check if old users file exists
   stat:
