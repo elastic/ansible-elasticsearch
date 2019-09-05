@@ -4,6 +4,7 @@
 - set_fact: manage_file_users=true
   when: es_users is defined and es_users.file is defined and es_users.file.keys() | list | length > 0
 
+# Users migration from elasticsearch < 6.3 versions
 - name: Check if old users file exists
   stat:
     path: '{{ es_conf_dir }}/x-pack/users'
@@ -17,6 +18,7 @@
     src: "{{ es_conf_dir }}/x-pack/users"
     dest: "{{ es_conf_dir }}/users"
   when: old_users_file.stat.exists
+# End of users migrations
 
 - name: Create the users file if it doesn't exist
   copy:
@@ -99,4 +101,3 @@
   become: yes
   template: src=security/users_roles.j2 dest={{ es_conf_dir }}/users_roles mode=0644 force=yes
   when: manage_file_users and users_roles | length > 0
-
