@@ -1,8 +1,5 @@
 ---
 
-- name: set fact es_version_changed
-  set_fact: es_version_changed={{ ((elasticsearch_install_from_package is defined and (debian_elasticsearch_install_from_repo.changed or redhat_elasticsearch_install_from_repo.changed)) or (elasticsearch_install_from_package is defined and elasticsearch_install_from_package.changed)) }}
-
 #Security configuration
 - name: include security/elasticsearch-security.yml
   include: security/elasticsearch-security.yml
