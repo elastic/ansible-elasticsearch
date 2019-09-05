@@ -44,7 +44,7 @@
 - name: Remove Users
   become: yes
   command: >
-    {{es_home}}/bin/{{es_xpack_users_command}} userdel {{item}}
+    {{es_home}}/bin/elasticsearch-users userdel {{item}}
   with_items: "{{users_to_remove | default([])}}"
   when: manage_file_users
   environment:
@@ -60,7 +60,7 @@
 - name: Add Users
   become: yes
   command: >
-    {{es_home}}/bin/{{es_xpack_users_command}} useradd {{item}} -p {{es_users.file[item].password}}
+    {{es_home}}/bin/elasticsearch-users useradd {{item}} -p {{es_users.file[item].password}}
   with_items: "{{ users_to_add | default([]) }}"
   when: manage_file_users
   no_log: True
@@ -73,7 +73,7 @@
 - name: Set User Passwords
   become: yes
   command: >
-    {{es_home}}/bin/{{es_xpack_users_command}} passwd {{ item }} -p {{es_users.file[item].password}}
+    {{es_home}}/bin/elasticsearch-users passwd {{ item }} -p {{es_users.file[item].password}}
   with_items: "{{ es_users.file.keys() | list }}"
   when: manage_file_users
   #Currently no easy way to figure out if the password has changed or to know what it currently is so we can skip.

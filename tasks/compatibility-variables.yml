@@ -9,7 +9,6 @@
 - name: Set the defaults here otherwise they can't be overriden in the same play if the role is called twice
   set_fact:
     es_repo_name: "{{ es_major_version }}"
-    es_xpack_users_command: "elasticsearch-users"
     es_package_name: "elasticsearch"
     es_other_package_name: "elasticsearch-oss"
     es_other_repo_name: "{{ 'oss-' + es_major_version }}"
