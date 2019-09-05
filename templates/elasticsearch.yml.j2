@@ -15,10 +15,6 @@ node.name: {{inventory_hostname}}
 
 # Path to directory containing configuration (this file and logging.yml):
 
-{% if (es_version is version_compare('6.0.0', '<')) %}
-path.conf: {{ es_conf_dir }}
-{% endif %}
-
 path.data: {{ es_data_dirs | array_to_str }}
 
 path.logs: {{ es_log_dir }}
