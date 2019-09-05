@@ -8,7 +8,6 @@
 
 - name: Set the defaults here otherwise they can't be overriden in the same play if the role is called twice
   set_fact:
-    es_xpack_conf_subdir: ""
     es_repo_name: "{{ es_major_version }}"
     es_xpack_users_command: "elasticsearch-users"
     es_package_name: "elasticsearch"
