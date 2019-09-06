@@ -35,8 +35,16 @@ action.auto_create_index: false
 action.auto_create_index: {{ es_action_auto_create_index }}
 {% endif %}
 
-{% if es_enable_xpack and es_api_basic_auth_username is defined and es_api_basic_auth_password is defined %}
+{% if es_enable_xpack and "security" in es_xpack_features and es_api_basic_auth_username is defined and es_api_basic_auth_password is defined %}
 xpack.security.enabled: true
+{% elif es_enable_xpack %}
+xpack.security.enabled: false
+{% endif %}
+
+{% if es_enable_xpack and "monitoring" in es_xpack_features %}
+xpack.monitoring.enabled: true
+{% elif es_enable_xpack %}
+xpack.monitoring.enabled: false
 {% endif %}
 
 {% if es_mail_config is defined %}
