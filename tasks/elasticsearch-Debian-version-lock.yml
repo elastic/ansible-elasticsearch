@@ -1,6 +1,0 @@
----
-- name: Debian - hold elasticsearch version
-  become: yes
-  dpkg_selections:
-    name: "{{ es_package_name }}"
-    selection: "hold"

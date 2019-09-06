@@ -27,7 +27,6 @@
 
 - name: RedHat - include versionlock
   include: elasticsearch-RedHat-version-lock.yml
-  when: es_version_lock
 
 - name: RedHat - Remove the other elasticsearch package if switching between OSS and standard
   become: yes
