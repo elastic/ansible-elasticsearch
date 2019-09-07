@@ -2,6 +2,35 @@
 - name: RedHat - install yum-version-lock
   become: yes
   yum: name=yum-plugin-versionlock state=present update_cache=yes
+
+- name: RedHat - check if requested elasticsearch version lock exists
+  become: yes
+  shell: yum versionlock list | grep -c {{es_package_name}}-{{es_version}}
+  register: es_requested_version_locked
+  args:
+    warn: false
+  failed_when: False
+  changed_when: False
+
 - name: RedHat - lock elasticsearch version
   become: yes
-  shell: yum versionlock delete 0:elasticsearch* ; yum versionlock add {{ es_package_name }}{% if es_version is defined and es_version != "" %}-{{ es_version }}{% endif %}
+  shell: yum versionlock delete 0:elasticsearch* ; yum versionlock add {{ es_package_name }}-{{ es_version }}
+  args:
+    warn: false
+  when: es_version_lock and es_requested_version_locked.stdout|int == 0
+
+- name: RedHat - check if any elasticsearch version lock exists
+  become: yes
+  shell: yum versionlock list | grep -c elasticsearch
+  register: es_version_locked
+  args:
+    warn: false
+  failed_when: False
+  changed_when: False
+
+- name: RedHat - unlock elasticsearch version
+  become: yes
+  shell: yum versionlock delete 0:elasticsearch*
+  args:
+    warn: false
+  when: not es_version_lock and es_version_locked.stdout|int > 0

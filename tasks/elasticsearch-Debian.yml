@@ -17,6 +17,13 @@
     changed_when: False
     check_mode: no
 
+  - name: unhold elasticsearch package when switching to a different package type
+    become: yes
+    dpkg_selections:
+      name: "{{ es_other_package_name }}"
+      selection: "install"
+    when: elasticsearch_package.stdout == 'install ok installed'
+
   - name: stop elasticsearch
     service:
       name: 'elasticsearch'
@@ -59,6 +66,20 @@
   when: (es_user_id is defined) and (es_group_id is defined)
   include: elasticsearch-optional-user.yml
 
+- name: Debian - Get installed elasticsearch version
+  command: dpkg-query --showformat='${Version}' --show {{ es_package_name }}
+  register: installed_es_version
+  failed_when: False
+  changed_when: False
+  check_mode: no
+
+- name: Debian - unhold elasticsearch version
+  become: yes
+  dpkg_selections:
+    name: "{{ es_package_name }}"
+    selection: "install"
+  when: not es_version_lock or (installed_es_version.stdout and installed_es_version.stdout != es_version)
+
 - name: Debian - Ensure elasticsearch is installed
   become: yes
   apt:
@@ -73,8 +94,11 @@
   environment:
     ES_PATH_CONF: "/etc/elasticsearch"
 
-- name: Debian - Include versionlock
-  include: elasticsearch-Debian-version-lock.yml
+- name: Debian - hold elasticsearch version
+  become: yes
+  dpkg_selections:
+    name: "{{ es_package_name }}"
+    selection: "hold"
   when: es_version_lock
 
 - name: Debian - Download elasticsearch from url
