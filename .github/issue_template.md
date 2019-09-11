@@ -1,4 +1,3 @@
-<!
 <!--
 
 ** Please read the guidelines below. **
