@@ -44,9 +44,15 @@ The simplest configuration therefore consists of:
   hosts: localhost
   roles:
     - role: elastic.elasticsearch
+  vars:
+    es_version: 7.1.1
 ```
 
-The above installs a single node 'node1' on the hosts 'localhost'.
+The above installs Elasticsearch 7.1.1 in a single node 'node1' on the hosts 'localhost'.
+
+**Note**:
+Elasticsearch default version is described in [`es_version`](defaults/main.yml#L2). You can override this variable in your playbook to install another version.
+While we are testing this role only with one 7.x and one 6.x version (respectively [7.1.1](defaults/main.yml#L2) and [6.8.0](.kitchen.yml#L22) at the time of writing), this role should work with others version also in most cases.
 
 This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
 
