@@ -17,6 +17,8 @@
     force: no # only copy it if the new path doesn't exist yet
     src: "{{ es_conf_dir }}/x-pack/users"
     dest: "{{ es_conf_dir }}/users"
+    group: "{{ es_group }}"
+    owner: "{{ es_user }}"
   when: old_users_file.stat.exists
 # End of users migrations
 
@@ -99,5 +101,5 @@
 #Overwrite users_roles file
 - name: Copy User Roles
   become: yes
-  template: src=security/users_roles.j2 dest={{ es_conf_dir }}/users_roles mode=0644 force=yes
+  template: src=security/users_roles.j2 dest={{ es_conf_dir }}/users_roles owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
   when: manage_file_users and users_roles | length > 0
