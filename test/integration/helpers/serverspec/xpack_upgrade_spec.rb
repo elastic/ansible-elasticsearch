@@ -5,13 +5,13 @@ vars = JSON.parse(File.read('/tmp/vars.json'))
 shared_examples 'xpack_upgrade::init' do |vars|
   #Test users file, users_roles and roles.yml
   describe file("/etc/elasticsearch/users_roles") do
-    it { should be_owned_by 'elasticsearch' }
+    it { should be_owned_by 'root' }
     it { should contain 'admin:es_admin' }
     it { should contain 'power_user:testUser' }
   end
 
   describe file("/etc/elasticsearch/users") do
-    it { should be_owned_by 'elasticsearch' }
+    it { should be_owned_by 'root' }
     it { should contain 'testUser:' }
     it { should contain 'es_admin:' }
   end
@@ -37,7 +37,7 @@ shared_examples 'xpack_upgrade::init' do |vars|
 
   #Test contents of role_mapping.yml
   describe file("/etc/elasticsearch/role_mapping.yml") do
-    it { should be_owned_by 'elasticsearch' }
+    it { should be_owned_by 'root' }
     it { should contain 'power_user:' }
     it { should contain '- cn=admins,dc=example,dc=com' }
     it { should contain 'user:' }

@@ -46,5 +46,5 @@
 #Copy Roles files
 - name: Copy role_mapping.yml File for Instance
   become: yes
-  template: src=security/role_mapping.yml.j2 dest={{ es_conf_dir }}/role_mapping.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=security/role_mapping.yml.j2 dest={{ es_conf_dir }}/role_mapping.yml owner=root group={{ es_group }} mode=0660 force=yes
   when: es_role_mapping is defined

@@ -4,11 +4,12 @@
   file:
     path: "{{ es_conf_dir }}/templates"
     state: directory
-    owner: "{{ es_user }}"
+    owner: root
     group: "{{ es_group }}"
+    mode: 2750
 
 - name: Copy templates to elasticsearch
-  copy: src={{ item }} dest={{ es_conf_dir }}/templates owner={{ es_user }} group={{ es_group }}
+  copy: src={{ item }} dest={{ es_conf_dir }}/templates owner=root group={{ es_group }} mode=0660
   register: load_templates
   with_fileglob:
     - "{{ es_templates_fileglob | default('') }}"

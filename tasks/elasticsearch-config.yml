@@ -1,27 +1,35 @@
 ---
 # Configure Elasticsearch Node
 
-#Create required directories
-- name: Create Directories
+#Create conf directory
+- name: Create Configuration Directory
   become: yes
-  file: path={{ item }} state=directory owner={{ es_user }} group={{ es_group }}
+  file: path={{ es_conf_dir }} state=directory owner=root group={{ es_group }} mode=2750
+
+#Create pid directory
+- name: Create PID Directory
+  become: yes
+  file: path={{ es_pid_dir }} state=directory owner={{ es_user }} group={{ es_group }} mode=0755
+
+#Create required directories
+- name: Create Others Directories
+  become: yes
+  file: path={{ item }} state=directory owner={{ es_user }} group={{ es_group }} mode=2750
   with_items:
-    - "{{ es_pid_dir }}"
     - "{{ es_log_dir }}"
-    - "{{ es_conf_dir }}"
     - "{{ es_data_dirs }}"
 
 #Copy the config template
 - name: Copy Configuration File
   become: yes
-  template: src=elasticsearch.yml.j2 dest={{ es_conf_dir }}/elasticsearch.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=elasticsearch.yml.j2 dest={{ es_conf_dir }}/elasticsearch.yml owner=root group={{ es_group }} mode=0660 force=yes
   register: system_change
   notify: restart elasticsearch
 
 #Copy the default file
 - name: Copy Default File
   become: yes
-  template: src=elasticsearch.j2 dest={{ default_file }} mode=0644 force=yes
+  template: src=elasticsearch.j2 dest={{ default_file }} owner=root group={{ es_group }} mode=0660 force=yes
   notify: restart elasticsearch
 
 #Copy the systemd specific file if systemd is installed
@@ -30,7 +38,7 @@
   block:
     - name: Make sure destination dir exists
       file: path={{ sysd_config_file | dirname }} state=directory mode=0755
-  
+
     - name: Copy specific ElasticSearch Systemd config file
       ini_file: path={{ sysd_config_file }} section=Service option=LimitMEMLOCK value=infinity mode=0644
       notify:
@@ -40,10 +48,10 @@
 #Copy the logging.yml
 - name: Copy log4j2.properties File
   become: yes
-  template: src={{ es_config_log4j2 }} dest={{ es_conf_dir }}/log4j2.properties owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src={{ es_config_log4j2 }} dest={{ es_conf_dir }}/log4j2.properties owner=root group={{ es_group }} mode=0660 force=yes
   notify: restart elasticsearch
 
 - name: Copy jvm.options File
   become: yes
-  template: src=jvm.options.j2 dest={{ es_conf_dir }}/jvm.options owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=jvm.options.j2 dest={{ es_conf_dir }}/jvm.options owner=root group={{ es_group }} mode=0660 force=yes
   notify: restart elasticsearch
