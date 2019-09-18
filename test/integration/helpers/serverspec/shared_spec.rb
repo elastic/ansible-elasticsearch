@@ -138,7 +138,7 @@ shared_examples 'shared::init' do |vars|
       name = plugin['plugin']
       describe file('/usr/share/elasticsearch/plugins/'+name) do
         it { should be_directory }
-        it { should be_owned_by vars['es_user'] }
+        it { should be_owned_by 'root' }
       end
       it 'should be installed and the right version' do
         plugins = curl_json("#{es_api_url}/_nodes/plugins", username=username, password=password)

@@ -5,11 +5,6 @@
   include: security/elasticsearch-security.yml
   when: es_enable_xpack
 
-#Add any feature specific configuration here
-- name: Set Plugin Directory Permissions
-  become: yes
-  file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes
-
 #Make sure elasticsearch.keystore has correct Permissions
 - name: Set elasticsearch.keystore Permissions
   become: yes
