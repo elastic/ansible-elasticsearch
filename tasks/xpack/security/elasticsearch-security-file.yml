@@ -22,15 +22,6 @@
   when: old_users_file.stat.exists
 # End of users migrations
 
-- name: Create the users file if it doesn't exist
-  copy:
-    content: ""
-    dest: "{{ es_conf_dir }}/users"
-    force: no # this ensures it only creates it if it does not exist
-    group: "{{ es_group }}"
-    owner: "{{ es_user }}"
-    mode: 0555
-
 #List current users
 - name: List Users
   become: yes
