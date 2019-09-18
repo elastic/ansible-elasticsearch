@@ -92,7 +92,7 @@
   register: debian_elasticsearch_install_from_repo
   notify: restart elasticsearch
   environment:
-    ES_PATH_CONF: "/etc/elasticsearch"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
 
 - name: Debian - hold elasticsearch version
   become: yes
@@ -112,4 +112,4 @@
   register: elasticsearch_install_from_package
   notify: restart elasticsearch
   environment:
-    ES_PATH_CONF: "/etc/elasticsearch"
+    ES_PATH_CONF: "{{ es_conf_dir }}"

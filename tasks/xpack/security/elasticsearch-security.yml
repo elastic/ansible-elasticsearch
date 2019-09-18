@@ -3,12 +3,6 @@
 
 #TODO: 1. Skip users with no password defined or error 2. Passwords | length > 6
 
-#Ensure x-pack conf directory is created if necessary
-- name: Ensure x-pack conf directory exists (file)
-  file: path={{ es_conf_dir }}{{ es_xpack_conf_subdir }} state=directory owner={{ es_user }} group={{ es_group }}
-  changed_when: False
-  when: (es_users is defined and es_users.file is defined) or (es_roles is defined and es_roles.file is defined) or (es_role_mapping is defined)
-
 #-----------------------------Create Bootstrap User-----------------------------------
 ### START BLOCK elasticsearch keystore ###
 - name: create the elasticsearch keystore
@@ -52,13 +46,5 @@
 #Copy Roles files
 - name: Copy role_mapping.yml File for Instance
   become: yes
-  template: src=security/role_mapping.yml.j2 dest={{ es_conf_dir }}{{es_xpack_conf_subdir}}/role_mapping.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=security/role_mapping.yml.j2 dest={{ es_conf_dir }}/role_mapping.yml owner=root group={{ es_group }} mode=0660 force=yes
   when: es_role_mapping is defined
-
-#------------------------------------------------------------------------------------
-
-#Ensure security conf directory is created
-- name: Ensure security conf directory exists
-  become: yes
-  file: path={{ es_conf_dir }}/security state=directory owner={{ es_user }} group={{ es_group }}
-  changed_when: False

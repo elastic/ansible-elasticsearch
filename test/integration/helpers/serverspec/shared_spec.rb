@@ -108,11 +108,11 @@ shared_examples 'shared::init' do |vars|
   if vars['es_templates']
     describe file('/etc/elasticsearch/templates') do
       it { should be_directory }
-      it { should be_owned_by vars['es_user'] }
+      it { should be_owned_by 'root' }
     end
     describe file('/etc/elasticsearch/templates/basic.json') do
       it { should be_file }
-      it { should be_owned_by vars['es_user'] }
+      it { should be_owned_by 'root' }
     end
     #This is possibly subject to format changes in the response across versions so may fail in the future
     describe 'Template Contents Correct' do
@@ -138,7 +138,7 @@ shared_examples 'shared::init' do |vars|
       name = plugin['plugin']
       describe file('/usr/share/elasticsearch/plugins/'+name) do
         it { should be_directory }
-        it { should be_owned_by vars['es_user'] }
+        it { should be_owned_by 'root' }
       end
       it 'should be installed and the right version' do
         plugins = curl_json("#{es_api_url}/_nodes/plugins", username=username, password=password)
@@ -152,6 +152,7 @@ shared_examples 'shared::init' do |vars|
     end
   end
   describe file("/etc/elasticsearch/elasticsearch.yml") do
+    it { should be_owned_by 'root' }
     it { should contain "node.name: localhost" }
     it { should contain 'cluster.name: elasticsearch' }
     it { should_not contain "path.conf: /etc/elasticsearch" }

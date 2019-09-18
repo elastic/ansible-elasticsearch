@@ -17,7 +17,6 @@
   file:
     dest: "{{ es_home }}/plugins/x-pack"
     state: "absent"
-  when: es_open_xpack
 
 #List currently installed plugins. We have to list the directories as the list commmand fails if the ES version is different than the plugin version.
 - name: Check installed elasticsearch plugins
@@ -80,8 +79,3 @@
   until: plugin_installed.rc == 0
   retries: 5
   delay: 5
-
-#Set permissions on plugins directory
-- name: Set Plugin Directory Permissions
-  become: yes
-  file: state=directory path={{ es_home }}/plugins owner={{ es_user }} group={{ es_group }} recurse=yes
