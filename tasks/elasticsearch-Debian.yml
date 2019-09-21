@@ -9,26 +9,6 @@
 
 - name: Gracefully stop and remove elasticsearch package if switching between OSS and standard
   become: yes
-  apt: name=apt-transport-https state=present
-  when: es_use_repository
-
-- name: Debian - Add Elasticsearch repository key
-  become: yes
-  apt_key: url="{{ es_apt_key }}" id="{{ es_apt_key_id }}" state=present
-  when: es_use_repository and es_apt_key
-
-- name: Debian - Add elasticsearch repository
-  become: yes
-  apt_repository: repo={{ item.repo }} state={{ item.state}}
-  with_items:
-    - { repo: "{{ es_apt_url_old }}", state: "absent" }
-    - { repo: "{{ es_apt_url }}", state: "present" }
-  when: es_use_repository
-
-
-- name: Gracefully stop and remove elasticsearch if we are switching to the oss version
-  when:
-    - es_package_name == 'elasticsearch-oss'
   block:
   - name: Check if the elasticsearch package is installed
     shell: "dpkg-query -W -f'${Status}' {{ es_other_package_name }}"
@@ -69,6 +49,7 @@
   - name: Debian - Add Elasticsearch repository key
     apt_key:
       url: '{{ es_apt_key }}'
+      id: '{{ es_apt_key_id }}'
       state: present
     when: es_add_repository and es_apt_key | string
 
