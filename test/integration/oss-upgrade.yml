@@ -6,8 +6,7 @@
   roles:
     - elasticsearch
   vars:
-    es_instance_name: "node1"
-    es_version: "{{ '6.2.4' if es_major_version == '6.x' else '5.6.9' }}" # This is set to an older version than the current default to force an upgrade
+    es_version: "{{ '7.0.0' if es_major_version == '7.x' else '6.7.1' }}" # This is set to an older version than the current default to force an upgrade
     es_enable_xpack: false
     es_heap_size: "1g"
 
@@ -18,6 +17,5 @@
   roles:
     - elasticsearch
   vars:
-    es_instance_name: "node1"
     es_enable_xpack: false
     es_heap_size: "1g"

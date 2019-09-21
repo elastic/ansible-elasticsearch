@@ -7,7 +7,7 @@
 
 - name: restart elasticsearch
   become: yes
-  service: name={{instance_init_script | basename}} state=restarted enabled=yes
+  service: name=elasticsearch state=restarted enabled=yes
   when:
     - es_restart_on_change
     - es_start_service

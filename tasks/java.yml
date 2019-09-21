@@ -18,6 +18,7 @@
   register: java_full_path
   failed_when: False
   changed_when: False
+  check_mode: no
   when: ansible_os_family == 'RedHat'
 
 - name: correct java version selected
@@ -43,6 +44,7 @@
   register: open_jdk
   ignore_errors: yes
   changed_when: false
+  check_mode: no
 
 #https://github.com/docker-library/openjdk/issues/19 - ensures tests pass due to java 8 broken certs
 - name: refresh the java ca-certificates

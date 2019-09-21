@@ -6,29 +6,27 @@
   roles:
     - elasticsearch
   vars:
-    es_instance_name: "node1"
-    es_api_port: 9200
-    es_config:
-      http.port: 9200
-      transport.tcp.port: 9300
-      discovery.zen.ping.unicast.hosts: "localhost:9300"
-      xpack.security.authc.realms.file1.type: "file"
+    es_config_6x:
       xpack.security.authc.realms.file1.order: 0
-      xpack.security.authc.realms.native1.type: "native"
+      xpack.security.authc.realms.file1.type: file
       xpack.security.authc.realms.native1.order: 1
+      xpack.security.authc.realms.native1.type: native
+    es_config_7x:
+      xpack.security.authc.realms.file.file1.order: 0
+      xpack.security.authc.realms.native.native1.order: 1
+    es_config: "{{ es_config_7x if es_major_version == '7.x' else es_config_6x }}"
     es_heap_size: "1g"
     es_templates: true
-    es_version: "{{ '6.2.4' if es_major_version == '6.x' else '5.6.9' }}" # This is set to an older version than the current default to force an upgrade
-    es_enable_xpack: true
+    es_major_version: "7.x"
+    es_version: "{{ '7.0.0' if es_major_version == '7.x' else '6.7.1' }}" # This is set to an older version than the current default to force an upgrade
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
     es_plugins:
-      - plugin: ingest-geoip
+      - plugin: ingest-attachment
     es_xpack_features:
       - security
       - alerting
     es_api_basic_auth_username: elastic
     es_api_basic_auth_password: changeme
-    es_message_auth_file: system_key
     es_role_mapping:
       power_user:
         - "cn=admins,dc=example,dc=com"
@@ -116,20 +114,17 @@
   roles:
     - elasticsearch
   vars:
-    es_api_port: 9200
-    es_instance_name: "node1"
-    es_config: 
-      http.port: 9200
-      transport.tcp.port: 9300
-      discovery.zen.ping.unicast.hosts: "localhost:9300"
-      xpack.security.enabled: True
-      xpack.security.authc.realms.file1.type: "file"
+    es_config_6x:
       xpack.security.authc.realms.file1.order: 0
-      xpack.security.authc.realms.native1.type: "native"
+      xpack.security.authc.realms.file1.type: file
       xpack.security.authc.realms.native1.order: 1
+      xpack.security.authc.realms.native1.type: native
+    es_config_7x:
+      xpack.security.authc.realms.file.file1.order: 0
+      xpack.security.authc.realms.native.native1.order: 1
+    es_config: "{{ es_config_7x if es_major_version == '7.x' else es_config_6x }}"
     es_heap_size: "1g"
     es_templates: true
-    es_enable_xpack: true
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
     es_plugins:
       - plugin: ingest-attachment

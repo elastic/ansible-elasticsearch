@@ -3,27 +3,15 @@ require 'json'
 vars = JSON.parse(File.read('/tmp/vars.json'))
 
 shared_examples 'xpack_upgrade::init' do |vars|
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
-    it { should contain "node.name: localhost-#{vars['es_instance_name']}" }
-    it { should contain 'cluster.name: elasticsearch' }
-    if vars['es_major_version'] == '6.x'
-      it { should_not contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
-    else
-      it { should contain "path.conf: /etc/elasticsearch/#{vars['es_instance_name']}" }
-    end
-    it { should contain "path.data: /var/lib/elasticsearch/localhost-#{vars['es_instance_name']}" }
-    it { should contain "path.logs: /var/log/elasticsearch/localhost-#{vars['es_instance_name']}" }
-  end
-
   #Test users file, users_roles and roles.yml
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}#{vars['es_xpack_conf_subdir']}/users_roles") do
-    it { should be_owned_by 'elasticsearch' }
+  describe file("/etc/elasticsearch/users_roles") do
+    it { should be_owned_by 'root' }
     it { should contain 'admin:es_admin' }
     it { should contain 'power_user:testUser' }
   end
 
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}#{vars['es_xpack_conf_subdir']}/users") do
-    it { should be_owned_by 'elasticsearch' }
+  describe file("/etc/elasticsearch/users") do
+    it { should be_owned_by 'root' }
     it { should contain 'testUser:' }
     it { should contain 'es_admin:' }
   end
@@ -35,16 +23,21 @@ shared_examples 'xpack_upgrade::init' do |vars|
     end
   end
 
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}/elasticsearch.yml") do
-    it { should contain 'security.authc.realms.file1.order: 0' }
-    it { should contain 'security.authc.realms.file1.type: file' }
-    it { should contain 'security.authc.realms.native1.order: 1' }
-    it { should contain 'security.authc.realms.native1.type: native' }
+  describe file("/etc/elasticsearch/elasticsearch.yml") do
+    if vars['es_major_version'] == '7.x'
+      it { should contain 'security.authc.realms.file.file1.order: 0' }
+      it { should contain 'security.authc.realms.native.native1.order: 1' }
+    else
+      it { should contain 'security.authc.realms.file1.order: 0' }
+      it { should contain 'security.authc.realms.file1.type: file' }
+      it { should contain 'security.authc.realms.native1.order: 1' }
+      it { should contain 'security.authc.realms.native1.type: native' }
+    end
   end
 
   #Test contents of role_mapping.yml
-  describe file("/etc/elasticsearch/#{vars['es_instance_name']}#{vars['es_xpack_conf_subdir']}/role_mapping.yml") do
-    it { should be_owned_by 'elasticsearch' }
+  describe file("/etc/elasticsearch/role_mapping.yml") do
+    it { should be_owned_by 'root' }
     it { should contain 'power_user:' }
     it { should contain '- cn=admins,dc=example,dc=com' }
     it { should contain 'user:' }
@@ -89,15 +82,6 @@ shared_examples 'xpack_upgrade::init' do |vars|
       command = command('curl -s localhost:9200/ -u logstash_system:aNewLogstashPassword | grep number')
       expect(command.stdout).to match(vars['es_version'])
       expect(command.exit_status).to eq(0)
-    end
-  end
-
-  if vars['es_major_version'] == '5.x' # kibana default password has been removed in 6.x
-    describe 'kibana access check' do
-      it 'should be reported as version '+vars['es_version'] do
-        result = curl_json('http://localhost:9200/', username='kibana', password='changeme')
-        expect(result['version']['number']).to eq(vars['es_version'])
-      end
     end
   end
 end

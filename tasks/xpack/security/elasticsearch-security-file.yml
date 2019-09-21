@@ -1,83 +1,82 @@
 ---
-- name: set fact manage_file_users
-  set_fact: manage_file_users=es_users is defined and es_users.file is defined and es_users.file.keys() | length > 0
+- set_fact: manage_file_users=false
 
+- set_fact: manage_file_users=true
+  when: es_users is defined and es_users.file is defined and es_users.file.keys() | list | length > 0
+
+# Users migration from elasticsearch < 6.3 versions
 - name: Check if old users file exists
   stat:
-    path: '{{ conf_dir }}/x-pack/users'
+    path: '{{ es_conf_dir }}/x-pack/users'
   register: old_users_file
+  check_mode: no
 
 - name: Copy the old users file from the old depreacted location
   copy:
     remote_src: yes
     force: no # only copy it if the new path doesn't exist yet
-    src: "{{ conf_dir }}/x-pack/users"
-    dest: "{{ conf_dir }}{{ es_xpack_conf_subdir }}/users"
-  when: old_users_file.stat.exists
-
-- name: Create the users file if it doesn't exist
-  copy:
-    content: ""
-    dest: "{{ conf_dir }}{{ es_xpack_conf_subdir }}/users"
-    force: no # this ensures it only creates it if it does not exist
+    src: "{{ es_conf_dir }}/x-pack/users"
+    dest: "{{ es_conf_dir }}/users"
     group: "{{ es_group }}"
-    owner: "{{ es_user }}"
-    mode: 0555
+    owner: root
+  when: old_users_file.stat.exists
+# End of users migrations
 
 #List current users
 - name: List Users
   become: yes
-  shell: cat {{conf_dir}}{{es_xpack_conf_subdir}}/users | awk -F':' '{print $1}'
+  shell: cat {{ es_conf_dir }}/users | awk -F':' '{print $1}'
   register: current_file_users
   when: manage_file_users
   changed_when: False
+  check_mode: no
 
 - name: set fact users_to_remove
-  set_fact: users_to_remove={{ current_file_users.stdout_lines | difference (es_users.file.keys()) }}
+  set_fact: users_to_remove={{ current_file_users.stdout_lines | difference (es_users.file.keys() | list) }}
   when: manage_file_users
 
 #Remove users
 - name: Remove Users
   become: yes
   command: >
-    {{es_home}}/bin/{{es_xpack_users_command}} userdel {{item}}
+    {{es_home}}/bin/elasticsearch-users userdel {{item}}
   with_items: "{{users_to_remove | default([])}}"
   when: manage_file_users
   environment:
-    CONF_DIR: "{{ conf_dir }}"
-    ES_PATH_CONF: "{{ conf_dir }}"
+    CONF_DIR: "{{ es_conf_dir }}"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
     ES_HOME: "{{es_home}}"
 
 - name: set fact users_to_add
-  set_fact: users_to_add={{ es_users.file.keys() | difference (current_file_users.stdout_lines) }}
+  set_fact: users_to_add={{ es_users.file.keys() | list | difference (current_file_users.stdout_lines) }}
   when: manage_file_users
 
 #Add users
 - name: Add Users
   become: yes
   command: >
-    {{es_home}}/bin/{{es_xpack_users_command}} useradd {{item}} -p {{es_users.file[item].password}}
+    {{es_home}}/bin/elasticsearch-users useradd {{item}} -p {{es_users.file[item].password}}
   with_items: "{{ users_to_add | default([]) }}"
   when: manage_file_users
   no_log: True
   environment:
-    CONF_DIR: "{{ conf_dir }}"
-    ES_PATH_CONF: "{{ conf_dir }}"
+    CONF_DIR: "{{ es_conf_dir }}"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
     ES_HOME: "{{es_home}}"
 
 #Set passwords for all users declared - Required as the useradd will not change existing user passwords
 - name: Set User Passwords
   become: yes
   command: >
-    {{es_home}}/bin/{{es_xpack_users_command}} passwd {{ item }} -p {{es_users.file[item].password}}
-  with_items: "{{ es_users.file.keys() | default([]) }}"
+    {{es_home}}/bin/elasticsearch-users passwd {{ item }} -p {{es_users.file[item].password}}
+  with_items: "{{ es_users.file.keys() | list }}"
   when: manage_file_users
   #Currently no easy way to figure out if the password has changed or to know what it currently is so we can skip.
   changed_when: False
   no_log: True
   environment:
-    CONF_DIR: "{{ conf_dir }}"
-    ES_PATH_CONF: "{{ conf_dir }}"
+    CONF_DIR: "{{ es_conf_dir }}"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
     ES_HOME: "{{es_home}}"
 
 - name: set fact users_roles
@@ -87,16 +86,11 @@
 #Copy Roles files
 - name: Copy roles.yml File for Instance
   become: yes
-  template: src=security/roles.yml.j2 dest={{conf_dir}}{{es_xpack_conf_subdir}}/roles.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  template: src=security/roles.yml.j2 dest={{ es_conf_dir }}/roles.yml owner=root group={{ es_group }} mode=0660 force=yes
   when: es_roles is defined and es_roles.file is defined
 
 #Overwrite users_roles file
 - name: Copy User Roles
   become: yes
-  template: src=security/users_roles.j2 dest={{conf_dir}}{{es_xpack_conf_subdir}}/users_roles mode=0644 force=yes
+  template: src=security/users_roles.j2 dest={{ es_conf_dir }}/users_roles owner=root group={{ es_group }} mode=0660 force=yes
   when: manage_file_users and users_roles | length > 0
-
-#Set permission on security directory. E.g. if 2 nodes are installed on the same machine, the second node will not get the users file created at install, causing the files being created at es_users call and then having the wrong Permissions.
-- name: Set Security Directory Permissions Recursive
-  become: yes
-  file: state=directory path={{conf_dir}}{{es_xpack_conf_subdir}}/ owner={{ es_user }} group={{ es_group }} recurse=yes

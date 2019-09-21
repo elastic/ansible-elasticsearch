@@ -1,8 +1,4 @@
 ---
-es_package_url: "https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch"
-es_conf_dir: "/etc/elasticsearch"
-sysd_script: "/usr/lib/systemd/system/elasticsearch.service"
-init_script: "/etc/init.d/elasticsearch"
-#add supported features here
-supported_xpack_features: ["alerting","monitoring","graph","security"]
+es_package_url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch"
 reserved_xpack_users: ["elastic","kibana","logstash_system"]
+sysd_config_file: "/etc/systemd/system/elasticsearch.service.d/override.conf"
