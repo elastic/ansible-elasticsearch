@@ -1,3 +1,27 @@
+# Changelog
+
+## 7.4.0 - 2019/10/01
+
+* 7.4.0 as default version
+* Remove compatibility with versions < 6.3
+
+| PR                                                      | Author                                                     | Title                                                     |
+| ------------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------- |
+|[#575](https://github.com/elastic/ansible-elasticsearch/pull/575) | [@flyinggecko](https://github.com/flyinggecko) | Fix name of Elasticsearch Ansible role |
+|[#578](https://github.com/elastic/ansible-elasticsearch/pull/578) | [@jmlrt](https://github.com/jmlrt) | Fix `dict object has no attribute dict_keys` issue with Python3 |
+|[#588](https://github.com/elastic/ansible-elasticsearch/pull/588) | [@broferek](https://github.com/broferek) | Move `userid` and `groupid` in a different place in the role |
+|[#591](https://github.com/elastic/ansible-elasticsearch/pull/591) | [@Crazybus](https://github.com/Crazybus) | Add back in `force_basic_auth` for all http requests |
+|[#582](https://github.com/elastic/ansible-elasticsearch/pull/582) | [@ktibi](https://github.com/ktibi) | Allow disable Elastic official repository setup |
+|[#593](https://github.com/elastic/ansible-elasticsearch/pull/593) | [@jmlrt](https://github.com/jmlrt) | Bunch of small fixes |
+|[#595](https://github.com/elastic/ansible-elasticsearch/pull/595) | [@broferek](https://github.com/broferek) | Set `limitMEMLOCK` for OS using Systemd|
+|[#600](https://github.com/elastic/ansible-elasticsearch/pull/600) | [@titan-architrave](https://github.com/titan-architrave) | Always gather the `es_major_version` variables|
+|[#605](https://github.com/elastic/ansible-elasticsearch/pull/605) | [@jmlrt](https://github.com/jmlrt) | Add doc for migration with data move|
+|[#601](https://github.com/elastic/ansible-elasticsearch/pull/601) | [@LukeRoz](https://github.com/LukeRoz) | Removing package version hold when `es_version_hold: false`|
+|[#612](https://github.com/elastic/ansible-elasticsearch/pull/612) | [@jmlrt](https://github.com/jmlrt) | Add Probot config to manage stale issues/pr|
+|[#614](https://github.com/elastic/ansible-elasticsearch/pull/614) | [@jmlrt](https://github.com/jmlrt) | Describe how to select a different elasticsearch version|
+|[#609](https://github.com/elastic/ansible-elasticsearch/pull/609) | [@jmlrt](https://github.com/jmlrt) | No more 6.3 compatibility + Use default files permissions from Elasticsearch package|
+|[#510](https://github.com/elastic/ansible-elasticsearch/pull/510) | [@verboEse](https://github.com/verboEse) | Don't fetch APT key if existent|
+
 ## 7.1.1 - 2019/06/04
 
 ### Breaking changes
