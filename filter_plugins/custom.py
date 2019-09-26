@@ -23,7 +23,7 @@ def array_to_str(values=[],separator=','):
 
 def extract_role_users(users={},exclude_users=[]):
     role_users=[]
-    for user,details in users.iteritems():
+    for user,details in users.items():
         if user not in exclude_users and "roles" in details:
             for role in details["roles"]:
                 role_users.append(role+":"+user)
