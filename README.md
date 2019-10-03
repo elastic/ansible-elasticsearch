@@ -31,7 +31,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install elastic.elasticsearch,7.1.1
+ansible-galaxy install elastic.elasticsearch,7.4.0
 ```
 
 Then create your playbook yaml adding the role elasticsearch.
@@ -45,14 +45,14 @@ The simplest configuration therefore consists of:
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_version: 7.1.1
+    es_version: 7.4.0
 ```
 
-The above installs Elasticsearch 7.1.1 in a single node 'node1' on the hosts 'localhost'.
+The above installs Elasticsearch 7.4.0 in a single node 'node1' on the hosts 'localhost'.
 
 **Note**:
 Elasticsearch default version is described in [`es_version`](defaults/main.yml#L2). You can override this variable in your playbook to install another version.
-While we are testing this role only with one 7.x and one 6.x version (respectively [7.1.1](defaults/main.yml#L2) and [6.8.0](.kitchen.yml#L22) at the time of writing), this role should work with others version also in most cases.
+While we are testing this role only with one 7.x and one 6.x version (respectively [7.4.0](defaults/main.yml#L2) and [6.8.1](.kitchen.yml#L22) at the time of writing), this role should work with others version also in most cases.
 
 This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
 
@@ -366,7 +366,7 @@ These can either be set to a user declared in the file based realm, with admin p
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
 * ```es_enable_xpack```  Default `true`. Setting this to `false` will install the oss release of elasticsearch
-* ```es_version``` (e.g. "7.1.1").
+* ```es_version``` (e.g. "7.4.0").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
