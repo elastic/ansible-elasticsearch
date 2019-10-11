@@ -24,6 +24,7 @@
     force_basic_auth: yes
     body_format: json
     body: "{{ lookup('file', item) }}"
+    validate_certs: "{{ es_validate_certs }}"
   when: load_templates.changed and es_start_service
   with_fileglob:
     - "{{ es_templates_fileglob | default('') }}"

@@ -44,7 +44,7 @@ es_debian_startup_timeout: 10
 # JVM custom parameters
 es_jvm_custom_parameters: ''
 
-es_security_api: "_{{ 'xpack/security' if es_version is version_compare('7.0.0', '<=') else 'security' }}"
+es_security_api: "{{ '_security' if es_version is version_compare('7.0.0', '>=') else '_xpack/security' }}"
 
 # SSL/TLS parameters
 es_enable_http_ssl: false
@@ -56,3 +56,4 @@ es_ssl_certificate: ""
 es_ssl_certificate_authority: ""
 es_ssl_certificate_path: "/etc/elasticsearch/certs"
 es_ssl_verification_mode: "certificate"
+es_validate_certs: "yes"

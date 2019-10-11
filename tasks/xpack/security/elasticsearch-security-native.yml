@@ -27,6 +27,7 @@
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
     status_code: 200
+    validate_certs: "{{ es_validate_certs }}"
   register: user_list_response
   when: manage_native_users
   check_mode: no
@@ -59,6 +60,7 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
   when: change_api_password
 
 - name: set fact es_api_basic_auth_password
@@ -79,6 +81,7 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
   when: manage_native_users
   with_items: "{{ users_to_remove | default([]) }}"
 
@@ -102,6 +105,7 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
   when: native_users[item].password is defined
   no_log: True
   with_items: "{{ users_to_ignore | default([]) }}"
@@ -121,6 +125,7 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
   when: manage_native_users
   no_log: True
   with_items: "{{ users_to_modify | default([]) }}"
@@ -137,6 +142,7 @@
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
     status_code: 200
+    validate_certs: "{{ es_validate_certs }}"
   register: role_list_response
   when: manage_native_roles
   check_mode: no
@@ -171,6 +177,7 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
   when: manage_native_roles
   with_items: "{{roles_to_remove | default([]) }}"
 
@@ -189,5 +196,6 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
   when: manage_native_roles
   with_items: "{{ roles_to_modify | default([]) }}"

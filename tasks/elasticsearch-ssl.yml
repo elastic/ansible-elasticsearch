@@ -32,4 +32,6 @@
   copy:
     src: "{{ es_ssl_certificate_authority }}"
     dest: "{{ es_ssl_certificate_path }}/{{ es_ssl_certificate_authority | basename }}"
-  when: es_ssl_certificate_authority
+  #Restart if this changes
+  notify: restart elasticsearch
+  when: es_ssl_certificate_authority | bool
