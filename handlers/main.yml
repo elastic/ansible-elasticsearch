@@ -1,7 +1,8 @@
 
 - name: reload systemd configuration
   become: yes
-  command: systemctl daemon-reload
+  systemd:
+    daemon_reload: true
 
 # Restart service and ensure it is enabled
 

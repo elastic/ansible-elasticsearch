@@ -1,5 +1,5 @@
 ---
-es_version: "7.1.1"
+es_version: "7.4.0"
 es_use_snapshot_release: false
 es_enable_xpack: true
 es_package_name: "elasticsearch"
@@ -29,7 +29,7 @@ es_data_dirs:
 es_log_dir: "/var/log/elasticsearch"
 es_action_auto_create_index: true
 es_max_open_files: 65536
-es_max_threads: "{{ 2048 if ( es_version is version_compare('6.0.0', '<')) else 8192 }}"
+es_max_threads: 8192
 es_max_map_count: 262144
 es_allow_downgrades: false
 es_xpack_features: []

@@ -52,7 +52,7 @@
   retries: 5
   delay: 10
   environment:
-    ES_PATH_CONF: "/etc/elasticsearch"
+    ES_PATH_CONF: "{{ es_conf_dir }}"
 
 - name: RedHat - Install Elasticsearch from url
   become: yes
