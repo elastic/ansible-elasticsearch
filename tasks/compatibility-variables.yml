@@ -29,7 +29,7 @@
     es_install_xpack: true
     es_xpack_users_command: "x-pack/users"
     es_xpack_conf_subdir: "/x-pack"
-  when: 
+  when:
     - not es_open_xpack
     - es_enable_xpack
 
@@ -43,3 +43,8 @@
   when:
     - es_open_xpack
     - not es_enable_xpack
+
+- name: Set the URL scheme based if http ssl/tls is enabled
+  set_fact:
+    es_api_scheme: "https"
+  when: es_enable_http_ssl
