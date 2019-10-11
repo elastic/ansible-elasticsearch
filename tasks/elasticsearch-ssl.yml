@@ -9,9 +9,11 @@
     src: "{{ item }}"
     dest: "{{ es_ssl_certificate_path }}/{{ item | basename }}"
   with_items:
-    - "{{ es_ssl_key }}"
-    - "{{ es_ssl_certificate }}"
+    - "{{ es_ssl_keystore }}"
+    - "{{ es_ssl_truststore }}"
   when: es_ssl_keystore and es_ssl_truststore
+  #Restart if these change
+  notify: restart elasticsearch
   register: copy_keystores
 
 - name: Upload SSL/TLS key and certificate
@@ -22,6 +24,8 @@
     - "{{ es_ssl_key }}"
     - "{{ es_ssl_certificate }}"
   when: es_ssl_key and es_ssl_certificate
+  #Restart if these change
+  notify: restart elasticsearch
   register: copy_certificates
 
 - name: Upload SSL Certificate Authority
