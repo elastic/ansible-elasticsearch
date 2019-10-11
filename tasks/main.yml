@@ -53,8 +53,9 @@
   tags:
       - xpack
 
-- name: include ssl.yml
+- name: include elasticsearch-ssl.yml
   include: elasticsearch-ssl.yml
+  when: es_enable_http_ssl or es_enable_transport_ssl
 
 - name: flush handlers
   meta: flush_handlers

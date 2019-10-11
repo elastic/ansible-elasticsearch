@@ -45,7 +45,10 @@ es_jvm_custom_parameters: ''
 # SSL/TLS parameters
 es_enable_http_ssl: false
 es_enable_transport_ssl: false
+es_ssl_keystore: ""
+es_ssl_truststore: ""
 es_ssl_key: ""
 es_ssl_certificate: ""
 es_ssl_certificate_authority: ""
 es_ssl_certificate_path: "/etc/elasticsearch/certs"
+es_ssl_verification_mode: "certificate"
