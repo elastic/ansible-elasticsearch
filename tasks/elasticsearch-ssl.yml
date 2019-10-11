@@ -35,3 +35,51 @@
   #Restart if this changes
   notify: restart elasticsearch
   when: es_ssl_certificate_authority | bool
+
+- name: Set transport keystore password
+  shell: echo "{{es_ssl_keystore_password}}" | {{es_home}}/bin/elasticsearch-keystore add -x -f 'xpack.security.{{ item }}.ssl.keystore.secure_password'
+  no_log: True
+  when: es_ssl_keystore_password and copy_keystores.changed
+  with_items:
+    - http
+    - transport
+
+- name: Set transport truststore password
+  shell: echo "{{es_ssl_truststore_password}}" | {{es_home}}/bin/elasticsearch-keystore add -x -f 'xpack.security.{{ item }}.ssl.truststore.secure_password'
+  no_log: True
+  when: es_ssl_truststore_password and copy_keystores.changed
+  with_items:
+    - http
+    - transport
+
+- name: Set transport key password
+  shell: echo "{{es_ssl_key_password}}" | {{es_home}}/bin/elasticsearch-keystore add -x -f 'xpack.security.{{ item }}.ssl.secure_key_passphrase'
+  no_log: True
+  when: es_ssl_key_password and copy_certificates.changed
+  with_items:
+    - http
+    - transport
+
+- name: Remove transport keystore password
+  shell: "{{es_home}}/bin/elasticsearch-keystore remove 'xpack.security.{{ item }}.ssl.keystore.secure_password'"
+  no_log: True
+  when: es_ssl_keystore_password == "" and copy_keystores.changed
+  with_items:
+    - http
+    - transport
+
+- name: Remove transport truststore password
+  shell: "{{es_home}}/bin/elasticsearch-keystore remove 'xpack.security.{{ item }}.ssl.truststore.secure_password'"
+  no_log: True
+  when: es_ssl_truststore_password == "" and copy_keystores.changed
+  with_items:
+    - http
+    - transport
+
+- name: Remove transport key password
+  shell: "{{es_home}}/bin/elasticsearch-keystore remove 'xpack.security.{{ item }}.ssl.secure_key_passphrase'"
+  no_log: True
+  when: es_ssl_key_password == "" and copy_certificates.changed
+  with_items:
+    - http
+    - transport

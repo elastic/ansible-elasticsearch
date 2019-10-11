@@ -50,8 +50,11 @@ es_security_api: "{{ '_security' if es_version is version_compare('7.0.0', '>=')
 es_enable_http_ssl: false
 es_enable_transport_ssl: false
 es_ssl_keystore: ""
+es_ssl_keystore_password: ""
 es_ssl_truststore: ""
+es_ssl_truststore_password: ""
 es_ssl_key: ""
+es_ssl_key_password: ""
 es_ssl_certificate: ""
 es_ssl_certificate_authority: ""
 es_ssl_certificate_path: "/etc/elasticsearch/certs"
