@@ -42,6 +42,8 @@ es_debian_startup_timeout: 10
 # JVM custom parameters
 es_jvm_custom_parameters: ''
 
+es_security_api: "_{{ 'xpack/security' if es_version is version_compare('7.0.0', '<=') else 'security' }}"
+
 # SSL/TLS parameters
 es_enable_http_ssl: false
 es_enable_transport_ssl: false
