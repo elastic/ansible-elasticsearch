@@ -37,24 +37,6 @@ action.auto_create_index: {{ es_action_auto_create_index }}
 
 {% if es_enable_xpack and es_api_basic_auth_username is defined and es_api_basic_auth_password is defined %}
 xpack.security.enabled: true
-{% endif %}
-
-{% if es_mail_config is defined %}
-xpack.notification.email:
-  account:
-    {{ es_mail_config['account'] }}:
-      profile: {{ es_mail_config['profile'] }}
-      email_defaults:
-        from: {{ es_mail_config['from'] }}
-      smtp:
-        auth: {{ es_mail_config['require_auth'] }}
-        host: {{ es_mail_config['host'] }}
-        port: {{ es_mail_config['port'] }}
-        {% if es_mail_config['require_auth'] == true -%}
-        user: {{ es_mail_config['user'] }}
-        password: {{ es_mail_config['pass'] }}
-        {%- endif %}
-{% endif %}
 
 {% if es_enable_http_ssl | bool %}
 xpack.security.http.ssl.enabled: true
@@ -87,4 +69,22 @@ xpack.security.transport.ssl.certificate_authorities: "{{ es_ssl_certificate_pat
 {% endif %}
 {% else %}
 # xpack.security.transport.ssl.enabled: false
+{% endif %}
+{% endif %}
+
+{% if es_mail_config is defined %}
+xpack.notification.email:
+  account:
+    {{ es_mail_config['account'] }}:
+      profile: {{ es_mail_config['profile'] }}
+      email_defaults:
+        from: {{ es_mail_config['from'] }}
+      smtp:
+        auth: {{ es_mail_config['require_auth'] }}
+        host: {{ es_mail_config['host'] }}
+        port: {{ es_mail_config['port'] }}
+        {% if es_mail_config['require_auth'] == true -%}
+        user: {{ es_mail_config['user'] }}
+        password: {{ es_mail_config['pass'] }}
+        {%- endif %}
 {% endif %}
