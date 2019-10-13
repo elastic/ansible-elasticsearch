@@ -19,7 +19,11 @@ def curl_json(uri, username=nil, password=nil)
   if username && password
     req.basic_auth username, password
   end
-  res = Net::HTTP.start(uri.hostname, uri.port) {|http|
+  res = Net::HTTP.start(
+    uri.hostname,
+    uri.port,
+    :verify_mode => OpenSSL::SSL::VERIFY_NONE
+  ) {|http|
     http.request(req)
   }
   return JSON.parse(res.body)

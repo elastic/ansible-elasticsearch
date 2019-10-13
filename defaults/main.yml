@@ -38,7 +38,7 @@ es_xpack_features: []
 es_api_scheme: "http"
 es_api_host: "localhost"
 es_api_port: 9200
-es_api_uri: "{{es_api_scheme}}://{{es_api_host}}:{{es_api_port}}"
+es_api_uri: "{{ es_api_scheme }}://{{ es_api_host }}:{{ es_api_port }}"
 es_debian_startup_timeout: 10
 
 # JVM custom parameters

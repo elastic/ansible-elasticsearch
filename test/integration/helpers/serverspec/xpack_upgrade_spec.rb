@@ -2,6 +2,11 @@ require 'spec_helper'
 require 'json'
 vars = JSON.parse(File.read('/tmp/vars.json'))
 
+es_api_url = "#{vars['es_api_scheme']}://localhost:#{vars['es_api_port']}"
+username = vars['es_api_basic_auth_username']
+password = vars['es_api_basic_auth_password']
+es_security_api = "#{vars['es_security_api']}"
+
 shared_examples 'xpack_upgrade::init' do |vars|
   #Test users file, users_roles and roles.yml
   describe file("/etc/elasticsearch/users_roles") do
@@ -18,7 +23,7 @@ shared_examples 'xpack_upgrade::init' do |vars|
 
   describe 'security roles' do
     it 'should list the security roles' do
-      roles = curl_json('http://localhost:9200/_xpack/security/role', username='es_admin', password='changeMeAgain')
+      roles = curl_json("#{es_api_url}/#{es_security_api}/role", username='es_admin', password='changeMeAgain')
       expect(roles.key?('superuser'))
     end
   end
@@ -54,7 +59,7 @@ shared_examples 'xpack_upgrade::init' do |vars|
   end
 
   describe 'security users' do
-    result = curl_json('http://localhost:9200/_xpack/security/user', username='elastic', password='elasticChanged')
+    result = curl_json("#{es_api_url}/#{es_security_api}/user", username='elastic', password='elasticChanged')
     it 'should have the elastic user' do
       expect(result['elastic']['username']).to eq('elastic')
       expect(result['elastic']['roles']).to eq(['superuser'])
