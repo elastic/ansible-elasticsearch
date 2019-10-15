@@ -60,3 +60,5 @@ es_ssl_certificate_authority: ""
 es_ssl_certificate_path: "/etc/elasticsearch/certs"
 es_ssl_verification_mode: "certificate"
 es_validate_certs: "yes"
+delete_unmanaged_file: true
+delete_unmanaged_native: true
