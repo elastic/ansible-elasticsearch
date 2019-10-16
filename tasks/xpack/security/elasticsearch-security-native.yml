@@ -97,7 +97,7 @@
 #Update password on all reserved users
 - name: Update Reserved User Passwords
   uri:
-    url: "{{ es_api_uri }}/{{ es_security_api }}/user/{{item}}/_password"
+    url: "{{ es_api_uri }}/{{ es_security_api }}/user/{{ item | urlencode }}/_password"
     method: POST
     body_format: json
     body: "{ \"password\":\"{{native_users[item].password}}\" }"
@@ -117,7 +117,7 @@
 #Overwrite all other users NOT inc. those reserved
 - name: Update Non-Reserved Native User Details
   uri:
-    url: "{{ es_api_uri }}/{{ es_security_api }}/user/{{item}}"
+    url: "{{ es_api_uri }}/{{ es_security_api }}/user/{{ item | urlencode }}"
     method: POST
     body_format: json
     body: "{{ native_users[item] | to_json }}"
@@ -171,7 +171,7 @@
 #Delete all non required roles NOT inc. reserved
 - name: Delete Native Roles
   uri:
-    url: "{{ es_api_uri }}/{{ es_security_api }}/role/{{item}}"
+    url: "{{ es_api_uri }}/{{ es_security_api }}/role/{{ item | urlencode }}"
     method: DELETE
     status_code: 200
     user: "{{es_api_basic_auth_username}}"
@@ -188,7 +188,7 @@
 #Update other roles - NOT inc. reserved roles
 - name: Update Native Roles
   uri:
-    url: "{{ es_api_uri }}/{{ es_security_api }}/role/{{item}}"
+    url: "{{ es_api_uri }}/{{ es_security_api }}/role/{{ item | urlencode }}"
     method: POST
     body_format: json
     body: "{{ es_roles.native[item] | to_json}}"
