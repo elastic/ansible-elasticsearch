@@ -22,6 +22,7 @@ def curl_json(uri, username=nil, password=nil)
   res = Net::HTTP.start(
     uri.hostname,
     uri.port,
+    :use_ssl => uri.scheme == 'https',
     :verify_mode => OpenSSL::SSL::VERIFY_NONE
   ) {|http|
     http.request(req)

@@ -5,7 +5,11 @@ vars = JSON.parse(File.read('/tmp/vars.json'))
 es_api_url = "#{vars['es_api_scheme']}://localhost:#{vars['es_api_port']}"
 username = vars['es_api_basic_auth_username']
 password = vars['es_api_basic_auth_password']
-es_security_api = "#{vars['es_security_api']}"
+if vars['es_major_version'] == '7.x'
+  es_security_api = "_security"
+else
+  es_security_api = "_xpack/security"
+end
 
 shared_examples 'xpack_upgrade::init' do |vars|
   #Test users file, users_roles and roles.yml
@@ -52,9 +56,7 @@ shared_examples 'xpack_upgrade::init' do |vars|
   #check accounts are correct i.e. we can auth and they have the correct roles
   describe 'kibana4_server access check' do
     it 'should be reported as version '+vars['es_version'] do
-      command = command('curl -s localhost:9200/ -u kibana4_server:changeMe | grep number')
-      expect(command.stdout).to match(vars['es_version'])
-      expect(command.exit_status).to eq(0)
+      expect(curl_json(es_api_url, username='kibana4_server', password='changeMe')['version']['number']).to eq(vars['es_version'])
     end
   end
 
@@ -84,9 +86,7 @@ shared_examples 'xpack_upgrade::init' do |vars|
 
   describe 'logstash_system access check' do
     it 'should be reported as version '+vars['es_version'] do
-      command = command('curl -s localhost:9200/ -u logstash_system:aNewLogstashPassword | grep number')
-      expect(command.stdout).to match(vars['es_version'])
-      expect(command.exit_status).to eq(0)
+      expect(curl_json(es_api_url, username='logstash_system', password='aNewLogstashPassword')['version']['number']).to eq(vars['es_version'])
     end
   end
 end
