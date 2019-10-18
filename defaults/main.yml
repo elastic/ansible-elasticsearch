@@ -33,6 +33,7 @@ es_max_threads: 8192
 es_max_map_count: 262144
 es_allow_downgrades: false
 es_xpack_features: []
+es_xpack_trial: false
 #These are used for internal operations performed by ansible.
 #They do not affect the current configuration
 es_api_scheme: "http"

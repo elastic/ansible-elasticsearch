@@ -90,6 +90,10 @@
   include: ./xpack/security/elasticsearch-xpack-activation.yml
   when: es_start_service and es_enable_xpack and es_xpack_license is defined and es_xpack_license != ''
 
+- name: activate-trial
+  include: ./xpack/security/elasticsearch-xpack-trial-activation.yml
+  when: es_start_service and es_enable_xpack and es_xpack_trial
+
 #perform security actions here now elasticsearch is started
 - name: include xpack/security/elasticsearch-security-native.yml
   include: ./xpack/security/elasticsearch-security-native.yml
