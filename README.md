@@ -390,6 +390,22 @@ When using [PEM encoded](https://www.elastic.co/guide/en/elasticsearch/reference
 * `es_ssl_key_password`  set this if your SSL key is protected with a password
 * `es_ssl_certificate`  the path to your SSL certificate
 
+##### Generating an SSL keystore
+
+With a password:
+
+```shell
+$ bin/elasticsearch-certutil ca --out ./my-ca.p12 --pass "ca_password"
+$ bin/elasticsearch-certutil cert --ca ./my-ca.p12 --ca-pass "ca_password" --out ./my-keystore.p12 --pass "keystore_password"
+```
+
+Without a password:
+
+```shell
+$ bin/elasticsearch-certutil ca --out ./my-ca.p12 --pass ""
+$ bin/elasticsearch-certutil cert --ca ./my-ca.p12 --out ./my-keystore.p12 --pass ""
+```
+
 ##### Additional optional SSL/TLS configuration
 
 * `es_ssl_certificate_path`  Default `{{ es_conf_dir }}/certs`. The location where certificates should be stored on the ES node.
@@ -421,8 +437,8 @@ When using [PEM encoded](https://www.elastic.co/guide/en/elasticsearch/reference
     es_api_basic_auth_password: changeme
     es_enable_http_ssl: true
     es_enable_transport_ssl: true
-    es_ssl_keystore: "my-keystore.p12"
-    es_ssl_truststore: "my-truststore.p12"
+    es_ssl_keystore: "files/certs/my-keystore.p12"
+    es_ssl_truststore: "files/certs/my-truststore.p12"
     es_ssl_keystore_password: "keystore_password"
     es_ssl_truststore_password: "truststore_password"
     es_validate_certs: no
