@@ -24,6 +24,7 @@ The latest Elasticsearch versions of 7.x & 6.x are actively tested.
 * For multi-instances use cases, we are now recommending Docker containers using our official images (https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html).
 
 ## Dependency
+
 This role uses the json_query filter which [requires jmespath](https://github.com/ansible/ansible/issues/24319) on the local machine.
 
 ## Usage
@@ -68,6 +69,10 @@ This playbook uses [Kitchen](https://kitchen.ci/) for CI and local testing.
 * Make
 
 ### Running the tests
+
+* Ensure you have checked out this repository to `elaticsearch`, not `ansible-elasticsearch`.
+* If you don't have a Gold or Platinum license to test with you can run the trial versions of the `xpack-upgrade` and `issue-test` suites by appending `-trial` to the `PATTERN` variable.
+* You may need to explicity specify `VERSION=7.x` if some suites are failing.
 
 Install the ruby dependencies with bundler
 
@@ -151,12 +156,13 @@ Whilst the role installs Elasticsearch with the default configuration parameters
 * ```es_config['http.port']``` - the http port for the node
 * ```es_config['transport.port']``` - the transport port for the node
 * ```es_config['discovery.seed_hosts']``` - the unicast discovery list, in the comma separated format ```"<host>:<port>,<host>:<port>"``` (typically the clusters dedicated masters)
+* ```es_config['cluster.initial_master_nodes']``` - for 7.x and above the list of master-eligible nodes to boostrap the cluster, in the comma separated format ```"<node.name>:<port>,<node.name>:<port>"``` (typically the node names of the clusters dedicated masters)
 * ```es_config['network.host']``` - sets both network.bind_host and network.publish_host to the same host value. The network.bind_host setting allows to control the host different network components will bind on.
 
-The network.publish_host setting allows to control the host the node will publish itself within the cluster so other nodes will be able to connect to it.
+The `network.publish_host` setting allows to control the host the node will publish itself within the cluster so other nodes will be able to connect to it.
 
 See https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html for further details on default binding behaviour and available options.
-The role makes no attempt to enforce the setting of these are requires users to specify them appropriately.  IT is recommended master nodes are listed and thus deployed first where possible.
+The role makes no attempt to enforce the setting of these are requires users to specify them appropriately.  It is recommended master nodes are listed and thus deployed first where possible.
 
 A more complex example:
 
@@ -262,7 +268,7 @@ ansible-playbook -i hosts ./your-playbook.yml
 X-Pack features, such as Security, are supported.
 
 The parameter `es_xpack_features` allows to list xpack features to install (example: `["alerting","monitoring","graph","security","ml"]`).
-When the list is empty, it install all features available with the current licence.
+When the list is empty, it installs all features available with the current licence.
 
 * ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/x-pack/current/mapping-roles.html)
 
@@ -347,6 +353,8 @@ es_roles:
 es_xpack_license: "{{ lookup('file', playbook_dir + '/files/' + es_cluster_name + '/license.json') }}"
 ```
 
+If you don't have a license you can enable the 30-day trial by setting `es_xpack_trial` to `true`.
+
 X-Pack configuration parameters can be added to the elasticsearch.yml file using the normal `es_config` parameter.
 
 For a full example see [here](https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack-upgrade.yml)
@@ -360,12 +368,72 @@ In order for native users and roles to be configured, the role calls the Elastic
 
 These can either be set to a user declared in the file based realm, with admin permissions, or the default "elastic" superuser (default password is changeme).
 
+#### X-Pack Security SSL/TLS
+
+The role allows configuring HTTP and transport layer SSL/TLS for the cluster. You will need to generate and provide your own PKCS12 or PEM encoded certificates as described in [Encrypting communications in Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/7.4/configuring-tls.html#configuring-tls).
+
+The following should be configured to ensure a security-enabled cluster successfully forms:
+
+* `es_enable_http_ssl`  Default `false`. Setting this to `true` will enable HTTP client SSL/TLS
+* `es_enable_transport_ssl` - Default `false`. Setting this to `true` will enable transport layer SSL/TLS
+
+When using a [PKCS12](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-settings.html#security-http-pkcs12-files) keystore and truststore:
+
+* `es_ssl_keystore`  path to your PKCS12 keystore (can be the same as `es_ssl_truststore`)
+* `es_ssl_keystore_password`  set this if your keystore is protected with a password
+* `es_ssl_truststore`  path to your PKCS12 keystore (can be the same as `es_ssl_keystore`)
+* `es_ssl_truststore_password`  set this if your truststore is protected with a password
+
+When using [PEM encoded](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-settings.html#_pem_encoded_files_3) certificates:
+
+* `es_ssl_key`  path to your SSL key
+* `es_ssl_key_password`  set this if your SSL key is protected with a password
+* `es_ssl_certificate`  the path to your SSL certificate
+
+##### Additional optional SSL/TLS configuration
+
+* `es_ssl_certificate_path`  Default `{{ es_conf_dir }}/certs`. The location where certificates should be stored on the ES node.
+* `es_ssl_verification_mode` Default `certificate`. See [SSL verification_mode](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-settings.html#ssl-tls-settings) for options.
+* `es_ssl_certificate_authority`  PEM encoded certificate file that should be trusted.
+* `es_validate_certs`  Default `yes`. Determines if ansible should validate SSL certificates when performing actions over HTTPS. e.g. installing templates and managing native users.
+
+##### Example SSL/TLS configuration
+
+```yaml
+- name: Elasticsearch with SSL/TLS enabled
+  hosts: localhost
+  roles:
+    - role: elastic.elasticsearch
+  vars:
+    es_config:
+      node.name: "node1"
+      cluster.name: "custom-cluster"
+      discovery.seed_hosts: "localhost:9301"
+      http.port: 9201
+      transport.port: 9301
+      node.data: false
+      node.master: true
+      bootstrap.memory_lock: true
+      xpack.security.authc.realms.file.file1.order: 0
+      xpack.security.authc.realms.native.native1.order: 1
+    es_heap_size: 1g
+    es_api_basic_auth_username: elastic
+    es_api_basic_auth_password: changeme
+    es_enable_http_ssl: true
+    es_enable_transport_ssl: true
+    es_ssl_keystore: "my-keystore.p12"
+    es_ssl_truststore: "my-truststore.p12"
+    es_ssl_keystore_password: "keystore_password"
+    es_ssl_truststore_password: "truststore_password"
+    es_validate_certs: no
+```
 
 ### Additional Configuration
 
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
 * ```es_enable_xpack```  Default `true`. Setting this to `false` will install the oss release of elasticsearch
+* `es_xpack_trial` Default `false`. Setting this to `true` will start the 30-day trail once the cluster starts.
 * ```es_version``` (e.g. "7.4.0").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
@@ -374,12 +442,14 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` an array of plugin definitions e.g.:
+
   ```yaml
     es_plugins:
       - plugin: ingest-attachment
   ```
+
 * ```es_path_repo``` Sets the whitelist for allowing local back-up repositories
-* ```es_action_auto_create_index ``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
+* ```es_action_auto_create_index``` Sets the value for auto index creation, use the syntax below for specifying indexes (else true/false):
      es_action_auto_create_index: '[".watches", ".triggered_watches", ".watcher-history-*"]'
 * ```es_allow_downgrades``` For development purposes only. (true or false (default) )
 * ```es_java_install``` If set to true, Java will be installed. (false (default for 7.x) or true (default for 6.x))
@@ -397,6 +467,7 @@ Earlier examples illustrate the installation of plugins using `es_plugins`.  For
 If installing Monitoring or Alerting, ensure the license plugin is also specified.  Security configuration currently has limited support, but more support is planned for later versions.
 
 To configure X-pack to send mail, the following configuration can be added to the role. When require_auth is true, you will also need to provide the user and password. If not these can be removed:
+
 ```yaml
     es_mail_config:
         account: <functional name>
@@ -445,7 +516,7 @@ To define proxy only for a particular plugin during its installation:
 * The playbook relies on the inventory_name of each host to ensure its directories are unique
 * KitchenCI has been used for testing.  This is used to confirm images reach the correct state after a play is first applied.  We currently test the latest version of 7.x and 6.x on all supported platforms.
 * The role aims to be idempotent.  Running the role multiple times, with no changes, should result in no state change on the server.  If the configuration is changed, these will be applied and Elasticsearch restarted where required.
-* In order to run x-pack tests a license file with security enabled is required. A trial license is appropriate. Set the environment variable `ES_XPACK_LICENSE_FILE` to the full path of the license file prior to running tests.
+* In order to run x-pack tests a license file with security enabled is required. Set the environment variable `ES_XPACK_LICENSE_FILE` to the full path of the license file prior to running tests. A trial license is appropriate and can be used by setting `es_xpack_trial` to `true`
 
 ## IMPORTANT NOTES RE PLUGIN MANAGEMENT
 
