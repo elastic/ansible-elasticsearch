@@ -29,10 +29,10 @@
     es_api_basic_auth_password: changeme
     es_enable_http_ssl: false
     es_enable_transport_ssl: true
-    es_ssl_keystore: "files/certs/keystore-password.p12"
-    es_ssl_truststore: "files/certs/truststore-password.p12"
-    es_ssl_keystore_password: password1
-    es_ssl_truststore_password: password2
+    es_ssl_keystore: "files/certs/shared-store-no-password.p12"
+    es_ssl_truststore: "files/certs/shared-store-no-password.p12"
+    es_ssl_keystore_password: ""
+    es_ssl_truststore_password: ""
     es_validate_certs: no
     es_role_mapping:
       power_user:
@@ -142,10 +142,10 @@
     es_api_basic_auth_password: elasticChanged
     es_enable_http_ssl: true
     es_enable_transport_ssl: true
-    es_ssl_keystore: "files/certs/shared-store-no-password.p12"
-    es_ssl_truststore: "files/certs/shared-store-no-password.p12"
-    es_ssl_keystore_password: ""
-    es_ssl_truststore_password: ""
+    es_ssl_keystore: "files/certs/keystore-password.p12"
+    es_ssl_truststore: "files/certs/truststore-password.p12"
+    es_ssl_keystore_password: password1
+    es_ssl_truststore_password: password2
     es_validate_certs: no
     es_role_mapping:
       power_user:

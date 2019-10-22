@@ -1,10 +1,14 @@
 require 'spec_helper'
 require 'json'
+require 'pathname'
 vars = JSON.parse(File.read('/tmp/vars.json'))
 
 es_api_url = "#{vars['es_api_scheme']}://localhost:#{vars['es_api_port']}"
 username = vars['es_api_basic_auth_username']
 password = vars['es_api_basic_auth_password']
+es_keystore_path = "#{vars['es_ssl_certificate_path']}/#{Pathname.new(vars['es_ssl_keystore']).basename}"
+es_truststore_path = "#{vars['es_ssl_certificate_path']}/#{Pathname.new(vars['es_ssl_truststore']).basename}"
+
 if vars['es_major_version'] == '7.x'
   es_security_api = "_security"
 else
@@ -61,7 +65,7 @@ shared_examples 'xpack_upgrade::init' do |vars|
   end
 
   describe 'security users' do
-    result = curl_json("#{es_api_url}/#{es_security_api}/user", username='elastic', password='elasticChanged')
+    result = curl_json("#{es_api_url}/#{es_security_api}/user", username=username, password=password)
     it 'should have the elastic user' do
       expect(result['elastic']['username']).to eq('elastic')
       expect(result['elastic']['roles']).to eq(['superuser'])
@@ -87,6 +91,16 @@ shared_examples 'xpack_upgrade::init' do |vars|
   describe 'logstash_system access check' do
     it 'should be reported as version '+vars['es_version'] do
       expect(curl_json(es_api_url, username='logstash_system', password='aNewLogstashPassword')['version']['number']).to eq(vars['es_version'])
+    end
+  end
+
+  describe 'SSL certificate check' do
+    certificates = curl_json("#{es_api_url}/_ssl/certificates", username=username, password=password)
+    it 'should list the keystore file' do
+      expect(certificates.any? { |cert| cert['path'] == es_keystore_path }).to be true
+    end
+    it 'should list the truststore file' do
+      expect(certificates.any? { |cert| cert['path'] == es_truststore_path }).to be true
     end
   end
 end
