@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.4.1 - 2019/10/22
+## 7.4.1 - 2019/10/23
 
 * 7.4.1 as default version
 * 6.8.4 as 6.x tested version
