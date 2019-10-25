@@ -6,8 +6,8 @@ vars = JSON.parse(File.read('/tmp/vars.json'))
 es_api_url = "#{vars['es_api_scheme']}://localhost:#{vars['es_api_port']}"
 username = vars['es_api_basic_auth_username']
 password = vars['es_api_basic_auth_password']
-es_keystore_path = "#{vars['es_ssl_certificate_path']}/#{Pathname.new(vars['es_ssl_keystore']).basename}"
-es_truststore_path = "#{vars['es_ssl_certificate_path']}/#{Pathname.new(vars['es_ssl_truststore']).basename}"
+es_keystore = Pathname.new(vars['es_ssl_keystore']).basename.to_s
+es_truststore = Pathname.new(vars['es_ssl_truststore']).basename.to_s
 
 if vars['es_major_version'] == '7.x'
   es_security_api = "_security"
@@ -46,6 +46,10 @@ shared_examples 'xpack_upgrade::init' do |vars|
       it { should contain 'security.authc.realms.native1.order: 1' }
       it { should contain 'security.authc.realms.native1.type: native' }
     end
+    it { should contain 'xpack.security.transport.ssl.enabled: true' }
+    it { should contain 'xpack.security.http.ssl.enabled: true' }
+    it { should contain es_keystore }
+    it { should contain es_truststore }
   end
 
   #Test contents of role_mapping.yml
@@ -97,10 +101,10 @@ shared_examples 'xpack_upgrade::init' do |vars|
   describe 'SSL certificate check' do
     certificates = curl_json("#{es_api_url}/_ssl/certificates", username=username, password=password)
     it 'should list the keystore file' do
-      expect(certificates.any? { |cert| cert['path'] == es_keystore_path }).to be true
+      expect(certificates.any? { |cert| cert['path'].include? es_keystore }).to be true
     end
     it 'should list the truststore file' do
-      expect(certificates.any? { |cert| cert['path'] == es_truststore_path }).to be true
+      expect(certificates.any? { |cert| cert['path'].include? es_truststore }).to be true
     end
   end
 end
