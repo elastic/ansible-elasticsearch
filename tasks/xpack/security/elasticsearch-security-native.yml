@@ -82,7 +82,7 @@
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
     validate_certs: "{{ es_validate_certs }}"
-  when: manage_native_users and delete_unmanaged_native
+  when: manage_native_users and es_delete_unmanaged_native
   with_items: "{{ users_to_remove | default([]) }}"
 
 - name: set fact users_to_ignore
@@ -178,7 +178,7 @@
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
     validate_certs: "{{ es_validate_certs }}"
-  when: manage_native_roles  and delete_unmanaged_native
+  when: manage_native_roles  and es_delete_unmanaged_native
   with_items: "{{roles_to_remove | default([]) }}"
 
 - name: set fact roles_to_modify

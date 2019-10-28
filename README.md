@@ -455,6 +455,8 @@ In addition to es_config, the following parameters allow the customization of th
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
 * ```es_api_basic_auth_password``` The password associated with the user declared in `es_api_basic_auth_username`
+* `es_delete_unmanaged_file` Default `true`. Set to false to keep file realm users that have been added outside of ansible.
+* `es_delete_unmanaged_native` Default `true`. Set to false to keep native realm users that have been added outside of ansible.
 * ```es_start_service``` (true (default) or false)
 * ```es_plugins_reinstall``` (true or false (default) )
 * ```es_plugins``` an array of plugin definitions e.g.:
