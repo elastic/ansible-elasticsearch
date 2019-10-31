@@ -17,6 +17,7 @@
     es_config: "{{ es_config_7x if es_major_version == '7.x' else es_config_6x }}"
     es_heap_size: "1g"
     es_templates: true
+    es_templates_fileglob: "test/integration/files/templates-{{ es_major_version }}/*.json"
     es_major_version: "7.x"
     es_version: "{{ '7.0.0' if es_major_version == '7.x' else '6.7.1' }}" # This is set to an older version than the current default to force an upgrade
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
@@ -30,8 +31,8 @@
     es_api_sleep: 5
     es_enable_http_ssl: false
     es_enable_transport_ssl: true
-    es_ssl_keystore: "files/certs/keystore-password.p12"
-    es_ssl_truststore: "files/certs/truststore-password.p12"
+    es_ssl_keystore: "test/integration/files/certs/keystore-password.p12"
+    es_ssl_truststore: "test/integration/files/certs/truststore-password.p12"
     es_ssl_keystore_password: password1
     es_ssl_truststore_password: password2
     es_validate_certs: no
@@ -133,6 +134,7 @@
     es_config: "{{ es_config_7x if es_major_version == '7.x' else es_config_6x }}"
     es_heap_size: "1g"
     es_templates: true
+    es_templates_fileglob: "test/integration/files/templates-{{ es_major_version }}/*.json"
     es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
     es_plugins:
       - plugin: ingest-attachment
@@ -144,8 +146,8 @@
     es_api_sleep: 5
     es_enable_http_ssl: true
     es_enable_transport_ssl: true
-    es_ssl_keystore: "files/certs/shared-store-no-password.p12"
-    es_ssl_truststore: "files/certs/shared-store-no-password.p12"
+    es_ssl_keystore: "test/integration/files/certs/shared-store-no-password.p12"
+    es_ssl_truststore: "test/integration/files/certs/shared-store-no-password.p12"
     es_ssl_keystore_password: ""
     es_ssl_truststore_password: ""
     es_validate_certs: no
