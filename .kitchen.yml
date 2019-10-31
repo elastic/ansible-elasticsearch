@@ -136,7 +136,3 @@ suites:
     provisioner:
       playbook: test/integration/xpack-upgrade-trial.yml
       idempotency_test: false
-  - name: issue-test-trial
-    provisioner:
-      playbook: test/integration/issue-test-trial.yml
-      idempotency_test: false
