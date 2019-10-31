@@ -2,7 +2,7 @@
 - name: Activate ES license (with security authentication)
   uri:
     method: PUT
-    url: "{{ es_api_uri }}/_{{ 'xpack/' if es_version is version_compare('7.0.0', '<') else '' }}license?acknowledge=true"
+    url: "{{ es_api_uri }}/{{ es_license_api }}?acknowledge=true"
     user: "{{es_api_basic_auth_username  | default(omit)}}"
     password: "{{es_api_basic_auth_password | default(omit)}}"
     body_format: json

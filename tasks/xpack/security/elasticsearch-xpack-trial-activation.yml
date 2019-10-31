@@ -2,7 +2,7 @@
 - name: Activate ES trial license (with security authentication)
   uri:
     method: POST
-    url: "{{ es_api_uri }}/_{{ 'xpack/' if es_version is version_compare('7.0.0', '<') else '' }}license/start_trial?acknowledge=true"
+    url: "{{ es_api_uri }}/{{ es_license_api }}/start_trial?acknowledge=true"
     user: "{{es_api_basic_auth_username  | default(omit)}}"
     password: "{{es_api_basic_auth_password | default(omit)}}"
     return_content: yes

@@ -40,13 +40,13 @@ es_api_scheme: "http"
 es_api_host: "localhost"
 es_api_port: 9200
 es_api_uri: "{{ es_api_scheme }}://{{ es_api_host }}:{{ es_api_port }}"
+es_security_api: "{{ '_security' if es_version is version_compare('7.0.0', '>=') else '_xpack/security' }}"
+es_license_api: "{{ '_license' if es_version is version_compare('7.0.0', '>=') else '_xpack/license' }}"
 es_api_sleep: 15
 es_debian_startup_timeout: 10
 
 # JVM custom parameters
 es_jvm_custom_parameters: ''
-
-es_security_api: "{{ '_security' if es_version is version_compare('7.0.0', '>=') else '_xpack/security' }}"
 
 # SSL/TLS parameters
 es_enable_http_ssl: false
