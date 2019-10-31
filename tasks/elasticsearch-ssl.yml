@@ -11,11 +11,17 @@
   file:
     dest: "{{ es_ssl_certificate_path }}"
     state: directory
+    owner: root
+    group: "{{ es_group }}"
+    mode: 0750
 
 - name: Upload SSL/TLS keystore
   copy:
     src: "{{ es_ssl_keystore }}"
     dest: "{{ es_ssl_certificate_path }}/{{ es_ssl_keystore | basename }}"
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
+    mode: 0640
   when: es_ssl_keystore and es_ssl_truststore
   notify: restart elasticsearch
   register: copy_keystore
@@ -24,6 +30,9 @@
   copy:
     src: "{{ es_ssl_truststore }}"
     dest: "{{ es_ssl_certificate_path }}/{{ es_ssl_truststore | basename }}"
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
+    mode: 0640
   when: es_ssl_keystore and es_ssl_truststore
   notify: restart elasticsearch
   register: copy_truststore
@@ -32,6 +41,9 @@
   copy:
     src: "{{ item }}"
     dest: "{{ es_ssl_certificate_path }}/{{ item | basename }}"
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
+    mode: 0640
   with_items:
     - "{{ es_ssl_key }}"
     - "{{ es_ssl_certificate }}"
@@ -44,6 +56,9 @@
   copy:
     src: "{{ es_ssl_certificate_authority }}"
     dest: "{{ es_ssl_certificate_path }}/{{ es_ssl_certificate_authority | basename }}"
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
+    mode: 0640
   #Restart if this changes
   notify: restart elasticsearch
   when: es_ssl_certificate_authority | bool
