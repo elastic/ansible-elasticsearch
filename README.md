@@ -214,6 +214,7 @@ An example of a three server deployment is shown below.  The first server holds 
     es_heap_size: "1g"
     es_config:
       cluster.name: "test-cluster"
+      cluster.initial_master_nodes: "elastic02:9300"
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
       node.data: false
@@ -230,6 +231,7 @@ An example of a three server deployment is shown below.  The first server holds 
       - "/opt/elasticsearch"
     es_config:
       cluster.name: "test-cluster"
+      cluster.initial_master_nodes: "elastic02:9300"
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
       node.data: true
