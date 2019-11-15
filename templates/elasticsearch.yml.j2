@@ -34,7 +34,7 @@ action.auto_create_index: {{ es_action_auto_create_index }}
 {% if es_enable_xpack and es_api_basic_auth_username is defined and es_api_basic_auth_password is defined %}
 xpack.security.enabled: true
 
-{% if es_enable_transport_ssl | bool %}
+{% if es_enable_transport_ssl and es_enable_auto_ssl_configuration %}
 xpack.security.transport.ssl.enabled: true
 xpack.security.transport.ssl.verification_mode: "{{ es_ssl_verification_mode }}"
 {% if es_ssl_keystore and es_ssl_truststore %}
@@ -47,11 +47,9 @@ xpack.security.transport.ssl.certificate: "{{ es_ssl_certificate_path }}/{{ es_s
 xpack.security.transport.ssl.certificate_authorities: "{{ es_ssl_certificate_path }}/{{ es_ssl_certificate_authority | basename }}"
 {% endif %}
 {% endif %}
-{% else %}
-# xpack.security.transport.ssl.enabled: false
 {% endif %}
 
-{% if es_enable_http_ssl | bool %}
+{% if es_enable_http_ssl and es_enable_auto_ssl_configuration %}
 xpack.security.http.ssl.enabled: true
 {% if es_ssl_keystore and es_ssl_truststore %}
 xpack.security.http.ssl.keystore.path: "{{ es_ssl_certificate_path }}/{{ es_ssl_keystore | basename }}"
@@ -63,8 +61,6 @@ xpack.security.http.ssl.certificate: "{{ es_ssl_certificate_path }}/{{ es_ssl_ce
 xpack.security.http.ssl.certificate_authorities: "{{ es_ssl_certificate_path }}/{{ es_ssl_certificate_authority | basename }}"
 {% endif %}
 {% endif %}
-{% else %}
-# xpack.security.http.ssl.enabled: false
 {% endif %}
 {% endif %}
 

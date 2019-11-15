@@ -49,6 +49,7 @@ es_debian_startup_timeout: 10
 es_jvm_custom_parameters: ''
 
 # SSL/TLS parameters
+es_enable_auto_ssl_configuration: true
 es_enable_http_ssl: false
 es_enable_transport_ssl: false
 es_ssl_keystore: ""
