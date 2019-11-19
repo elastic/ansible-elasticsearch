@@ -41,3 +41,5 @@ es_debian_startup_timeout: 10
 
 # JVM custom parameters
 es_jvm_custom_parameters: ''
+
+es_http_scheme: http
