@@ -11,7 +11,7 @@
   register: old_users_file
   check_mode: no
 
-- name: Copy the old users file from the old depreacted location
+- name: Copy the old users file from the old deprecated location
   copy:
     remote_src: yes
     force: no # only copy it if the new path doesn't exist yet
@@ -33,7 +33,7 @@
 
 - name: set fact users_to_remove
   set_fact: users_to_remove={{ current_file_users.stdout_lines | difference (es_users.file.keys() | list) }}
-  when: manage_file_users
+  when: manage_file_users and es_delete_unmanaged_file
 
 #Remove users
 - name: Remove Users
@@ -49,7 +49,7 @@
 
 - name: set fact users_to_add
   set_fact: users_to_add={{ es_users.file.keys() | list | difference (current_file_users.stdout_lines) }}
-  when: manage_file_users
+  when: manage_file_users and es_delete_unmanaged_file
 
 #Add users
 - name: Add Users

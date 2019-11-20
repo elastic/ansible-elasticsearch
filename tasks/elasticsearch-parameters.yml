@@ -17,6 +17,13 @@
     - es_api_basic_auth_username is not defined
     - es_api_basic_auth_password is not defined
 
+- name: fail when ssl enabled without defining a key and certificate
+  fail: msg="Enabling SSL/TLS (es_enable_http_ssl or es_enable_transport_ssl) requires es_ssl_keystore and es_ssl_truststore or es_ssl_key and es_ssl_certificate to be provided"
+  when:
+    - es_enable_http_ssl or es_enable_transport_ssl
+    - (es_ssl_key == "" or es_ssl_certificate == "")
+    - (es_ssl_keystore == "" or es_ssl_truststore == "")
+
 - name: set fact file_reserved_users
   set_fact: file_reserved_users={{ es_users.file.keys() | list | intersect (reserved_xpack_users) }}
   when: es_users is defined and es_users.file is defined and (es_users.file.keys() | list | length > 0) and (es_users.file.keys() | list | intersect (reserved_xpack_users) | length > 0)
