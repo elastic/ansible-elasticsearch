@@ -21,12 +21,13 @@
 #List current users
 - name: List Native Users
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user
+    url: "{{ es_api_uri }}/{{ es_security_api }}/user"
     method: GET
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
     status_code: 200
+    validate_certs: "{{ es_validate_certs }}"
   register: user_list_response
   when: manage_native_users
   check_mode: no
@@ -51,7 +52,7 @@
 
 - name: Update API User Password
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{es_api_basic_auth_username}}/_password
+    url: "{{ es_api_uri }}/{{ es_security_api }}/user/{{es_api_basic_auth_username}}/_password"
     method: POST
     body_format: json
     body: "{ \"password\":\"{{native_users[es_api_basic_auth_username].password}}\" }"
@@ -59,6 +60,7 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
   when: change_api_password
 
 - name: set fact es_api_basic_auth_password
@@ -73,13 +75,14 @@
 #Delete all non required users NOT inc. reserved
 - name: Delete Native Users
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{item}}
+    url: "{{ es_api_uri }}/{{ es_security_api }}/user/{{item}}"
     method: DELETE
     status_code: 200
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
-  when: manage_native_users
+    validate_certs: "{{ es_validate_certs }}"
+  when: manage_native_users and es_delete_unmanaged_native
   with_items: "{{ users_to_remove | default([]) }}"
 
 - name: set fact users_to_ignore
@@ -94,7 +97,7 @@
 #Update password on all reserved users
 - name: Update Reserved User Passwords
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{item}}/_password
+    url: "{{ es_api_uri }}/{{ es_security_api }}/user/{{ item | urlencode }}/_password"
     method: POST
     body_format: json
     body: "{ \"password\":\"{{native_users[item].password}}\" }"
@@ -102,6 +105,7 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
   when: native_users[item].password is defined
   no_log: True
   with_items: "{{ users_to_ignore | default([]) }}"
@@ -113,7 +117,7 @@
 #Overwrite all other users NOT inc. those reserved
 - name: Update Non-Reserved Native User Details
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/user/{{item}}
+    url: "{{ es_api_uri }}/{{ es_security_api }}/user/{{ item | urlencode }}"
     method: POST
     body_format: json
     body: "{{ native_users[item] | to_json }}"
@@ -121,6 +125,7 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
   when: manage_native_users
   no_log: True
   with_items: "{{ users_to_modify | default([]) }}"
@@ -130,13 +135,14 @@
 #List current roles not. inc those reserved
 - name: List Native Roles
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role
+    url: "{{ es_api_uri }}/{{ es_security_api }}/role"
     method: GET
     body_format: json
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
     status_code: 200
+    validate_certs: "{{ es_validate_certs }}"
   register: role_list_response
   when: manage_native_roles
   check_mode: no
@@ -165,13 +171,14 @@
 #Delete all non required roles NOT inc. reserved
 - name: Delete Native Roles
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role/{{item}}
+    url: "{{ es_api_uri }}/{{ es_security_api }}/role/{{ item | urlencode }}"
     method: DELETE
     status_code: 200
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
-  when: manage_native_roles
+    validate_certs: "{{ es_validate_certs }}"
+  when: manage_native_roles  and es_delete_unmanaged_native
   with_items: "{{roles_to_remove | default([]) }}"
 
 - name: set fact roles_to_modify
@@ -181,7 +188,7 @@
 #Update other roles - NOT inc. reserved roles
 - name: Update Native Roles
   uri:
-    url: http://{{es_api_host}}:{{es_api_port}}/_xpack/security/role/{{item}}
+    url: "{{ es_api_uri }}/{{ es_security_api }}/role/{{ item | urlencode }}"
     method: POST
     body_format: json
     body: "{{ es_roles.native[item] | to_json}}"
@@ -189,5 +196,6 @@
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
   when: manage_native_roles
   with_items: "{{ roles_to_modify | default([]) }}"

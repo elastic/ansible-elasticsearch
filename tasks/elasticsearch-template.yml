@@ -16,7 +16,7 @@
 
 - name: Install templates
   uri:
-    url: "http://{{es_api_host}}:{{es_api_port}}/_template/{{item | filename}}"
+    url: "{{ es_api_uri }}/_template/{{item | filename}}"
     method: PUT
     status_code: 200
     user: "{{es_api_basic_auth_username | default(omit)}}"
@@ -24,6 +24,7 @@
     force_basic_auth: yes
     body_format: json
     body: "{{ lookup('file', item) }}"
+    validate_certs: "{{ es_validate_certs }}"
   when: load_templates.changed and es_start_service
   with_fileglob:
     - "{{ es_templates_fileglob | default('') }}"

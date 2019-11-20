@@ -2,13 +2,14 @@
 - name: Activate ES license (with security authentication)
   uri:
     method: PUT
-    url: "http://{{es_api_host}}:{{es_api_port}}/_xpack/license?acknowledge=true"
+    url: "{{ es_api_uri }}/{{ es_license_api }}?acknowledge=true"
     user: "{{es_api_basic_auth_username  | default(omit)}}"
     password: "{{es_api_basic_auth_password | default(omit)}}"
     body_format: json
     body: "{{ es_xpack_license }}"
     return_content: yes
     force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
   register: license_activated
   no_log: True
   failed_when: >
@@ -16,5 +17,5 @@
     license_activated.json.license_status is not defined or
     license_activated.json.license_status != 'valid'
 
-- debug:
-    msg: "License: {{ license_activated }}"
+- name: License
+  debug: msg={{ license_activated }}

@@ -33,11 +33,35 @@ es_max_threads: 8192
 es_max_map_count: 262144
 es_allow_downgrades: false
 es_xpack_features: []
+es_xpack_trial: false
 #These are used for internal operations performed by ansible.
 #They do not affect the current configuration
+es_api_scheme: "http"
 es_api_host: "localhost"
 es_api_port: 9200
+es_api_uri: "{{ es_api_scheme }}://{{ es_api_host }}:{{ es_api_port }}"
+es_security_api: "{{ '_security' if es_version is version_compare('7.0.0', '>=') else '_xpack/security' }}"
+es_license_api: "{{ '_license' if es_version is version_compare('7.0.0', '>=') else '_xpack/license' }}"
+es_api_sleep: 15
 es_debian_startup_timeout: 10
 
 # JVM custom parameters
 es_jvm_custom_parameters: ''
+
+# SSL/TLS parameters
+es_enable_auto_ssl_configuration: true
+es_enable_http_ssl: false
+es_enable_transport_ssl: false
+es_ssl_keystore: ""
+es_ssl_keystore_password: ""
+es_ssl_truststore: ""
+es_ssl_truststore_password: ""
+es_ssl_key: ""
+es_ssl_key_password: ""
+es_ssl_certificate: ""
+es_ssl_certificate_authority: ""
+es_ssl_certificate_path: "{{ es_conf_dir }}/certs"
+es_ssl_verification_mode: "certificate"
+es_validate_certs: "yes"
+es_delete_unmanaged_file: true
+es_delete_unmanaged_native: true
