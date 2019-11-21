@@ -1,6 +1,6 @@
 
 {% if es_config %}
-{{ es_config | to_nice_yaml }}
+{{ es_config | to_nice_yaml(indent=2) }}
 {% endif %}
 
 {% if es_config['cluster.name'] is not defined %}
