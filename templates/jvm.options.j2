@@ -67,7 +67,7 @@
 -Dio.netty.noUnsafe=true
 -Dio.netty.noKeySetOptimization=true
 -Dio.netty.recycler.maxCapacityPerThread=0
-{% if es_version | version_compare('7.4.0', '>=')  %}
+{% if es_version is version('7.4.0', '>=')  %}
 -Dio.netty.allocator.numDirectArenas=0
 {% endif %}
 
