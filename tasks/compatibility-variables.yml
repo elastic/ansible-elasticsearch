@@ -23,3 +23,8 @@
     es_other_package_name: "elasticsearch"
   when:
     - not es_enable_xpack
+
+- name: Set the URL scheme to https if SSL/TLS is enabled
+  set_fact:
+    es_api_scheme: "https"
+  when: es_enable_http_ssl | bool

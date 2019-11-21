@@ -1,6 +1,19 @@
 require 'spec_helper'
 require 'json'
+require 'pathname'
 vars = JSON.parse(File.read('/tmp/vars.json'))
+
+es_api_url = "#{vars['es_api_scheme']}://localhost:#{vars['es_api_port']}"
+username = vars['es_api_basic_auth_username']
+password = vars['es_api_basic_auth_password']
+es_keystore = Pathname.new(vars['es_ssl_keystore']).basename.to_s
+es_truststore = Pathname.new(vars['es_ssl_truststore']).basename.to_s
+
+if vars['es_major_version'] == '7.x'
+  es_security_api = "_security"
+else
+  es_security_api = "_xpack/security"
+end
 
 shared_examples 'xpack_upgrade::init' do |vars|
   #Test users file, users_roles and roles.yml
@@ -18,7 +31,7 @@ shared_examples 'xpack_upgrade::init' do |vars|
 
   describe 'security roles' do
     it 'should list the security roles' do
-      roles = curl_json('http://localhost:9200/_xpack/security/role', username='es_admin', password='changeMeAgain')
+      roles = curl_json("#{es_api_url}/#{es_security_api}/role", username='es_admin', password='changeMeAgain')
       expect(roles.key?('superuser'))
     end
   end
@@ -33,6 +46,10 @@ shared_examples 'xpack_upgrade::init' do |vars|
       it { should contain 'security.authc.realms.native1.order: 1' }
       it { should contain 'security.authc.realms.native1.type: native' }
     end
+    it { should contain 'xpack.security.transport.ssl.enabled: true' }
+    it { should contain 'xpack.security.http.ssl.enabled: true' }
+    it { should contain es_keystore }
+    it { should contain es_truststore }
   end
 
   #Test contents of role_mapping.yml
@@ -47,14 +64,12 @@ shared_examples 'xpack_upgrade::init' do |vars|
   #check accounts are correct i.e. we can auth and they have the correct roles
   describe 'kibana4_server access check' do
     it 'should be reported as version '+vars['es_version'] do
-      command = command('curl -s localhost:9200/ -u kibana4_server:changeMe | grep number')
-      expect(command.stdout).to match(vars['es_version'])
-      expect(command.exit_status).to eq(0)
+      expect(curl_json(es_api_url, username='kibana4_server', password='changeMe')['version']['number']).to eq(vars['es_version'])
     end
   end
 
   describe 'security users' do
-    result = curl_json('http://localhost:9200/_xpack/security/user', username='elastic', password='elasticChanged')
+    result = curl_json("#{es_api_url}/#{es_security_api}/user", username=username, password=password)
     it 'should have the elastic user' do
       expect(result['elastic']['username']).to eq('elastic')
       expect(result['elastic']['roles']).to eq(['superuser'])
@@ -79,9 +94,17 @@ shared_examples 'xpack_upgrade::init' do |vars|
 
   describe 'logstash_system access check' do
     it 'should be reported as version '+vars['es_version'] do
-      command = command('curl -s localhost:9200/ -u logstash_system:aNewLogstashPassword | grep number')
-      expect(command.stdout).to match(vars['es_version'])
-      expect(command.exit_status).to eq(0)
+      expect(curl_json(es_api_url, username='logstash_system', password='aNewLogstashPassword')['version']['number']).to eq(vars['es_version'])
+    end
+  end
+
+  describe 'SSL certificate check' do
+    certificates = curl_json("#{es_api_url}/_ssl/certificates", username=username, password=password)
+    it 'should list the keystore file' do
+      expect(certificates.any? { |cert| cert['path'].include? es_keystore }).to be true
+    end
+    it 'should list the truststore file' do
+      expect(certificates.any? { |cert| cert['path'].include? es_truststore }).to be true
     end
   end
 end

@@ -20,7 +20,8 @@
     es_templates_fileglob: "test/integration/files/templates-{{ es_major_version }}/*.json"
     es_major_version: "7.x"
     es_version: "{{ '7.0.0' if es_major_version == '7.x' else '6.7.1' }}" # This is set to an older version than the current default to force an upgrade
-    es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
+    es_xpack_license: ""
+    es_xpack_trial: true
     es_plugins:
       - plugin: ingest-attachment
     es_xpack_features:
@@ -135,7 +136,8 @@
     es_heap_size: "1g"
     es_templates: true
     es_templates_fileglob: "test/integration/files/templates-{{ es_major_version }}/*.json"
-    es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
+    es_xpack_license: ""
+    es_xpack_trial: false
     es_plugins:
       - plugin: ingest-attachment
     es_xpack_features:
