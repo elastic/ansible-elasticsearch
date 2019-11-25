@@ -1,5 +1,5 @@
 ---
-es_version: "7.4.1"
+es_version: "7.4.2"
 es_use_snapshot_release: false
 es_enable_xpack: true
 es_package_name: "elasticsearch"
