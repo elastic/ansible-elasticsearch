@@ -66,8 +66,3 @@ MAX_LOCKED_MEMORY=unlimited
 MAX_MAP_COUNT={{es_max_map_count}}
 {% endif %}
 
-# Specifies the maximum number of threads that can be started.
-# Elasticsearch requires a minimum of 2048.
-{% if es_max_threads is defined %}
-MAX_THREADS={{ es_max_threads }}
-{% endif %}

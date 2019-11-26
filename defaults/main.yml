@@ -28,7 +28,6 @@ es_data_dirs:
 es_log_dir: "/var/log/elasticsearch"
 es_action_auto_create_index: true
 es_max_open_files: 65536
-es_max_threads: 8192
 es_max_map_count: 262144
 es_allow_downgrades: false
 es_xpack_features: []
