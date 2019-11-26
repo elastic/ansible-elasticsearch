@@ -9,30 +9,23 @@ ES_HOME={{es_home}}
 #JAVA_HOME=
 
 # Elasticsearch configuration directory
-CONF_DIR={{ es_conf_dir }}
 ES_PATH_CONF={{ es_conf_dir }}
-
-# Elasticsearch data directory
-DATA_DIR={{ es_data_dirs | array_to_str }}
-
-# Elasticsearch logs directory
-LOG_DIR={{ es_log_dir }}
 
 # Elasticsearch PID directory
 PID_DIR={{ es_pid_dir }}
 
-ES_JVM_OPTIONS={{ es_conf_dir }}/jvm.options
+# Additional Java OPTS
+ES_JAVA_OPTS=
 
 # Configure restart on package upgrade (true, every other setting will lead to not restarting)
-#ES_RESTART_ON_UPGRADE=true
-
-# Path to the GC log file
-#ES_GC_LOG_FILE=/var/log/elasticsearch/gc.log
+#RESTART_ON_UPGRADE=true
 
 ################################
 # Elasticsearch service
 ################################
 
+# SysV init.d
+#
 # The number of seconds to wait before checking if Elasticsearch started successfully as a daemon process
 ES_STARTUP_SLEEP_TIME=5
 
@@ -43,17 +36,17 @@ ES_STARTUP_SLEEP_TIME=5
 # Specifies the maximum file descriptor number that can be opened by this process
 # When using Systemd, this setting is ignored and the LimitNOFILE defined in
 # /usr/lib/systemd/system/elasticsearch.service takes precedence
+#MAX_OPEN_FILES=65535
 {% if es_max_open_files is defined %}
-#MAX_OPEN_FILES
 MAX_OPEN_FILES={{es_max_open_files}}
 {% endif %}
 
 # The maximum number of bytes of memory that may be locked into RAM
 # Set to "unlimited" if you use the 'bootstrap.memory_lock: true' option
-# in elasticsearch.yml
-# When using Systemd, the LimitMEMLOCK property must be set
-# in /usr/lib/systemd/system/elasticsearch.service
-#MAX_LOCKED_MEMORY=
+# in elasticsearch.yml.
+# When using systemd, LimitMEMLOCK must be set in a unit file such as
+# /etc/systemd/system/elasticsearch.service.d/override.conf.
+#MAX_LOCKED_MEMORY=unlimited
 {% if m_lock_enabled %}
 MAX_LOCKED_MEMORY=unlimited
 {% endif %}
@@ -65,4 +58,3 @@ MAX_LOCKED_MEMORY=unlimited
 {% if es_max_map_count is defined %}
 MAX_MAP_COUNT={{es_max_map_count}}
 {% endif %}
-
