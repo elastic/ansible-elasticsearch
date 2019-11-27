@@ -1,0 +1,7 @@
+# Elasticsearch CUSTOM FILE
+
+ES_HOME=/usr/share/elasticsearch
+ES_PATH_CONF=/etc/elasticsearch
+PID_DIR=/var/run/elasticsearch
+ES_JAVA_OPTS=
+ES_STARTUP_SLEEP_TIME=5

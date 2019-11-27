@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'json'
 vars = JSON.parse(File.read('/tmp/vars.json'))
 
-families = {
+$families = {
   'Debian' => {
     'shell'    => '/bin/false',
     'password' => '*',
@@ -15,7 +15,7 @@ families = {
   }
 }
 
-family = families[vars['ansible_os_family']]
+$family = $families[vars['ansible_os_family']]
 
 es_api_url = "#{vars['es_api_scheme']}://localhost:#{vars['es_api_port']}"
 username = vars['es_api_basic_auth_username']
@@ -88,9 +88,9 @@ shared_examples 'shared::init' do |vars|
     it { should belong_to_group vars['es_group'] }
     it { should have_uid vars['es_user_id'] } if vars.key?('es_user_id')
 
-    it { should have_login_shell family['shell'] }
+    it { should have_login_shell $family['shell'] }
 
-    its(:encrypted_password) { should eq(family['password']) }
+    its(:encrypted_password) { should eq($family['password']) }
   end
 
   describe package(vars['es_package_name']) do
@@ -129,7 +129,7 @@ shared_examples 'shared::init' do |vars|
     end
   end
 
-  describe file(family['defaults_path']) do
+  describe file($family['defaults_path']) do
     its(:content) { should match '' }
   end
 
