@@ -9,7 +9,7 @@
     state: directory
     owner: root
     group: "{{ es_group }}"
-    mode: 2750
+    mode: "2750"
 
 #Create pid directory
 - name: Create PID Directory
@@ -19,7 +19,7 @@
     state: directory
     owner: "{{ es_user }}"
     group: "{{ es_group }}"
-    mode: 0755
+    mode: "755"
 
 #Create required directories
 - name: Create Others Directories
@@ -29,7 +29,7 @@
     state: directory
     owner: "{{ es_user }}"
     group: "{{ es_group }}"
-    mode: 2750
+    mode: "2750"
   with_items:
     - "{{ es_log_dir }}"
     - "{{ es_data_dirs }}"
@@ -42,7 +42,7 @@
     dest: "{{ es_conf_dir }}/elasticsearch.yml"
     owner: root
     group: "{{ es_group }}"
-    mode: 0660
+    mode: "660"
     force: yes
   register: system_change
   notify: restart elasticsearch
@@ -55,7 +55,7 @@
     dest: "{{ default_file }}"
     owner: root
     group: "{{ es_group }}"
-    mode: 0660
+    mode: "660"
     force: yes
   notify: restart elasticsearch
 
@@ -67,7 +67,7 @@
       file:
         path: "{{ sysd_config_file | dirname }}"
         state: directory
-        mode: 0755
+        mode: "755"
 
     - name: Copy specific ElasticSearch Systemd config file
       ini_file:
@@ -75,7 +75,7 @@
         section: Service
         option: LimitMEMLOCK
         value: infinity
-        mode: 0644
+        mode: "644"
       notify:
        - reload systemd configuration
        - restart elasticsearch
@@ -87,7 +87,7 @@
     dest: "{{ es_conf_dir }}/jvm.options"
     owner: root
     group: "{{ es_group }}"
-    mode: 0660
+    mode: "660"
     force: yes
   notify: restart elasticsearch
 
@@ -98,7 +98,7 @@
     dest: "{{ es_conf_dir }}/log4j2.properties"
     owner: root
     group: "{{ es_group }}"
-    mode: 0660
+    mode: "660"
     force: yes
   notify: restart elasticsearch
   when: es_config_log4j2 != ''
