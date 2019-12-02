@@ -51,7 +51,7 @@
 - name: Copy Default File
   become: yes
   template:
-    src: "{% if es_config_default != '' %}{{ es_config_default }}{% else %}elasticsearch.j2{% endif %}"
+    src: "{{ es_config_default }}"
     dest: "{{ default_file }}"
     owner: root
     group: "{{ es_group }}"
@@ -83,7 +83,7 @@
 - name: Copy jvm.options File
   become: yes
   template:
-    src: "{% if es_config_jvm != '' %}{{ es_config_jvm }}{% else %}jvm.options.j2{% endif %}"
+    src: "{{ es_config_jvm }}"
     dest: "{{ es_conf_dir }}/jvm.options"
     owner: root
     group: "{{ es_group }}"
