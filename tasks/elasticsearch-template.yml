@@ -6,7 +6,7 @@
     state: directory
     owner: root
     group: "{{ es_group }}"
-    mode: 2750
+    mode: "2750"
 
 - name: Copy templates to elasticsearch
   copy: src={{ item }} dest={{ es_conf_dir }}/templates owner=root group={{ es_group }} mode=0660

@@ -4,17 +4,32 @@
 #Create conf directory
 - name: Create Configuration Directory
   become: yes
-  file: path={{ es_conf_dir }} state=directory owner=root group={{ es_group }} mode=2750
+  file:
+    path: "{{ es_conf_dir }}"
+    state: directory
+    owner: root
+    group: "{{ es_group }}"
+    mode: "2750"
 
 #Create pid directory
 - name: Create PID Directory
   become: yes
-  file: path={{ es_pid_dir }} state=directory owner={{ es_user }} group={{ es_group }} mode=0755
+  file:
+    path: "{{ es_pid_dir }}"
+    state: directory
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
+    mode: "755"
 
 #Create required directories
 - name: Create Others Directories
   become: yes
-  file: path={{ item }} state=directory owner={{ es_user }} group={{ es_group }} mode=2750
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
+    mode: "2750"
   with_items:
     - "{{ es_log_dir }}"
     - "{{ es_data_dirs }}"
@@ -22,14 +37,26 @@
 #Copy the config template
 - name: Copy Configuration File
   become: yes
-  template: src=elasticsearch.yml.j2 dest={{ es_conf_dir }}/elasticsearch.yml owner=root group={{ es_group }} mode=0660 force=yes
+  template:
+    src: elasticsearch.yml.j2
+    dest: "{{ es_conf_dir }}/elasticsearch.yml"
+    owner: root
+    group: "{{ es_group }}"
+    mode: "660"
+    force: yes
   register: system_change
   notify: restart elasticsearch
 
 #Copy the default file
 - name: Copy Default File
   become: yes
-  template: src=elasticsearch.j2 dest={{ default_file }} owner=root group={{ es_group }} mode=0660 force=yes
+  template:
+    src: "{{ es_config_default }}"
+    dest: "{{ default_file }}"
+    owner: root
+    group: "{{ es_group }}"
+    mode: "660"
+    force: yes
   notify: restart elasticsearch
 
 #Copy the systemd specific file if systemd is installed
@@ -37,21 +64,41 @@
   become: yes
   block:
     - name: Make sure destination dir exists
-      file: path={{ sysd_config_file | dirname }} state=directory mode=0755
+      file:
+        path: "{{ sysd_config_file | dirname }}"
+        state: directory
+        mode: "755"
 
     - name: Copy specific ElasticSearch Systemd config file
-      ini_file: path={{ sysd_config_file }} section=Service option=LimitMEMLOCK value=infinity mode=0644
+      ini_file:
+        path: "{{ sysd_config_file }}"
+        section: Service
+        option: LimitMEMLOCK
+        value: infinity
+        mode: "644"
       notify:
        - reload systemd configuration
        - restart elasticsearch
 
-#Copy the logging.yml
-- name: Copy log4j2.properties File
-  become: yes
-  template: src={{ es_config_log4j2 }} dest={{ es_conf_dir }}/log4j2.properties owner=root group={{ es_group }} mode=0660 force=yes
-  notify: restart elasticsearch
-
 - name: Copy jvm.options File
   become: yes
-  template: src=jvm.options.j2 dest={{ es_conf_dir }}/jvm.options owner=root group={{ es_group }} mode=0660 force=yes
+  template:
+    src: "{{ es_config_jvm }}"
+    dest: "{{ es_conf_dir }}/jvm.options"
+    owner: root
+    group: "{{ es_group }}"
+    mode: "660"
+    force: yes
   notify: restart elasticsearch
+
+- name: Copy log4j2.properties File
+  become: yes
+  template:
+    src: "{{ es_config_log4j2 }}"
+    dest: "{{ es_conf_dir }}/log4j2.properties"
+    owner: root
+    group: "{{ es_group }}"
+    mode: "660"
+    force: yes
+  notify: restart elasticsearch
+  when: es_config_log4j2 != ''

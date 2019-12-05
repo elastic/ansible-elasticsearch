@@ -405,7 +405,6 @@ In addition to es_config, the following parameters allow the customization of th
 * ```update_java``` Updates Java to the latest version. (true or false (default))
 * ```es_max_map_count``` maximum number of VMA (Virtual Memory Areas) a process can own. Defaults to 262144.
 * ```es_max_open_files``` the maximum file descriptor number that can be opened by this process. Defaults to 65536.
-* ```es_max_threads``` the maximum number of threads the process can start. Defaults to 2048 (the minimum required by elasticsearch).
 * ```es_debian_startup_timeout``` how long Debian-family SysV init scripts wait for the service to start, in seconds. Defaults to 10 seconds.
 * ```es_use_repository``` Setting this to `false` will stop Ansible from using the official Elastic package from any repository configured on the system.
 * ```es_add_repository``` Setting this to `false` will stop Ansible to add the official Elastic package repositories (if es_use_repository is true) if you want to use a repo already present.
