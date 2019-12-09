@@ -1,5 +1,50 @@
 # Changelog
 
+## 7.5.0 - 2019/12/09
+
+* 7.5.0 as default version
+* 6.8.5 as 6.x tested version
+
+### Breaking changes
+
+#### Removing the MAX_THREAD settings
+
+Ansible-elasticsearch 7.5.0 is removing the option to customize the maximum number of threads the process can start in [#637](https://github.com/elastic/ansible-elasticsearch/pull/637/files#diff-04c6e90faac2675aa89e2176d2eec7d8L408).
+We discovered that this option wasn't working anymore since multi-instance support removal in ansible-elasticsearch 7.1.1.
+This option will be added back in a following release if it's still relevant regarding latest Elasticsearch evolutions.
+
+#### Changes about configuration files
+
+Ansible-elasticsearch 7.5.0 is updating the configuration files provided by this role in [#637](https://github.com/elastic/ansible-elasticsearch/pull/637) which contained some otions deprecated in 6.x and 7.x:
+- `/etc/default/elasticsearch`|`/etc/sysconfig/elasticsearch`: the new template reflect the configuration file provided by Elasticsearch >= 6.x, the parameter we removed were already not used in 6.x and 7.x
+- `/etc/elasticsearch/jvm.options`: the new template reflect the configuration files provided by Elasticsearch >= 6.x
+- `/etc/elasticsearch/log4j2.properties`:
+  - We removed `log4j2.properties.j2` template from this Ansible role as it was a static file not bringing any customization specific to some ansible variable.
+  - Deployment of this Ansible role on new servers will get the default `log4j2.properties` provided by Elastisearch without any override.
+  - **WARNING**: For upgrade scenarios where this file was already managed by previous versions of ansible-elasticsearch, this file will become unmanaged and won't be updated by default. If you wish to update it to 7.5 version, you can retrieve it [here](https://github.com/elastic/elasticsearch/blob/7.5/distribution/src/config/log4j2.properties) and use this file with `es_config_log4j2` Ansible variable (see below).
+
+##### How to override configuration files provided by ansible-elasticsearch?
+
+You can now override the configuration files with your own versions by using the following Ansible variables:
+- `es_config_default: "elasticsearch.j2"`: replace `elasticsearch.j2` by your own template to use a custom `/etc/default/elasticsearch`|`/etc/sysconfig/elasticsearch` configuration file
+- `es_config_jvm: "jvm.options.j2"`: replace `jvm.options.j2` by your own template to use a custom `/etc/elasticsearch/jvm.options` configuration file
+- `es_config_log4j2: ""`: set this variable to the path of your own template to use a custom `/etc/elasticsearch/log4j2.properties` configuration file
+
+### SSL/TLS Support
+
+Ansible-elasticsearch is now supporting SSL/TLS encryption. Please refer to [X-Pack Security SSL/TLS](https://github.com/elastic/ansible-elasticsearch/blob/master/docs/ssl-tls-setup.md) to configure it.
+
+| PR                                                               | Author                                         | Title                                        |
+| ---------------------------------------------------------------- | ---------------------------------------------- | -------------------------------------------- |
+|[#625](https://github.com/elastic/ansible-elasticsearch/pull/625) | [@jmlrt](https://github.com/jmlrt)             | Add bumper script                            |
+|[#575](https://github.com/elastic/ansible-elasticsearch/pull/575) | [@flyinggecko](https://github.com/flyinggecko) | Docs: Fix name of elasticsearch ansible role |
+|[#629](https://github.com/elastic/ansible-elasticsearch/pull/629) | [@patsevanton](https://github.com/patsevanton) | Add cluster.initial_master_nodes             |
+|[#620](https://github.com/elastic/ansible-elasticsearch/pull/620) | [@pemontto](https://github.com/pemontto)       | Add SSL/TLS support                          |
+|[#630](https://github.com/elastic/ansible-elasticsearch/pull/630) | [@jmlrt](https://github.com/jmlrt)             | Indent yaml for config file                  |
+|[#636](https://github.com/elastic/ansible-elasticsearch/pull/636) | [@jmlrt](https://github.com/jmlrt)             | Bump elasticsearch to 6.8.5 and 7.4.2        |
+|[#637](https://github.com/elastic/ansible-elasticsearch/pull/637) | [@jmlrt](https://github.com/jmlrt)             | Use default config files                     |
+
+
 ## 7.4.1 - 2019/10/23
 
 * 7.4.1 as default version
