@@ -461,7 +461,7 @@ Both ```es_user_id``` and ```es_group_id``` must be set for the user and group i
 * ```es_restart_on_change``` - defaults to true.  If false, changes will not result in Elasticsearch being restarted.
 * ```es_plugins_reinstall``` - defaults to false.  If true, all currently installed plugins will be removed from a node.  Listed plugins will then be re-installed.
 
-This role ships with sample templates located in the [files/templates/](files/templates) directory. `es_templates_fileglob` variable (defaults to `<role>/files/templates/`) is used with the Ansible [with_fileglob](http://docs.ansible.com/ansible/playbooks_loops.html#id4) loop. When setting the globs, be sure to use an absolute path.
+This role ships with sample templates located in the [test/integration/files/templates-7.x](test/integration/files/templates-7.x) directory. `es_templates_fileglob` variable is used with the Ansible [with_fileglob](http://docs.ansible.com/ansible/playbooks_loops.html#id4) loop. When setting the globs, be sure to use an absolute path.
 
 ### Proxy
 
