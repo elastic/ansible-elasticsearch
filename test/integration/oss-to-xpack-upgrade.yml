@@ -19,7 +19,3 @@
   vars:
     oss_version: false
     es_heap_size: "1g"
-    es_xpack_features:
-      - monitoring
-      - graph
-      - ml

@@ -288,11 +288,6 @@ ansible-playbook -i hosts ./your-playbook.yml
 
 ### Installing X-Pack Features
 
-X-Pack features, such as Security, are supported.
-
-The parameter `es_xpack_features` allows to list xpack features to install (example: `["alerting","monitoring","graph","security","ml"]`).
-When the list is empty, it installs all features available with the current licence.
-
 * ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/x-pack/current/mapping-roles.html)
 
 
