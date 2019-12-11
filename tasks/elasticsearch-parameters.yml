@@ -13,9 +13,8 @@
 - name: fail when api credentials are not declared when using security
   fail: msg="Enabling security requires an es_api_basic_auth_username and es_api_basic_auth_password to be provided to allow cluster operations"
   when:
-    - es_enable_xpack and "security" in es_xpack_features
-    - es_api_basic_auth_username is not defined
-    - es_api_basic_auth_password is not defined
+    - not oss_version
+    - es_api_basic_auth_username is not defined or es_api_basic_auth_password is not defined
 
 - name: fail when ssl enabled without defining a key and certificate
   fail: msg="Enabling SSL/TLS (es_enable_http_ssl or es_enable_transport_ssl) requires es_ssl_keystore and es_ssl_truststore or es_ssl_key and es_ssl_certificate to be provided"

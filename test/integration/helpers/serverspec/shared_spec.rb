@@ -44,8 +44,8 @@ shared_examples 'shared::init' do |vars|
     end
   end
   describe 'xpack checks' do
-    if vars['es_enable_xpack']
-      it 'should be be running the xpack version' do
+    if not vars['oss_version']
+      it 'should be be running the basic version' do
         expect(curl_json("#{es_api_url}/_xpack", username=username, password=password)['tagline']).to eq('You know, for X')
       end
       it 'xpack should be activated' do
