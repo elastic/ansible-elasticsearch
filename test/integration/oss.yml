@@ -6,7 +6,7 @@
   roles:
     - elasticsearch
   vars:
-    es_enable_xpack: false
+    oss_version: true
     es_heap_size: "1g"
     es_plugins:
       - plugin: ingest-attachment

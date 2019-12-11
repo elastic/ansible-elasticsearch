@@ -402,7 +402,7 @@ These can either be set to a user declared in the file based realm, with admin p
 
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
-* ```es_enable_xpack```  Default `true`. Setting this to `false` will install the oss release of elasticsearch
+* ```oss_version```  Default `false`. Setting this to `true` will install the oss release of elasticsearch
 * `es_xpack_trial` Default `false`. Setting this to `true` will start the 30-day trail once the cluster starts.
 * ```es_version``` (e.g. "7.5.0").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".

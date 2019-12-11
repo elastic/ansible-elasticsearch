@@ -1,7 +1,7 @@
 ---
 es_version: "7.5.0"
 es_use_snapshot_release: false
-es_enable_xpack: true
+oss_version: false
 es_package_name: "elasticsearch"
 es_version_lock: false
 es_use_repository: true
