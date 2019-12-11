@@ -39,16 +39,13 @@
   apt: name={{ java }} state={{java_state}}
   when: ansible_os_family == 'Debian'
 
-- name: register open_jdk version
-  shell: java -version 2>&1 | grep OpenJDK
-  register: open_jdk
-  ignore_errors: yes
-  changed_when: false
-  check_mode: no
+- name: Ubuntu - Get installed packages
+  package_facts:
+  when: ansible_distribution == 'Ubuntu'
 
 #https://github.com/docker-library/openjdk/issues/19 - ensures tests pass due to java 8 broken certs
 - name: refresh the java ca-certificates
   become: yes
   command: /var/lib/dpkg/info/ca-certificates-java.postinst configure
-  when: ansible_distribution == 'Ubuntu' and open_jdk.rc == 0
+  when: ansible_distribution == 'Ubuntu' and 'ca-certificates-java' in ansible_facts.packages
   changed_when: false
