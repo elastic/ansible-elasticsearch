@@ -103,6 +103,6 @@
 #We also do after the native realm to ensure any changes are applied here first and its denf up.
 - name: include elasticsearch-template.yml
   include: elasticsearch-template.yml
-  when: es_templates
+  when: es_templates | bool
   tags:
       - templates
