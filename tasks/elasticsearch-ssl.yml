@@ -61,7 +61,7 @@
     mode: "640"
   #Restart if this changes
   notify: restart elasticsearch
-  when: es_ssl_certificate_authority | bool
+  when: (es_ssl_certificate_authority is defined) and (es_ssl_certificate_authority|length > 0)
 
 - name: Set keystore password
   shell: echo "{{ es_ssl_keystore_password }}" | {{ es_home }}/bin/elasticsearch-keystore add -x -f 'xpack.security.{{ item }}.ssl.keystore.secure_password'
