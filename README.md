@@ -25,13 +25,13 @@ The latest Elasticsearch versions of 7.x & 6.x are actively tested.
 
 ### Removing the MAX_THREAD settings
 
-Ansible-elasticsearch 7.5.0 is removing the option to customize the maximum number of threads the process can start in [#637](https://github.com/elastic/ansible-elasticsearch/pull/637/files#diff-04c6e90faac2675aa89e2176d2eec7d8L408).
+Ansible-elasticsearch 7.5.1 is removing the option to customize the maximum number of threads the process can start in [#637](https://github.com/elastic/ansible-elasticsearch/pull/637/files#diff-04c6e90faac2675aa89e2176d2eec7d8L408).
 We discovered that this option wasn't working anymore since multi-instance support removal in ansible-elasticsearch 7.1.1.
 This option will be added back in a following release if it's still relevant regarding latest Elasticsearch evolutions.
 
 ### Changes about configuration files
 
-Ansible-elasticsearch 7.5.0 is updating the configuration files provided by this role in [#637](https://github.com/elastic/ansible-elasticsearch/pull/637) which contained some otions deprecated in 6.x and 7.x:
+Ansible-elasticsearch 7.5.1 is updating the configuration files provided by this role in [#637](https://github.com/elastic/ansible-elasticsearch/pull/637) which contained some otions deprecated in 6.x and 7.x:
 - `/etc/default/elasticsearch`|`/etc/sysconfig/elasticsearch`: the new template reflect the configuration file provided by Elasticsearch >= 6.x, the parameter we removed were already not used in 6.x and 7.x
 - `/etc/elasticsearch/jvm.options`: the new template reflect the configuration files provided by Elasticsearch >= 6.x
 - `/etc/elasticsearch/log4j2.properties`:
@@ -55,7 +55,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install elastic.elasticsearch,7.5.0
+ansible-galaxy install elastic.elasticsearch,7.5.1
 ```
 
 Then create your playbook yaml adding the role elasticsearch.
@@ -69,14 +69,14 @@ The simplest configuration therefore consists of:
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_version: 7.5.0
+    es_version: 7.5.1
 ```
 
-The above installs Elasticsearch 7.5.0 in a single node 'node1' on the hosts 'localhost'.
+The above installs Elasticsearch 7.5.1 in a single node 'node1' on the hosts 'localhost'.
 
 **Note**:
 Elasticsearch default version is described in [`es_version`](defaults/main.yml#L2). You can override this variable in your playbook to install another version.
-While we are testing this role only with one 7.x and one 6.x version (respectively [7.5.0](defaults/main.yml#L2) and [6.8.5](.kitchen.yml#L22) at the time of writing), this role should work with others version also in most cases.
+While we are testing this role only with one 7.x and one 6.x version (respectively [7.5.1](defaults/main.yml#L2) and [6.8.6](.kitchen.yml#L22) at the time of writing), this role should work with others version also in most cases.
 
 This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
 
@@ -404,7 +404,7 @@ In addition to es_config, the following parameters allow the customization of th
 
 * ```es_enable_xpack```  Default `true`. Setting this to `false` will install the oss release of elasticsearch
 * `es_xpack_trial` Default `false`. Setting this to `true` will start the 30-day trail once the cluster starts.
-* ```es_version``` (e.g. "7.5.0").
+* ```es_version``` (e.g. "7.5.1").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.

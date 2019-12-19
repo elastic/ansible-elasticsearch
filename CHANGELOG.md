@@ -1,5 +1,16 @@
 # Changelog
 
+## 7.5.1 - 2019/12/18
+
+* 7.5.1 as default version
+* 6.8.6 as 6.x tested version
+
+| PR                                                               | Author                             | Title                                                    |
+| ---------------------------------------------------------------- | ---------------------------------- | -------------------------------------------------------- |
+|[#643](https://github.com/elastic/ansible-elasticsearch/pull/643) | [@jmlrt](https://github.com/jmlrt) | Set templates task to run only if `es_templates` is true |
+|[#647](https://github.com/elastic/ansible-elasticsearch/pull/647) | [@jmlrt](https://github.com/jmlrt) | Fix when condition for es_ssl_certificate_authority      |
+
+
 ## 7.5.0 - 2019/12/09
 
 * 7.5.0 as default version
