@@ -75,7 +75,6 @@
     CONF_DIR: "{{ es_conf_dir }}"
     ES_PATH_CONF: "{{ es_conf_dir }}"
     ES_INCLUDE: "{{ default_file }}"
-    ES_JAVA_OPTS: "{% if item.proxy_host is defined and item.proxy_host != '' and item.proxy_port is defined and item.proxy_port != ''%} -Dhttp.proxyHost={{ item.proxy_host }} -Dhttp.proxyPort={{ item.proxy_port }} -Dhttps.proxyHost={{ item.proxy_host }} -Dhttps.proxyPort={{ item.proxy_port }}  {% elif es_proxy_host is defined and es_proxy_host != '' %} -Dhttp.proxyHost={{ es_proxy_host }} -Dhttp.proxyPort={{ es_proxy_port }} -Dhttps.proxyHost={{ es_proxy_host }} -Dhttps.proxyPort={{ es_proxy_port }} {% endif %}"
   until: plugin_installed.rc == 0
   retries: 5
   delay: 5

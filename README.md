@@ -212,8 +212,6 @@ A more complex example:
     es_api_port: 9201
     es_plugins:
       - plugin: ingest-attachment
-        proxy_host: proxy.example.com
-        proxy_port: 8080
 ```
 
 #### Important Note
@@ -469,17 +467,6 @@ To define proxy globally, set the following variables:
 
 * ```es_proxy_host``` - global proxy host
 * ```es_proxy_port``` - global proxy port
-
-To define proxy only for a particular plugin during its installation:
-
-```yaml
-  es_plugins:
-    - plugin: ingest-attachment
-      proxy_host: proxy.example.com
-      proxy_port: 8080
-```
-
-> For plugins installation, proxy_host and proxy_port are used first if they are defined and fallback to the global proxy settings if not. The same values are currently used for both the http and https proxy settings.
 
 ## Notes
 
