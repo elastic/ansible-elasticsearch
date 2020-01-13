@@ -37,5 +37,5 @@
   set_fact: m_lock_enabled={{ es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True }}
 
 - name: set fact use_system_d
-  set_fact: use_system_d={{(ansible_distribution == 'Debian' and ansible_distribution_version is version_compare('8', '>=')) or (ansible_distribution in ['RedHat','CentOS'] and ansible_distribution_version is version_compare('7', '>=')) or (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version_compare('15', '>=')) }}
+  set_fact: use_system_d={{(ansible_distribution == 'Debian' and ansible_distribution_version is version('8', '>=')) or (ansible_distribution in ['RedHat','CentOS'] and ansible_distribution_version is version('7', '>=')) or (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('15', '>=')) }}
 
