@@ -446,7 +446,8 @@ To configure X-pack to send mail, the following configuration can be added to th
         host: <mail domain>
         port: <port number>
         user: <e-mail address> --optional
-        pass: <password> --optional
+        pass: <password> --optional (ES 6.x)
+        secure_pass: <password> --optional (ES 7.x)
 ```
 
 * ```es_user``` - defaults to elasticsearch.
