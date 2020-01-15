@@ -48,3 +48,5 @@
   become: yes
   template: src=security/role_mapping.yml.j2 dest={{ es_conf_dir }}/role_mapping.yml owner=root group={{ es_group }} mode=0660 force=yes
   when: es_role_mapping is defined
+
+- include: elasticsearch-smtp.yml
