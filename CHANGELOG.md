@@ -1,5 +1,16 @@
 # Changelog
 
+## 7.5.2 - 2020/01/21
+
+* 7.5.2 as default version
+
+| PR                                                               | Author                                 | Title                                                            |
+| ---------------------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------- |
+|[#648](https://github.com/elastic/ansible-elasticsearch/pull/648) | [@jmlrt](https://github.com/jmlrt)     | add proxy options to ES_JAVA_OPTS when defined with es_proxy_host|
+|[#657](https://github.com/elastic/ansible-elasticsearch/pull/657) | [@jakommo](https://github.com/jakommo) | switched relative URLs to absolute URLs                          |
+|[#664](https://github.com/elastic/ansible-elasticsearch/pull/664) | [@jmlrt](https://github.com/jmlrt)     | bump ruby to 2.5.7                                          |
+
+
 ## 7.5.1 - 2019/12/18
 
 * 7.5.1 as default version

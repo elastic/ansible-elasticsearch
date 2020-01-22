@@ -23,7 +23,7 @@
         #!/usr/local/bin/runbld
         set -euo pipefail
 
-        export RBENV_VERSION='2.3.0'
+        export RBENV_VERSION='2.5.7'
         export PATH="$HOME/.rbenv/bin:$PATH"
         eval "$(rbenv init -)"
         rbenv local $RBENV_VERSION
