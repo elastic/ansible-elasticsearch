@@ -110,7 +110,9 @@
 
 # specify an alternative path for heap dumps; ensure the directory exists and
 # has sufficient space
--XX:HeapDumpPath=${heap.dump.path}
+{% if heap.dump.path is defined %} 
+-XX:HeapDumpPath=${heap.dump.path} 
+{% endif %}
 
 # specify an alternative path for JVM fatal error logs
 -XX:ErrorFile={{ es_log_dir }}/hs_err_pid%p.log
