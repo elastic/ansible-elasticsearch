@@ -77,6 +77,8 @@ xpack.notification.email:
         port: {{ es_mail_config['port'] }}
         {% if es_mail_config['require_auth'] == true -%}
         user: {{ es_mail_config['user'] }}
+        {% endif -%}
+        {%- if es_mail_config['require_auth'] == true and es_mail_config['pass'] is defined -%}
         password: {{ es_mail_config['pass'] }}
-        {%- endif %}
+        {%- endif -%}
 {% endif %}

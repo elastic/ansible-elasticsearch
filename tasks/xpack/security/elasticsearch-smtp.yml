@@ -1,0 +1,26 @@
+---
+- set_fact: manage_smtp_secure_password=false
+
+- set_fact: manage_smtp_secure_password=true
+  when: es_mail_config is defined and es_mail_config.secure_pass is defined
+
+- set_fact: smtp_password_path="xpack.notification.email.account.{{ es_mail_config['account'] }}.smtp.secure_password"
+  when: es_mail_config is defined and es_mail_config.account is defined
+
+- name: Create Smtp password for notifications
+  become: yes
+  shell: echo "{{es_mail_config['secure_pass']}}" | {{es_home}}/bin/elasticsearch-keystore add -x -f '{{ smtp_password_path }}'
+  when:
+    - es_mail_config['secure_pass'] is defined and list_keystore is defined and smtp_password_path not in list_keystore.stdout_lines
+  environment:
+    ES_PATH_CONF: "{{ es_conf_dir }}"
+  no_log: True
+
+- name: Remove Smtp password for notifications
+  become: yes
+  shell: "{{es_home}}/bin/elasticsearch-keystore remove {{ smtp_password_path }}"
+  when:
+    - es_mail_config['secure_pass'] is not defined and smtp_password_path in list_keystore.stdout_lines
+  environment:
+    ES_PATH_CONF: "{{ es_conf_dir }}"
+  no_log: True
