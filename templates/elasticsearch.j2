@@ -15,7 +15,7 @@ ES_PATH_CONF={{ es_conf_dir }}
 PID_DIR={{ es_pid_dir }}
 
 # Additional Java OPTS
-ES_JAVA_OPTS=
+ES_JAVA_OPTS="{% if es_proxy_host is defined and es_proxy_host != '' %}-Dhttp.proxyHost={{ es_proxy_host }} -Dhttp.proxyPort={{ es_proxy_port }} -Dhttps.proxyHost={{ es_proxy_host }} -Dhttps.proxyPort={{ es_proxy_port }}{% endif %}"
 
 # Configure restart on package upgrade (true, every other setting will lead to not restarting)
 #RESTART_ON_UPGRADE=true
