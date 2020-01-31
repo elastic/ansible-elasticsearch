@@ -40,16 +40,16 @@
   - name: split up the snapshot url so we can create the plugin url
     set_fact:
       split_url: "{{ es_custom_package_url.split('/') }}"
-  
+
   - name: set base plugin url
     set_fact:
       plugin_url: "{{ split_url[0] + '//' + split_url[2:5]|join('/') + '/elasticsearch-plugins/'}}"
-  
+
   - name: create es_plugins with the snapshot url
     set_fact:
       es_plugins_temp: "{{ es_plugins_temp|default([]) + [{'plugin': item.plugin, 'url': plugin_url + item.plugin + '/' + item.plugin + '-' + es_version + '-SNAPSHOT.zip'}] }}"
     with_items: "{{ es_plugins }}"
-  
+
   - name: override the original es_plugins with the snapshot version
     set_fact:
       es_plugins: "{{ es_plugins_temp }}"
