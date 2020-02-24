@@ -31,8 +31,8 @@ This option will be added back in a following release if it's still relevant reg
 
 ### Changes about configuration files
 
-Ansible-elasticsearch 7.5.2 is updating the configuration files provided by this role in [#637](https://github.com/elastic/ansible-elasticsearch/pull/637) which contained some otions deprecated in 6.x and 7.x:
-- `/etc/default/elasticsearch`|`/etc/sysconfig/elasticsearch`: the new template reflect the configuration file provided by Elasticsearch >= 6.x, the parameter we removed were already not used in 6.x and 7.x
+Ansible-elasticsearch 7.5.2 is updating the configuration files provided by this role in [#637](https://github.com/elastic/ansible-elasticsearch/pull/637) which contained some options deprecated in 6.x and 7.x:
+- `/etc/default/elasticsearch`|`/etc/sysconfig/elasticsearch`: the new template reflect the configuration file provided by Elasticsearch >= 6.x, the parameters we removed were already not used in 6.x and 7.x
 - `/etc/elasticsearch/jvm.options`: the new template reflect the configuration files provided by Elasticsearch >= 6.x
 - `/etc/elasticsearch/log4j2.properties`:
   - We removed `log4j2.properties.j2` template from this Ansible role as it was a static file not bringing any customization specific to some ansible variable.
@@ -76,7 +76,7 @@ The above installs Elasticsearch 7.6.0 in a single node 'node1' on the hosts 'lo
 
 **Note**:
 Elasticsearch default version is described in [`es_version`](https://github.com/elastic/ansible-elasticsearch/blob/master/defaults/main.yml#L2). You can override this variable in your playbook to install another version.
-While we are testing this role only with one 7.x and one 6.x version (respectively [7.6.0](https://github.com/elastic/ansible-elasticsearch/blob/master/defaults/main.yml#L2) and [6.8.6](https://github.com/elastic/ansible-elasticsearch/blob/master/.kitchen.yml#L22) at the time of writing), this role should work with others version also in most cases.
+While we are testing this role only with one 7.x and one 6.x version (respectively [7.6.0](https://github.com/elastic/ansible-elasticsearch/blob/master/defaults/main.yml#L2) and [6.8.6](https://github.com/elastic/ansible-elasticsearch/blob/master/.kitchen.yml#L22) at the time of writing), this role should work with other versions also in most cases.
 
 This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
 
@@ -305,7 +305,7 @@ es_role_mapping:
     - "cn=admins,dc=example,dc=com"
 ```
 
-* ```es_users``` - Users can be declared here as yml. Two sub keys 'native' and 'file' determine the realm under which realm the user is created.  Beneath each of these keys users should be declared as yml entries. e.g.
+* ```es_users``` - Users can be declared here as yml. Two sub keys 'native' and 'file' determine the realm under which the user is created.  Beneath each of these keys users should be declared as yml entries. e.g.
 
 ```yaml
 es_users:
@@ -327,7 +327,7 @@ es_users:
 ```
 
 
-* ```es_roles``` - Elasticsearch roles can be declared here as yml. Two sub keys 'native' and 'file' determine how the role is created i.e. either through a file or http(native) call.  Beneath each key list the roles with appropriate permissions, using the file based format described [here] (https://www.elastic.co/guide/en/x-pack/current/file-realm.html) e.g.
+* ```es_roles``` - Elasticsearch roles can be declared here as yml. Two sub keys 'native' and 'file' determine how the role is created i.e. either through a file or http(native) call.  Beneath each key list the roles with appropriate permissions, using the file based format described [here](https://www.elastic.co/guide/en/x-pack/current/file-realm.html) e.g.
 
 ```yaml
 es_roles:
