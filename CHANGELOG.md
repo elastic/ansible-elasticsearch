@@ -1,5 +1,16 @@
 # Changelog
 
+## 7.6.1 - 2020/03/04
+
+* 7.6.1 as default version
+
+| PR                                                               | Author                                           | Title                        |
+| ---------------------------------------------------------------- | ------------------------------------------------ | ---------------------------- |
+|[#674](https://github.com/elastic/ansible-elasticsearch/pull/674) | [@HadrienPatte](https://github.com/HadrienPatte) | Fix typos in README          |
+|[#672](https://github.com/elastic/ansible-elasticsearch/pull/672) | [@pgassmann](https://github.com/pgassmann)       | Fix check mode               |
+|[#676](https://github.com/elastic/ansible-elasticsearch/pull/676) | [@nduytg](https://github.com/nduytg)             | Lint elasticsearch-xpack.yml |
+
+
 ## 7.6.0 - 2020/02/11
 
 * 7.6.0 as default version
