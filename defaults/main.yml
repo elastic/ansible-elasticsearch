@@ -47,6 +47,7 @@ es_api_sleep: 15
 es_debian_startup_timeout: 10
 
 # JVM custom parameters
+es_java_home: ''
 es_jvm_custom_parameters: ''
 
 # SSL/TLS parameters
