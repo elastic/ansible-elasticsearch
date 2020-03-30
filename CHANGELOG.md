@@ -1,5 +1,38 @@
 # Changelog
 
+## 7.6.1 - 2020/03/04
+
+* 7.6.1 as default version
+
+| PR                                                               | Author                                           | Title                        |
+| ---------------------------------------------------------------- | ------------------------------------------------ | ---------------------------- |
+|[#674](https://github.com/elastic/ansible-elasticsearch/pull/674) | [@HadrienPatte](https://github.com/HadrienPatte) | Fix typos in README          |
+|[#672](https://github.com/elastic/ansible-elasticsearch/pull/672) | [@pgassmann](https://github.com/pgassmann)       | Fix check mode               |
+|[#676](https://github.com/elastic/ansible-elasticsearch/pull/676) | [@nduytg](https://github.com/nduytg)             | Lint elasticsearch-xpack.yml |
+
+
+## 7.6.0 - 2020/02/11
+
+* 7.6.0 as default version
+
+| PR                                                               | Author                                                 | Title                                                 |
+| ---------------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------- |
+|[#667](https://github.com/elastic/ansible-elasticsearch/pull/667) | [@dependabot[bot]](https://github.com/apps/dependabot) | Bump rubyzip from 1.2.2 to 2.0.0                      |
+|[#671](https://github.com/elastic/ansible-elasticsearch/pull/671) | [@haslersn](https://github.com/haslersn)               | Remove whitespaces before newmines                    |
+|[#669](https://github.com/elastic/ansible-elasticsearch/pull/669) | [@rs-garrick](https://github.com/rs-garrick)           | Several tasks in elasticsearch-ssl.yml missing become |
+
+
+## 7.5.2 - 2020/01/21
+
+* 7.5.2 as default version
+
+| PR                                                               | Author                                 | Title                                                            |
+| ---------------------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------- |
+|[#648](https://github.com/elastic/ansible-elasticsearch/pull/648) | [@jmlrt](https://github.com/jmlrt)     | add proxy options to ES_JAVA_OPTS when defined with es_proxy_host|
+|[#657](https://github.com/elastic/ansible-elasticsearch/pull/657) | [@jakommo](https://github.com/jakommo) | switched relative URLs to absolute URLs                          |
+|[#664](https://github.com/elastic/ansible-elasticsearch/pull/664) | [@jmlrt](https://github.com/jmlrt)     | bump ruby to 2.5.7                                               |
+
+
 ## 7.5.1 - 2019/12/18
 
 * 7.5.1 as default version
