@@ -1,5 +1,16 @@
 # Changelog
 
+## 7.6.2 - 2020/03/31
+
+* 7.6.2 as default version
+* 6.8.8 as 6.x tested version
+
+| PR                                                               | Author                               | Title                                                          |
+| ---------------------------------------------------------------- | ------------------------------------ | -------------------------------------------------------------- |
+|[#678](https://github.com/elastic/ansible-elasticsearch/pull/678) | [@nduytg](https://github.com/nduytg) | Update security task files                                     |
+|[#681](https://github.com/elastic/ansible-elasticsearch/pull/681) | [@timdev](https://github.com/timdev) | Introduce `es_java_home` variable to allow setting `JAVA_HOME` |
+|[#682](https://github.com/elastic/ansible-elasticsearch/pull/682) | [@jmlrt](https://github.com/jmlrt)   | Export `VERSION` variable to make subshell                     |
+
 ## 7.6.1 - 2020/03/04
 
 * 7.6.1 as default version
