@@ -1,5 +1,5 @@
 ---
-es_version: "7.5.2"
+es_version: "7.6.2"
 es_use_snapshot_release: false
 es_enable_xpack: true
 es_package_name: "elasticsearch"
@@ -47,6 +47,7 @@ es_api_sleep: 15
 es_debian_startup_timeout: 10
 
 # JVM custom parameters
+es_java_home: ''
 es_jvm_custom_parameters: ''
 
 # SSL/TLS parameters

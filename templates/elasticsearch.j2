@@ -6,7 +6,11 @@
 ES_HOME={{es_home}}
 
 # Elasticsearch Java path
+{% if es_java_home | length > 0 %}
+JAVA_HOME={{ es_java_home }}
+{% else %}
 #JAVA_HOME=
+{% endif %}
 
 # Elasticsearch configuration directory
 ES_PATH_CONF={{ es_conf_dir }}
