@@ -49,6 +49,7 @@ es_debian_startup_timeout: 10
 # JVM custom parameters
 es_java_home: ''
 es_jvm_custom_parameters: ''
+es_heap_dump_path: "/var/lib/elasticsearch"
 
 # SSL/TLS parameters
 es_enable_auto_ssl_configuration: true
