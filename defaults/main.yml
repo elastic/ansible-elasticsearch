@@ -12,7 +12,7 @@ es_apt_key: "{{ es_repo_base }}/GPG-KEY-elasticsearch"
 es_apt_url: "deb {{ es_repo_base }}/packages/{{ es_repo_name }}/apt stable main"
 es_apt_url_old: "deb http://packages.elastic.co/elasticsearch/{{ es_repo_name }}/debian stable main"
 es_start_service: true
-es_java_install: "{{ false if (es_version is version_compare('7.0.0', '>=')) else true }}"
+es_java_install: "{{ false if (es_version is version('7.0.0', '>=')) else true }}"
 update_java: false
 es_restart_on_change: true
 es_plugins_reinstall: false
@@ -41,8 +41,8 @@ es_api_scheme: "http"
 es_api_host: "localhost"
 es_api_port: 9200
 es_api_uri: "{{ es_api_scheme }}://{{ es_api_host }}:{{ es_api_port }}"
-es_security_api: "{{ '_security' if es_version is version_compare('7.0.0', '>=') else '_xpack/security' }}"
-es_license_api: "{{ '_license' if es_version is version_compare('7.0.0', '>=') else '_xpack/license' }}"
+es_security_api: "{{ '_security' if es_version is version('7.0.0', '>=') else '_xpack/security' }}"
+es_license_api: "{{ '_license' if es_version is version('7.0.0', '>=') else '_xpack/license' }}"
 es_api_sleep: 15
 es_debian_startup_timeout: 10
 
