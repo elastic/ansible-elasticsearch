@@ -1,47 +1,60 @@
 # Changelog
 
+## 7.7.0 - 2020/05/13
+
+* 7.7.0 as default version
+* 6.8.9 as 6.x tested version
+* Updated Ansible minimal version from 2.4.2 to 2.5.0 in [#690](https://github.com/elastic/ansible-elasticsearch/pull/690)
+
+| PR                                                                | Author                                                 | Title                                            |
+|-------------------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------|
+| [#689](https://github.com/elastic/ansible-elasticsearch/pull/689) | [@CristianPupazan](https://github.com/CristianPupazan) | Remove port from `initial_master_nodes` setting  |
+| [#681](https://github.com/elastic/ansible-elasticsearch/pull/691) | [@jmlrt](https://github.com/jmlrt)                     | Update jvm options with default values for 7.6.0 |
+
+
 ## 7.6.2 - 2020/03/31
 
 * 7.6.2 as default version
 * 6.8.8 as 6.x tested version
 
-| PR                                                               | Author                               | Title                                                          |
-| ---------------------------------------------------------------- | ------------------------------------ | -------------------------------------------------------------- |
-|[#678](https://github.com/elastic/ansible-elasticsearch/pull/678) | [@nduytg](https://github.com/nduytg) | Update security task files                                     |
-|[#681](https://github.com/elastic/ansible-elasticsearch/pull/681) | [@timdev](https://github.com/timdev) | Introduce `es_java_home` variable to allow setting `JAVA_HOME` |
-|[#682](https://github.com/elastic/ansible-elasticsearch/pull/682) | [@jmlrt](https://github.com/jmlrt)   | Export `VERSION` variable to make subshell                     |
+| PR                                                                | Author                               | Title                                                          |
+|-------------------------------------------------------------------|--------------------------------------|----------------------------------------------------------------|
+| [#678](https://github.com/elastic/ansible-elasticsearch/pull/678) | [@nduytg](https://github.com/nduytg) | Update security task files                                     |
+| [#681](https://github.com/elastic/ansible-elasticsearch/pull/681) | [@timdev](https://github.com/timdev) | Introduce `es_java_home` variable to allow setting `JAVA_HOME` |
+| [#682](https://github.com/elastic/ansible-elasticsearch/pull/682) | [@jmlrt](https://github.com/jmlrt)   | Export `VERSION` variable to make subshell                     |
+
 
 ## 7.6.1 - 2020/03/04
 
 * 7.6.1 as default version
 
-| PR                                                               | Author                                           | Title                        |
-| ---------------------------------------------------------------- | ------------------------------------------------ | ---------------------------- |
-|[#674](https://github.com/elastic/ansible-elasticsearch/pull/674) | [@HadrienPatte](https://github.com/HadrienPatte) | Fix typos in README          |
-|[#672](https://github.com/elastic/ansible-elasticsearch/pull/672) | [@pgassmann](https://github.com/pgassmann)       | Fix check mode               |
-|[#676](https://github.com/elastic/ansible-elasticsearch/pull/676) | [@nduytg](https://github.com/nduytg)             | Lint elasticsearch-xpack.yml |
+| PR                                                                | Author                                           | Title                        |
+|-------------------------------------------------------------------|--------------------------------------------------|------------------------------|
+| [#674](https://github.com/elastic/ansible-elasticsearch/pull/674) | [@HadrienPatte](https://github.com/HadrienPatte) | Fix typos in README          |
+| [#672](https://github.com/elastic/ansible-elasticsearch/pull/672) | [@pgassmann](https://github.com/pgassmann)       | Fix check mode               |
+| [#676](https://github.com/elastic/ansible-elasticsearch/pull/676) | [@nduytg](https://github.com/nduytg)             | Lint elasticsearch-xpack.yml |
 
 
 ## 7.6.0 - 2020/02/11
 
 * 7.6.0 as default version
 
-| PR                                                               | Author                                                 | Title                                                 |
-| ---------------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------- |
-|[#667](https://github.com/elastic/ansible-elasticsearch/pull/667) | [@dependabot[bot]](https://github.com/apps/dependabot) | Bump rubyzip from 1.2.2 to 2.0.0                      |
-|[#671](https://github.com/elastic/ansible-elasticsearch/pull/671) | [@haslersn](https://github.com/haslersn)               | Remove whitespaces before newmines                    |
-|[#669](https://github.com/elastic/ansible-elasticsearch/pull/669) | [@rs-garrick](https://github.com/rs-garrick)           | Several tasks in elasticsearch-ssl.yml missing become |
+| PR                                                                | Author                                                 | Title                                                 |
+|-------------------------------------------------------------------|--------------------------------------------------------|-------------------------------------------------------|
+| [#667](https://github.com/elastic/ansible-elasticsearch/pull/667) | [@dependabot[bot]](https://github.com/apps/dependabot) | Bump rubyzip from 1.2.2 to 2.0.0                      |
+| [#671](https://github.com/elastic/ansible-elasticsearch/pull/671) | [@haslersn](https://github.com/haslersn)               | Remove whitespaces before newmines                    |
+| [#669](https://github.com/elastic/ansible-elasticsearch/pull/669) | [@rs-garrick](https://github.com/rs-garrick)           | Several tasks in elasticsearch-ssl.yml missing become |
 
 
 ## 7.5.2 - 2020/01/21
 
 * 7.5.2 as default version
 
-| PR                                                               | Author                                 | Title                                                            |
-| ---------------------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------- |
-|[#648](https://github.com/elastic/ansible-elasticsearch/pull/648) | [@jmlrt](https://github.com/jmlrt)     | add proxy options to ES_JAVA_OPTS when defined with es_proxy_host|
-|[#657](https://github.com/elastic/ansible-elasticsearch/pull/657) | [@jakommo](https://github.com/jakommo) | switched relative URLs to absolute URLs                          |
-|[#664](https://github.com/elastic/ansible-elasticsearch/pull/664) | [@jmlrt](https://github.com/jmlrt)     | bump ruby to 2.5.7                                               |
+| PR                                                                | Author                                 | Title                                                             |
+|-------------------------------------------------------------------|----------------------------------------|-------------------------------------------------------------------|
+| [#648](https://github.com/elastic/ansible-elasticsearch/pull/648) | [@jmlrt](https://github.com/jmlrt)     | add proxy options to ES_JAVA_OPTS when defined with es_proxy_host |
+| [#657](https://github.com/elastic/ansible-elasticsearch/pull/657) | [@jakommo](https://github.com/jakommo) | switched relative URLs to absolute URLs                           |
+| [#664](https://github.com/elastic/ansible-elasticsearch/pull/664) | [@jmlrt](https://github.com/jmlrt)     | bump ruby to 2.5.7                                                |
 
 
 ## 7.5.1 - 2019/12/18
@@ -49,10 +62,10 @@
 * 7.5.1 as default version
 * 6.8.6 as 6.x tested version
 
-| PR                                                               | Author                             | Title                                                    |
-| ---------------------------------------------------------------- | ---------------------------------- | -------------------------------------------------------- |
-|[#643](https://github.com/elastic/ansible-elasticsearch/pull/643) | [@jmlrt](https://github.com/jmlrt) | Set templates task to run only if `es_templates` is true |
-|[#647](https://github.com/elastic/ansible-elasticsearch/pull/647) | [@jmlrt](https://github.com/jmlrt) | Fix when condition for es_ssl_certificate_authority      |
+| PR                                                                | Author                             | Title                                                    |
+|-------------------------------------------------------------------|------------------------------------|----------------------------------------------------------|
+| [#643](https://github.com/elastic/ansible-elasticsearch/pull/643) | [@jmlrt](https://github.com/jmlrt) | Set templates task to run only if `es_templates` is true |
+| [#647](https://github.com/elastic/ansible-elasticsearch/pull/647) | [@jmlrt](https://github.com/jmlrt) | Fix when condition for es_ssl_certificate_authority      |
 
 
 ## 7.5.0 - 2019/12/09
@@ -89,15 +102,15 @@ You can now override the configuration files with your own versions by using the
 
 Ansible-elasticsearch is now supporting SSL/TLS encryption. Please refer to [X-Pack Security SSL/TLS](https://github.com/elastic/ansible-elasticsearch/blob/master/docs/ssl-tls-setup.md) to configure it.
 
-| PR                                                               | Author                                         | Title                                        |
-| ---------------------------------------------------------------- | ---------------------------------------------- | -------------------------------------------- |
-|[#625](https://github.com/elastic/ansible-elasticsearch/pull/625) | [@jmlrt](https://github.com/jmlrt)             | Add bumper script                            |
-|[#575](https://github.com/elastic/ansible-elasticsearch/pull/575) | [@flyinggecko](https://github.com/flyinggecko) | Docs: Fix name of elasticsearch ansible role |
-|[#629](https://github.com/elastic/ansible-elasticsearch/pull/629) | [@patsevanton](https://github.com/patsevanton) | Add cluster.initial_master_nodes             |
-|[#620](https://github.com/elastic/ansible-elasticsearch/pull/620) | [@pemontto](https://github.com/pemontto)       | Add SSL/TLS support                          |
-|[#630](https://github.com/elastic/ansible-elasticsearch/pull/630) | [@jmlrt](https://github.com/jmlrt)             | Indent yaml for config file                  |
-|[#636](https://github.com/elastic/ansible-elasticsearch/pull/636) | [@jmlrt](https://github.com/jmlrt)             | Bump elasticsearch to 6.8.5 and 7.4.2        |
-|[#637](https://github.com/elastic/ansible-elasticsearch/pull/637) | [@jmlrt](https://github.com/jmlrt)             | Use default config files                     |
+| PR                                                                | Author                                         | Title                                        |
+|-------------------------------------------------------------------|------------------------------------------------|----------------------------------------------|
+| [#625](https://github.com/elastic/ansible-elasticsearch/pull/625) | [@jmlrt](https://github.com/jmlrt)             | Add bumper script                            |
+| [#575](https://github.com/elastic/ansible-elasticsearch/pull/575) | [@flyinggecko](https://github.com/flyinggecko) | Docs: Fix name of elasticsearch ansible role |
+| [#629](https://github.com/elastic/ansible-elasticsearch/pull/629) | [@patsevanton](https://github.com/patsevanton) | Add cluster.initial_master_nodes             |
+| [#620](https://github.com/elastic/ansible-elasticsearch/pull/620) | [@pemontto](https://github.com/pemontto)       | Add SSL/TLS support                          |
+| [#630](https://github.com/elastic/ansible-elasticsearch/pull/630) | [@jmlrt](https://github.com/jmlrt)             | Indent yaml for config file                  |
+| [#636](https://github.com/elastic/ansible-elasticsearch/pull/636) | [@jmlrt](https://github.com/jmlrt)             | Bump elasticsearch to 6.8.5 and 7.4.2        |
+| [#637](https://github.com/elastic/ansible-elasticsearch/pull/637) | [@jmlrt](https://github.com/jmlrt)             | Use default config files                     |
 
 
 ## 7.4.1 - 2019/10/23
@@ -105,11 +118,11 @@ Ansible-elasticsearch is now supporting SSL/TLS encryption. Please refer to [X-P
 * 7.4.1 as default version
 * 6.8.4 as 6.x tested version
 
-| PR                                                               | Author                             | Title                                              |
-| ---------------------------------------------------------------- | ---------------------------------- | -------------------------------------------------- |
-|[#617](https://github.com/elastic/ansible-elasticsearch/pull/617) | [@jmlrt](https://github.com/jmlrt) | Use systemd ansible module for daemon-reload       |
-|[#618](https://github.com/elastic/ansible-elasticsearch/pull/618) | [@jmlrt](https://github.com/jmlrt) | Fix probot newlines                                |
-|[#619](https://github.com/elastic/ansible-elasticsearch/pull/619) | [@jmlrt](https://github.com/jmlrt) | Fix python AttributeError + format code with black |
+| PR                                                                | Author                             | Title                                              |
+|-------------------------------------------------------------------|------------------------------------|----------------------------------------------------|
+| [#617](https://github.com/elastic/ansible-elasticsearch/pull/617) | [@jmlrt](https://github.com/jmlrt) | Use systemd ansible module for daemon-reload       |
+| [#618](https://github.com/elastic/ansible-elasticsearch/pull/618) | [@jmlrt](https://github.com/jmlrt) | Fix probot newlines                                |
+| [#619](https://github.com/elastic/ansible-elasticsearch/pull/619) | [@jmlrt](https://github.com/jmlrt) | Fix python AttributeError + format code with black |
 
 
 ## 7.4.0 - 2019/10/01
@@ -117,22 +130,22 @@ Ansible-elasticsearch is now supporting SSL/TLS encryption. Please refer to [X-P
 * 7.4.0 as default version
 * Remove compatibility with versions < 6.3
 
-| PR                                                      | Author                                                     | Title                                                     |
-| ------------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------- |
-|[#575](https://github.com/elastic/ansible-elasticsearch/pull/575) | [@flyinggecko](https://github.com/flyinggecko) | Fix name of Elasticsearch Ansible role |
-|[#578](https://github.com/elastic/ansible-elasticsearch/pull/578) | [@jmlrt](https://github.com/jmlrt) | Fix `dict object has no attribute dict_keys` issue with Python3 |
-|[#588](https://github.com/elastic/ansible-elasticsearch/pull/588) | [@broferek](https://github.com/broferek) | Move `userid` and `groupid` in a different place in the role |
-|[#591](https://github.com/elastic/ansible-elasticsearch/pull/591) | [@Crazybus](https://github.com/Crazybus) | Add back in `force_basic_auth` for all http requests |
-|[#582](https://github.com/elastic/ansible-elasticsearch/pull/582) | [@ktibi](https://github.com/ktibi) | Allow disable Elastic official repository setup |
-|[#593](https://github.com/elastic/ansible-elasticsearch/pull/593) | [@jmlrt](https://github.com/jmlrt) | Bunch of small fixes |
-|[#595](https://github.com/elastic/ansible-elasticsearch/pull/595) | [@broferek](https://github.com/broferek) | Set `limitMEMLOCK` for OS using Systemd|
-|[#600](https://github.com/elastic/ansible-elasticsearch/pull/600) | [@titan-architrave](https://github.com/titan-architrave) | Always gather the `es_major_version` variables|
-|[#605](https://github.com/elastic/ansible-elasticsearch/pull/605) | [@jmlrt](https://github.com/jmlrt) | Add doc for migration with data move|
-|[#601](https://github.com/elastic/ansible-elasticsearch/pull/601) | [@LukeRoz](https://github.com/LukeRoz) | Removing package version hold when `es_version_hold: false`|
-|[#612](https://github.com/elastic/ansible-elasticsearch/pull/612) | [@jmlrt](https://github.com/jmlrt) | Add Probot config to manage stale issues/pr|
-|[#614](https://github.com/elastic/ansible-elasticsearch/pull/614) | [@jmlrt](https://github.com/jmlrt) | Describe how to select a different elasticsearch version|
-|[#609](https://github.com/elastic/ansible-elasticsearch/pull/609) | [@jmlrt](https://github.com/jmlrt) | No more 6.3 compatibility + Use default files permissions from Elasticsearch package|
-|[#510](https://github.com/elastic/ansible-elasticsearch/pull/510) | [@verboEse](https://github.com/verboEse) | Don't fetch APT key if existent|
+| PR                                                                | Author                                                   | Title                                                                                |
+|-------------------------------------------------------------------|----------------------------------------------------------|--------------------------------------------------------------------------------------|
+| [#575](https://github.com/elastic/ansible-elasticsearch/pull/575) | [@flyinggecko](https://github.com/flyinggecko)           | Fix name of Elasticsearch Ansible role                                               |
+| [#578](https://github.com/elastic/ansible-elasticsearch/pull/578) | [@jmlrt](https://github.com/jmlrt)                       | Fix `dict object has no attribute dict_keys` issue with Python3                      |
+| [#588](https://github.com/elastic/ansible-elasticsearch/pull/588) | [@broferek](https://github.com/broferek)                 | Move `userid` and `groupid` in a different place in the role                         |
+| [#591](https://github.com/elastic/ansible-elasticsearch/pull/591) | [@Crazybus](https://github.com/Crazybus)                 | Add back in `force_basic_auth` for all http requests                                 |
+| [#582](https://github.com/elastic/ansible-elasticsearch/pull/582) | [@ktibi](https://github.com/ktibi)                       | Allow disable Elastic official repository setup                                      |
+| [#593](https://github.com/elastic/ansible-elasticsearch/pull/593) | [@jmlrt](https://github.com/jmlrt)                       | Bunch of small fixes                                                                 |
+| [#595](https://github.com/elastic/ansible-elasticsearch/pull/595) | [@broferek](https://github.com/broferek)                 | Set `limitMEMLOCK` for OS using Systemd                                              |
+| [#600](https://github.com/elastic/ansible-elasticsearch/pull/600) | [@titan-architrave](https://github.com/titan-architrave) | Always gather the `es_major_version` variables                                       |
+| [#605](https://github.com/elastic/ansible-elasticsearch/pull/605) | [@jmlrt](https://github.com/jmlrt)                       | Add doc for migration with data move                                                 |
+| [#601](https://github.com/elastic/ansible-elasticsearch/pull/601) | [@LukeRoz](https://github.com/LukeRoz)                   | Removing package version hold when `es_version_hold: false`                          |
+| [#612](https://github.com/elastic/ansible-elasticsearch/pull/612) | [@jmlrt](https://github.com/jmlrt)                       | Add Probot config to manage stale issues/pr                                          |
+| [#614](https://github.com/elastic/ansible-elasticsearch/pull/614) | [@jmlrt](https://github.com/jmlrt)                       | Describe how to select a different elasticsearch version                             |
+| [#609](https://github.com/elastic/ansible-elasticsearch/pull/609) | [@jmlrt](https://github.com/jmlrt)                       | No more 6.3 compatibility + Use default files permissions from Elasticsearch package |
+| [#510](https://github.com/elastic/ansible-elasticsearch/pull/510) | [@verboEse](https://github.com/verboEse)                 | Don't fetch APT key if existent                                                      |
 
 
 ## 7.1.1 - 2019/06/04
