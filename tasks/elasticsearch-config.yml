@@ -60,7 +60,7 @@
   notify: restart elasticsearch
 
 #Copy the systemd specific file if systemd is installed
-- when: use_system_d and m_lock_enabled
+- when: use_system_d and (m_lock_enabled or es_max_open_files is defined)
   become: yes
   block:
     - name: Make sure destination dir exists
@@ -70,12 +70,13 @@
         mode: "755"
 
     - name: Copy specific ElasticSearch Systemd config file
-      ini_file:
-        path: "{{ sysd_config_file }}"
-        section: Service
-        option: LimitMEMLOCK
-        value: infinity
+      template:
+        src: "override.conf.j2"
+        dest: "{{ sysd_config_file }}"
+        owner: root
+        group: "{{ es_group }}"
         mode: "644"
+        force: yes
       notify:
        - reload systemd configuration
        - restart elasticsearch
