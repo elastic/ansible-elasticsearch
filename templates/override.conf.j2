@@ -1,0 +1,7 @@
+[Service]
+{% if m_lock_enabled %}
+LimitMEMLOCK = infinity
+{% endif %}
+{% if es_max_open_files is defined %}
+LimitNOFILE = {{ es_max_open_files }}
+{% endif %}
