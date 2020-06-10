@@ -8,9 +8,9 @@
 - name: Set backward compatibility for deprecated es_enable_xpack variable
   when: es_enable_xpack is defined and not es_enable_xpack
   block:
-  - name: set fact oss_version when using es_enable_xpack
+  - name: Set fact oss_version when using es_enable_xpack
     set_fact: oss_version=true
-  - name: set fact oss_version when using es_enable_xpack
+  - name: Warn about deprecated es_enable_xpack variable
     debug:
       msg: "WARNING: es_enable_xpack variable is now deprecated. You should use oss_version instead"
 
@@ -36,9 +36,3 @@
   set_fact:
     es_api_scheme: "https"
   when: es_enable_http_ssl | bool
-
-- debug:
-    var: oss_version
-
-- debug:
-    var: es_package_name
