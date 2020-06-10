@@ -12,7 +12,10 @@
 #Check if working with security we have an es_api_basic_auth_username and es_api_basic_auth_username - otherwise any http calls wont work
 - name: fail when api credentials are not declared when using security
   fail: msg="Enabling security requires an es_api_basic_auth_username and es_api_basic_auth_password to be provided to allow cluster operations"
-  when: not oss_version and es_api_basic_auth_username is defined and es_api_basic_auth_password is not defined
+  when:
+    - not oss_version
+    - es_api_basic_auth_username is defined
+    - es_api_basic_auth_password is not defined
 
 - name: fail when ssl enabled without defining a key and certificate
   fail: msg="Enabling SSL/TLS (es_enable_http_ssl or es_enable_transport_ssl) requires es_ssl_keystore and es_ssl_truststore or es_ssl_key and es_ssl_certificate to be provided"
