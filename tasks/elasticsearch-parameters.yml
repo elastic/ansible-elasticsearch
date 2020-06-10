@@ -1,5 +1,10 @@
 # Check for mandatory parameters
 
+- name: Warn about deprecated  es_xpack_features variable
+  debug:
+    msg: "WARNING: es_xpack_features variable is now deprecated. All feature are now enabled by default"
+  when: es_xpack_features is defined and not oss_version
+
 - name: fail when es_proxy_port is not defined or is blank
   fail: msg="es_proxy_port must be specified and cannot be blank when es_proxy_host is defined"
   when: (es_proxy_port is not defined or es_proxy_port == '') and (es_proxy_host is defined and es_proxy_host != '')
@@ -38,4 +43,3 @@
 
 - name: set fact use_system_d
   set_fact: use_system_d={{(ansible_distribution == 'Debian' and ansible_distribution_version is version('8', '>=')) or (ansible_distribution in ['RedHat','CentOS'] and ansible_distribution_version is version('7', '>=')) or (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('15', '>=')) }}
-
