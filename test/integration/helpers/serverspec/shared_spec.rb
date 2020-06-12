@@ -44,42 +44,12 @@ shared_examples 'shared::init' do |vars|
     end
   end
   describe 'xpack checks' do
-    if vars['es_enable_xpack']
-      it 'should be be running the xpack version' do
+    if not vars['oss_version']
+      it 'should be be running the basic version' do
         expect(curl_json("#{es_api_url}/_xpack", username=username, password=password)['tagline']).to eq('You know, for X')
       end
       it 'xpack should be activated' do
         expect(curl_json("#{es_api_url}/_license", username=username, password=password)['license']['status']).to eq('active')
-      end
-      if vars.key?('es_xpack_features')
-        curl_json("#{es_api_url}/_xpack", username=username, password=password)['features'].each do |feature,values|
-          enabled = vars['es_xpack_features'].include? feature
-          status = if enabled then 'enabled' else 'disabled' end
-          it "the xpack feature '#{feature}' to be #{status}" do
-            expect(values['enabled'] = enabled)
-          end
-        end
-      else
-        features.each do |feature, status|
-          feature_available = curl_json("#{es_api_url}/_xpack", username=username, password=password)['features'][feature]['available']
-          if feature_available == "true"
-            status = "available"
-          else
-            status = "unavailable"
-          end
-          it "the xpack feature '#{feature}' to be #{status}" do
-            expect(feature_available = status['available'])
-          end
-          feature_enabled = curl_json("#{es_api_url}/_xpack", username=username, password=password)['features'][feature]['enabled']
-          if feature_enabled == "true"
-            status = "enabled"
-          else
-            status = "disabled"
-          end
-          it "the xpack feature '#{feature}' to be #{status}" do
-            expect(feature_available = status['enabled'])
-          end
-        end
       end
     end
   end
