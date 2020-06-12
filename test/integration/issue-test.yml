@@ -17,9 +17,6 @@
     es_heap_size: "1g"
     es_plugins:
       - plugin: ingest-attachment
-    es_xpack_features:
-      - security
-      - alerting
     es_api_basic_auth_username: elastic
     es_api_basic_auth_password: changeme
     es_users:

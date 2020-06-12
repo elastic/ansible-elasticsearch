@@ -31,7 +31,7 @@ action.auto_create_index: false
 action.auto_create_index: {{ es_action_auto_create_index }}
 {% endif %}
 
-{% if es_enable_xpack and es_api_basic_auth_username is defined and es_api_basic_auth_password is defined %}
+{% if not oss_version and es_api_basic_auth_username is defined and es_api_basic_auth_password is defined %}
 xpack.security.enabled: true
 
 {% if es_enable_transport_ssl and es_enable_auto_ssl_configuration %}
