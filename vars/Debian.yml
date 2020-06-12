@@ -1,5 +1,11 @@
 ---
-java: "{% if es_java is defined %}{{es_java}}{% else %}openjdk-8-jre-headless{% endif %}"
+java_package: |
+  {% if ansible_os_family == 'Debian' and ansible_distribution_major_version == '10' %}
+    openjdk-11-jre-headless
+  {% else %}
+    openjdk-8-jre-headless
+  {% endif %}
+java: "{% if es_java is defined %}{{es_java}}{% else %}{{ java_package }}{% endif %}"
 default_file: "/etc/default/elasticsearch"
 es_home: "/usr/share/elasticsearch"
 es_apt_key_id: "46095ACC8548582C1A2699A9D27D666CD88E42B4"
