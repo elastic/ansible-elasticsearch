@@ -288,11 +288,6 @@ ansible-playbook -i hosts ./your-playbook.yml
 
 ### Installing X-Pack Features
 
-X-Pack features, such as Security, are supported.
-
-The parameter `es_xpack_features` allows to list xpack features to install (example: `["alerting","monitoring","graph","security","ml"]`).
-When the list is empty, it installs all features available with the current licence.
-
 * ```es_role_mapping``` Role mappings file declared as yml as described [here](https://www.elastic.co/guide/en/x-pack/current/mapping-roles.html)
 
 
@@ -400,7 +395,7 @@ These can either be set to a user declared in the file based realm, with admin p
 
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
 
-* ```es_enable_xpack```  Default `true`. Setting this to `false` will install the oss release of elasticsearch
+* ```oss_version```  Default `false`. Setting this to `true` will install the oss release of elasticsearch
 * `es_xpack_trial` Default `false`. Setting this to `true` will start the 30-day trail once the cluster starts.
 * ```es_version``` (e.g. "7.7.1").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".

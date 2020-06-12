@@ -3,7 +3,7 @@
 #Security configuration
 - name: include security/elasticsearch-security.yml
   include: security/elasticsearch-security.yml
-  when: es_enable_xpack
+  when: not oss_version
 
 #Make sure elasticsearch.keystore has correct Permissions
 - name: Set elasticsearch.keystore Permissions
