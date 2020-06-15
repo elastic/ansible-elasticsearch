@@ -94,6 +94,20 @@ platforms:
         - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
       use_sudo: false
       run_command: "/sbin/init"
+  - name: debian-10
+    driver_config:
+      image: debian:10
+      privileged: true
+      provision_command:
+        - apt-get update -q && apt-get install -y -q gnupg2 python-jmespath systemd-sysv
+        - echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" > /etc/apt/sources.list.d/ansible.list
+        - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+        - apt-get update -q && apt-get install -y -q ansible
+      volume:
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
+      use_sudo: false
+      run_command: "/sbin/init"
   - name: centos-7
     driver_config:
       image: centos:7
