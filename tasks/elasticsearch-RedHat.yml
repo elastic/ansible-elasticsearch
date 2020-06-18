@@ -45,7 +45,7 @@
     state: present
     update_cache: yes
     allow_downgrade: '{{ allow_downgrade }}'
-  when: es_use_repository
+  when: es_use_repository and not ansible_check_mode
   register: redhat_elasticsearch_install_from_repo
   notify: restart elasticsearch
   until: redhat_elasticsearch_install_from_repo.rc == 0
