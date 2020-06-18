@@ -1,5 +1,14 @@
 # Changelog
 
+## 7.8.0 - 2020/06/18
+
+* 7.8.0 as default version
+
+| PR                                                                | Author                             | Title                          |
+|-------------------------------------------------------------------|------------------------------------|--------------------------------|
+| [#653](https://github.com/elastic/ansible-elasticsearch/pull/653) | [@jmlrt](https://github.com/jmlrt) | Fix Xpack features refactoring |
+| [#699](https://github.com/elastic/ansible-elasticsearch/pull/699) | [@jmlrt](https://github.com/jmlrt) | Add Debian 10 support          |
+
 ## 7.7.1 - 2020/06/04
 
 * 7.7.1 as default version
