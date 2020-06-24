@@ -162,11 +162,3 @@ suites:
     provisioner:
       playbook: test/integration/xpack-upgrade-trial.yml
       idempotency_test: false
-  - name: oss-mlock
-    provisioner:
-      playbook: test/integration/oss-mlock.yml
-      idempotency_test: false
-  - name: xpack-mlock
-    provisioner:
-      playbook: test/integration/xpack-mlock.yml
-      idempotency_test: false
