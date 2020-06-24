@@ -1,0 +1,12 @@
+---
+- name: Standard test for single node setup. Tests memlock
+  hosts: localhost
+  post_tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - elasticsearch
+  vars:
+    oss_version: true
+    es_heap_size: "1g"
+    es_config:
+      bootstrap.memory_lock: true
