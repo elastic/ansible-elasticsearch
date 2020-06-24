@@ -120,6 +120,18 @@ platforms:
       run_command: "/usr/sbin/init"
       privileged: true
       use_sudo: false
+  - name: amazonlinux-2
+    driver_config:
+      image: amazonlinux:2
+      provision_command:
+        - yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+        - yum -y install ansible iproute python2-jmespath
+      volume:
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
+      run_command: "/usr/sbin/init"
+      privileged: true
+      use_sudo: false
 
 suites:
   - name: oss
