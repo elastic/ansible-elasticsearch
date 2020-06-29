@@ -12,7 +12,7 @@
 #If the user attempts to lock memory they must specify a heap size
 - name: fail when heap size is not specified when using memory lock
   fail: msg="If locking memory with bootstrap.memory_lock a heap size must be specified"
-  when: es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True and es_heap_size is not defined
+  when: es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True and es_heap_size is not defined and not ansible_check_mode
 
 #Check if working with security we have an es_api_basic_auth_username and es_api_basic_auth_username - otherwise any http calls wont work
 - name: fail when api credentials are not declared when using security
