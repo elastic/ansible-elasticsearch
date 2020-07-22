@@ -62,6 +62,4 @@
         timeout: 360
         fail: true
     - timestamps
-    publishers:
-    - email:
-        recipients: infra-root+build@elastic.co
+
