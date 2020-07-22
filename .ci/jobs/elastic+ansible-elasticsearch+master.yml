@@ -24,3 +24,10 @@
         echo "Finished getting xpack_license from secrets service"
         make setup
         make verify VERSION=$VERSION PATTERN=$TEST_TYPE-$OS
+    publishers:
+    - slack:
+        notify-back-to-normal: True
+        notify-every-failure: True
+        room: infra-release-notify
+        team-domain: elastic
+        auth-token-id: release-slack-integration-token
