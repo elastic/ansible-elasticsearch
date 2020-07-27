@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.8.1 - 2020/XX/XX
+## 7.8.1 - 2020/07/28
 
 * 7.8.1 as default version
 * 6.8.11 as 6.x tested version
