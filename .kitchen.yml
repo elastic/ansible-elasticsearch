@@ -19,7 +19,7 @@ provisioner:
     extra_vars:
       es_major_version: "<%= ENV['VERSION'] %>"
       <% if ENV['VERSION'] == '6.x' %>
-      es_version: '6.8.8'
+      es_version: '6.8.10'
       <% end %>
   <% end %>
 
@@ -94,11 +94,37 @@ platforms:
         - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
       use_sudo: false
       run_command: "/sbin/init"
+  - name: debian-10
+    driver_config:
+      image: debian:10
+      privileged: true
+      provision_command:
+        - apt-get update -q && apt-get install -y -q gnupg2 python-jmespath systemd-sysv
+        - echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" > /etc/apt/sources.list.d/ansible.list
+        - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+        - apt-get update -q && apt-get install -y -q ansible
+      volume:
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
+      use_sudo: false
+      run_command: "/sbin/init"
   - name: centos-7
     driver_config:
       image: centos:7
       provision_command:
         - yum -y install epel-release
+        - yum -y install ansible iproute python2-jmespath
+      volume:
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
+      run_command: "/usr/sbin/init"
+      privileged: true
+      use_sudo: false
+  - name: amazonlinux-2
+    driver_config:
+      image: amazonlinux:2
+      provision_command:
+        - yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
         - yum -y install ansible iproute python2-jmespath
       volume:
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json

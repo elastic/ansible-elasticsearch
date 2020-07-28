@@ -6,12 +6,14 @@
 
 # Users migration from elasticsearch < 6.3 versions
 - name: Check if old users file exists
+  become: yes
   stat:
     path: '{{ es_conf_dir }}/x-pack/users'
   register: old_users_file
   check_mode: no
 
 - name: Copy the old users file from the old deprecated location
+  become: yes
   copy:
     remote_src: yes
     force: no # only copy it if the new path doesn't exist yet

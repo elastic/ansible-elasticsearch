@@ -7,7 +7,9 @@ OS:
   - ubuntu-1804
   - debian-8
   - debian-9
+  - debian-10
   - centos-7
+  - amazonlinux-2
 TEST_TYPE:
   - oss
   - oss-upgrade

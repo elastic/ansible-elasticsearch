@@ -37,12 +37,19 @@
 ################################################################
 
 ## GC configuration
+{% if es_version is version('7.6.0', '<') %}
 -XX:+UseConcMarkSweepGC
 -XX:CMSInitiatingOccupancyFraction=75
 -XX:+UseCMSInitiatingOccupancyOnly
+{% else %}
+8-13:-XX:+UseConcMarkSweepGC
+8-13:-XX:CMSInitiatingOccupancyFraction=75
+8-13:-XX:+UseCMSInitiatingOccupancyOnly
+{% endif %}
 
 ## G1GC Configuration
-# NOTE: G1GC is only supported on JDK version 10 or later.
+# NOTE: G1 GC is only supported on JDK version 10 or later
+{% if es_version is version('7.6.0', '<') %}
 # To use G1GC uncomment the lines below.
 # 10-:-XX:-UseConcMarkSweepGC
 # 10-:-XX:-UseCMSInitiatingOccupancyOnly
@@ -52,6 +59,15 @@
 {% else %}
 # 10-:-XX:G1ReservePercent=25
 # 10-:-XX:InitiatingHeapOccupancyPercent=30
+{% endif %}
+{% else %}
+# to use G1GC, uncomment the next two lines and update the version on the
+# following three lines to your version of the JDK
+# 10-13:-XX:-UseConcMarkSweepGC
+# 10-13:-XX:-UseCMSInitiatingOccupancyOnly
+14-:-XX:+UseG1GC
+14-:-XX:G1ReservePercent=25
+14-:-XX:InitiatingHeapOccupancyPercent=30
 {% endif %}
 
 {% if es_version is version('7.5.0', '<') %}
@@ -100,6 +116,7 @@
 -Dlog4j2.disable.jmx=true
 {% endif %}
 
+## JVM temporary directory
 -Djava.io.tmpdir=${ES_TMPDIR}
 
 ## heap dumps
@@ -110,7 +127,7 @@
 
 # specify an alternative path for heap dumps; ensure the directory exists and
 # has sufficient space
--XX:HeapDumpPath=${heap.dump.path}
+-XX:HeapDumpPath={{ es_heap_dump_path }}
 
 # specify an alternative path for JVM fatal error logs
 -XX:ErrorFile={{ es_log_dir }}/hs_err_pid%p.log
