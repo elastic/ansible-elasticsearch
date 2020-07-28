@@ -1,5 +1,17 @@
 # Changelog
 
+## 7.8.1 - 2020/07/28
+
+* 7.8.1 as default version
+* 6.8.11 as 6.x tested version
+
+| PR                                                                | Author                                 | Title                                    |
+|-------------------------------------------------------------------|----------------------------------------|------------------------------------------|
+| [#701](https://github.com/elastic/ansible-elasticsearch/pull/701) | [@suramon](https://github.com/suramon) | Fix running ansible in check mode        |
+| [#703](https://github.com/elastic/ansible-elasticsearch/pull/703) | [@anisf](https://github.com/anisf)     | Add amazonlinux2 support                 |
+| [#705](https://github.com/elastic/ansible-elasticsearch/pull/705) | [@andzs](https://github.com/andzs)     | Use sudo for users migration from <6.3.0 |
+
+
 ## 7.8.0 - 2020/06/18
 
 * 7.8.0 as default version
