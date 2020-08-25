@@ -26,6 +26,7 @@ es_config_jvm: "jvm.options.j2"
 #Need to provide default directories
 es_conf_dir: "/etc/elasticsearch"
 es_pid_dir: "/var/run/elasticsearch"
+es_tmp_dir: "/tmp"
 es_data_dirs:
   - "/var/lib/elasticsearch"
 es_log_dir: "/var/log/elasticsearch"
