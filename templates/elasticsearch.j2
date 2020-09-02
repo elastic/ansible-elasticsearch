@@ -5,6 +5,9 @@
 # Elasticsearch home directory
 ES_HOME={{es_home}}
 
+# Elasticsearch temp directory
+ES_TMPDIR={{ es_tmp_dir }}
+
 # Elasticsearch Java path
 {% if es_java_home | length > 0 %}
 JAVA_HOME={{ es_java_home }}
