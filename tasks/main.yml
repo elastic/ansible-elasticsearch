@@ -89,15 +89,18 @@
 - name: activate-license
   include: ./xpack/security/elasticsearch-xpack-activation.yml
   when: es_start_service and not oss_version and es_xpack_license is defined and es_xpack_license != ''
+  run_once: True
 
 - name: activate-trial
   include: ./xpack/security/elasticsearch-xpack-trial-activation.yml
   when: es_start_service and not oss_version and es_xpack_trial
+  run_once: True
 
 #perform security actions here now elasticsearch is started
 - name: include xpack/security/elasticsearch-security-native.yml
   include: ./xpack/security/elasticsearch-security-native.yml
   when: manage_native_realm | bool
+  run_once: True
 
 #Templates done after restart - handled by flushing the handlers. e.g. suppose user removes security on a running node and doesn't specify es_api_basic_auth_username and es_api_basic_auth_password.  The templates will subsequently not be removed if we don't wait for the node to restart.
 #We also do after the native realm to ensure any changes are applied here first and its denf up.
