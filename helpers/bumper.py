@@ -15,12 +15,12 @@ os.chdir(os.path.join(os.path.dirname(__file__), '..'))
 
 old_versions = {
     6: '6.8.11',
-    7: '7.8.1',
+    7: '7.9.0',
 }
 
 new_versions = {
     6: '6.8.12',
-    7: '7.9.0',
+    7: '7.9.1',
 }
 
 files = [
