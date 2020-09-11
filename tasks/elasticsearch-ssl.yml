@@ -7,7 +7,7 @@
   set_fact: es_same_keystore=true
   when: es_ssl_keystore == es_ssl_truststore
 
-- name: ensure certificate directory exists
+- name: Ensure certificate directory exists
   become: yes
   file:
     dest: "{{ es_ssl_certificate_path }}"
@@ -15,6 +15,7 @@
     owner: root
     group: "{{ es_group }}"
     mode: "750"
+  when: es_ssl_upload
 
 - name: Upload SSL/TLS keystore
   become: yes
@@ -24,7 +25,7 @@
     owner: "{{ es_user }}"
     group: "{{ es_group }}"
     mode: "640"
-  when: es_ssl_keystore and es_ssl_truststore
+  when: es_ssl_upload and es_ssl_keystore and es_ssl_truststore
   notify: restart elasticsearch
   register: copy_keystore
 
@@ -36,7 +37,7 @@
     owner: "{{ es_user }}"
     group: "{{ es_group }}"
     mode: "640"
-  when: es_ssl_keystore and es_ssl_truststore
+  when: es_ssl_upload and es_ssl_keystore and es_ssl_truststore
   notify: restart elasticsearch
   register: copy_truststore
 
@@ -51,7 +52,7 @@
   with_items:
     - "{{ es_ssl_key }}"
     - "{{ es_ssl_certificate }}"
-  when: es_ssl_key and es_ssl_certificate
+  when: es_ssl_upload and es_ssl_key and es_ssl_certificate
   #Restart if these change
   notify: restart elasticsearch
   register: copy_certificates
@@ -66,7 +67,7 @@
     mode: "640"
   #Restart if this changes
   notify: restart elasticsearch
-  when: (es_ssl_certificate_authority is defined) and (es_ssl_certificate_authority|length > 0)
+  when: es_ssl_upload and (es_ssl_certificate_authority is defined) and (es_ssl_certificate_authority|length > 0)
 
 - name: Set keystore password
   become: yes
