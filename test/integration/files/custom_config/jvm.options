@@ -2,7 +2,6 @@
 
 -Xms2g
 -Xmx2g
--XX:+UseConcMarkSweepGC
 -XX:CMSInitiatingOccupancyFraction=75
 -XX:+UseCMSInitiatingOccupancyOnly
 -Des.networkaddress.cache.ttl=60
