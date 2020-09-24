@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.9.2 - 2020/09/24
+
+* 7.9.2 as default version
+
+| PR                                                                | Author                                 | Title                                    |
+|-------------------------------------------------------------------|----------------------------------------|------------------------------------------|
+| [#716](https://github.com/elastic/ansible-elasticsearch/pull/716) | [@lksnyder0](https://github.com/lksnyder0) | Use run_once for api related tasks        |
+
 ## 7.9.1 - 2020/09/03
 
 * 7.9.1 as default version
