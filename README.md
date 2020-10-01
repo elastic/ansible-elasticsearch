@@ -1,4 +1,4 @@
-# ansible-elasticsearch
+# ansible-Elasticsearch
 [![Build Status](https://img.shields.io/jenkins/s/https/devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master.svg)](https://devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master/)
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
@@ -54,7 +54,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 
 ## Usage
 
-Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
+Create your Ansible playbook with your own tasks, and include the role Elastic search. You will have to have this repository accessible within the context of playbook.
 
 ```sh
 ansible-galaxy install elastic.elasticsearch,7.9.2
