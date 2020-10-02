@@ -216,10 +216,12 @@ A more complex example:
       - plugin: ingest-attachment
 ```
 
-#### Important Note
+#### Important Notes
 
 **The role uses es_api_host and es_api_port to communicate with the node for actions only achievable via http e.g. to install templates and to check the NODE IS ACTIVE.  These default to "localhost" and 9200 respectively.
 If the node is deployed to bind on either a different host or port, these must be changed.**
+
+**Only use es_data_dirs and es_log_dir for customizing the data and log dirs respectively. When using together with `es_config['path.data']` and `es_config['path.logs']` it would result in generating duplicate data- and logs-keys in `elasticsearch.yml` and thus let fail to start elasticsearch.**
 
 ### Multi Node Server Installations
 
