@@ -4,6 +4,7 @@
 
 * 7.9.3 as default version.
 * 6.8.13 as 6.x tested version
+
 | PR | Author | Title |
 | --- | --- | --- |
 | [#727](https://github.com/elastic/ansible-elasticsearch/pull/727) | [@smutel](https://github.com/smutel) | Add an option to not upload SSL/TLS certs  |
