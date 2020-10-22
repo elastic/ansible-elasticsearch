@@ -1,5 +1,16 @@
 # Changelog
 
+## 7.9.3
+
+* 7.9.3 as default version.
+* 6.8.13 as 6.x tested version
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#727](https://github.com/elastic/ansible-elasticsearch/pull/727) | [@smutel](https://github.com/smutel) | Add an option to not upload SSL/TLS certs  |
+| [#726](https://github.com/elastic/ansible-elasticsearch/pull/726) | [@vielfarbig](https://github.com/vielfarbig) | Add note to only using es_data_dirs and es_log_dir for customizing th…  |
+
+
 ## 7.9.2 - 2020/09/24
 
 * 7.9.2 as default version
