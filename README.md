@@ -38,7 +38,7 @@ Ansible-elasticsearch 7.5.2 is updating the configuration files provided by this
 - `/etc/elasticsearch/jvm.options`: the new template reflect the configuration files provided by Elasticsearch >= 6.x
 - `/etc/elasticsearch/log4j2.properties`:
   - We removed `log4j2.properties.j2` template from this Ansible role as it was a static file not bringing any customization specific to some ansible variable.
-  - Deployment of this Ansible role on new servers will get the default `log4j2.properties` provided by Elastisearch without any override.
+  - Deployment of this Ansible role on new servers will get the default `log4j2.properties` provided by Elasticsearch without any override.
   - **WARNING**: For upgrade scenarios where this file was already managed by previous versions of ansible-elasticsearch, this file will become unmanaged and won't be updated by default. If you wish to update it to 7.5 version, you can retrieve it [here](https://github.com/elastic/elasticsearch/blob/7.5/distribution/src/config/log4j2.properties) and use this file with `es_config_log4j2` Ansible variable (see below).
 
 #### How to override configuration files provided by ansible-elasticsearch?
@@ -186,7 +186,7 @@ Whilst the role installs Elasticsearch with the default configuration parameters
 
 The `network.publish_host` setting allows to control the host the node will publish itself within the cluster so other nodes will be able to connect to it.
 
-See https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html for further details on default binding behaviour and available options.
+See https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html for further details on default binding behavior and available options.
 The role makes no attempt to enforce the setting of these are requires users to specify them appropriately.  It is recommended master nodes are listed and thus deployed first where possible.
 
 A more complex example:
@@ -397,7 +397,7 @@ These can either be set to a user declared in the file based realm, with admin p
 
 ### Additional Configuration
 
-In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
+In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behavior. Options include:
 
 * ```oss_version```  Default `false`. Setting this to `true` will install the oss release of elasticsearch
 * `es_xpack_trial` Default `false`. Setting this to `true` will start the 30-day trail once the cluster starts.
@@ -477,7 +477,7 @@ To define proxy globally, set the following variables:
 
 ## IMPORTANT NOTES RE PLUGIN MANAGEMENT
 
-* If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 6.x.
+* If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behavior is required in ES 6.x.
 * If no plugins are listed in the playbook for a node, all currently installed plugins will be removed.
 * The role supports automatic detection of differences between installed and listed plugins - installing those listed but not installed, and removing those installed but not listed.   Should users wish to re-install plugins they should set es_plugins_reinstall to true.  This will cause all currently installed plugins to be removed and those listed to be installed.
 
