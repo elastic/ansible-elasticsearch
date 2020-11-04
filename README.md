@@ -95,9 +95,9 @@ This playbook uses [Kitchen](https://kitchen.ci/) for CI and local testing.
 
 ### Running the tests
 
-* Ensure you have checked out this repository to `elaticsearch`, not `ansible-elasticsearch`.
+* Ensure you have checked out this repository to `elasticsearch`, not `ansible-elasticsearch`.
 * If you don't have a Gold or Platinum license to test with you can run the trial versions of the `xpack-upgrade` and `issue-test` suites by appending `-trial` to the `PATTERN` variable.
-* You may need to explicity specify `VERSION=7.x` if some suites are failing.
+* You may need to explicitly specify `VERSION=7.x` if some suites are failing.
 
 Install the ruby dependencies with bundler
 
