@@ -1,5 +1,19 @@
 # Changelog
 
+## 7.10.0
+
+* 7.10.0 as default version.
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#742](https://github.com/elastic/ansible-elasticsearch/pull/742) | [@jmlrt](https://github.com/jmlrt) | convert custom filter to python3  |
+| [#741](https://github.com/elastic/ansible-elasticsearch/pull/741) | [@jmlrt](https://github.com/jmlrt) | [meta] clean deprecated bumper script  |
+| [#740](https://github.com/elastic/ansible-elasticsearch/pull/740) | [@jmlrt](https://github.com/jmlrt) | fix some typos  |
+| [#728](https://github.com/elastic/ansible-elasticsearch/pull/728) | [@smutel](https://github.com/smutel) | Improve the documentation for TLS  |
+| [#739](https://github.com/elastic/ansible-elasticsearch/pull/739) | [@0xflotus](https://github.com/0xflotus) | fix: small error  |
+
+
 ## 7.9.3
 
 * 7.9.3 as default version.
