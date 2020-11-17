@@ -2,6 +2,9 @@
 driver:
   name: docker
 
+transport:
+  max_ssh_sessions: 6
+
 provisioner:
   name: ansible_playbook
   hosts: localhost
