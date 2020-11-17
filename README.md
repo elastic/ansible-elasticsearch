@@ -13,6 +13,7 @@ Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedH
 * Debian 9
 * Debian 10
 * CentOS 7
+* CentOS 8
 * Amazon Linux 2
 
 The latest Elasticsearch versions of 7.x & 6.x are actively tested.

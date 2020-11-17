@@ -123,6 +123,18 @@ platforms:
       run_command: "/usr/sbin/init"
       privileged: true
       use_sudo: false
+  - name: centos-8
+    driver_config:
+      image: centos:8
+      provision_command:
+        - yum -y install epel-release
+        - yum -y install ansible iproute python3-jmespath
+      volume:
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
+      run_command: "/usr/sbin/init"
+      privileged: true
+      use_sudo: false
   - name: amazonlinux-2
     driver_config:
       image: amazonlinux:2
