@@ -9,6 +9,7 @@ OS:
   - debian-9
   - debian-10
   - centos-7
+  - centos-8
   - amazonlinux-2
 TEST_TYPE:
   - oss
