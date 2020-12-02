@@ -2,6 +2,9 @@
 driver:
   name: docker
 
+transport:
+  max_ssh_sessions: 6
+
 provisioner:
   name: ansible_playbook
   hosts: localhost
@@ -114,6 +117,18 @@ platforms:
       provision_command:
         - yum -y install epel-release
         - yum -y install ansible iproute python2-jmespath
+      volume:
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
+      run_command: "/usr/sbin/init"
+      privileged: true
+      use_sudo: false
+  - name: centos-8
+    driver_config:
+      image: centos:8
+      provision_command:
+        - yum -y install epel-release
+        - yum -y install ansible iproute python3-jmespath
       volume:
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
         - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
