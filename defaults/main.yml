@@ -1,5 +1,5 @@
 ---
-es_version: "7.8.0"
+es_version: "7.10.0"
 es_use_snapshot_release: false
 oss_version: false
 es_package_name: "elasticsearch"
@@ -26,6 +26,7 @@ es_config_jvm: "jvm.options.j2"
 #Need to provide default directories
 es_conf_dir: "/etc/elasticsearch"
 es_pid_dir: "/var/run/elasticsearch"
+es_tmp_dir: "/tmp"
 es_data_dirs:
   - "/var/lib/elasticsearch"
 es_log_dir: "/var/log/elasticsearch"
@@ -54,6 +55,7 @@ es_heap_dump_path: "/var/lib/elasticsearch"
 es_enable_auto_ssl_configuration: true
 es_enable_http_ssl: false
 es_enable_transport_ssl: false
+es_ssl_upload: true
 es_ssl_keystore: ""
 es_ssl_keystore_password: ""
 es_ssl_truststore: ""

@@ -1,5 +1,66 @@
 # Changelog
 
+## 7.10.0
+
+* 7.10.0 as default version.
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#742](https://github.com/elastic/ansible-elasticsearch/pull/742) | [@jmlrt](https://github.com/jmlrt) | convert custom filter to python3  |
+| [#741](https://github.com/elastic/ansible-elasticsearch/pull/741) | [@jmlrt](https://github.com/jmlrt) | [meta] clean deprecated bumper script  |
+| [#740](https://github.com/elastic/ansible-elasticsearch/pull/740) | [@jmlrt](https://github.com/jmlrt) | fix some typos  |
+| [#728](https://github.com/elastic/ansible-elasticsearch/pull/728) | [@smutel](https://github.com/smutel) | Improve the documentation for TLS  |
+| [#739](https://github.com/elastic/ansible-elasticsearch/pull/739) | [@0xflotus](https://github.com/0xflotus) | fix: small error  |
+
+
+## 7.9.3
+
+* 7.9.3 as default version.
+* 6.8.13 as 6.x tested version
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#727](https://github.com/elastic/ansible-elasticsearch/pull/727) | [@smutel](https://github.com/smutel) | Add an option to not upload SSL/TLS certs  |
+| [#726](https://github.com/elastic/ansible-elasticsearch/pull/726) | [@vielfarbig](https://github.com/vielfarbig) | Add note to only using es_data_dirs and es_log_dir for customizing th…  |
+
+
+## 7.9.2 - 2020/09/24
+
+* 7.9.2 as default version
+
+| PR                                                                | Author                                 | Title                                    |
+|-------------------------------------------------------------------|----------------------------------------|------------------------------------------|
+| [#716](https://github.com/elastic/ansible-elasticsearch/pull/716) | [@lksnyder0](https://github.com/lksnyder0) | Use run_once for api related tasks        |
+
+## 7.9.1 - 2020/09/03
+
+* 7.9.1 as default version
+
+| PR                                                                | Author                                 | Title                                    |
+|-------------------------------------------------------------------|----------------------------------------|------------------------------------------|
+| [#701](https://github.com/elastic/ansible-elasticsearch/pull/701) | [@suramon](https://github.com/suramon) | Fix running ansible in check mode        |
+| [#703](https://github.com/elastic/ansible-elasticsearch/pull/703) | [@anisf](https://github.com/anisf)     | Add amazonlinux2 support                 |
+| [#705](https://github.com/elastic/ansible-elasticsearch/pull/705) | [@andzs](https://github.com/andzs)     | Use sudo for users migration from <6.3.0 |
+
+## 7.9.0 - 2020/08/18
+
+* 7.9.0 as default version
+* 6.8.12 as 6.x tested version
+
+
+## 7.8.1 - 2020/07/28
+
+* 7.8.1 as default version
+* 6.8.11 as 6.x tested version
+
+| PR                                                                | Author                                 | Title                                    |
+|-------------------------------------------------------------------|----------------------------------------|------------------------------------------|
+| [#701](https://github.com/elastic/ansible-elasticsearch/pull/701) | [@suramon](https://github.com/suramon) | Fix running ansible in check mode        |
+| [#703](https://github.com/elastic/ansible-elasticsearch/pull/703) | [@anisf](https://github.com/anisf)     | Add amazonlinux2 support                 |
+| [#705](https://github.com/elastic/ansible-elasticsearch/pull/705) | [@andzs](https://github.com/andzs)     | Use sudo for users migration from <6.3.0 |
+
+
 ## 7.8.0 - 2020/06/18
 
 * 7.8.0 as default version

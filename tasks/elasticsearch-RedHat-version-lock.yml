@@ -8,7 +8,7 @@
 
 - name: RedHat - check if requested elasticsearch version lock exists
   become: yes
-  shell: yum versionlock list | grep -c {{es_package_name}}-{{es_version}}
+  shell: 'yum versionlock list | grep {{es_package_name}} | grep -c "{{es_version}}"'
   register: es_requested_version_locked
   args:
     warn: false

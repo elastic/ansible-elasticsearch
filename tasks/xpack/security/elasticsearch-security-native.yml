@@ -12,7 +12,7 @@
 - name: set fact manage_native_role to false
   set_fact: manage_native_roles=false
 
-- name: set fact manange_native_roles to true
+- name: set fact manage_native_roles to true
   set_fact: manage_native_roles=true
   when: es_roles is defined and es_roles.native is defined and es_roles.native.keys() | list | length > 0
 

@@ -13,6 +13,7 @@ Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedH
 * Debian 9
 * Debian 10
 * CentOS 7
+* CentOS 8
 * Amazon Linux 2
 
 The latest Elasticsearch versions of 7.x & 6.x are actively tested.
@@ -38,7 +39,7 @@ Ansible-elasticsearch 7.5.2 is updating the configuration files provided by this
 - `/etc/elasticsearch/jvm.options`: the new template reflect the configuration files provided by Elasticsearch >= 6.x
 - `/etc/elasticsearch/log4j2.properties`:
   - We removed `log4j2.properties.j2` template from this Ansible role as it was a static file not bringing any customization specific to some ansible variable.
-  - Deployment of this Ansible role on new servers will get the default `log4j2.properties` provided by Elastisearch without any override.
+  - Deployment of this Ansible role on new servers will get the default `log4j2.properties` provided by Elasticsearch without any override.
   - **WARNING**: For upgrade scenarios where this file was already managed by previous versions of ansible-elasticsearch, this file will become unmanaged and won't be updated by default. If you wish to update it to 7.5 version, you can retrieve it [here](https://github.com/elastic/elasticsearch/blob/7.5/distribution/src/config/log4j2.properties) and use this file with `es_config_log4j2` Ansible variable (see below).
 
 #### How to override configuration files provided by ansible-elasticsearch?
@@ -57,7 +58,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install elastic.elasticsearch,7.8.0
+ansible-galaxy install elastic.elasticsearch,7.10.0
 ```
 
 Then create your playbook yaml adding the role elasticsearch.
@@ -71,14 +72,14 @@ The simplest configuration therefore consists of:
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_version: 7.8.0
+    es_version: 7.10.0
 ```
 
-The above installs Elasticsearch 7.8.0 in a single node 'node1' on the hosts 'localhost'.
+The above installs Elasticsearch 7.10.0 in a single node 'node1' on the hosts 'localhost'.
 
 **Note**:
 Elasticsearch default version is described in [`es_version`](https://github.com/elastic/ansible-elasticsearch/blob/master/defaults/main.yml#L2). You can override this variable in your playbook to install another version.
-While we are testing this role only with one 7.x and one 6.x version (respectively [7.8.0](https://github.com/elastic/ansible-elasticsearch/blob/master/defaults/main.yml#L2) and [6.8.10](https://github.com/elastic/ansible-elasticsearch/blob/master/.kitchen.yml#L22) at the time of writing), this role should work with other versions also in most cases.
+While we are testing this role only with one 7.x and one 6.x version (respectively [7.10.0](https://github.com/elastic/ansible-elasticsearch/blob/master/defaults/main.yml#L2) and [6.8.13](https://github.com/elastic/ansible-elasticsearch/blob/master/.kitchen.yml#L22) at the time of writing), this role should work with other versions also in most cases.
 
 This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
 
@@ -95,9 +96,9 @@ This playbook uses [Kitchen](https://kitchen.ci/) for CI and local testing.
 
 ### Running the tests
 
-* Ensure you have checked out this repository to `elaticsearch`, not `ansible-elasticsearch`.
+* Ensure you have checked out this repository to `elasticsearch`, not `ansible-elasticsearch`.
 * If you don't have a Gold or Platinum license to test with you can run the trial versions of the `xpack-upgrade` and `issue-test` suites by appending `-trial` to the `PATTERN` variable.
-* You may need to explicity specify `VERSION=7.x` if some suites are failing.
+* You may need to explicitly specify `VERSION=7.x` if some suites are failing.
 
 Install the ruby dependencies with bundler
 
@@ -186,7 +187,7 @@ Whilst the role installs Elasticsearch with the default configuration parameters
 
 The `network.publish_host` setting allows to control the host the node will publish itself within the cluster so other nodes will be able to connect to it.
 
-See https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html for further details on default binding behaviour and available options.
+See https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html for further details on default binding behavior and available options.
 The role makes no attempt to enforce the setting of these are requires users to specify them appropriately.  It is recommended master nodes are listed and thus deployed first where possible.
 
 A more complex example:
@@ -216,10 +217,12 @@ A more complex example:
       - plugin: ingest-attachment
 ```
 
-#### Important Note
+#### Important Notes
 
 **The role uses es_api_host and es_api_port to communicate with the node for actions only achievable via http e.g. to install templates and to check the NODE IS ACTIVE.  These default to "localhost" and 9200 respectively.
 If the node is deployed to bind on either a different host or port, these must be changed.**
+
+**Only use es_data_dirs and es_log_dir for customizing the data and log dirs respectively. When using together with `es_config['path.data']` and `es_config['path.logs']` it would result in generating duplicate data- and logs-keys in `elasticsearch.yml` and thus let fail to start elasticsearch.**
 
 ### Multi Node Server Installations
 
@@ -395,11 +398,11 @@ These can either be set to a user declared in the file based realm, with admin p
 
 ### Additional Configuration
 
-In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behaviour. Options include:
+In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behavior. Options include:
 
 * ```oss_version```  Default `false`. Setting this to `true` will install the oss release of elasticsearch
 * `es_xpack_trial` Default `false`. Setting this to `true` will start the 30-day trail once the cluster starts.
-* ```es_version``` (e.g. "7.8.0").
+* ```es_version``` (e.g. "7.10.0").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
@@ -486,7 +489,7 @@ To define proxy globally, set the following variables:
 
 ## IMPORTANT NOTES RE PLUGIN MANAGEMENT
 
-* If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behaviour is required in ES 6.x.
+* If the ES version is changed, all plugins will be removed.  Those listed in the playbook will be re-installed.  This is behavior is required in ES 6.x.
 * If no plugins are listed in the playbook for a node, all currently installed plugins will be removed.
 * The role supports automatic detection of differences between installed and listed plugins - installing those listed but not installed, and removing those installed but not listed.   Should users wish to re-install plugins they should set es_plugins_reinstall to true.  This will cause all currently installed plugins to be removed and those listed to be installed.
 
