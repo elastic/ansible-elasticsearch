@@ -34,6 +34,31 @@
     environment:
       ES_PATH_CONF: "{{ es_conf_dir }}"
     no_log: true
+
+  - name: Remove keystore entries
+    become: yes
+    command: >
+     {{es_home}}/bin/elasticsearch-keystore remove '{{ item.key }}'
+    with_items: "{{ es_keystore_entries }}"
+    when: es_keystore_entries is defined and (es_keystore_entries | length > 0) and item.state == 'absent' and item.key in list_keystore.stdout_lines and 'bootstrap.password' not in item.key
+
+  - name: Reload keystore entries
+    become: yes
+    command: >
+     {{es_home}}/bin/elasticsearch-keystore list
+    register: list_keystore
+    changed_when: False
+    environment:
+      ES_PATH_CONF: "{{ es_conf_dir }}"
+    check_mode: no
+
+  - name: Add keystore entries
+    become: yes
+    shell: echo {{item.value | quote }} | {{ es_home }}/bin/elasticsearch-keystore add -x {{ item.key }} {% if item.force %} -f {% endif %}
+    with_items: "{{ es_keystore_entries }}"
+    when: es_keystore_entries is defined and (es_keystore_entries | length > 0) and item.state != 'absent' and item.key not in list_keystore.stdout_lines and 'bootstrap.password' not in item.key
+    no_log: true
+
 ### END BLOCK elasticsearch keystore ###
 
 #-----------------------------FILE BASED REALM----------------------------------------
