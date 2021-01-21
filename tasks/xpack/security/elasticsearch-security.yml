@@ -45,6 +45,7 @@
       - item.state is defined and item.state == 'absent'
       - item.key in list_keystore.stdout_lines
       - ('bootstrap.password' not in item.key)
+    no_log: true
 
   - name: Reload keystore entries
     become: yes
