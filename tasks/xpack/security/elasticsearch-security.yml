@@ -38,9 +38,13 @@
   - name: Remove keystore entries
     become: yes
     command: >
-     {{es_home}}/bin/elasticsearch-keystore remove '{{ item.key }}'
+     echo {{ es_api_basic_auth_password | quote }} | {{ es_home }}/bin/elasticsearch-keystore remove '{{ item.key }}'
     with_items: "{{ es_keystore_entries }}"
-    when: es_keystore_entries is defined and (es_keystore_entries | length > 0) and item.state == 'absent' and item.key in list_keystore.stdout_lines and 'bootstrap.password' not in item.key
+    when:
+      - es_keystore_entries is defined and es_keystore_entries | length > 0
+      - item.state is defined and item.state == 'absent'
+      - item.key in list_keystore.stdout_lines
+      - ('bootstrap.password' not in item.key)
 
   - name: Reload keystore entries
     become: yes
@@ -54,9 +58,13 @@
 
   - name: Add keystore entries
     become: yes
-    shell: echo {{item.value | quote }} | {{ es_home }}/bin/elasticsearch-keystore add -x {{ item.key }} {% if item.force %} -f {% endif %}
+    shell: echo {{ item.value | quote }} | {{ es_home }}/bin/elasticsearch-keystore add -x {{ item.key }} -f
     with_items: "{{ es_keystore_entries }}"
-    when: es_keystore_entries is defined and (es_keystore_entries | length > 0) and item.state != 'absent' and item.key not in list_keystore.stdout_lines and 'bootstrap.password' not in item.key
+    when:
+      - es_keystore_entries is defined and es_keystore_entries | length > 0
+      - item.state is undefined or item.state == 'present'
+      - item.force|default(False) or ( not item.force|default(False) and item.key not in list_keystore.stdout_lines )
+      - ('bootstrap.password' not in item.key)
     no_log: true
 
 ### END BLOCK elasticsearch keystore ###
