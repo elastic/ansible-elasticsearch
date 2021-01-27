@@ -26,6 +26,7 @@
     - axis:
         name: TEST_TYPE
         filename: elasticsearch/test/matrix-6x.yml
+        type: yaml
     triggers:
     - github-pull-request:
         github-hooks: true
