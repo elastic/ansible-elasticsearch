@@ -3,6 +3,25 @@
     name: elastic+ansible-elasticsearch+pull-request
     display-name: elastic / ansible-elasticsearch - pull-request
     description: Pull request testing with test kitchen
+    parameters:
+    - string:
+        name: VERSION
+        default: 7.x
+        description: Elasticsearch major version
+    axes:
+    - axis:
+        type: slave
+        name: label
+        values:
+        - linux
+    - axis:
+        name: OS
+        filename: elasticsearch/test/matrix.yml
+        type: yaml
+    - axis:
+        name: TEST_TYPE
+        filename: elasticsearch/test/matrix.yml
+        type: yaml
     scm:
     - git:
         branches:
