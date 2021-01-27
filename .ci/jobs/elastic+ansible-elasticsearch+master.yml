@@ -9,6 +9,24 @@
         default: master
         description: the Git branch specifier to build (&lt;branchName&gt;, &lt;tagName&gt;,
           &lt;commitId&gt;, etc.)
+    - string:
+        name: VERSION
+        default: 7.x
+        description: Elasticsearch major version
+    axes:
+    - axis:
+        type: slave
+        name: label
+        values:
+        - linux
+    - axis:
+        name: OS
+        filename: elasticsearch/test/matrix.yml
+        type: yaml
+    - axis:
+        name: TEST_TYPE
+        filename: elasticsearch/test/matrix.yml
+        type: yaml
     triggers:
     - timed: H H(02-04) * * *
     publishers:
