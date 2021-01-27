@@ -1,0 +1,36 @@
+---
+- job:
+    name: elastic+ansible-elasticsearch+pull-request-6x
+    display-name: elastic / ansible-elasticsearch - pull-request - 6.x
+    description: Pull request testing with test kitchen for Elasticsearch 6.x
+    parameters:
+    - string:
+        name: VERSION
+        default: 6.x
+        description: Elasticsearch major version
+    scm:
+    - git:
+        branches:
+        - $ghprbActualCommit
+        refspec: +refs/pull/*:refs/remotes/origin/pr/*
+    axes:
+    - axis:
+        type: slave
+        name: label
+        values:
+        - linux
+    - axis:
+        name: OS
+        filename: elasticsearch/test/matrix-6x.yml
+        type: yaml
+    - axis:
+        name: TEST_TYPE
+        filename: elasticsearch/test/matrix-6x.yml
+    triggers:
+    - github-pull-request:
+        github-hooks: true
+        org-list:
+        - elastic
+        allow-whitelist-orgs-as-admins: true
+        cancel-builds-on-update: true
+        status-context: devops-ci

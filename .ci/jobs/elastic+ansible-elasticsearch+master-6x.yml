@@ -1,0 +1,39 @@
+---
+- job:
+    name: elastic+ansible-elasticsearch+master-6x
+    display-name: elastic / ansible-elasticsearch - master - 6.x
+    description: Master branch testing with test kitchen for Elasticsearch 6.x
+    parameters:
+    - string:
+        name: branch_specifier
+        default: master
+        description: the Git branch specifier to build (&lt;branchName&gt;, &lt;tagName&gt;,
+          &lt;commitId&gt;, etc.)
+    - string:
+        name: VERSION
+        default: 6.x
+        description: Elasticsearch major version
+    axes:
+    - axis:
+        type: slave
+        name: label
+        values:
+        - linux
+    - axis:
+        name: OS
+        filename: elasticsearch/test/matrix-6x.yml
+        type: yaml
+    - axis:
+        name: TEST_TYPE
+        filename: elasticsearch/test/matrix-6x.yml
+        type: yaml
+    triggers:
+    - timed: H H(02-04) * * *
+    publishers:
+    - slack:
+        notify-back-to-normal: True
+        notify-every-failure: True
+        room: infra-release-notify
+        team-domain: elastic
+        auth-token-id: release-slack-integration-token
+        auth-token-credential-id: release-slack-integration-token
