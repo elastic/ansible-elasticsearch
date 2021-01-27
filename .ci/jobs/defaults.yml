@@ -29,20 +29,6 @@
         url: git@github.com:elastic/ansible-elasticsearch.git
         basedir: elasticsearch
         wipe-workspace: 'False'
-    axes:
-    - axis:
-        type: slave
-        name: label
-        values:
-        - linux
-    - axis:
-        name: OS
-        filename: elasticsearch/test/matrix.yml
-        type: yaml
-    - axis:
-        name: TEST_TYPE
-        filename: elasticsearch/test/matrix.yml
-        type: yaml
     vault:
       role_id: cff5d4e0-61bf-2497-645f-fcf019d10c13
     builders:
