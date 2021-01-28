@@ -2,7 +2,7 @@ default: build
 
 SHELL:=/bin/bash -eux
 export VERSION := 7.x
-PATTERN := xpack-ubuntu-1604
+PATTERN := default-ubuntu-1804
 
 .PHONY: converge verify test login destroy list
 

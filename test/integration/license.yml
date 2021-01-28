@@ -1,0 +1,9 @@
+---
+- name: Setup Elasticsearch with a license
+  hosts: localhost
+  post_tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - elasticsearch
+  vars:
+    es_xpack_license: "{{ lookup('file', '/tmp/license.json')  }}"
