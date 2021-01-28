@@ -28,7 +28,13 @@
 
   - name: Create Bootstrap password for elastic user
     become: yes
-    shell: echo {{ es_api_basic_auth_password | quote }} | {{ es_home }}/bin/elasticsearch-keystore add -x 'bootstrap.password'
+    command:
+      argv:
+      - "{{ es_api_basic_auth_password }}"
+      - "{{ es_home }}/bin/elasticsearch-keystore"
+      - 'add'
+      - '-x'
+      - 'bootstrap.password'
     when:
       - es_api_basic_auth_username is defined and list_keystore is defined and es_api_basic_auth_username == 'elastic' and 'bootstrap.password' not in list_keystore.stdout_lines
     environment:
@@ -38,7 +44,7 @@
   - name: Remove keystore entries
     become: yes
     command: >
-     echo {{ es_api_basic_auth_password | quote }} | {{ es_home }}/bin/elasticsearch-keystore remove '{{ item.key }}'
+     {{es_home}}/bin/elasticsearch-keystore remove {{item.key}}
     with_items: "{{ es_keystore_entries }}"
     when:
       - es_keystore_entries is defined and es_keystore_entries | length > 0
@@ -59,7 +65,14 @@
 
   - name: Add keystore entries
     become: yes
-    shell: echo {{ item.value | quote }} | {{ es_home }}/bin/elasticsearch-keystore add -x {{ item.key }} -f
+    command:
+      stdin: "{{ item.value }}"
+      argv:
+      - "{{ es_home }}/bin/elasticsearch-keystore"
+      - add
+      - '-x'
+      - '-f'
+      - "{{ item.key }}"
     with_items: "{{ es_keystore_entries }}"
     when:
       - es_keystore_entries is defined and es_keystore_entries | length > 0
@@ -67,6 +80,9 @@
       - item.force|default(False) or ( not item.force|default(False) and item.key not in list_keystore.stdout_lines )
       - ('bootstrap.password' not in item.key)
     no_log: true
+
+
+
 
 ### END BLOCK elasticsearch keystore ###
 
