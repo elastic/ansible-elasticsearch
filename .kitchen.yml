@@ -159,7 +159,7 @@ suites:
       idempotency_test: true
   - name: license
     provisioner:
-      playbook: test/integration/default.yml
+      playbook: test/integration/license.yml
       idempotency_test: true
   - name: oss
     provisioner:
