@@ -28,13 +28,7 @@
 
   - name: Create Bootstrap password for elastic user
     become: yes
-    command:
-      argv:
-      - "{{ es_api_basic_auth_password }}"
-      - "{{ es_home }}/bin/elasticsearch-keystore"
-      - 'add'
-      - '-x'
-      - 'bootstrap.password'
+    shell: echo {{ es_api_basic_auth_password | quote }} | {{ es_home }}/bin/elasticsearch-keystore add -x 'bootstrap.password'
     when:
       - es_api_basic_auth_username is defined and list_keystore is defined and es_api_basic_auth_username == 'elastic' and 'bootstrap.password' not in list_keystore.stdout_lines
     environment:
@@ -65,14 +59,7 @@
 
   - name: Add keystore entries
     become: yes
-    command:
-      stdin: "{{ item.value }}"
-      argv:
-      - "{{ es_home }}/bin/elasticsearch-keystore"
-      - add
-      - '-x'
-      - '-f'
-      - "{{ item.key }}"
+    shell: echo {{ item.value | quote }} | {{ es_home }}/bin/elasticsearch-keystore add -x -f {{ item.key }}
     with_items: "{{ es_keystore_entries }}"
     when:
       - es_keystore_entries is defined and es_keystore_entries | length > 0
