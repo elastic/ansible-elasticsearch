@@ -459,6 +459,26 @@ Both ```es_user_id``` and ```es_group_id``` must be set for the user and group i
 * ```es_restart_on_change``` - defaults to true.  If false, changes will not result in Elasticsearch being restarted.
 * ```es_plugins_reinstall``` - defaults to false.  If true, all currently installed plugins will be removed from a node.  Listed plugins will then be re-installed.
 
+To add, update or remove elasticsearch.keystore entries, use the following variable:
+
+```yaml
+# state is optional and defaults to present
+es_keystore_entries:
+- key: someKeyToAdd
+  value: someValue
+  state: present
+
+- key: someKeyToUpdate
+  value: newValue
+  # state: present
+  force: Yes
+
+- key: someKeyToDelete
+  state: absent
+```
+
+
+
 This role ships with sample templates located in the [test/integration/files/templates-7.x](https://github.com/elastic/ansible-elasticsearch/tree/master/test/integration/files/templates-7.x) directory. `es_templates_fileglob` variable is used with the Ansible [with_fileglob](http://docs.ansible.com/ansible/playbooks_loops.html#id4) loop. When setting the globs, be sure to use an absolute path.
 
 ### Proxy
