@@ -1,0 +1,16 @@
+---
+- name: Deploy Elasticsearch previous version
+  hosts: localhost
+  post_tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - elasticsearch
+  vars:
+    es_version: "{{ '7.0.0' if es_major_version == '7.x' else '6.7.1' }}"
+
+- name: Deploy Elasticsearch latest version
+  hosts: localhost
+  post_tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - elasticsearch

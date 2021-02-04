@@ -9,8 +9,12 @@ OS:
   - centos-8
   - amazonlinux-2
 TEST_TYPE:
+  - custom-config
+  - default
+  - license
   - oss
+  - oss-to-default-upgrade
   - oss-upgrade
-  - oss-to-xpack-upgrade
-  - xpack
-  - xpack-upgrade
+  - security
+  - trial
+  - upgrade
