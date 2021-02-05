@@ -42,6 +42,17 @@ Ansible-elasticsearch 7.5.2 is updating the configuration files provided by this
   - Deployment of this Ansible role on new servers will get the default `log4j2.properties` provided by Elasticsearch without any override.
   - **WARNING**: For upgrade scenarios where this file was already managed by previous versions of ansible-elasticsearch, this file will become unmanaged and won't be updated by default. If you wish to update it to 7.5 version, you can retrieve it [here](https://github.com/elastic/elasticsearch/blob/7.5/distribution/src/config/log4j2.properties) and use this file with `es_config_log4j2` Ansible variable (see below).
 
+### Removing OSS distribution for versions >= 7.11.0
+
+Starting from Elasticsearch 7.11.0, OSS distributions will no more provided following Elasticsearch
+recent license change.
+
+This Ansible role will fail if `oss_version` is set to `true` and `es_version` is greater than 
+`7.11.0`.
+
+See [Doubling down on open, Part II](https://www.elastic.co/blog/licensing-change for more details)
+blog post for more details.
+
 #### How to override configuration files provided by ansible-elasticsearch?
 
 You can now override the configuration files with your own versions by using the following Ansible variables:
@@ -128,7 +139,7 @@ $ make list
 
 The default test suite is Ubuntu 16.04 with X-Pack. If you want to test another suite you can override this with the `PATTERN` variable
 ```sh
-$ make converge PATTERN=oss-centos-7
+$ make converge PATTERN=security-centos-7
 ```
 
 The `PATTERN` is a kitchen pattern which can match multiple suites. To run all tests for CentOS
@@ -138,7 +149,7 @@ $ make converge PATTERN=centos-7
 
 The default version is 7.x. If you want to test 6.x you can override it with the `VERSION` variable, for example:
 ```sh
-$ make converge VERSION=6.x PATTERN=oss-centos-7
+$ make converge VERSION=6.x PATTERN=security-centos-7
 ```
 
 When you are finished testing you can clean up everything with
@@ -400,7 +411,7 @@ These can either be set to a user declared in the file based realm, with admin p
 
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behavior. Options include:
 
-* ```oss_version```  Default `false`. Setting this to `true` will install the oss release of elasticsearch
+* ```oss_version```  Default `false`. Setting this to `true` will install the oss release of Elasticsearch (for version <7.11.0 only).
 * `es_xpack_trial` Default `false`. Setting this to `true` will start the 30-day trail once the cluster starts.
 * ```es_version``` (e.g. "7.10.2").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".

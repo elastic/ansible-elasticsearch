@@ -12,9 +12,7 @@ TEST_TYPE:
   - custom-config
   - default
   - license
-  - oss
   - oss-to-default-upgrade
-  - oss-upgrade
   - security
   - trial
   - upgrade
