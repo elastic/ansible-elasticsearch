@@ -5,6 +5,13 @@
     msg: "WARNING: es_xpack_features variable is now deprecated. All feature are now enabled by default"
   when: es_xpack_features is defined and not oss_version
 
+- name: "fail when oss_version is true with es_version >= 7.11.0"
+  fail:
+    msg: >
+      OSS versions are not available for Elasticsearch >= 7.11.0.
+      See https://www.elastic.co/blog/licensing-change for more details.
+  when: oss_version and es_version is version('7.11.0', '>=')
+
 - name: fail when es_proxy_port is not defined or is blank
   fail: msg="es_proxy_port must be specified and cannot be blank when es_proxy_host is defined"
   when: (es_proxy_port is not defined or es_proxy_port == '') and (es_proxy_host is defined and es_proxy_host != '')
