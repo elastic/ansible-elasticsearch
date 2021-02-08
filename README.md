@@ -181,8 +181,11 @@ The following illustrates applying configuration parameters to an Elasticsearch 
       discovery.seed_hosts: "localhost:9301"
       http.port: 9201
       transport.port: 9301
-      node.data: false
-      node.master: true
+      node.roles:
+        - master
+        - ingest
+        - ml
+        - remote_cluster_client
       bootstrap.memory_lock: true
     es_heap_size: 1g
     es_api_port: 9201
@@ -218,8 +221,11 @@ A more complex example:
       discovery.seed_hosts: "localhost:9301"
       http.port: 9201
       transport.port: 9301
-      node.data: false
-      node.master: true
+      node.roles:
+        - master
+        - ingest
+        - ml
+        - remote_cluster_client
       bootstrap.memory_lock: true
     es_heap_size: 1g
     es_start_service: false
@@ -254,8 +260,11 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.initial_master_nodes: "elastic02"
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      node.data: false
-      node.master: true
+      node.roles:
+        - master
+        - ingest
+        - ml
+        - remote_cluster_client
       bootstrap.memory_lock: false
     es_plugins:
      - plugin: ingest-attachment
@@ -271,8 +280,11 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.initial_master_nodes: "elastic02"
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      node.data: true
-      node.master: false
+      node.roles:
+        - data
+        - ingest
+        - ml
+        - remote_cluster_client
       bootstrap.memory_lock: false
     es_plugins:
       - plugin: ingest-attachment
@@ -285,8 +297,11 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.name: "test-cluster"
       discovery.seed_hosts: "elastic02:9300"
       http.port: 9200
-      node.data: true
-      node.master: false
+      node.roles:
+        - data
+        - ingest
+        - ml
+        - remote_cluster_client
       bootstrap.memory_lock: false
     es_plugins:
       - plugin: ingest-attachment
