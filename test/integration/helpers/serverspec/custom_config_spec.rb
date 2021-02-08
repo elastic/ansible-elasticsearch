@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'shared_spec'
 
-shared_examples 'oss::init' do |vars|
+shared_examples 'custom_config::init' do |vars|
   describe file("/etc/elasticsearch/log4j2.properties") do
     it { should be_file }
     it { should be_owned_by 'root' }

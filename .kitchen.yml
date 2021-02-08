@@ -149,31 +149,39 @@ platforms:
       use_sudo: false
 
 suites:
+  - name: custom-config
+    provisioner:
+      idempotency_test: true
+      playbook: test/integration/custom-config.yml
+  - name: default
+    provisioner:
+      playbook: test/integration/default.yml
+      idempotency_test: true
+  - name: license
+    provisioner:
+      playbook: test/integration/license.yml
+      idempotency_test: true
   - name: oss
     provisioner:
       idempotency_test: true
       playbook: test/integration/oss.yml
+  - name: oss-to-default-upgrade
+    provisioner:
+      playbook: test/integration/oss-to-default-upgrade.yml
+      idempotency_test: false
   - name: oss-upgrade
     provisioner:
       playbook: test/integration/oss-upgrade.yml
       idempotency_test: false
-  - name: oss-to-xpack-upgrade
+  - name: security
     provisioner:
-      playbook: test/integration/oss-to-xpack-upgrade.yml
-      idempotency_test: false
-  - name: xpack
-    provisioner:
-      playbook: test/integration/xpack.yml
+      playbook: test/integration/security.yml
       idempotency_test: true
-  - name: xpack-upgrade
+  - name: trial
     provisioner:
-      playbook: test/integration/xpack-upgrade.yml
-      idempotency_test: false
-  - name: issue-test
+      playbook: test/integration/trial.yml
+      idempotency_test: false # es_xpack_trial is not idempotent currently
+  - name: upgrade
     provisioner:
-      playbook: test/integration/issue-test.yml
-      idempotency_test: false
-  - name: xpack-upgrade-trial
-    provisioner:
-      playbook: test/integration/xpack-upgrade-trial.yml
+      playbook: test/integration/upgrade.yml
       idempotency_test: false
