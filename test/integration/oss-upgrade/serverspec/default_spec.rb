@@ -1,9 +1,7 @@
-require 'oss_upgrade_spec'
 require 'shared_spec'
 require 'json'
 vars = JSON.parse(File.read('/tmp/vars.json'))
 
-describe 'oss upgrade Tests' do
-  include_examples 'oss_upgrade::init', vars
+describe 'oss upgrade tests' do
   include_examples 'shared::init', vars
 end

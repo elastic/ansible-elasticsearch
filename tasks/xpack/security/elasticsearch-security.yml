@@ -38,9 +38,14 @@
   - name: Remove keystore entries
     become: yes
     command: >
-     {{es_home}}/bin/elasticsearch-keystore remove '{{item.key}}'
-    with_items: "{{es_keystore.remove}}"
-    when: es_keystore.remove is defined and (es_keystore.remove | length > 0) and item.key in list_keystore.stdout_lines and 'bootstrap.password' not in item.key
+     echo {{ es_api_basic_auth_password | quote }} | {{ es_home }}/bin/elasticsearch-keystore remove '{{ item.key }}'
+    with_items: "{{ es_keystore_entries }}"
+    when:
+      - es_keystore_entries is defined and es_keystore_entries | length > 0
+      - item.state is defined and item.state == 'absent'
+      - item.key in list_keystore.stdout_lines
+      - ('bootstrap.password' not in item.key)
+    no_log: true
 
   - name: Reload keystore entries
     become: yes
@@ -54,10 +59,15 @@
 
   - name: Add keystore entries
     become: yes
-    shell: echo "{{item.value}}" | {{es_home}}/bin/elasticsearch-keystore add -x '{{item.key}}'
-    with_items: "{{es_keystore.add}}"
-    when: es_keystore.add is defined and (es_keystore.add | length > 0) and item.key not in list_keystore.stdout_lines and 'bootstrap.password' not in item.key
+    shell: echo {{ item.value | quote }} | {{ es_home }}/bin/elasticsearch-keystore add -x -f {{ item.key }}
+    with_items: "{{ es_keystore_entries }}"
+    when:
+      - es_keystore_entries is defined and es_keystore_entries | length > 0
+      - item.state is undefined or item.state == 'present'
+      - item.force|default(False) or ( not item.force|default(False) and item.key not in list_keystore.stdout_lines )
+      - ('bootstrap.password' not in item.key)
     no_log: true
+
 
 ### END BLOCK elasticsearch keystore ###
 
@@ -71,7 +81,7 @@
 #Copy Roles files
 - name: Copy role_mapping.yml file for instance
   become: yes
-  template: 
+  template:
     src: security/role_mapping.yml.j2
     dest: "{{ es_conf_dir }}/role_mapping.yml"
     owner: root
