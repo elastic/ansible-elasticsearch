@@ -137,7 +137,6 @@
   uri:
     url: "{{ es_api_uri }}/{{ es_security_api }}/role"
     method: GET
-    body_format: json
     user: "{{es_api_basic_auth_username}}"
     password: "{{es_api_basic_auth_password}}"
     force_basic_auth: yes
