@@ -253,9 +253,12 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.name: "test-cluster"
       cluster.initial_master_nodes: "elastic02"
       discovery.seed_hosts: "elastic02:9300"
+      http.host: 0.0.0.0
       http.port: 9200
       node.data: false
       node.master: true
+      transport.host: 0.0.0.0
+      transport.port: 9300
       bootstrap.memory_lock: false
     es_plugins:
      - plugin: ingest-attachment
@@ -270,9 +273,12 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.name: "test-cluster"
       cluster.initial_master_nodes: "elastic02"
       discovery.seed_hosts: "elastic02:9300"
+      http.host: 0.0.0.0
       http.port: 9200
       node.data: true
       node.master: false
+      transport.host: 0.0.0.0
+      transport.port: 9300
       bootstrap.memory_lock: false
     es_plugins:
       - plugin: ingest-attachment
@@ -284,9 +290,12 @@ An example of a three server deployment is shown below.  The first server holds 
     es_config:
       cluster.name: "test-cluster"
       discovery.seed_hosts: "elastic02:9300"
+      http.host: 0.0.0.0
       http.port: 9200
       node.data: true
       node.master: false
+      transport.host: 0.0.0.0
+      transport.port: 9300
       bootstrap.memory_lock: false
     es_plugins:
       - plugin: ingest-attachment
