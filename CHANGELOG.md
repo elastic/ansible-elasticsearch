@@ -1,5 +1,42 @@
 # Changelog
 
+## 7.11.1
+
+* 7.11.1 as default version.
+* 6.8.14 as 6.x tested version
+
+| PR                                                                | Author                                                       | Title                                          |
+|-------------------------------------------------------------------|--------------------------------------------------------------|------------------------------------------------|
+| [#760](https://github.com/elastic/ansible-elasticsearch/pull/760) | [@jmlrt](https://github.com/jmlrt)                           | Add dedicated CI jobs for 6.x                  |
+| [#761](https://github.com/elastic/ansible-elasticsearch/pull/761) | [@rubarclk](https://github.com/rubarclk)                     | Fix Elasticsearch 7.x deb url                  |
+| [#769](https://github.com/elastic/ansible-elasticsearch/pull/769) | [@Bernhard-Fluehmann](https://github.com/Bernhard-Fluehmann) | Add support for elasticsearch-keystore entries |
+| [#765](https://github.com/elastic/ansible-elasticsearch/pull/765) | [@jmlrt](https://github.com/jmlrt)                           | Refactor Kitchen tests                         |
+| [#770](https://github.com/elastic/ansible-elasticsearch/pull/770) | [@jmlrt](https://github.com/jmlrt)                           | Remove OSS support for version >= 7.11.0       |
+| [#779](https://github.com/elastic/ansible-elasticsearch/pull/779) | [@jmlrt](https://github.com/jmlrt)                           | Fix "list native roles" task                   |
+
+
+## 7.10.2
+
+* 7.10.2 as default version.
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#753](https://github.com/elastic/ansible-elasticsearch/pull/753) | [@jmlrt](https://github.com/jmlrt) | Fix java install path when system has multiple java  |
+
+
+## 7.10.1
+
+* 7.10.1 as default version.
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#747](https://github.com/elastic/ansible-elasticsearch/pull/747) | [@fourstepper](https://github.com/fourstepper) | Fix idempotency for both supported CentOS versions  |
+| [#744](https://github.com/elastic/ansible-elasticsearch/pull/744) | [@v1v](https://github.com/v1v) | Support CentOS 8  |
+| [#736](https://github.com/elastic/ansible-elasticsearch/pull/736) | [@jmlrt](https://github.com/jmlrt) | Fix test-kitchen net-scp-error  |
+
+
 ## 7.10.0
 
 * 7.10.0 as default version.

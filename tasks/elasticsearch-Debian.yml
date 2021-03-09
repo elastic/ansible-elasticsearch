@@ -103,7 +103,7 @@
   when: es_version_lock
 
 - name: Debian - Download elasticsearch from url
-  get_url: url={% if es_custom_package_url is defined %}{{ es_custom_package_url }}{% else %}{{ es_package_url }}-{{ es_version }}.deb{% endif %} dest=/tmp/elasticsearch-{{ es_version }}.deb validate_certs=no
+  get_url: url={% if es_custom_package_url is defined %}{{ es_custom_package_url }}{% else %}{{ es_package_url }}-{{ es_version }}-amd64.deb{% endif %} dest=/tmp/elasticsearch-{{ es_version }}.deb validate_certs=no
   when: not es_use_repository
 
 - name: Debian - Ensure elasticsearch is installed from downloaded package

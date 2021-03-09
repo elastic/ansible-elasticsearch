@@ -1,8 +1,8 @@
 ---
 - job:
-    name: elastic+ansible-elasticsearch+master
-    display-name: elastic / ansible-elasticsearch - master
-    description: Master branch testing with test kitchen
+    name: elastic+ansible-elasticsearch+master-6x
+    display-name: elastic / ansible-elasticsearch - master - 6.x
+    description: Master branch testing with test kitchen for Elasticsearch 6.x
     parameters:
     - string:
         name: branch_specifier
@@ -11,7 +11,7 @@
           &lt;commitId&gt;, etc.)
     - string:
         name: VERSION
-        default: 7.x
+        default: 6.x
         description: Elasticsearch major version
     axes:
     - axis:
@@ -21,11 +21,11 @@
         - linux
     - axis:
         name: OS
-        filename: elasticsearch/test/matrix.yml
+        filename: elasticsearch/test/matrix-6x.yml
         type: yaml
     - axis:
         name: TEST_TYPE
-        filename: elasticsearch/test/matrix.yml
+        filename: elasticsearch/test/matrix-6x.yml
         type: yaml
     triggers:
     - timed: H H(02-04) * * *

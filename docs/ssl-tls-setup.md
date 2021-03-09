@@ -73,9 +73,9 @@ $ bin/elasticsearch-certutil cert --ca ./my-ca.p12 --out ./my-keystore.p12 --pas
     es_enable_http_ssl: true
     es_enable_transport_ssl: true
     es_ssl_keystore: "files/certs/my-keystore.p12"
-    es_ssl_truststore: "files/certs/my-truststore.p12"
+    es_ssl_truststore: "files/certs/my-ca.p12"
     es_ssl_keystore_password: "keystore_password"
-    es_ssl_truststore_password: "truststore_password"
+    es_ssl_truststore_password: "ca_password"
     es_validate_certs: no
 ```
 

@@ -43,6 +43,17 @@ Ansible-elasticsearch 7.5.2 is updating the configuration files provided by this
   - Deployment of this Ansible role on new servers will get the default `log4j2.properties` provided by Elasticsearch without any override.
   - **WARNING**: For upgrade scenarios where this file was already managed by previous versions of ansible-elasticsearch, this file will become unmanaged and won't be updated by default. If you wish to update it to 7.5 version, you can retrieve it [here](https://github.com/elastic/elasticsearch/blob/7.5/distribution/src/config/log4j2.properties) and use this file with `es_config_log4j2` Ansible variable (see below).
 
+### Removing OSS distribution for versions >= 7.11.0
+
+Starting from Elasticsearch 7.11.0, OSS distributions will no more provided following Elasticsearch
+recent license change.
+
+This Ansible role will fail if `oss_version` is set to `true` and `es_version` is greater than 
+`7.11.0`.
+
+See [Doubling down on open, Part II](https://www.elastic.co/blog/licensing-change for more details)
+blog post for more details.
+
 #### How to override configuration files provided by ansible-elasticsearch?
 
 You can now override the configuration files with your own versions by using the following Ansible variables:
@@ -59,7 +70,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install elastic.elasticsearch,7.10.0
+ansible-galaxy install elastic.elasticsearch,v7.11.1
 ```
 
 Then create your playbook yaml adding the role elasticsearch.
@@ -73,14 +84,14 @@ The simplest configuration therefore consists of:
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_version: 7.10.0
+    es_version: 7.11.1
 ```
 
-The above installs Elasticsearch 7.10.0 in a single node 'node1' on the hosts 'localhost'.
+The above installs Elasticsearch 7.11.1 in a single node 'node1' on the hosts 'localhost'.
 
 **Note**:
 Elasticsearch default version is described in [`es_version`](https://github.com/elastic/ansible-elasticsearch/blob/master/defaults/main.yml#L2). You can override this variable in your playbook to install another version.
-While we are testing this role only with one 7.x and one 6.x version (respectively [7.10.0](https://github.com/elastic/ansible-elasticsearch/blob/master/defaults/main.yml#L2) and [6.8.13](https://github.com/elastic/ansible-elasticsearch/blob/master/.kitchen.yml#L22) at the time of writing), this role should work with other versions also in most cases.
+While we are testing this role only with one 7.x and one 6.x version (respectively [7.11.1](https://github.com/elastic/ansible-elasticsearch/blob/master/defaults/main.yml#L2) and [6.8.14](https://github.com/elastic/ansible-elasticsearch/blob/master/.kitchen.yml#L22) at the time of writing), this role should work with other versions also in most cases.
 
 This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
 
@@ -98,7 +109,7 @@ This playbook uses [Kitchen](https://kitchen.ci/) for CI and local testing.
 ### Running the tests
 
 * Ensure you have checked out this repository to `elasticsearch`, not `ansible-elasticsearch`.
-* If you don't have a Gold or Platinum license to test with you can run the trial versions of the `xpack-upgrade` and `issue-test` suites by appending `-trial` to the `PATTERN` variable.
+* If you don't have a Gold or Platinum license to test with you can run the trial versions of the `xpack-upgrade` suites by appending `-trial` to the `PATTERN` variable.
 * You may need to explicitly specify `VERSION=7.x` if some suites are failing.
 
 Install the ruby dependencies with bundler
@@ -129,7 +140,7 @@ $ make list
 
 The default test suite is Ubuntu 16.04 with X-Pack. If you want to test another suite you can override this with the `PATTERN` variable
 ```sh
-$ make converge PATTERN=oss-centos-7
+$ make converge PATTERN=security-centos-7
 ```
 
 The `PATTERN` is a kitchen pattern which can match multiple suites. To run all tests for CentOS
@@ -139,7 +150,7 @@ $ make converge PATTERN=centos-7
 
 The default version is 7.x. If you want to test 6.x you can override it with the `VERSION` variable, for example:
 ```sh
-$ make converge VERSION=6.x PATTERN=oss-centos-7
+$ make converge VERSION=6.x PATTERN=security-centos-7
 ```
 
 When you are finished testing you can clean up everything with
@@ -243,9 +254,12 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.name: "test-cluster"
       cluster.initial_master_nodes: "elastic02"
       discovery.seed_hosts: "elastic02:9300"
+      http.host: 0.0.0.0
       http.port: 9200
       node.data: false
       node.master: true
+      transport.host: 0.0.0.0
+      transport.port: 9300
       bootstrap.memory_lock: false
     es_plugins:
      - plugin: ingest-attachment
@@ -260,9 +274,12 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.name: "test-cluster"
       cluster.initial_master_nodes: "elastic02"
       discovery.seed_hosts: "elastic02:9300"
+      http.host: 0.0.0.0
       http.port: 9200
       node.data: true
       node.master: false
+      transport.host: 0.0.0.0
+      transport.port: 9300
       bootstrap.memory_lock: false
     es_plugins:
       - plugin: ingest-attachment
@@ -274,9 +291,12 @@ An example of a three server deployment is shown below.  The first server holds 
     es_config:
       cluster.name: "test-cluster"
       discovery.seed_hosts: "elastic02:9300"
+      http.host: 0.0.0.0
       http.port: 9200
       node.data: true
       node.master: false
+      transport.host: 0.0.0.0
+      transport.port: 9300
       bootstrap.memory_lock: false
     es_plugins:
       - plugin: ingest-attachment
@@ -401,9 +421,9 @@ These can either be set to a user declared in the file based realm, with admin p
 
 In addition to es_config, the following parameters allow the customization of the Java and Elasticsearch versions as well as the role behavior. Options include:
 
-* ```oss_version```  Default `false`. Setting this to `true` will install the oss release of elasticsearch
+* ```oss_version```  Default `false`. Setting this to `true` will install the oss release of Elasticsearch (for version <7.11.0 only).
 * `es_xpack_trial` Default `false`. Setting this to `true` will start the 30-day trail once the cluster starts.
-* ```es_version``` (e.g. "7.10.0").
+* ```es_version``` (e.g. "7.11.1").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
@@ -459,6 +479,26 @@ Both ```es_user_id``` and ```es_group_id``` must be set for the user and group i
 
 * ```es_restart_on_change``` - defaults to true.  If false, changes will not result in Elasticsearch being restarted.
 * ```es_plugins_reinstall``` - defaults to false.  If true, all currently installed plugins will be removed from a node.  Listed plugins will then be re-installed.
+
+To add, update or remove elasticsearch.keystore entries, use the following variable:
+
+```yaml
+# state is optional and defaults to present
+es_keystore_entries:
+- key: someKeyToAdd
+  value: someValue
+  state: present
+
+- key: someKeyToUpdate
+  value: newValue
+  # state: present
+  force: Yes
+
+- key: someKeyToDelete
+  state: absent
+```
+
+
 
 This role ships with sample templates located in the [test/integration/files/templates-7.x](https://github.com/elastic/ansible-elasticsearch/tree/master/test/integration/files/templates-7.x) directory. `es_templates_fileglob` variable is used with the Ansible [with_fileglob](http://docs.ansible.com/ansible/playbooks_loops.html#id4) loop. When setting the globs, be sure to use an absolute path.
 

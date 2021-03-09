@@ -1,0 +1,11 @@
+---
+- name: Setup Elasticsearch with custom config files
+  hosts: localhost
+  post_tasks:
+    - include: elasticsearch/test/integration/debug.yml
+  roles:
+    - elasticsearch
+  vars:
+    es_config_default: "test/integration/files/custom_config/elasticsearch"
+    es_config_log4j2: "test/integration/files/custom_config/log4j2.properties"
+    es_config_jvm: "test/integration/files/custom_config/jvm.options"
