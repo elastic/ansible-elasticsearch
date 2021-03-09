@@ -71,11 +71,7 @@ platforms:
       image: ubuntu:20.04
       privileged: true
       provision_command:
-        # TODO: focal is not yet released for ansible https://github.com/ansible/ansible/pull/69161
-        # - apt-get install -y -q ansible iproute2 python-jmespath
-        # Workaround with pip
-        - apt-get update && apt-get -y -q install iproute2 python3-jmespath python3-pip 
-        - pip3 install ansible
+        - apt-get install -y -q ansible iproute2 python-jmespath
       use_sudo: false
       volume:
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
