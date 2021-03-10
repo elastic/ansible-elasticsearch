@@ -1,5 +1,5 @@
 ---
-es_version: "7.11.1"
+es_version: "7.11.2"
 es_use_snapshot_release: false
 oss_version: false
 es_package_name: "elasticsearch"
