@@ -4,6 +4,13 @@
 
 * 7.11.2 as default version.
 
+| PR | Author | Title |
+| --- | --- | --- |
+| [#771](https://github.com/elastic/ansible-elasticsearch/pull/771) | [@Bernhard-Fluehmann](https://github.com/Bernhard-Fluehmann) | Cleanup remove keystore entries  |
+| [#782](https://github.com/elastic/ansible-elasticsearch/pull/782) | [@kuops](https://github.com/kuops) | Fix README.md Multi Node Server Installations  |
+| [#777](https://github.com/elastic/ansible-elasticsearch/pull/777) | [@DanRoscigno](https://github.com/DanRoscigno) | Update ssl-tls-setup.md  |
+
+
 ## 7.11.1
 
 * 7.11.1 as default version.
