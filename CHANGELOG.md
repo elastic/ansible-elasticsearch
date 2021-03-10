@@ -4,7 +4,6 @@
 
 * 7.11.2 as default version.
 
-
 | PR | Author | Title |
 | --- | --- | --- |
 | [#771](https://github.com/elastic/ansible-elasticsearch/pull/771) | [@Bernhard-Fluehmann](https://github.com/Bernhard-Fluehmann) | Cleanup remove keystore entries  |
