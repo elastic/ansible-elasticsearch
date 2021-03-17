@@ -4,3 +4,4 @@ java: "{% if es_java is defined %}{{es_java}}{% else %}openjdk-{{ java_version }
 default_file: "/etc/default/elasticsearch"
 es_home: "/usr/share/elasticsearch"
 es_apt_key_id: "46095ACC8548582C1A2699A9D27D666CD88E42B4"
+es_deb_url: "{% if es_version is version('7.0.0', '>=') %}{{ es_package_url }}-{{ es_version }}-amd64.deb{% else %}{{ es_package_url }}-{{ es_version }}.deb{% endif %}"

@@ -2,3 +2,4 @@
 java: "{{ es_java | default('java-1.8.0-openjdk.x86_64') }}"
 default_file: "/etc/sysconfig/elasticsearch"
 es_home: "/usr/share/elasticsearch"
+es_rpm_url: "{% if es_version is version('7.0.0', '>=') %}{{ es_package_url }}-{{ es_version }}-x86_64.rpm{% else %}{{ es_package_url }}-{{ es_version }}.rpm{% endif %}"
