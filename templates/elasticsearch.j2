@@ -10,9 +10,9 @@ ES_TMPDIR={{ es_tmp_dir }}
 
 # Elasticsearch Java path
 {% if es_java_home | length > 0 %}
-JAVA_HOME={{ es_java_home }}
+ES_JAVA_HOME={{ es_java_home }}
 {% else %}
-#JAVA_HOME=
+#ES_JAVA_HOME=
 {% endif %}
 
 # Elasticsearch configuration directory
