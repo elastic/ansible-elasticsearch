@@ -102,6 +102,10 @@
     selection: "hold"
   when: es_version_lock
 
+# workaround due to https://github.com/ansible/ansible/issues/66977
+- set_fact:
+    es_deb_url: "{% if es_version is version('7.0.0', '>=') %}{{ es_package_url }}-{{ es_version }}-amd64.deb{% else %}{{ es_package_url }}-{{ es_version }}.deb{% endif %}"
+
 - name: Debian - Install Elasticsearch from url
   become: yes
   apt:

@@ -54,6 +54,10 @@
   environment:
     ES_PATH_CONF: "{{ es_conf_dir }}"
 
+# workaround due to https://github.com/ansible/ansible/issues/66977
+- set_fact:
+    es_rpm_url: "{% if es_version is version('7.0.0', '>=') %}{{ es_package_url }}-{{ es_version }}-x86_64.rpm{% else %}{{ es_package_url }}-{{ es_version }}.rpm{% endif %}"
+
 - name: RedHat - Install Elasticsearch from url
   become: yes
   yum:
