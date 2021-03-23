@@ -1,5 +1,18 @@
 # Changelog
 
+## 7.12.0
+
+* 7.12.0 as default version.
+* 6.8.15 as 6.x tested version
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#789](https://github.com/elastic/ansible-elasticsearch/pull/789) | [@jmlrt](https://github.com/jmlrt) | Use ES_JAVA_HOME instead of JAVA_HOME  |
+| [#788](https://github.com/elastic/ansible-elasticsearch/pull/788) | [@jmlrt](https://github.com/jmlrt) | Fix deb and rpm url  |
+| [#784](https://github.com/elastic/ansible-elasticsearch/pull/784) | [@jmlrt](https://github.com/jmlrt) | [meta] fix changelog after 7.11.2 release  |
+
+
 ## 7.11.2
 
 * 7.11.2 as default version.
