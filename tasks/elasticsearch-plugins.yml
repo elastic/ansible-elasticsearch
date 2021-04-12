@@ -67,7 +67,7 @@
   become: yes
   command: "{{es_home}}/bin/elasticsearch-plugin install {{ item.url | default(item.plugin) }} --batch --silent"
   register: plugin_installed
-  changed_when: plugin_installed.rc == 0
+  changed_when: plugin_installed.rc|default(0) == 0
   with_items: "{{ es_plugins }}"
   when: item.plugin in plugins_to_install
   notify: restart elasticsearch
@@ -75,6 +75,6 @@
     CONF_DIR: "{{ es_conf_dir }}"
     ES_PATH_CONF: "{{ es_conf_dir }}"
     ES_INCLUDE: "{{ default_file }}"
-  until: plugin_installed.rc == 0
+  until: plugin_installed.rc|default(0) == 0
   retries: 5
   delay: 5
