@@ -60,7 +60,7 @@ platforms:
       image: ubuntu:18.04
       privileged: true
       provision_command:
-        - apt-get install -y -q ansible iproute2 python-jmespath
+        - apt-get update -q && apt-get install -y -q ansible iproute2 python-jmespath
       use_sudo: false
       volume:
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
