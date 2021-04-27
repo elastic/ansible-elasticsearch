@@ -102,13 +102,15 @@
     selection: "hold"
   when: es_version_lock
 
-- name: Debian - Download elasticsearch from url
-  get_url: url={% if es_custom_package_url is defined %}{{ es_custom_package_url }}{% else %}{{ es_package_url }}-{{ es_version }}-amd64.deb{% endif %} dest=/tmp/elasticsearch-{{ es_version }}.deb validate_certs=no
-  when: not es_use_repository
+# workaround due to https://github.com/ansible/ansible/issues/66977
+- set_fact:
+    es_deb_url: "{% if es_version is version('7.0.0', '>=') %}{{ es_package_url }}-{{ es_version }}-amd64.deb{% else %}{{ es_package_url }}-{{ es_version }}.deb{% endif %}"
 
-- name: Debian - Ensure elasticsearch is installed from downloaded package
+- name: Debian - Install Elasticsearch from url
   become: yes
-  apt: deb=/tmp/elasticsearch-{{ es_version }}.deb
+  apt:
+    deb: "{% if es_custom_package_url is defined %}{{ es_custom_package_url }}{% else %}{{ es_deb_url }}{% endif %}"
+    state: present
   when: not es_use_repository
   register: elasticsearch_install_from_package
   notify: restart elasticsearch
