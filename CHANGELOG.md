@@ -1,5 +1,16 @@
 # Changelog
 
+## 7.12.1
+
+* 7.12.1 as default version.
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#793](https://github.com/elastic/ansible-elasticsearch/pull/793) | [@jmlrt](https://github.com/jmlrt) | [meta] update ubuntu-1804 during kitchen provisioning  |
+| [#787](https://github.com/elastic/ansible-elasticsearch/pull/787) | [@tobiashuste](https://github.com/tobiashuste) | Stop plugin install to fail in check mode  |
+
+
 ## 7.12.0
 
 * 7.12.0 as default version.
