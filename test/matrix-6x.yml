@@ -2,6 +2,7 @@ OS:
   - ubuntu-1404
   - ubuntu-1604
   - ubuntu-1804
+  - ubuntu-2004
   - debian-8
   - debian-9
   - debian-10
