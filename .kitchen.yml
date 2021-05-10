@@ -66,6 +66,17 @@ platforms:
         - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
         - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
       run_command: "/sbin/init"
+  - name: ubuntu-20.04
+    driver_config:
+      image: ubuntu:20.04
+      privileged: true
+      provision_command:
+        - apt-get update -q && apt-get install -y -q ansible gpg iproute2 python3-jmespath
+      use_sudo: false
+      volume:
+        - <%=ENV['ES_XPACK_LICENSE_FILE']%>:/tmp/license.json
+        - /etc # This fixes certain java file actions that check the mount point. Without this adding users fails for some docker storage drivers
+      run_command: "/sbin/init"
   - name: debian-8
     driver_config:
       image: debian:8
