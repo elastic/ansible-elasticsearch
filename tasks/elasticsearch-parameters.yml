@@ -22,6 +22,13 @@
   fail: msg="If locking memory with bootstrap.memory_lock a heap size must be specified"
   when: es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True and es_heap_size is not defined and not ansible_check_mode
 
+- name: fail when password is not declared when using security
+  fail: msg="Enabling security requires an es_api_basic_auth_username and es_api_basic_auth_password to be provided to allow cluster operations"
+  when:
+    - not oss_version
+    - es_api_basic_auth_username is defined
+    - es_api_basic_auth_password is not defined
+
 - name: fail when api credentials are not declared when using tls
   fail: msg="Enabling tls requires an es_api_basic_auth_username and es_api_basic_auth_password"
   when:
