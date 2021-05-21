@@ -2,3 +2,5 @@
 java: "{{ es_java | default('java-1.8.0-openjdk.x86_64') }}"
 default_file: "/etc/sysconfig/elasticsearch"
 es_home: "/usr/share/elasticsearch"
+package_manager: "{% if ansible_os_family == 'RedHat' and ansible_distribution_major_version >= '8' %}dnf{% else %}yum{% endif %}"
+versionlock_plugin_package: "{% if ansible_os_family == 'RedHat' and ansible_distribution_major_version >= '8' %}python3-dnf-plugin-versionlock{% else %}yum-plugin-versionlock{% endif %}"
