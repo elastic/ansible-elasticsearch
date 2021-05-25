@@ -1,5 +1,17 @@
 # Changelog
 
+## 7.13.0
+
+* 7.13.0 as default version.
+* 6.8.16 as 6.x tested version
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#796](https://github.com/elastic/ansible-elasticsearch/pull/796) | [@jmlrt](https://github.com/jmlrt) | Fails deployment when using tls without security  |
+| [#745](https://github.com/elastic/ansible-elasticsearch/pull/745) | [@v1v](https://github.com/v1v) | Support ubuntu-20  |
+
+
 ## 7.12.1
 
 * 7.12.1 as default version.
