@@ -1,3 +1,4 @@
+---
 # Check for mandatory parameters
 
 - name: Warn about deprecated  es_xpack_features variable
@@ -16,18 +17,24 @@
   fail: msg="es_proxy_port must be specified and cannot be blank when es_proxy_host is defined"
   when: (es_proxy_port is not defined or es_proxy_port == '') and (es_proxy_host is defined and es_proxy_host != '')
 
-#If the user attempts to lock memory they must specify a heap size
+# If the user attempts to lock memory they must specify a heap size
 - name: fail when heap size is not specified when using memory lock
   fail: msg="If locking memory with bootstrap.memory_lock a heap size must be specified"
   when: es_config['bootstrap.memory_lock'] is defined and es_config['bootstrap.memory_lock'] == True and es_heap_size is not defined and not ansible_check_mode
 
-#Check if working with security we have an es_api_basic_auth_username and es_api_basic_auth_username - otherwise any http calls wont work
-- name: fail when api credentials are not declared when using security
+- name: fail when password is not declared when using security
   fail: msg="Enabling security requires an es_api_basic_auth_username and es_api_basic_auth_password to be provided to allow cluster operations"
   when:
     - not oss_version
     - es_api_basic_auth_username is defined
     - es_api_basic_auth_password is not defined
+
+- name: fail when api credentials are not declared when using tls
+  fail: msg="Enabling tls requires an es_api_basic_auth_username and es_api_basic_auth_password"
+  when:
+    - not oss_version
+    - es_enable_http_ssl or es_enable_transport_ssl
+    - es_api_basic_auth_username is not defined or es_api_basic_auth_password is not defined
 
 - name: fail when ssl enabled without defining a key and certificate
   fail: msg="Enabling SSL/TLS (es_enable_http_ssl or es_enable_transport_ssl) requires es_ssl_keystore and es_ssl_truststore or es_ssl_key and es_ssl_certificate to be provided"
@@ -42,7 +49,7 @@
 
 - name: fail when changing users through file realm
   fail:
-     msg: "ERROR: INVALID CONFIG - YOU CANNOT CHANGE RESERVED USERS THROUGH THE FILE REALM. THE FOLLOWING CANNOT BE CHANGED: {{file_reserved_users}}. USE THE NATIVE REALM."
+    msg: "ERROR: INVALID CONFIG - YOU CANNOT CHANGE RESERVED USERS THROUGH THE FILE REALM. THE FOLLOWING CANNOT BE CHANGED: {{file_reserved_users}}. USE THE NATIVE REALM."
   when: file_reserved_users | default([]) | length > 0
 
 - name: set fact m_lock_enabled
