@@ -10,6 +10,8 @@
   become: yes
   yum: name=libselinux-python state=present update_cache=yes
   when: ( ansible_distribution == "CentOS" ) and ( ansible_distribution_major_version == "6" )
+  vars:
+    ansible_python_interpreter: "{{ python2_interpreter }}"
 
 - name: RedHat - add Elasticsearch repo
   become: yes
@@ -33,6 +35,8 @@
   yum:
     name: '{{ es_other_package_name }}'
     state: 'absent'
+  vars:
+    ansible_python_interpreter: "{{ python2_interpreter }}"
 
 - name: Include optional user and group creation.
   when: (es_user_id is defined) and (es_group_id is defined)
@@ -53,6 +57,8 @@
   delay: 10
   environment:
     ES_PATH_CONF: "{{ es_conf_dir }}"
+  vars:
+    ansible_python_interpreter: "{{ python2_interpreter }}"
 
 # workaround due to https://github.com/ansible/ansible/issues/66977
 - set_fact:
@@ -66,3 +72,5 @@
   when: not es_use_repository
   register: elasticsearch_install_from_package
   notify: restart elasticsearch
+  vars:
+    ansible_python_interpreter: "{{ python2_interpreter }}"

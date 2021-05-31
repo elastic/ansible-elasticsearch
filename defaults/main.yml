@@ -69,3 +69,4 @@ es_ssl_verification_mode: "certificate"
 es_validate_certs: "yes"
 es_delete_unmanaged_file: true
 es_delete_unmanaged_native: true
+python2_interpreter: /bin/python

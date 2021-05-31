@@ -5,6 +5,8 @@
     name: yum-plugin-versionlock
     state: present
     update_cache: yes
+  vars:
+    ansible_python_interpreter: "{{ python2_interpreter }}"
 
 - name: RedHat - check if requested elasticsearch version lock exists
   become: yes
