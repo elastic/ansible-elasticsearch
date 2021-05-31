@@ -38,7 +38,7 @@
   - name: Remove keystore entries
     become: yes
     command: >
-     echo {{ es_api_basic_auth_password | quote }} | {{ es_home }}/bin/elasticsearch-keystore remove '{{ item.key }}'
+     {{ es_home }}/bin/elasticsearch-keystore remove '{{ item.key }}'
     with_items: "{{ es_keystore_entries }}"
     when:
       - es_keystore_entries is defined and es_keystore_entries | length > 0

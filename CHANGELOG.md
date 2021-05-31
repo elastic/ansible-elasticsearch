@@ -1,5 +1,67 @@
 # Changelog
 
+## 7.13.0
+
+* 7.13.0 as default version.
+* 6.8.16 as 6.x tested version
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#796](https://github.com/elastic/ansible-elasticsearch/pull/796) | [@jmlrt](https://github.com/jmlrt) | Fails deployment when using tls without security  |
+| [#745](https://github.com/elastic/ansible-elasticsearch/pull/745) | [@v1v](https://github.com/v1v) | Support ubuntu-20  |
+
+
+## 7.12.1
+
+* 7.12.1 as default version.
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#793](https://github.com/elastic/ansible-elasticsearch/pull/793) | [@jmlrt](https://github.com/jmlrt) | [meta] update ubuntu-1804 during kitchen provisioning  |
+| [#787](https://github.com/elastic/ansible-elasticsearch/pull/787) | [@tobiashuste](https://github.com/tobiashuste) | Stop plugin install to fail in check mode  |
+
+
+## 7.12.0
+
+* 7.12.0 as default version.
+* 6.8.15 as 6.x tested version
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#789](https://github.com/elastic/ansible-elasticsearch/pull/789) | [@jmlrt](https://github.com/jmlrt) | Use ES_JAVA_HOME instead of JAVA_HOME  |
+| [#788](https://github.com/elastic/ansible-elasticsearch/pull/788) | [@jmlrt](https://github.com/jmlrt) | Fix deb and rpm url  |
+| [#784](https://github.com/elastic/ansible-elasticsearch/pull/784) | [@jmlrt](https://github.com/jmlrt) | [meta] fix changelog after 7.11.2 release  |
+
+
+## 7.11.2
+
+* 7.11.2 as default version.
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#771](https://github.com/elastic/ansible-elasticsearch/pull/771) | [@Bernhard-Fluehmann](https://github.com/Bernhard-Fluehmann) | Cleanup remove keystore entries  |
+| [#782](https://github.com/elastic/ansible-elasticsearch/pull/782) | [@kuops](https://github.com/kuops) | Fix README.md Multi Node Server Installations  |
+| [#777](https://github.com/elastic/ansible-elasticsearch/pull/777) | [@DanRoscigno](https://github.com/DanRoscigno) | Update ssl-tls-setup.md  |
+
+
+## 7.11.1
+
+* 7.11.1 as default version.
+* 6.8.14 as 6.x tested version
+
+| PR                                                                | Author                                                       | Title                                          |
+|-------------------------------------------------------------------|--------------------------------------------------------------|------------------------------------------------|
+| [#760](https://github.com/elastic/ansible-elasticsearch/pull/760) | [@jmlrt](https://github.com/jmlrt)                           | Add dedicated CI jobs for 6.x                  |
+| [#761](https://github.com/elastic/ansible-elasticsearch/pull/761) | [@rubarclk](https://github.com/rubarclk)                     | Fix Elasticsearch 7.x deb url                  |
+| [#769](https://github.com/elastic/ansible-elasticsearch/pull/769) | [@Bernhard-Fluehmann](https://github.com/Bernhard-Fluehmann) | Add support for elasticsearch-keystore entries |
+| [#765](https://github.com/elastic/ansible-elasticsearch/pull/765) | [@jmlrt](https://github.com/jmlrt)                           | Refactor Kitchen tests                         |
+| [#770](https://github.com/elastic/ansible-elasticsearch/pull/770) | [@jmlrt](https://github.com/jmlrt)                           | Remove OSS support for version >= 7.11.0       |
+| [#779](https://github.com/elastic/ansible-elasticsearch/pull/779) | [@jmlrt](https://github.com/jmlrt)                           | Fix "list native roles" task                   |
+
+
 ## 7.10.2
 
 * 7.10.2 as default version.
