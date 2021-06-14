@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.13.2
+
+* 7.13.2 as default version.
+
 ## 7.13.1
 
 * 7.13.1 as default version.
