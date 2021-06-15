@@ -111,6 +111,7 @@
   apt:
     deb: "{% if es_custom_package_url is defined %}{{ es_custom_package_url }}{% else %}{{ es_deb_url }}{% endif %}"
     state: present
+    validate_certs: no
   when: not es_use_repository
   register: elasticsearch_install_from_package
   notify: restart elasticsearch
