@@ -45,8 +45,7 @@ Ansible-elasticsearch 7.5.2 is updating the configuration files provided by this
 
 ### Removing OSS distribution for versions >= 7.11.0
 
-Starting from Elasticsearch 7.11.0, OSS distributions will no more provided following Elasticsearch
-recent license change.
+Starting from Elasticsearch 7.11.0, OSS distributions will no longer be provided following the recent Elasticsearch license change.
 
 This Ansible role will fail if `oss_version` is set to `true` and `es_version` is greater than 
 `7.11.0`.
