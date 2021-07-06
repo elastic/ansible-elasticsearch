@@ -470,17 +470,6 @@ To configure X-pack to send mail, the following configuration can be added to th
         pass: <password> --optional
 ```
 
-* ```es_keystore``` To add or remove keystore entries, the following configuration can be added to the role. To edit entries, use a combination of add and remove. For security reasons the bootstrap password can not be edited or removed:
-
-```yaml
-    es_keystore:
-        add:
-          - key: my_key
-            value: my_value
-        remove:
-          - key: my_key
-```
-
 * ```es_user``` - defaults to elasticsearch.
 * ```es_group``` - defaults to elasticsearch.
 * ```es_user_id``` - default is undefined.
