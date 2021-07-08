@@ -1,5 +1,16 @@
 # Changelog
 
+## 7.13.3
+
+* 7.13.3 as default version.
+* 6.8.17 as 6.x tested version
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#800](https://github.com/elastic/ansible-elasticsearch/pull/800) | [@chuckmilam](https://github.com/chuckmilam) | Minor correction for readability.  |
+
+
 ## 7.13.2
 
 * 7.13.2 as default version.
