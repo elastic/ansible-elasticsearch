@@ -57,17 +57,30 @@
       ES_PATH_CONF: "{{ es_conf_dir }}"
     check_mode: no
 
-  - name: Add keystore entries
+  - name: Add keystore string entries
     become: yes
     shell: echo {{ item.value | quote }} | {{ es_home }}/bin/elasticsearch-keystore add -x -f {{ item.key }}
     with_items: "{{ es_keystore_entries }}"
     when:
       - es_keystore_entries is defined and es_keystore_entries | length > 0
       - item.state is undefined or item.state == 'present'
+      - item.file is undefined or not item.file
       - item.force|default(False) or ( not item.force|default(False) and item.key not in list_keystore.stdout_lines )
       - ('bootstrap.password' not in item.key)
     no_log: true
 
+  - name: Add keystore file entries
+    become: yes
+    command: >
+     {{ es_home }}/bin/elasticsearch-keystore add-file -f {{ item.key }} {{ item.value }}
+    with_items: "{{ es_keystore_entries }}"
+    when:
+      - es_keystore_entries is defined and es_keystore_entries | length > 0
+      - item.state is undefined or item.state == 'present'
+      - item.file is defined and item.file
+      - item.force|default(False) or ( not item.force|default(False) and item.key not in list_keystore.stdout_lines )
+      - ('bootstrap.password' not in item.key)
+    no_log: true
 
 ### END BLOCK elasticsearch keystore ###
 

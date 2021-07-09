@@ -103,3 +103,17 @@
     force: yes
   notify: restart elasticsearch
   when: es_config_log4j2 != ''
+
+- name: Copy additional files
+  become: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default(es_user) }}"
+    group: "{{ item.group | default(es_group) }}"
+    mode: "{{ item.mode | default('660') }}"
+  loop: "{{ es_additional_files }}"
+  when:
+    - es_additional_files is defined
+    - es_additional_files | length > 0
+
