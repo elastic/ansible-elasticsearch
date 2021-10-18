@@ -300,7 +300,7 @@ You can now override the configuration files with your own versions by using the
 
 ### SSL/TLS Support
 
-Ansible-elasticsearch is now supporting SSL/TLS encryption. Please refer to [X-Pack Security SSL/TLS](https://github.com/elastic/ansible-elasticsearch/blob/master/docs/ssl-tls-setup.md) to configure it.
+Ansible-elasticsearch is now supporting SSL/TLS encryption. Please refer to [X-Pack Security SSL/TLS](https://github.com/elastic/ansible-elasticsearch/blob/main/docs/ssl-tls-setup.md) to configure it.
 
 | PR                                                                | Author                                         | Title                                        |
 |-------------------------------------------------------------------|------------------------------------------------|----------------------------------------------|
