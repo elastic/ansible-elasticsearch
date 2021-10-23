@@ -83,7 +83,8 @@
 
 # If playbook runs too fast, Native commands could fail as the Native Realm is not yet up
 - name: Wait {{ es_api_sleep }} seconds for the Native Realm to come up
-  command: "sleep {{ es_api_sleep }}"
+  wait_for:
+    timeout: "{{ es_api_sleep }}"
   when: manage_native_realm | bool
 
 - name: activate-license
