@@ -391,6 +391,33 @@ es_roles:
             - create_index
 ```
 
+* ```es_role_mappings``` - Elasticsearch role mappings can be declared here as yml. Each key is a name of a role mapping, with yaml formatted JSON defining the role mapping as described [here](https://www.elastic.co/guide/en/x-pack/current/mapping-roles.html) e.g.
+
+```yaml
+es_role_mappings:
+  groupname-editor:
+    enabled: true
+    roles:
+      - editor
+    rules:
+      field:
+        groups: "EditorGroup"
+  groupname-admin:
+    enabled: true
+    roles:
+      - editor
+    rules:
+      field:
+        groups: "AdminGroup"
+  realmname-viewer:
+    enabled: true
+    roles:
+      - viewer
+    rules:
+      field:
+        realm.name: realm1
+```
+
 * ```es_xpack_license``` - X-Pack license. The license is a json blob. Set the variable directly (possibly protected by Ansible vault) or from a file in the Ansible project on the control machine via a lookup:
 
 ```yaml
