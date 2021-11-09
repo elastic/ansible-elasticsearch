@@ -26,9 +26,6 @@ provisioner:
       <% end %>
   <% end %>
 
-transport:
-  max_ssh_sessions: 6
-
 platforms:
   - name: ubuntu-14.04
     driver_config:
