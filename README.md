@@ -6,7 +6,6 @@
 
 Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
 
-* Ubuntu 14.04
 * Ubuntu 16.04
 * Ubuntu 18.04
 * Ubuntu 20.04
