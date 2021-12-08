@@ -91,7 +91,7 @@ The above installs Elasticsearch 7.16.0 in a single node 'node1' on the hosts 'l
 Elasticsearch default version is described in [`es_version`](https://github.com/elastic/ansible-elasticsearch/blob/main/defaults/main.yml#L2). You can override this variable in your playbook to install another version.
 While we are testing this role only with one 7.x and one 6.x version (respectively [7.16.0](https://github.com/elastic/ansible-elasticsearch/blob/main/defaults/main.yml#L2) and [6.8.18](https://github.com/elastic/ansible-elasticsearch/blob/main/.kitchen.yml#L22) at the time of writing), this role should work with other versions also in most cases.
 
-This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
+This role also uses [Ansible tags](https://docs.ansible.com/ansible/2.9/user_guide/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
 
 ## Testing
 
