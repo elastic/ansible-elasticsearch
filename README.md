@@ -49,7 +49,7 @@ Starting from Elasticsearch 7.11.0, OSS distributions will no longer be provided
 This Ansible role will fail if `oss_version` is set to `true` and `es_version` is greater than 
 `7.11.0`.
 
-See [Doubling down on open, Part II](https://www.elastic.co/blog/licensing-change for more details)
+See [Doubling down on open, Part II](https://www.elastic.co/blog/licensing-change)
 blog post for more details.
 
 #### How to override configuration files provided by ansible-elasticsearch?
