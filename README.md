@@ -2,6 +2,8 @@
 [![Build Status](https://img.shields.io/jenkins/s/https/devops-ci.elastic.co/job/elastic+ansible-elasticsearch+main.svg)](https://devops-ci.elastic.co/job/elastic+ansible-elasticsearch+main/)
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
+⚠️ **This Ansible role is being deprecated and will not be updated to support Elasticsearch 8.0.0 and the following versions.**
+
 **THIS ROLE IS FOR 7.x & 6.x**
 
 Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
