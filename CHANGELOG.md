@@ -1,5 +1,19 @@
 # Changelog
 
+## 7.16.1
+
+* 7.16.1 as default version.
+* 6.8.21 as 6.x tested version
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#838](https://github.com/elastic/ansible-elasticsearch/pull/838) | [@mgreau](https://github.com/mgreau) | Add warning message about 8.x versions  |
+| [#830](https://github.com/elastic/ansible-elasticsearch/pull/830) | [@bfontaine](https://github.com/bfontaine) | README: fix link to ES licensing change blog post  |
+| [#831](https://github.com/elastic/ansible-elasticsearch/pull/831) | [@gaima8](https://github.com/gaima8) | command necessarily causes a change on each invocation breaking idempotency, wait_for accomplishes the same goal without the change  |
+| [#833](https://github.com/elastic/ansible-elasticsearch/pull/833) | [@Pablohn26](https://github.com/Pablohn26) | Fix broken link  |
+
+
 ## 7.16.0
 
 * 7.16.0 as default version.
