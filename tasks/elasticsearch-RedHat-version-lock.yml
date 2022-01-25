@@ -1,7 +1,7 @@
 ---
-- name: RedHat - install yum-version-lock
+- name: RedHat - install {{ versionlock_plugin_package }}
   become: yes
-  yum:
+  package:
     name: "{{ versionlock_plugin_package }}"
     state: present
     update_cache: yes
