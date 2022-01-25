@@ -24,7 +24,7 @@ Issues that do not follow these guidelines are likely to be closed.
 
 **Elasticsearch version**
 
-**Role version**:  (If using master please specify github sha)
+**Role version**:  (If using main please specify github sha)
 
 **JVM version** (`java -version`):
 
