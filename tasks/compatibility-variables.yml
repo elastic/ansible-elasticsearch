@@ -3,8 +3,8 @@
 # It is possible to set these are defaults with messy jinja templating one liners however:
 # 1. That is really hard to read and debug
 # 2. When running multiple plays with the same role the defaults are not re-evaluated. An example of this
-# can be seen in our the https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack.yml
-# integration test and in the Multi Node server documentation examples https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack.yml
+# can be seen in our the https://github.com/elastic/ansible-elasticsearch/blob/main/test/integration/xpack.yml
+# integration test and in the Multi Node server documentation examples https://github.com/elastic/ansible-elasticsearch/blob/main/test/integration/xpack.yml
 - name: Set backward compatibility for deprecated es_enable_xpack variable
   when: es_enable_xpack is defined and not es_enable_xpack
   block:

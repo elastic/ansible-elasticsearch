@@ -1,5 +1,45 @@
 # Changelog
 
+## 7.16.3
+
+* 7.16.3 as default version.
+* 6.8.23 as 6.x tested version
+
+## 7.16.2
+
+* 7.16.2 as default version.
+* 6.8.22 as 6.x tested version
+
+## 7.16.1
+
+* 7.16.1 as default version.
+* 6.8.21 as 6.x tested version
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#838](https://github.com/elastic/ansible-elasticsearch/pull/838) | [@mgreau](https://github.com/mgreau) | Add warning message about 8.x versions  |
+| [#830](https://github.com/elastic/ansible-elasticsearch/pull/830) | [@bfontaine](https://github.com/bfontaine) | README: fix link to ES licensing change blog post  |
+| [#831](https://github.com/elastic/ansible-elasticsearch/pull/831) | [@gaima8](https://github.com/gaima8) | command necessarily causes a change on each invocation breaking idempotency, wait_for accomplishes the same goal without the change  |
+| [#833](https://github.com/elastic/ansible-elasticsearch/pull/833) | [@Pablohn26](https://github.com/Pablohn26) | Fix broken link  |
+
+
+## 7.16.0
+
+* 7.16.0 as default version.
+
+
+| PR | Author | Title |
+| --- | --- | --- |
+| [#835](https://github.com/elastic/ansible-elasticsearch/pull/835) | [@jmlrt](https://github.com/jmlrt) | Remove Ubuntu 14.04 support  |
+| [#825](https://github.com/elastic/ansible-elasticsearch/pull/825) | [@darxriggs](https://github.com/darxriggs) | Remove duplicate entry from YAML  |
+| [#828](https://github.com/elastic/ansible-elasticsearch/pull/828) | [@ygel](https://github.com/ygel) | Rename master - main  |
+
+
+## 7.15.1
+
+* 7.15.1 as default version.
+
 ## 7.15.0
 
 * 7.15.0 as default version.
@@ -296,7 +336,7 @@ You can now override the configuration files with your own versions by using the
 
 ### SSL/TLS Support
 
-Ansible-elasticsearch is now supporting SSL/TLS encryption. Please refer to [X-Pack Security SSL/TLS](https://github.com/elastic/ansible-elasticsearch/blob/master/docs/ssl-tls-setup.md) to configure it.
+Ansible-elasticsearch is now supporting SSL/TLS encryption. Please refer to [X-Pack Security SSL/TLS](https://github.com/elastic/ansible-elasticsearch/blob/main/docs/ssl-tls-setup.md) to configure it.
 
 | PR                                                                | Author                                         | Title                                        |
 |-------------------------------------------------------------------|------------------------------------------------|----------------------------------------------|

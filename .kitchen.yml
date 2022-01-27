@@ -22,12 +22,9 @@ provisioner:
     extra_vars:
       es_major_version: "<%= ENV['VERSION'] %>"
       <% if ENV['VERSION'] == '6.x' %>
-      es_version: '6.8.18'
+      es_version: '6.8.23'
       <% end %>
   <% end %>
-
-transport:
-  max_ssh_sessions: 6
 
 platforms:
   - name: ubuntu-14.04
