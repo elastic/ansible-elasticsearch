@@ -1,8 +1,17 @@
+# ARCHIVED
+
+This project is no longer maintained. For alternative getting started
+experiences, you may want to try one of these options:
+
+- Start a [free trial on Elastic Cloud](https://www.elastic.co/cloud/elasticsearch-service/signup), our hosted service.
+- Take a look at [Elastic Cloud on Kubernetes (ECK)](https://elastic.co/guide/en/cloud-on-k8s/current/k8s-quickstart.html) for launching the stack via Kubernetes.
+- Read our [Running the Elastic Stack on Docker](https://www.elastic.co/guide/en/elastic-stack-get-started/current/get-started-docker.html) guide.
+- Take a look at the [Elastic Stack Terraform provider.](https://github.com/elastic/terraform-provider-elasticstack)
+
 # ansible-elasticsearch
 [![Build Status](https://img.shields.io/jenkins/s/https/devops-ci.elastic.co/job/elastic+ansible-elasticsearch+main.svg)](https://devops-ci.elastic.co/job/elastic+ansible-elasticsearch+main/)
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
-⚠️ **This Ansible role is being deprecated and will not be updated to support Elasticsearch 8.0.0 and the following versions.**
 
 **THIS ROLE IS FOR 7.x & 6.x**
 
