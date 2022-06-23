@@ -1,7 +1,7 @@
 # 8.x support
 
 In [December 2021](https://github.com/elastic/ansible-elasticsearch/pull/838), we made the hard decision to deprecate this Ansible playbook without adding support for Elasticsearch 8.X. 
-We aknowledge the impact this has had on many developers and organizations, and while we are not reverting the decision, we decided to share some guidelines around how to proceed from here, for folks wanting to keep using this playbook with Elasticsearch 8.X.
+We acknowledge the impact this has had on many developers and organizations, and while we are not reverting the decision, we decided to share some guidelines around how to proceed from here, for folks wanting to keep using this playbook with Elasticsearch 8.X.
 
 ---
 
@@ -33,10 +33,7 @@ At a high level, this role is expected to work in most cases for fresh installs 
 
 ## Context for the below experiment
 
-The intent is to assess if the current playbook can still work with ES 8.X and what modifications may be needed.
-
-5 months after deprecating this role and dropping the CI tests: the testing framework (ansible, docker, kitchen, serverspec) that allowed us to test all the compatible OS is now broken.
-Attempts at fixing were inconclusive, with transient success at best for some OS/testsuite combination. For the sake of this experiment, tests were done manually on a GCP VM, using an Ubuntu 20.04 and CentOS7 VMs.
+The intent is to assess if the current playbook can still work with ES 8.X and what modifications may be needed. The testing was done on Ubuntu 20.04 and CentOS7 GCP VMs.
 
 The only code change done in the Ansible playbook was the override of the `es_version` variable.
 
