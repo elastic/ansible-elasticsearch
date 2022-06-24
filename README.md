@@ -1,7 +1,10 @@
 # ARCHIVED
 
-This project is no longer maintained. For alternative getting started
-experiences, you may want to try one of these options:
+This project is no longer maintained.
+
+You are welcomed to keep using it and adapting it to work for your own needs, including with Elasticsearch [8.x](docs/8x-support.md).
+
+For alternative getting started experiences, you may want to try one of these options:
 
 - Start a [free trial on Elastic Cloud](https://www.elastic.co/cloud/elasticsearch-service/signup), our hosted service.
 - Take a look at [Elastic Cloud on Kubernetes (ECK)](https://elastic.co/guide/en/cloud-on-k8s/current/k8s-quickstart.html) for launching the stack via Kubernetes.
@@ -9,13 +12,12 @@ experiences, you may want to try one of these options:
 - Take a look at the [Elastic Stack Terraform provider.](https://github.com/elastic/terraform-provider-elasticstack)
 
 # ansible-elasticsearch
-[![Build Status](https://img.shields.io/jenkins/s/https/devops-ci.elastic.co/job/elastic+ansible-elasticsearch+main.svg)](https://devops-ci.elastic.co/job/elastic+ansible-elasticsearch+main/)
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
 
-**THIS ROLE IS FOR 7.x & 6.x**
+**THIS ROLE IS FOR 7.x & 6.x**, but should still work with 8.x (see [note](docs/8x-support.md)).
 
-Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
+Ansible role for 7.x/6.x Elasticsearch - tests used to run and pass on the below platforms:
 
 * Ubuntu 16.04
 * Ubuntu 18.04
@@ -25,8 +27,6 @@ Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedH
 * Debian 10
 * CentOS 7
 * Amazon Linux 2
-
-The latest Elasticsearch versions of 7.x & 6.x are actively tested.
 
 ## BREAKING CHANGES
 
