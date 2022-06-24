@@ -2,3 +2,11 @@
 java: "{{ es_java | default('java-1.8.0-openjdk.x86_64') }}"
 default_file: "/etc/sysconfig/elasticsearch"
 es_home: "/usr/share/elasticsearch"
+
+# We need to detect the package manager to use here - yum for CentOS 7, dnf for CentOS >= 8.
+package_manager: "{{ ansible_facts.pkg_mgr }}"
+versionlock_plugin_package: "{% if ansible_distribution_version is version('8', '>=') %}
+                              python3-dnf-plugin-versionlock
+                            {% else %}
+                              yum-plugin-versionlock
+                            {% endif %}"
