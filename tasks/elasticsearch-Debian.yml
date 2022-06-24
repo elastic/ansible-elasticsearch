@@ -46,6 +46,11 @@
       name: apt-transport-https
       state: present
 
+  - name: Debian - Install gpg to support the requirement of apt_key in the next play
+    apt:
+      name: gpg
+      state: present
+
   - name: Debian - Add Elasticsearch repository key
     apt_key:
       url: '{{ es_apt_key }}'
