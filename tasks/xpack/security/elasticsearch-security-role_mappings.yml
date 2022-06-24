@@ -1,0 +1,43 @@
+---
+#List current role mappings
+- name: List Role Mappings
+  uri:
+    url: "{{ es_api_uri }}/{{ es_security_api }}/role_mapping"
+    method: GET
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+    status_code: 200
+    validate_certs: "{{ es_validate_certs }}"
+  register: role_mapping_list_response
+  check_mode: no
+
+- name: set fact role_mappings_to_remove
+  set_fact: role_mappings_to_remove={{ role_mapping_list_response.json.keys() | difference ( es_role_mappings.keys() | list) }}
+
+#Delete all non required role mappings
+- name: Delete Role mappings
+  uri:
+    url: "{{ es_api_uri }}/{{ es_security_api }}/role_mapping/{{ item | urlencode }}"
+    method: DELETE
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
+  when: es_delete_unmanaged_role_mappings
+  with_items: "{{ role_mappings_to_remove | default([]) }}"
+
+#Update other roles mappings
+- name: Update Role Mappings
+  uri:
+    url: "{{ es_api_uri }}/{{ es_security_api }}/role_mapping/{{ item | urlencode }}"
+    method: POST
+    body_format: json
+    body: "{{ es_role_mappings[item] | to_json}}"
+    status_code: 200
+    user: "{{es_api_basic_auth_username}}"
+    password: "{{es_api_basic_auth_password}}"
+    force_basic_auth: yes
+    validate_certs: "{{ es_validate_certs }}"
+  with_items: "{{ es_role_mappings.keys() | list | default([]) }}"
